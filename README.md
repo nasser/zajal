@@ -12,7 +12,7 @@ Yes and no. The primary concern at this point is getting the interpreter stable 
     $ git clone http://github.com/nasser/zajal.git
     $ cd zajal
     $ make
-    $ ./bin/zajal src/test/ballerina.rb
+    $ ./bin/zajal examples/ballerina.rb
     
 Once more of the interpreter gets nailed down, expect easy to use one click installs.
 
