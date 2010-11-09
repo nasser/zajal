@@ -661,7 +661,7 @@ VALUE ofrb_get_style(VALUE self) {
 }
 
 VALUE ofrb_set_style(VALUE self, VALUE style) {
-  /*  ofSetStyle(/* FIXME ofStyle style */); */
+  /*  ofSetStyle( FIXME ofStyle style ); */
   return Qnil;
 }
 
