@@ -46,7 +46,7 @@ VALUE proc_call(VALUE proc) {
 #define SAFE_PROC_CALL(__proc) {rb_protect(proc_call, __proc, &zajal_error); handleError(zajal_error); if(zajal_error) {return;} }
 
 ZajalInterpreter::ZajalInterpreter() {
-  zajal_last_error = 0;
+  zajal_error_message = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
 }
 
 //--------------------------------------------------------------
@@ -62,7 +62,7 @@ void ZajalInterpreter::setup() {
   ofSetRectMode(OF_RECTMODE_CORNER);
   ofSetLineWidth(1.0);
   
-  SAFE_PROC_CALL(setup_proc);
+  if(!zajal_error) SAFE_PROC_CALL(setup_proc);
 }
 
 //--------------------------------------------------------------
@@ -178,18 +178,15 @@ void ZajalInterpreter::loadScript(char* filename) {
   fclose(f);
   
   // execute contents of file, catch errors
-  int e;
   ruby_script(script_name);
-  rb_eval_string_protect(f_content, &e);
-  handleError(e);
+  rb_eval_string_protect(f_content, &zajal_error);
+  handleError(zajal_error);
 }
 
 
 // http://metaeditor.sourceforge.net/embed/
 void ZajalInterpreter::handleError(int error_number) {
-  if(error_number && error_number != zajal_last_error) {
-    zajal_last_error = error_number;
-    
+  if(error_number) {
     VALUE last_error = rb_gv_get("$!");
     char* error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
     char* error_message = RSTRING_PTR(rb_obj_as_string(last_error));
@@ -200,7 +197,9 @@ void ZajalInterpreter::handleError(int error_number) {
     // message
     cout << "message = " << error_message << endl;
     
-    zajal_error_message = error_message;
+    size_t error_message_size = strlen(error_message);
+    strncpy(zajal_error_message, error_message, ERROR_MESSAGE_SIZE);
+    strncat(zajal_error_message, "\n", ERROR_MESSAGE_SIZE);
     
     // backtrace
     if(!NIL_P(last_error)) {
@@ -210,6 +209,7 @@ void ZajalInterpreter::handleError(int error_number) {
         VALUE* backtrace_ptr = RARRAY_PTR(backtrace);
         
         for(int c=0; c<backtrace_length; c++) {
+          if(c == 0) strncat(zajal_error_message, RSTRING_PTR(backtrace_ptr[c]), ERROR_MESSAGE_SIZE - error_message_size);
             o << "\tfrom " << RSTRING_PTR(backtrace_ptr[c]) << "\n";
         }
         cout << "backtrace = \n" << o.str() << endl;

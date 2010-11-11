@@ -26,6 +26,8 @@
 
 // #define USE_FANCY_ERROR
 
+#define ERROR_MESSAGE_SIZE 1024
+
 class ZajalInterpreter : public ofBaseApp{
 	
 	public:
@@ -50,7 +52,7 @@ class ZajalInterpreter : public ofBaseApp{
     long script_mtime;
 
     void handleError(int error_number);
-    int zajal_error, zajal_last_error;
+    int zajal_error;
 		ofImage zajal_last_image;
     char* zajal_error_message;
 };
