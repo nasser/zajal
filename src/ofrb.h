@@ -27,6 +27,8 @@
 
 #include "ruby.h"
 
+void __ofrb_graphics_reset_frame();
+
 void ofrb_init();
 
 #ifdef __cplusplus

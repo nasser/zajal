@@ -37,6 +37,24 @@ VALUE _ofrb_line_width = INT2FIX(1);
 VALUE _ofrb_background_auto = Qtrue;
 VALUE _ofrb_fill = Qtrue;
 
+int _ofrb_stacked_text_initial_y = 20;
+int _ofrb_stacked_text_line_height = 20;
+int _ofrb_stacked_text_x = 10;
+int _ofrb_stacked_text_y = _ofrb_stacked_text_initial_y;
+
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+/* reset internal variables at start of each frame */
+void __ofrb_graphics_reset_frame() {
+  _ofrb_stacked_text_y = _ofrb_stacked_text_initial_y;
+}
+
+#ifdef __cplusplus
+}
+#endif
+
 /* TODO support named colors, move this to a helper source file */
 int __make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a) {
   VALUE arg1, arg2, arg3, arg4;
@@ -229,9 +247,26 @@ VALUE ofrb_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
 }
 
 /*  TODO support fonts here later */
-VALUE ofrb_text(VALUE self, VALUE textString, VALUE x, VALUE y) {
-  VALUE s = rb_funcall(textString, rb_intern("to_s"), 0);
-  ofDrawBitmapString(StringValuePtr(s), NUM2DBL(x), NUM2DBL(y));
+VALUE ofrb_text(int argc, VALUE* argv, VALUE klass) {
+  VALUE s, x, y;
+  rb_scan_args(argc, argv, "12", &s, &x, &y);
+  
+  VALUE text_string = rb_funcall(s, rb_intern("to_s"), 0);
+  
+  if(NIL_P(x) && NIL_P(y)) {
+    /* called without coordinates, stack the text */
+    ofDrawBitmapString(StringValuePtr(text_string), _ofrb_stacked_text_x, _ofrb_stacked_text_y);
+    _ofrb_stacked_text_y += _ofrb_stacked_text_line_height;
+    
+  } else if(!NIL_P(x) && !NIL_P(y)) {
+    /* called with coordinates, draw text at coordinates */
+    ofDrawBitmapString(StringValuePtr(text_string), NUM2DBL(x), NUM2DBL(y));
+    
+  } else {
+    rb_raise(rb_eTypeError, "Expected 1 or 3 arguments to text!");
+    
+  }
+  
   return Qnil;
 }
 
@@ -720,7 +755,7 @@ void ofrb_graphics_init(VALUE module) {
   rb_define_method(module, "line", RB_FUNC(ofrb_line), 4);
   
   /*  basic text */
-  rb_define_method(module, "text", RB_FUNC(ofrb_text), 3);
+  rb_define_method(module, "text", RB_FUNC(ofrb_text), -1);
   
   /*  curved lines */
   rb_define_method(module, "curve", RB_FUNC(ofrb_curve), 8);

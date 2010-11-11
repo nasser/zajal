@@ -23,6 +23,7 @@
 
 #include "ruby.h"
 #include "ofMain.h"
+#include "ofrb.h"
 
 // #define USE_FANCY_ERROR
 
