@@ -3,7 +3,6 @@ v = 0
 
 setup do
   window_title "Ballerina"
-  size 500
   smoothing true
   framerate 60
 end
