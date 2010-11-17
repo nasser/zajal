@@ -20,7 +20,7 @@
 #include "ofMain.h"
 #include "macros.h"
 
-VALUE ofrb_seed_random(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_seed_random(int argc, VALUE* argv, VALUE klass) {
   VALUE val;
   rb_scan_args(argc, argv, "01", &val);
   
@@ -37,7 +37,7 @@ VALUE ofrb_seed_random(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
   
-VALUE ofrb_random(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_random(int argc, VALUE* argv, VALUE klass) {
   VALUE min, max;
   rb_scan_args(argc, argv, "02", &min, &max);
   
@@ -59,17 +59,21 @@ VALUE ofrb_random(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_random_width(VALUE self) {
+VALUE zj_random_width(VALUE self) {
   return DBL2NUM(ofRandomWidth());
 }
 
-VALUE ofrb_random_height(VALUE self) {
+VALUE zj_random_height(VALUE self) {
   return DBL2NUM(ofRandomHeight());
 }
 
-void ofrb_math_init(VALUE module) {
-  rb_define_method(module, "seed_random", RB_FUNC(ofrb_seed_random), -1);
-  rb_define_method(module, "random", RB_FUNC(ofrb_random), -1);
-  rb_define_method(module, "random_width", RB_FUNC(ofrb_random_width), 0);
-  rb_define_method(module, "random_height", RB_FUNC(ofrb_random_height), 0);
+VALUE zj_mathematics_init(VALUE zj_mZajal) {
+  VALUE zj_mMathematics = rb_define_module_under(zj_mZajal, "Mathematics");
+  
+  rb_define_method(zj_mMathematics, "seed_random", RB_FUNC(zj_seed_random), -1);
+  rb_define_method(zj_mMathematics, "random", RB_FUNC(zj_random), -1);
+  rb_define_method(zj_mMathematics, "random_width", RB_FUNC(zj_random_width), 0);
+  rb_define_method(zj_mMathematics, "random_height", RB_FUNC(zj_random_height), 0);
+  
+  return zj_mMathematics;
 }

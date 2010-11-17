@@ -16,31 +16,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*  Ruby openFrameworks bindings */
 
-#include "ruby.h"
-#include "ofMain.h"
-#include "zajal.h"
+#ifndef MATHEMATICS_H
+#define MATHEMATICS_H
 
-#include "app.h"
-#include "mathematics.h"
+VALUE zj_mathematics_init(VALUE zj_mZajal);
 
-void ofrb_baseapp_init(VALUE module);
-void ofrb_graphics_init(VALUE module);
-
-void zj_zajal_init() {
-  VALUE zj_mZajal = rb_define_module("Zajal");
-  
-  VALUE zj_mApp = zj_app_init(zj_mZajal);
-  VALUE zj_mMathematics = zj_mathematics_init(zj_mZajal);
-  ofrb_baseapp_init(zj_mZajal);
-  ofrb_graphics_init(zj_mZajal);
-  
-  /*  include ruby's math */
-  rb_include_module(rb_cObject, rb_mMath);
-  
-  /*  include zajal modules */
-  rb_include_module(rb_cObject, zj_mZajal);
-  rb_include_module(rb_cObject, zj_mApp);
-  rb_include_module(rb_cObject, zj_mMathematics);
-}
+#endif /* MATHEMATICS_H */
