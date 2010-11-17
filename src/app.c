@@ -21,7 +21,7 @@
 #include "macros.h"
 
 /*  globals */
-VALUE zj_value_window_title = Qnil;
+VALUE _zj_value_window_title = Qnil;
 
 VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
   VALUE w;
@@ -103,12 +103,12 @@ VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
   
   if(NIL_P(new_title)) {
     /*  method called without argument, treat as a getter */
-    return zj_value_window_title;
+    return _zj_value_window_title;
     
   } else {
     /*  method called with argument, treat as setter */
-    zj_value_window_title = new_title;
-    ofSetWindowTitle(StringValuePtr(zj_value_window_title));
+    _zj_value_window_title = new_title;
+    ofSetWindowTitle(StringValuePtr(_zj_value_window_title));
     return Qnil;
     
   }
