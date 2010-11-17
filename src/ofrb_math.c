@@ -18,7 +18,7 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "ofrb_macros.h"
+#include "macros.h"
 
 VALUE ofrb_seed_random(int argc, VALUE* argv, VALUE klass) {
   VALUE val;

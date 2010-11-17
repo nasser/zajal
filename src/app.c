@@ -18,7 +18,7 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "ofrb_macros.h"
+#include "macros.h"
 
 /*  globals */
 VALUE zj_value_window_title = Qnil;

@@ -18,7 +18,7 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "ofrb_macros.h"
+#include "macros.h"
 
 // event procs
 VALUE setup_proc;

@@ -25,7 +25,7 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "ofrb_macros.h"
+#include "macros.h"
 
 /*  internal global variables */
 VALUE _ofrb_curve_resolution = INT2FIX(20);
