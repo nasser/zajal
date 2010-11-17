@@ -67,6 +67,16 @@ VALUE zj_random_height(VALUE self) {
   return DBL2NUM(ofRandomHeight());
 }
 
+/* methods added to Numeric class */
+
+VALUE zj_to_deg(VALUE self) {
+  return DBL2NUM(NUM2DBL(self) * 57.29577951);
+}
+
+VALUE zj_to_rad(VALUE self) {
+  return DBL2NUM(NUM2DBL(self) * 0.017453293);
+}
+
 VALUE zj_mathematics_init(VALUE zj_mZajal) {
   VALUE zj_mMathematics = rb_define_module_under(zj_mZajal, "Mathematics");
   
@@ -74,6 +84,9 @@ VALUE zj_mathematics_init(VALUE zj_mZajal) {
   rb_define_method(zj_mMathematics, "random", RB_FUNC(zj_random), -1);
   rb_define_method(zj_mMathematics, "random_width", RB_FUNC(zj_random_width), 0);
   rb_define_method(zj_mMathematics, "random_height", RB_FUNC(zj_random_height), 0);
+  
+  rb_define_method(rb_cNumeric, "to_deg", RB_FUNC(zj_to_deg), 0);
+  rb_define_method(rb_cNumeric, "to_rad", RB_FUNC(zj_to_rad), 0);
   
   return zj_mMathematics;
 }
