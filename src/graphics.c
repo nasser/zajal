@@ -28,35 +28,27 @@
 #include "macros.h"
 
 /*  internal global variables */
-VALUE _ofrb_curve_resolution = INT2FIX(20);
-VALUE _ofrb_circle_resolution = INT2FIX(22);
-VALUE _ofrb_smoothing = Qfalse;
-VALUE _ofrb_alpha_blending = Qfalse;
-VALUE _ofrb_arb_textures = Qtrue;
-VALUE _ofrb_line_width = INT2FIX(1);
-VALUE _ofrb_background_auto = Qtrue;
-VALUE _ofrb_fill = Qtrue;
+VALUE _zj_curve_resolution = INT2FIX(20);
+VALUE _zj_circle_resolution = INT2FIX(22);
+VALUE _zj_smoothing = Qfalse;
+VALUE _zj_alpha_blending = Qfalse;
+VALUE _zj_arb_textures = Qtrue;
+VALUE _zj_line_width = INT2FIX(1);
+VALUE _zj_background_auto = Qtrue;
+VALUE _zj_fill = Qtrue;
 
-int _ofrb_stacked_text_initial_y = 20;
-int _ofrb_stacked_text_line_height = 20;
-int _ofrb_stacked_text_x = 10;
-int _ofrb_stacked_text_y = _ofrb_stacked_text_initial_y;
-
-#ifdef __cplusplus
- extern "C" {
-#endif
+int _zj_stacked_text_initial_y = 20;
+int _zj_stacked_text_line_height = 20;
+int _zj_stacked_text_x = 10;
+int _zj_stacked_text_y = _zj_stacked_text_initial_y;
 
 /* reset internal variables at start of each frame */
-void __ofrb_graphics_reset_frame() {
-  _ofrb_stacked_text_y = _ofrb_stacked_text_initial_y;
+void zj_graphics_reset_frame() {
+  _zj_stacked_text_y = _zj_stacked_text_initial_y;
 }
-
-#ifdef __cplusplus
-}
-#endif
 
 /* TODO support named colors, move this to a helper source file */
-int __make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a) {
+int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a) {
   VALUE arg1, arg2, arg3, arg4;
   rb_scan_args(argc, argv, "04", &arg1, &arg2, &arg3, &arg4);
   
@@ -100,7 +92,7 @@ int __make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a) {
   
 }
 
-VALUE ofrb_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   VALUE new_rectmode;
   rb_scan_args(argc, argv, "01", &new_rectmode);
   
@@ -157,10 +149,10 @@ VALUE ofrb_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  * 
  * Returns nothing
  */
-VALUE ofrb_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
+VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
   ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(w), NUM2DBL(h));
   
-  if(_ofrb_smoothing == Qtrue && _ofrb_fill == Qtrue) {
+  if(_zj_smoothing == Qtrue && _zj_fill == Qtrue) {
     /*  smoothing is on and the rectangle was filled. draw a smooth outline. */
     ofNoFill();
     ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(w), NUM2DBL(h));
@@ -185,10 +177,10 @@ VALUE ofrb_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
  * 
  * Returns nothing
  */
-VALUE ofrb_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
+VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
   ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(s), NUM2DBL(s));
   
-  if(_ofrb_smoothing == Qtrue && _ofrb_fill == Qtrue) {
+  if(_zj_smoothing == Qtrue && _zj_fill == Qtrue) {
     /*  smoothing is on and the square was filled. draw a smooth outline. */
     ofNoFill();
     ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(s), NUM2DBL(s));
@@ -199,10 +191,10 @@ VALUE ofrb_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
   return Qnil;
 }
 
-VALUE ofrb_triangle(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
+VALUE zj_triangle(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
   ofTriangle(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
   
-  if(_ofrb_smoothing == Qtrue && _ofrb_fill == Qtrue) {
+  if(_zj_smoothing == Qtrue && _zj_fill == Qtrue) {
     /*  smoothing is on and the triangle was filled. draw a smooth outline. */
     ofNoFill();
     ofTriangle(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
@@ -213,10 +205,10 @@ VALUE ofrb_triangle(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3
   return Qnil;
 }
 
-VALUE ofrb_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
+VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
   ofCircle(NUM2DBL(x), NUM2DBL(y), NUM2DBL(radius));
   
-  if(_ofrb_smoothing == Qtrue && _ofrb_fill == Qtrue) {
+  if(_zj_smoothing == Qtrue && _zj_fill == Qtrue) {
     /*  smoothing is on and the circle was filled. draw a smooth outline. */
     ofNoFill();
     ofCircle(NUM2DBL(x), NUM2DBL(y), NUM2DBL(radius));
@@ -227,10 +219,10 @@ VALUE ofrb_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
   return Qnil;
 }
 
-VALUE ofrb_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
+VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
   ofEllipse(NUM2DBL(x), NUM2DBL(y), NUM2DBL(width), NUM2DBL(height));
   
-  if(_ofrb_smoothing == Qtrue && _ofrb_fill == Qtrue) {
+  if(_zj_smoothing == Qtrue && _zj_fill == Qtrue) {
     /*  smoothing is on and the ellipse was filled. draw a smooth outline. */
     ofNoFill();
     ofEllipse(NUM2DBL(x), NUM2DBL(y), NUM2DBL(width), NUM2DBL(height));
@@ -241,13 +233,13 @@ VALUE ofrb_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
   return Qnil;
 }
 
-VALUE ofrb_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
+VALUE zj_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
   ofLine(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2));
   return Qnil;
 }
 
 /*  TODO support fonts here later */
-VALUE ofrb_text(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_text(int argc, VALUE* argv, VALUE klass) {
   VALUE s, x, y;
   rb_scan_args(argc, argv, "12", &s, &x, &y);
   
@@ -255,8 +247,8 @@ VALUE ofrb_text(int argc, VALUE* argv, VALUE klass) {
   
   if(NIL_P(x) && NIL_P(y)) {
     /* called without coordinates, stack the text */
-    ofDrawBitmapString(StringValuePtr(text_string), _ofrb_stacked_text_x, _ofrb_stacked_text_y);
-    _ofrb_stacked_text_y += _ofrb_stacked_text_line_height;
+    ofDrawBitmapString(StringValuePtr(text_string), _zj_stacked_text_x, _zj_stacked_text_y);
+    _zj_stacked_text_y += _zj_stacked_text_line_height;
     
   } else if(!NIL_P(x) && !NIL_P(y)) {
     /* called with coordinates, draw text at coordinates */
@@ -270,22 +262,22 @@ VALUE ofrb_text(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_curve(VALUE self, VALUE x0, VALUE y0, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
+VALUE zj_curve(VALUE self, VALUE x0, VALUE y0, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
   ofCurve(NUM2DBL(x0), NUM2DBL(y0), NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
   return Qnil;
 }
 
-VALUE ofrb_bezier(VALUE self, VALUE x0, VALUE y0, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
+VALUE zj_bezier(VALUE self, VALUE x0, VALUE y0, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
   ofBezier(NUM2DBL(x0), NUM2DBL(y0), NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
   return Qnil;
 }
 
-VALUE ofrb_push_matrix(VALUE self) {
+VALUE zj_push_matrix(VALUE self) {
   ofPushMatrix();
   return Qnil;
 }
 
-VALUE ofrb_pop_matrix(VALUE self) {
+VALUE zj_pop_matrix(VALUE self) {
   ofPopMatrix();
   return Qnil;
 }
@@ -307,14 +299,14 @@ VALUE ofrb_pop_matrix(VALUE self) {
  * 
  * Returns nothing
  */
-VALUE ofrb_matrix(VALUE self) {
+VALUE zj_matrix(VALUE self) {
   ofPushMatrix();
   VALUE returnValue = rb_yield(Qnil);
   ofPopMatrix();
   return returnValue;
 }
 
-VALUE ofrb_translate(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
   rb_scan_args(argc, argv, "21", &x, &y, &z);
   
@@ -331,7 +323,7 @@ VALUE ofrb_translate(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_scale(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
   rb_scan_args(argc, argv, "21", &x, &y, &z);
   
@@ -350,7 +342,7 @@ VALUE ofrb_scale(int argc, VALUE* argv, VALUE klass) {
 
 /*  TODO rotate method deviates significantly from of and disables advanced functionality. fix this. */
 /*  TODO finish rotate method */
-VALUE ofrb_rotate(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_rotate(int argc, VALUE* argv, VALUE klass) {
   VALUE arg1, arg2, arg3;
   rb_scan_args(argc, argv, "12", &arg1, &arg2, &arg3);
   
@@ -363,12 +355,12 @@ VALUE ofrb_rotate(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_begin_shape(VALUE self) {
+VALUE zj_begin_shape(VALUE self) {
   ofBeginShape();
   return Qnil;
 }
 
-VALUE ofrb_end_shape(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_end_shape(int argc, VALUE* argv, VALUE klass) {
   VALUE rbClosed = Qnil;
   bool cClosed = false;
   rb_scan_args(argc, argv, "01", &rbClosed);
@@ -391,7 +383,7 @@ VALUE ofrb_end_shape(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_shape(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_shape(int argc, VALUE* argv, VALUE klass) {
   VALUE rbClosed = Qnil;
   bool cClosed = false;
   rb_scan_args(argc, argv, "01", &rbClosed);
@@ -417,73 +409,73 @@ VALUE ofrb_shape(int argc, VALUE* argv, VALUE klass) {
   return returnValue;
 }
 
-VALUE ofrb_vertex(VALUE self, VALUE x, VALUE y) {
+VALUE zj_vertex(VALUE self, VALUE x, VALUE y) {
   ofVertex(NUM2DBL(x), NUM2DBL(y));
   return Qnil;
 }
 
-VALUE ofrb_curve_vertex(VALUE self, VALUE x, VALUE y) {
+VALUE zj_curve_vertex(VALUE self, VALUE x, VALUE y) {
   ofCurveVertex(NUM2DBL(x), NUM2DBL(y));
   return Qnil;
 }
 
-VALUE ofrb_bezier_vertex(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
+VALUE zj_bezier_vertex(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
   ofBezierVertex(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
   return Qnil;
 }
 
-VALUE ofrb_curve_resolution(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
   VALUE new_resolution;
   rb_scan_args(argc, argv, "01", &new_resolution);
   
   if(NIL_P(new_resolution)) {
     /*  called without argument, return current curve resolution */
-    return _ofrb_curve_resolution;
+    return _zj_curve_resolution;
     
   } else {
     /*  called with argument, set curve resolution */
-    _ofrb_curve_resolution = new_resolution;
-    ofSetCurveResolution(FIX2INT(_ofrb_curve_resolution));
+    _zj_curve_resolution = new_resolution;
+    ofSetCurveResolution(FIX2INT(_zj_curve_resolution));
     
   }
   
   return Qnil;
 }
 
-VALUE ofrb_circle_resolution(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
   VALUE new_resolution;
   rb_scan_args(argc, argv, "01", &new_resolution);
   
   if(NIL_P(new_resolution)) {
     /*  called without argument, return current circle resolution */
-    return _ofrb_circle_resolution;
+    return _zj_circle_resolution;
     
   } else {
     /*  called with argument, set circle resolution */
-    _ofrb_circle_resolution = new_resolution;
-    ofSetCircleResolution(FIX2INT(_ofrb_circle_resolution));
+    _zj_circle_resolution = new_resolution;
+    ofSetCircleResolution(FIX2INT(_zj_circle_resolution));
     
   }
   
   return Qnil;
 }
 
-VALUE ofrb_smoothing(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
   VALUE new_smoothing;
   rb_scan_args(argc, argv, "01", &new_smoothing);
   
   if(NIL_P(new_smoothing)) {
     /*  called without argument, return current smoothing */
-    return _ofrb_smoothing;
+    return _zj_smoothing;
     
   } else if(new_smoothing == Qtrue) {
     /*  called with true, enable smoothing */
-    _ofrb_smoothing = new_smoothing;
+    _zj_smoothing = new_smoothing;
     ofEnableSmoothing();
     
   } else if(new_smoothing == Qfalse) {
     /*  called with false, disable smoothing */
-    _ofrb_smoothing = new_smoothing;
+    _zj_smoothing = new_smoothing;
     ofDisableSmoothing();
     
   } else {
@@ -494,22 +486,22 @@ VALUE ofrb_smoothing(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_alpha_blending(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
   VALUE new_alpha_blending;
   rb_scan_args(argc, argv, "01", &new_alpha_blending);
   
   if(NIL_P(new_alpha_blending)) {
     /*  called without argument, return current alpha blending */
-    return _ofrb_alpha_blending;
+    return _zj_alpha_blending;
     
   } else if(new_alpha_blending == Qtrue) {
     /*  called with true, enable alpha blending */
-    _ofrb_alpha_blending = new_alpha_blending;
+    _zj_alpha_blending = new_alpha_blending;
     ofEnableAlphaBlending();
     
   } else if(new_alpha_blending == Qfalse) {
     /*  called with false, disable alpha blending */
-    _ofrb_alpha_blending = new_alpha_blending;
+    _zj_alpha_blending = new_alpha_blending;
     ofDisableAlphaBlending();
     
   } else {
@@ -520,22 +512,22 @@ VALUE ofrb_alpha_blending(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_arb_textures(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
   VALUE new_arb_textures;
   rb_scan_args(argc, argv, "01", &new_arb_textures);
   
   if(NIL_P(new_arb_textures)) {
     /*  called without argument, return current arb texture setting */
-    return _ofrb_arb_textures;
+    return _zj_arb_textures;
     
   } else if(new_arb_textures == Qtrue) {
     /*  called with true, enable arb textures */
-    _ofrb_arb_textures = new_arb_textures;
+    _zj_arb_textures = new_arb_textures;
     ofEnableArbTex();
     
   } else if(new_arb_textures == Qfalse) {
     /*  called with false, disable arb textures */
-    _ofrb_arb_textures = new_arb_textures;
+    _zj_arb_textures = new_arb_textures;
     ofDisableArbTex();
     
   } else {
@@ -546,13 +538,13 @@ VALUE ofrb_arb_textures(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_line_width(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
   VALUE new_line_width;
   rb_scan_args(argc, argv, "01", &new_line_width);
   
   if(NIL_P(new_line_width)) {
     /*  called without argument, return current line width */
-    return _ofrb_line_width;
+    return _zj_line_width;
     
   } else {
     /*  called with argument, set line width */
@@ -563,9 +555,9 @@ VALUE ofrb_line_width(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_background(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
   int r, g, b, a;
-  if(__make_color(argc, argv, &r, &g, &b, &a)) {
+  if(zj_graphics_make_color(argc, argv, &r, &g, &b, &a)) {
     /*  called with arguments, change the background */
     ofBackground(r, g, b);
     
@@ -587,22 +579,22 @@ VALUE ofrb_background(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_background_auto(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
   VALUE new_background_auto;
   rb_scan_args(argc, argv, "01", &new_background_auto);
   
   if(NIL_P(new_background_auto)) {
     /*  called without argument, return current background auto setting */
-    return _ofrb_background_auto;
+    return _zj_background_auto;
     
   } else if(new_background_auto == Qtrue){
     /*  called with true, enable auto background */
-    _ofrb_background_auto = new_background_auto;
+    _zj_background_auto = new_background_auto;
     ofSetBackgroundAuto(true);
     
   } else if(new_background_auto == Qfalse) {
     /*  called with false, disable auto background */
-    _ofrb_background_auto = new_background_auto;
+    _zj_background_auto = new_background_auto;
     ofSetBackgroundAuto(false);
     
   } else {
@@ -626,22 +618,22 @@ VALUE ofrb_background_auto(int argc, VALUE* argv, VALUE klass) {
  * 
  * Returns nothing
  */
-VALUE ofrb_fill(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
   VALUE new_fill;
   rb_scan_args(argc, argv, "01", &new_fill);
   
   if(NIL_P(new_fill)) {
     /*  called without argument, return current fill setting */
-    return _ofrb_fill;
+    return _zj_fill;
     
   } else if(new_fill == Qtrue) {
     /*  called with true, enable fill */
-    _ofrb_fill = new_fill;
+    _zj_fill = new_fill;
     ofFill();
     
   } else if(new_fill == Qfalse) {
     /*  called with false, disable fill */
-    _ofrb_fill = new_fill;
+    _zj_fill = new_fill;
     ofNoFill();
     
   } else {
@@ -675,138 +667,72 @@ VALUE ofrb_fill(int argc, VALUE* argv, VALUE klass) {
  * 
  * Returns nothing
  */
-VALUE ofrb_color(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_color(int argc, VALUE* argv, VALUE klass) {
   int r, g, b, a;
-  __make_color(argc, argv, &r, &g, &b, &a);
+  zj_graphics_make_color(argc, argv, &r, &g, &b, &a);
   
   ofSetColor(r, g, b, a);
   return Qnil;
 }
 
-/*  --- */
-
-VALUE ofrb_ofb_clear_bg(VALUE self) {
-  ofbClearBg();
-  return Qnil; /* FIXME Fix function return! Original: bool; */
-}
-
-VALUE ofrb_get_style(VALUE self) {
-  ofGetStyle();
-  return Qnil; /* FIXME Fix function return! Original: ofStyle; */
-}
-
-VALUE ofrb_set_style(VALUE self, VALUE style) {
-  /*  ofSetStyle( FIXME ofStyle style ); */
-  return Qnil;
-}
-
-VALUE ofrb_push_style(VALUE self) {
-  ofPushStyle();
-  return Qnil;
-}
-
-VALUE ofrb_pop_style(VALUE self) {
-  ofPopStyle();
-  return Qnil;
-}
-
-VALUE ofrb_rotate_x(VALUE self, VALUE degrees) {
-  ofRotateX(NUM2DBL(degrees));
-  return Qnil;
-}
-
-VALUE ofrb_rotate_y(VALUE self, VALUE degrees) {
-  ofRotateY(NUM2DBL(degrees));
-  return Qnil;
-}
-
-VALUE ofrb_rotate_z(VALUE self, VALUE degrees) {
-  ofRotateZ(NUM2DBL(degrees));
-  return Qnil;
-}
-
-VALUE ofrb_setup_graphic_defaults(VALUE self) {
-  ofSetupGraphicDefaults();
-  return Qnil;
-}
-
-VALUE ofrb_setup_screen(VALUE self) {
-  ofSetupScreen();
-  return Qnil;
-}
-
-VALUE ofrb_set_poly_mode(VALUE self, VALUE mode) {
-  ofSetPolyMode(FIX2INT(mode));
-  return Qnil;
-}
-
-VALUE ofrb_next_contour(VALUE self, VALUE bClose) {
+VALUE zj_next_contour(VALUE self, VALUE bClose) {
   ofNextContour(RTEST(bClose));
   return Qnil;
 }
 
-void ofrb_graphics_init(VALUE module) {
+VALUE zj_graphics_init(VALUE zj_mZajal) {
+  VALUE zj_mGraphics = rb_define_module_under(zj_mZajal, "Graphics");
+  
   /*  basic shapes */
-  rb_define_method(module, "rectangle", RB_FUNC(ofrb_rectangle), 4);
-  rb_define_method(module, "square", RB_FUNC(ofrb_square), 3);
-  rb_define_method(module, "triangle", RB_FUNC(ofrb_triangle), 6);
-  rb_define_method(module, "circle", RB_FUNC(ofrb_circle), 3);
-  rb_define_method(module, "ellipse", RB_FUNC(ofrb_ellipse), 4);
-  rb_define_method(module, "line", RB_FUNC(ofrb_line), 4);
+  rb_define_method(zj_mGraphics, "rectangle", RB_FUNC(zj_rectangle), 4);
+  rb_define_method(zj_mGraphics, "square", RB_FUNC(zj_square), 3);
+  rb_define_method(zj_mGraphics, "triangle", RB_FUNC(zj_triangle), 6);
+  rb_define_method(zj_mGraphics, "circle", RB_FUNC(zj_circle), 3);
+  rb_define_method(zj_mGraphics, "ellipse", RB_FUNC(zj_ellipse), 4);
+  rb_define_method(zj_mGraphics, "line", RB_FUNC(zj_line), 4);
   
   /*  basic text */
-  rb_define_method(module, "text", RB_FUNC(ofrb_text), -1);
+  rb_define_method(zj_mGraphics, "text", RB_FUNC(zj_text), -1);
   
   /*  curved lines */
-  rb_define_method(module, "curve", RB_FUNC(ofrb_curve), 8);
-  rb_define_method(module, "bezier", RB_FUNC(ofrb_bezier), 8);
+  rb_define_method(zj_mGraphics, "curve", RB_FUNC(zj_curve), 8);
+  rb_define_method(zj_mGraphics, "bezier", RB_FUNC(zj_bezier), 8);
   
   /*  draw states */
-  rb_define_method(module, "rectangle_mode", RB_FUNC(ofrb_rectangle_mode), -1);
+  rb_define_method(zj_mGraphics, "rectangle_mode", RB_FUNC(zj_rectangle_mode), -1);
   
   /*  matrixes */
-  rb_define_method(module, "push_matrix", RB_FUNC(ofrb_push_matrix), 0);
-  rb_define_method(module, "pop_matrix", RB_FUNC(ofrb_pop_matrix), 0);
-  rb_define_method(module, "matrix", RB_FUNC(ofrb_matrix), 0);
+  rb_define_method(zj_mGraphics, "push_matrix", RB_FUNC(zj_push_matrix), 0);
+  rb_define_method(zj_mGraphics, "pop_matrix", RB_FUNC(zj_pop_matrix), 0);
+  rb_define_method(zj_mGraphics, "matrix", RB_FUNC(zj_matrix), 0);
   
   /*  transformation */
-  rb_define_method(module, "translate", RB_FUNC(ofrb_translate), -1);
-  rb_define_method(module, "scale", RB_FUNC(ofrb_scale), -1);
-  rb_define_method(module, "rotate", RB_FUNC(ofrb_rotate), -1);
+  rb_define_method(zj_mGraphics, "translate", RB_FUNC(zj_translate), -1);
+  rb_define_method(zj_mGraphics, "scale", RB_FUNC(zj_scale), -1);
+  rb_define_method(zj_mGraphics, "rotate", RB_FUNC(zj_rotate), -1);
   
   /*  shape blocks */
-  rb_define_method(module, "begin_shape", RB_FUNC(ofrb_begin_shape), 0);
-  rb_define_method(module, "end_shape", RB_FUNC(ofrb_end_shape), 1);
-  rb_define_method(module, "shape", RB_FUNC(ofrb_shape), -1);
+  rb_define_method(zj_mGraphics, "begin_shape", RB_FUNC(zj_begin_shape), 0);
+  rb_define_method(zj_mGraphics, "end_shape", RB_FUNC(zj_end_shape), 1);
+  rb_define_method(zj_mGraphics, "shape", RB_FUNC(zj_shape), -1);
   
   /*  vertexes */
-  rb_define_method(module, "vertex", RB_FUNC(ofrb_vertex), 2);
-  rb_define_method(module, "curve_vertex", RB_FUNC(ofrb_curve_vertex), 2);
-  rb_define_method(module, "bezier_vertex", RB_FUNC(ofrb_bezier_vertex), 6);
+  rb_define_method(zj_mGraphics, "vertex", RB_FUNC(zj_vertex), 2);
+  rb_define_method(zj_mGraphics, "curve_vertex", RB_FUNC(zj_curve_vertex), 2);
+  rb_define_method(zj_mGraphics, "bezier_vertex", RB_FUNC(zj_bezier_vertex), 6);
   
   /*  settings */
-  rb_define_method(module, "circle_resolution", RB_FUNC(ofrb_circle_resolution), -1);
-  rb_define_method(module, "curve_resolution", RB_FUNC(ofrb_circle_resolution), -1);
-  rb_define_method(module, "smoothing", RB_FUNC(ofrb_smoothing), -1);
-  rb_define_method(module, "alpha_blending", RB_FUNC(ofrb_alpha_blending), -1);
-  rb_define_method(module, "arb_textures", RB_FUNC(ofrb_arb_textures), -1);
-  rb_define_method(module, "line_width", RB_FUNC(ofrb_line_width), -1);
-  rb_define_method(module, "background_auto", RB_FUNC(ofrb_background_auto), -1);
-  rb_define_method(module, "fill", RB_FUNC(ofrb_fill), -1);
+  rb_define_method(zj_mGraphics, "circle_resolution", RB_FUNC(zj_circle_resolution), -1);
+  rb_define_method(zj_mGraphics, "curve_resolution", RB_FUNC(zj_circle_resolution), -1);
+  rb_define_method(zj_mGraphics, "smoothing", RB_FUNC(zj_smoothing), -1);
+  rb_define_method(zj_mGraphics, "alpha_blending", RB_FUNC(zj_alpha_blending), -1);
+  rb_define_method(zj_mGraphics, "arb_textures", RB_FUNC(zj_arb_textures), -1);
+  rb_define_method(zj_mGraphics, "line_width", RB_FUNC(zj_line_width), -1);
+  rb_define_method(zj_mGraphics, "background_auto", RB_FUNC(zj_background_auto), -1);
+  rb_define_method(zj_mGraphics, "fill", RB_FUNC(zj_fill), -1);
   
-  rb_define_method(module, "background", RB_FUNC(ofrb_background), -1);
-  rb_define_method(module, "color", RB_FUNC(ofrb_color), -1);
-  return;
+  rb_define_method(zj_mGraphics, "background", RB_FUNC(zj_background), -1);
+  rb_define_method(zj_mGraphics, "color", RB_FUNC(zj_color), -1);
   
-  /*  rb_define_method(ofrb_mOF, "get_style", RB_FUNC(ofrb_get_style), 0); */
-  /*  rb_define_method(ofrb_mOF, "set_style", RB_FUNC(ofrb_set_style), 1); */
-  /*  rb_define_method(ofrb_mOF, "push_style", RB_FUNC(ofrb_push_style), 0); */
-  /*  rb_define_method(ofrb_mOF, "pop_style", RB_FUNC(ofrb_pop_style), 0); */
-  /*  rb_define_method(ofrb_mOF, "rotate_x", RB_FUNC(ofrb_rotate_x), 1); */
-  /*  rb_define_method(ofrb_mOF, "rotate_y", RB_FUNC(ofrb_rotate_y), 1); */
-  /*  rb_define_method(ofrb_mOF, "rotate_z", RB_FUNC(ofrb_rotate_z), 1); */
-  /*  rb_define_method(ofrb_mOF, "setup_graphic_defaults", RB_FUNC(ofrb_setup_graphic_defaults), 0); */
-  /*  rb_define_method(ofrb_mOF, "setup_screen", RB_FUNC(ofrb_setup_screen), 0); */
-  /*  rb_define_method(ofrb_mOF, "set_poly_mode", RB_FUNC(ofrb_set_poly_mode), 1); */
-  /*  rb_define_method(ofrb_mOF, "next_contour", RB_FUNC(ofrb_next_contour), 1); */
+  return zj_mGraphics;
 }

@@ -23,6 +23,8 @@
 #include "ruby.h"
 #include "ZajalInterpreter.h"
 
+#include "graphics.h"
+
 extern VALUE setup_proc;
 extern VALUE update_proc;
 extern VALUE draw_proc;
@@ -105,7 +107,7 @@ void ZajalInterpreter::draw() {
     ofDrawBitmapString(zajal_error_message, 10, ofGetHeight()/2-30);
     
   } else {
-    __ofrb_graphics_reset_frame();
+    zj_graphics_reset_frame();
     rb_protect(proc_call, draw_proc, &zajal_error);
     #ifdef USE_FANCY_ERROR
     if(!zajal_error) zajal_last_image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());

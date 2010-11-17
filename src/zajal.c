@@ -24,6 +24,7 @@
 
 #include "app.h"
 #include "mathematics.h"
+#include "graphics.h"
 
 void ofrb_baseapp_init(VALUE module);
 void ofrb_graphics_init(VALUE module);
@@ -33,8 +34,8 @@ void zj_zajal_init() {
   
   VALUE zj_mApp = zj_app_init(zj_mZajal);
   VALUE zj_mMathematics = zj_mathematics_init(zj_mZajal);
+  VALUE zj_mGraphics = zj_graphics_init(zj_mZajal);
   ofrb_baseapp_init(zj_mZajal);
-  ofrb_graphics_init(zj_mZajal);
   
   /*  include ruby's math */
   rb_include_module(rb_cObject, rb_mMath);
@@ -43,4 +44,5 @@ void zj_zajal_init() {
   rb_include_module(rb_cObject, zj_mZajal);
   rb_include_module(rb_cObject, zj_mApp);
   rb_include_module(rb_cObject, zj_mMathematics);
+  rb_include_module(rb_cObject, zj_mGraphics);
 }
