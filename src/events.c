@@ -37,93 +37,95 @@ VALUE audio_requested_proc;
 
 extern ofBaseApp* ofAppPtr;
 
-VALUE ofrb_setup(VALUE self) {
+VALUE zj_setup(VALUE self) {
   if(rb_block_given_p()) setup_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_update(VALUE self) {
+VALUE zj_update(VALUE self) {
   if(rb_block_given_p()) update_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_draw(VALUE self) {
+VALUE zj_draw(VALUE self) {
   if(rb_block_given_p()) draw_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_exit(VALUE self) {
+VALUE zj_exit(VALUE self) {
   if(rb_block_given_p()) exit_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_window_resized(VALUE self) {
+VALUE zj_window_resized(VALUE self) {
   if(rb_block_given_p()) window_resized_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_key_pressed(VALUE self) {
+VALUE zj_key_pressed(VALUE self) {
   if(rb_block_given_p()) key_pressed_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_key_released(VALUE self) {
+VALUE zj_key_released(VALUE self) {
   if(rb_block_given_p()) key_released_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_mouse_moved(VALUE self) {
+VALUE zj_mouse_moved(VALUE self) {
   if(rb_block_given_p()) mouse_moved_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_mouse_dragged(VALUE self) {
+VALUE zj_mouse_dragged(VALUE self) {
   if(rb_block_given_p()) mouse_dragged_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_mouse_pressed(VALUE self) {
+VALUE zj_mouse_pressed(VALUE self) {
   if(rb_block_given_p()) mouse_pressed_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_mouse_released(VALUE self) {
+VALUE zj_mouse_released(VALUE self) {
   if(rb_block_given_p()) mouse_released_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_audio_received(VALUE self) {
+VALUE zj_audio_received(VALUE self) {
   if(rb_block_given_p()) audio_received_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_audio_requested(VALUE self) {
+VALUE zj_audio_requested(VALUE self) {
   if(rb_block_given_p()) audio_requested_proc = rb_block_proc();
   
   return Qnil;
 }
 
-VALUE ofrb_mouse_x(VALUE self) {
+VALUE zj_mouse_x(VALUE self) {
   return INT2FIX(ofAppPtr->mouseX);
 }
 
-VALUE ofrb_mouse_y(VALUE self) {
+VALUE zj_mouse_y(VALUE self) {
   return INT2FIX(ofAppPtr->mouseY);
 }
 
-void ofrb_baseapp_init(VALUE module) {
+VALUE zj_events_init(VALUE zj_mZajal) {
+  VALUE zj_mEvents = rb_define_module_under(zj_mZajal, "Events");
+  
   rb_global_variable(&setup_proc);
   rb_global_variable(&update_proc);
   rb_global_variable(&draw_proc);
@@ -151,18 +153,20 @@ void ofrb_baseapp_init(VALUE module) {
   audio_received_proc = Qnil;
   audio_requested_proc = Qnil;
   
-  rb_define_method(module, "setup", RB_FUNC(ofrb_setup), 0);
-  rb_define_method(module, "update", RB_FUNC(ofrb_update), 0);
-  rb_define_method(module, "draw", RB_FUNC(ofrb_draw), 0);
-  rb_define_method(module, "exit", RB_FUNC(ofrb_exit), 0);
-  rb_define_method(module, "window_resized", RB_FUNC(ofrb_window_resized), 0);
-  rb_define_method(module, "mouse_moved", RB_FUNC(ofrb_mouse_moved), 0);
-  rb_define_method(module, "mouse_dragged", RB_FUNC(ofrb_mouse_dragged), 0);
-  rb_define_method(module, "mouse_pressed", RB_FUNC(ofrb_mouse_pressed), 0);
-  rb_define_method(module, "mouse_released", RB_FUNC(ofrb_mouse_released), 0);
-  rb_define_method(module, "audio_requested", RB_FUNC(ofrb_audio_requested), 0);
-  rb_define_method(module, "audio_received", RB_FUNC(ofrb_audio_received), 0);
+  rb_define_method(zj_mEvents, "setup", RB_FUNC(zj_setup), 0);
+  rb_define_method(zj_mEvents, "update", RB_FUNC(zj_update), 0);
+  rb_define_method(zj_mEvents, "draw", RB_FUNC(zj_draw), 0);
+  rb_define_method(zj_mEvents, "exit", RB_FUNC(zj_exit), 0);
+  rb_define_method(zj_mEvents, "window_resized", RB_FUNC(zj_window_resized), 0);
+  rb_define_method(zj_mEvents, "mouse_moved", RB_FUNC(zj_mouse_moved), 0);
+  rb_define_method(zj_mEvents, "mouse_dragged", RB_FUNC(zj_mouse_dragged), 0);
+  rb_define_method(zj_mEvents, "mouse_pressed", RB_FUNC(zj_mouse_pressed), 0);
+  rb_define_method(zj_mEvents, "mouse_released", RB_FUNC(zj_mouse_released), 0);
+  rb_define_method(zj_mEvents, "audio_requested", RB_FUNC(zj_audio_requested), 0);
+  rb_define_method(zj_mEvents, "audio_received", RB_FUNC(zj_audio_received), 0);
   
-  rb_define_method(module, "mouse_x", RB_FUNC(ofrb_mouse_x), 0);
-  rb_define_method(module, "mouse_y", RB_FUNC(ofrb_mouse_y), 0);
+  rb_define_method(zj_mEvents, "mouse_x", RB_FUNC(zj_mouse_x), 0);
+  rb_define_method(zj_mEvents, "mouse_y", RB_FUNC(zj_mouse_y), 0);
+  
+  return zj_mEvents;
 }
