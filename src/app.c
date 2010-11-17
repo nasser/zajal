@@ -21,9 +21,9 @@
 #include "ofrb_macros.h"
 
 /*  globals */
-VALUE ofrb_value_window_title = Qnil;
+VALUE zj_value_window_title = Qnil;
 
-VALUE ofrb_width(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
   VALUE w;
   rb_scan_args(argc, argv, "01", &w);
   
@@ -40,7 +40,7 @@ VALUE ofrb_width(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_height(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_height(int argc, VALUE* argv, VALUE klass) {
   VALUE h;
   rb_scan_args(argc, argv, "01", &h);
   
@@ -57,7 +57,7 @@ VALUE ofrb_height(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_size(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
   VALUE w, h;
   rb_scan_args(argc, argv, "02", &w, &h);
   
@@ -81,7 +81,7 @@ VALUE ofrb_size(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE ofrb_framerate(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
   VALUE new_framerate;
   rb_scan_args(argc, argv, "01", &new_framerate);
   
@@ -97,27 +97,31 @@ VALUE ofrb_framerate(int argc, VALUE* argv, VALUE klass) {
   }
 }
 
-VALUE ofrb_window_title(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_window_title(int argc, VALUE* argv, VALUE klass) {
   VALUE new_title;
   rb_scan_args(argc, argv, "01", &new_title);
   
   if(NIL_P(new_title)) {
     /*  method called without argument, treat as a getter */
-    return ofrb_value_window_title;
+    return zj_value_window_title;
     
   } else {
     /*  method called with argument, treat as setter */
-    ofrb_value_window_title = new_title;
-    ofSetWindowTitle(StringValuePtr(ofrb_value_window_title));
+    zj_value_window_title = new_title;
+    ofSetWindowTitle(StringValuePtr(zj_value_window_title));
     return Qnil;
     
   }
 }
 
-void ofrb_apprunner_init(VALUE module) {
-  rb_define_method(module, "height", RB_FUNC(ofrb_height), -1);
-  rb_define_method(module, "width", RB_FUNC(ofrb_width), -1);
-  rb_define_method(module, "size", RB_FUNC(ofrb_size), -1);
-  rb_define_method(module, "framerate", RB_FUNC(ofrb_framerate), -1);
-  rb_define_method(module, "window_title", RB_FUNC(ofrb_window_title), -1);
+VALUE zj_app_init(VALUE zj_mZajal) {
+  VALUE zj_mApp = rb_define_module_under(zj_mZajal, "Zajal");
+  
+  rb_define_method(zj_mApp, "height", RB_FUNC(zj_height), -1);
+  rb_define_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
+  rb_define_method(zj_mApp, "size", RB_FUNC(zj_size), -1);
+  rb_define_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
+  rb_define_method(zj_mApp, "window_title", RB_FUNC(zj_window_title), -1);
+  
+  return zj_mApp;
 }

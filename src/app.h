@@ -16,22 +16,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*  Ruby openFrameworks bindings */
+#ifndef APP_H
+#define APP_H
 
-#ifndef ZAJAL_H
-#define ZAJAL_H
+VALUE zj_app_init(VALUE zj_mZajal);
 
-#ifdef __cplusplus
- extern "C" {
-#endif
-
-void __ofrb_graphics_reset_frame();
-
-void zj_zajal_init();
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* ZAJAL_H */
-
+#endif /* APP_H */

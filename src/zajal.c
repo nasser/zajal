@@ -22,7 +22,8 @@
 #include "ofMain.h"
 #include "zajal.h"
 
-void ofrb_apprunner_init(VALUE module);
+#include "app.h"
+
 void ofrb_baseapp_init(VALUE module);
 void ofrb_graphics_init(VALUE module);
 void ofrb_math_init(VALUE module);
@@ -30,13 +31,15 @@ void ofrb_math_init(VALUE module);
 void zj_zajal_init() {
   VALUE zj_mZajal = rb_define_module("Zajal");
   
-  ofrb_apprunner_init(zj_mZajal);
+  VALUE zj_mApp = zj_app_init(zj_mZajal);
   ofrb_baseapp_init(zj_mZajal);
   ofrb_graphics_init(zj_mZajal);
   ofrb_math_init(zj_mZajal);
   
   /*  include math */
   rb_include_module(rb_cObject, rb_mMath);
-  /*  include of */
+  
+  /*  include zajal modules */
   rb_include_module(rb_cObject, zj_mZajal);
+  rb_include_module(rb_cObject, zj_mApp);
 }
