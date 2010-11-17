@@ -2,7 +2,7 @@ t = 0
 v = 0
 
 setup do
-  window_title "Ballerina"
+  title "Ballerina"
   smoothing true
   framerate 60
 end

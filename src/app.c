@@ -97,7 +97,7 @@ VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
   }
 }
 
-VALUE zj_window_title(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
   VALUE new_title;
   rb_scan_args(argc, argv, "01", &new_title);
   
@@ -121,7 +121,7 @@ VALUE zj_app_init(VALUE zj_mZajal) {
   rb_define_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
   rb_define_method(zj_mApp, "size", RB_FUNC(zj_size), -1);
   rb_define_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
-  rb_define_method(zj_mApp, "window_title", RB_FUNC(zj_window_title), -1);
+  rb_define_method(zj_mApp, "title", RB_FUNC(zj_title), -1);
   
   return zj_mApp;
 }
