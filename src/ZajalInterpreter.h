@@ -23,7 +23,7 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "ofrb.h"
+#include "zajal.h"
 
 // #define USE_FANCY_ERROR
 

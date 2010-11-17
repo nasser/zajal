@@ -18,8 +18,8 @@
 
 /*  Ruby openFrameworks bindings */
 
-#ifndef OFRB_H
-#define OFRB_H
+#ifndef ZAJAL_H
+#define ZAJAL_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -29,10 +29,11 @@
 
 void __ofrb_graphics_reset_frame();
 
-void ofrb_init();
+void zj_zajal_init();
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* OFRB_H */
+#endif /* ZAJAL_H */
+

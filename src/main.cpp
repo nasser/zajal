@@ -21,7 +21,7 @@
 #include "ruby.h"
 #include "ofMain.h"
 #include "ZajalInterpreter.h"
-#include "ofrb.h"
+#include "zajal.h"
 #include "ofAppGlutWindow.h"
 
 extern const char zajal_version[];
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
   print_version();
   
   ruby_init();
-  ofrb_init();
+  zj_zajal_init();
   
   // load in a script and run it if possible
   if(argc > 1) {

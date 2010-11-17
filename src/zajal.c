@@ -20,23 +20,23 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "ofrb.h"
+#include "zajal.h"
 
 void ofrb_apprunner_init(VALUE module);
 void ofrb_baseapp_init(VALUE module);
 void ofrb_graphics_init(VALUE module);
 void ofrb_math_init(VALUE module);
 
-void ofrb_init() {
-  VALUE ofrb_mOF = rb_define_module("OF");
+void zj_zajal_init() {
+  VALUE zj_mZajal = rb_define_module("Zajal");
   
-  ofrb_apprunner_init(ofrb_mOF);
-  ofrb_baseapp_init(ofrb_mOF);
-  ofrb_graphics_init(ofrb_mOF);
-  ofrb_math_init(ofrb_mOF);
+  ofrb_apprunner_init(zj_mZajal);
+  ofrb_baseapp_init(zj_mZajal);
+  ofrb_graphics_init(zj_mZajal);
+  ofrb_math_init(zj_mZajal);
   
   /*  include math */
   rb_include_module(rb_cObject, rb_mMath);
   /*  include of */
-  rb_include_module(rb_cObject, ofrb_mOF);
+  rb_include_module(rb_cObject, zj_mZajal);
 }
