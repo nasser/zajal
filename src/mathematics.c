@@ -70,11 +70,27 @@ VALUE zj_random_height(VALUE self) {
 /* methods added to Numeric class */
 
 VALUE zj_to_deg(VALUE self) {
-  return DBL2NUM(NUM2DBL(self) * 57.29577951);
+  /* TODO test if faster using own implementation vs calling of* function */
+  /* return DBL2NUM(NUM2DBL(self) * 57.29577951); */
+  return DBL2NUM(ofRadToDeg(NUM2DBL(self)));
 }
 
 VALUE zj_to_rad(VALUE self) {
-  return DBL2NUM(NUM2DBL(self) * 0.017453293);
+  /* TODO test if faster using own implementation vs calling of* function */
+  /* return DBL2NUM(NUM2DBL(self) * 0.017453293); */
+  return DBL2NUM(ofDegToRad(NUM2DBL(self)));
+}
+
+VALUE zj_sign(VALUE self) {
+  return DBL2NUM(ofSign(NUM2DBL(self)));
+}
+
+VALUE zj_clamp(VALUE self, VALUE min, VALUE max) {
+  return DBL2NUM(ofClamp(NUM2DBL(self), NUM2DBL(min), NUM2DBL(max)));
+}
+
+VALUE zj_normalize(VALUE self, VALUE min, VALUE max) {
+  return DBL2NUM(ofNormalize(NUM2DBL(self), NUM2DBL(min), NUM2DBL(max)));
 }
 
 VALUE zj_mathematics_init(VALUE zj_mZajal) {
@@ -87,6 +103,9 @@ VALUE zj_mathematics_init(VALUE zj_mZajal) {
   
   rb_define_method(rb_cNumeric, "to_deg", RB_FUNC(zj_to_deg), 0);
   rb_define_method(rb_cNumeric, "to_rad", RB_FUNC(zj_to_rad), 0);
+  rb_define_method(rb_cNumeric, "sign", RB_FUNC(zj_sign), 0);
+  rb_define_method(rb_cNumeric, "clamp", RB_FUNC(zj_clamp), 2);
+  rb_define_method(rb_cNumeric, "normalize", RB_FUNC(zj_normalize), 2);
   
   return zj_mMathematics;
 }
