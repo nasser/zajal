@@ -7,7 +7,7 @@ include TomDoc
 source = open(ARGV[0]).read
 
 # get category name from source file
-category = ARGV[0].scan(/ofrb_([^\.]+).c/).first.first
+category = ARGV[0].scan(/([^\.]+).c/).first.first
 
 # category comment is the second comment in the file
 category_comment = source.scan(/\/\*(.*?)\*\//m)[1].first.strip.gsub!(/[^a-zA-Z\n]*\*[^a-zA-Z\n]*/m, "")
