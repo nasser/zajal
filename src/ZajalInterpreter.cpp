@@ -70,6 +70,13 @@ VALUE zj_safe_key_released_call(VALUE key) {
   if(!NIL_P(key_released_proc)) rb_funcall(key_released_proc, rb_intern("call"), 1, key);
 }
 
+VALUE zj_safe_window_resized_call(VALUE args) {
+  VALUE w = ((VALUE*)args)[0];
+  VALUE h = ((VALUE*)args)[1];
+  
+  if(!NIL_P(window_resized_proc)) rb_funcall(window_resized_proc, rb_intern("call"), 2, w, h);
+}
+
 VALUE zj_button_to_symbol(int button) {
   if(button == 0)
     return ID2SYM(rb_intern("left"));
@@ -240,7 +247,14 @@ void ZajalInterpreter::mouseReleased(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::windowResized(int w, int h) {
-  
+  if(!zajal_error) {
+    VALUE args[2];
+    args[0] = INT2FIX(w);
+    args[1] = INT2FIX(h);
+    
+    rb_protect(zj_safe_window_resized_call, (VALUE)args, &zajal_error);
+    handleError(zajal_error);
+  }
 }
 
 void ZajalInterpreter::loadScript(char* filename) {
