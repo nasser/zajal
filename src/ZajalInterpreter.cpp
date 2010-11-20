@@ -54,6 +54,14 @@ VALUE zj_safe_mouse_pressed_call(VALUE args) {
   if(!NIL_P(mouse_pressed_proc)) rb_funcall(mouse_pressed_proc, rb_intern("call"), 3, x, y, button);
 }
 
+VALUE zj_safe_mouse_released_call(VALUE args) {
+  VALUE x = ((VALUE*)args)[0];
+  VALUE y = ((VALUE*)args)[1];
+  VALUE button = ((VALUE*)args)[2];
+  
+  if(!NIL_P(mouse_released_proc)) rb_funcall(mouse_released_proc, rb_intern("call"), 3, x, y, button);
+}
+
 VALUE zj_button_to_symbol(int button) {
   if(button == 0)
     return ID2SYM(rb_intern("left"));
@@ -201,6 +209,15 @@ void ZajalInterpreter::mousePressed(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
+  if(!zajal_error) {
+    VALUE args[3];
+    args[0] = INT2FIX(x);
+    args[1] = INT2FIX(y);
+    args[2] = zj_button_to_symbol(button);
+    
+    rb_protect(zj_safe_mouse_released_call, (VALUE)args, &zajal_error);
+    handleError(zajal_error);
+  }
 }
 
 //--------------------------------------------------------------
