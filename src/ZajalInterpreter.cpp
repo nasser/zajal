@@ -38,6 +38,14 @@ VALUE zj_safe_mouse_moved_call(VALUE args) {
   if(!NIL_P(mouse_moved_proc)) rb_funcall(mouse_moved_proc, rb_intern("call"), 2, x, y);
 }
 
+VALUE zj_safe_mouse_dragged_call(VALUE args) {
+  VALUE x = ((VALUE*)args)[0];
+  VALUE y = ((VALUE*)args)[1];
+  VALUE button = ((VALUE*)args)[2];
+  
+  if(!NIL_P(mouse_dragged_proc)) rb_funcall(mouse_dragged_proc, rb_intern("call"), 3, x, y, button);
+}
+
 ZajalInterpreter::ZajalInterpreter() {
   zajal_error_message = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
   currentContext = Qnil;
@@ -147,19 +155,24 @@ void ZajalInterpreter::mouseMoved(int x, int y) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
-  
+  if(!zajal_error) {
+    VALUE args[3];
+    args[0] = INT2FIX(x);
+    args[1] = INT2FIX(y);
+    args[2] = zj_button_to_symbol(button);
+    
+    rb_protect(zj_safe_mouse_dragged_call, (VALUE)args, &zajal_error);
+    handleError(zajal_error);
+  }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
-  
 }
 
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
-  
-
 }
 
 //--------------------------------------------------------------
