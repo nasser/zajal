@@ -29,7 +29,7 @@
 
 #define ERROR_MESSAGE_SIZE 1024
 
-class ZajalInterpreter : public ofBaseApp{
+class ZajalInterpreter : public ofBaseApp {
 	
 	public:
     ZajalInterpreter();
@@ -51,6 +51,8 @@ class ZajalInterpreter : public ofBaseApp{
   private:
     char* script_name;
     long script_mtime;
+    
+    VALUE currentContext;
 
     void handleError(int error_number);
     int zajal_error;

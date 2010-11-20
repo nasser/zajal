@@ -49,6 +49,7 @@ VALUE proc_call(VALUE proc) {
 
 ZajalInterpreter::ZajalInterpreter() {
   zajal_error_message = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
+  currentContext = Qnil;
 }
 
 //--------------------------------------------------------------
@@ -182,8 +183,13 @@ void ZajalInterpreter::loadScript(char* filename) {
   
   // execute contents of file, catch errors
   ruby_script(script_name);
-  rb_eval_string_protect(f_content, &zajal_error);
-  handleError(zajal_error);
+  
+  VALUE newContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
+  rb_funcall(newContext, rb_intern("instance_eval"), 1, rb_str_new2(f_content));
+  currentContext = newContext;
+    
+  //rb_eval_string_protect(f_content, &zajal_error);
+  // handleError(zajal_error);
 }
 
 

@@ -30,6 +30,8 @@
 void ofrb_baseapp_init(VALUE module);
 void ofrb_graphics_init(VALUE module);
 
+VALUE zj_cContext;
+
 void zj_zajal_init() {
   VALUE zj_mZajal = rb_define_module("Zajal");
   
@@ -38,13 +40,17 @@ void zj_zajal_init() {
   VALUE zj_mGraphics = zj_graphics_init(zj_mZajal);
   VALUE zj_mEvents = zj_events_init(zj_mZajal);
   
+  /* the context in which user code is run */
+  /* TODO Context is not the best name, come up with something better */
+  zj_cContext = rb_define_class_under(zj_mZajal, "Context", rb_cObject);
+  
   /*  include ruby's math */
-  rb_include_module(rb_cObject, rb_mMath);
+  rb_include_module(zj_cContext, rb_mMath);
   
   /*  include zajal modules */
-  rb_include_module(rb_cObject, zj_mZajal);
-  rb_include_module(rb_cObject, zj_mApp);
-  rb_include_module(rb_cObject, zj_mMathematics);
-  rb_include_module(rb_cObject, zj_mGraphics);
-  rb_include_module(rb_cObject, zj_mEvents);
+  rb_include_module(zj_cContext, zj_mApp);
+  rb_include_module(zj_cContext, zj_mMathematics);
+  rb_include_module(zj_cContext, zj_mGraphics);
+  rb_include_module(zj_cContext, zj_mEvents);
+  rb_include_module(zj_cContext, zj_mZajal);
 }

@@ -25,6 +25,8 @@
  extern "C" {
 #endif
 
+extern VALUE zj_cContext;
+
 void __ofrb_graphics_reset_frame();
 
 void zj_zajal_init();
