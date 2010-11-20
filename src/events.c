@@ -160,6 +160,7 @@ VALUE zj_events_init(VALUE zj_mZajal) {
   rb_define_method(zj_mEvents, "exit", RB_FUNC(zj_exit), 0);
   rb_define_method(zj_mEvents, "window_resized", RB_FUNC(zj_window_resized), 0);
   rb_define_method(zj_mEvents, "key_pressed", RB_FUNC(zj_key_pressed), 0);
+  rb_define_method(zj_mEvents, "key_released", RB_FUNC(zj_key_released), 0);
   rb_define_method(zj_mEvents, "mouse_moved", RB_FUNC(zj_mouse_moved), 0);
   rb_define_method(zj_mEvents, "mouse_dragged", RB_FUNC(zj_mouse_dragged), 0);
   rb_define_method(zj_mEvents, "mouse_pressed", RB_FUNC(zj_mouse_pressed), 0);

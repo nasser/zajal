@@ -66,6 +66,10 @@ VALUE zj_safe_key_pressed_call(VALUE key) {
   if(!NIL_P(key_pressed_proc)) rb_funcall(key_pressed_proc, rb_intern("call"), 1, key);
 }
 
+VALUE zj_safe_key_released_call(VALUE key) {
+  if(!NIL_P(key_released_proc)) rb_funcall(key_released_proc, rb_intern("call"), 1, key);
+}
+
 VALUE zj_button_to_symbol(int button) {
   if(button == 0)
     return ID2SYM(rb_intern("left"));
@@ -174,7 +178,12 @@ void ZajalInterpreter::keyPressed  (int key) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::keyReleased  (int key) {
-  
+  if(!zajal_error) {
+    // TODO convert key into symbols
+    VALUE key_value = INT2FIX(key);
+    rb_protect(zj_safe_key_released_call, key_value, &zajal_error);
+    handleError(zajal_error);
+  }
 }
 
 //--------------------------------------------------------------
