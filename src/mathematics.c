@@ -101,6 +101,11 @@ VALUE zj_mathematics_init(VALUE zj_mZajal) {
   rb_define_method(zj_mMathematics, "random_width", RB_FUNC(zj_random_width), 0);
   rb_define_method(zj_mMathematics, "random_height", RB_FUNC(zj_random_height), 0);
   
+  rb_define_const(zj_mMathematics, "Pi", DBL2NUM(PI));
+  rb_define_const(zj_mMathematics, "TwoPi", DBL2NUM(TWO_PI));
+  rb_define_const(zj_mMathematics, "FourPi", DBL2NUM(FOUR_PI));
+  rb_define_const(zj_mMathematics, "HalfPi", DBL2NUM(HALF_PI));
+  
   rb_define_method(rb_cNumeric, "to_deg", RB_FUNC(zj_to_deg), 0);
   rb_define_method(rb_cNumeric, "to_rad", RB_FUNC(zj_to_rad), 0);
   rb_define_method(rb_cNumeric, "sign", RB_FUNC(zj_sign), 0);
