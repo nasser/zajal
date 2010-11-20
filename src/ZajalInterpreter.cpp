@@ -39,13 +39,17 @@ extern VALUE mouse_released_proc;
 extern VALUE audio_received_proc;
 extern VALUE audio_requested_proc;
 
-// next_tick = 5000;
-
-VALUE proc_call(VALUE proc) {
+// for procs with no arguments, no need for specialized safe function
+VALUE zj_safe_proc_call(VALUE proc) {
   if(!NIL_P(proc)) rb_funcall(proc, rb_intern("call"), 0);
 }
 
-#define SAFE_PROC_CALL(__proc) {rb_protect(proc_call, __proc, &zajal_error); handleError(zajal_error); if(zajal_error) {return;} }
+VALUE zj_safe_mouse_moved_call(VALUE args) {
+  VALUE x = ((VALUE*)args)[0];
+  VALUE y = ((VALUE*)args)[1];
+  
+  if(!NIL_P(mouse_moved_proc)) rb_funcall(mouse_moved_proc, rb_intern("call"), 2, x, y);
+}
 
 ZajalInterpreter::ZajalInterpreter() {
   zajal_error_message = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
@@ -65,12 +69,20 @@ void ZajalInterpreter::setup() {
   ofSetRectMode(OF_RECTMODE_CORNER);
   ofSetLineWidth(1.0);
   
-  if(!zajal_error) SAFE_PROC_CALL(setup_proc);
+  if(!zajal_error) {
+    rb_protect(zj_safe_proc_call, setup_proc, &zajal_error);
+    handleError(zajal_error);
+  }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::update() {
-  if(!zajal_error) SAFE_PROC_CALL(update_proc);
+  if(!zajal_error) {
+    rb_protect(zj_safe_proc_call, update_proc, &zajal_error);
+    handleError(zajal_error);
+    if(zajal_error) return;
+    
+  }
   
   // TODO ticks are dependant on frame rate
   static int next_tick = 1;
@@ -78,17 +90,22 @@ void ZajalInterpreter::update() {
     struct stat attrib;
     if(stat(script_name, &attrib)) {
       printf("Some error...\n");
+      
     } else {
       if(attrib.st_mtimespec.tv_sec > script_mtime) {
         printf("Updating %s in place...\n", script_name);
         loadScript(script_name);
         setup();
+        
       }
+      
     }
     
     next_tick = 1;
+    
   } else {
     next_tick--;
+    
   }
 }
 
@@ -109,7 +126,7 @@ void ZajalInterpreter::draw() {
     
   } else {
     zj_graphics_reset_frame();
-    rb_protect(proc_call, draw_proc, &zajal_error);
+    rb_protect(zj_safe_proc_call, draw_proc, &zajal_error);
     #ifdef USE_FANCY_ERROR
     if(!zajal_error) zajal_last_image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
     #endif
@@ -130,8 +147,15 @@ void ZajalInterpreter::keyReleased  (int key) {
 }
 
 //--------------------------------------------------------------
+// http://www.ruby-forum.com/topic/76498
 void ZajalInterpreter::mouseMoved(int x, int y) {
-  if(!zajal_error) SAFE_PROC_CALL(mouse_moved_proc);
+  if(!zajal_error) {
+    VALUE args[2];
+    args[0] = INT2FIX(x);
+    args[1] = INT2FIX(y);
+    rb_protect(zj_safe_mouse_moved_call, (VALUE)args, &zajal_error);
+    handleError(zajal_error);
+  }
 }
 
 //--------------------------------------------------------------
