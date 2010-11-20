@@ -148,6 +148,7 @@ VALUE zj_events_init(VALUE zj_mZajal) {
   key_pressed_proc = Qnil;
   key_released_proc = Qnil;
   mouse_moved_proc = Qnil;
+  mouse_pressed_proc = Qnil;
   mouse_dragged_proc = Qnil;
   mouse_released_proc = Qnil;
   audio_received_proc = Qnil;
