@@ -46,6 +46,17 @@ VALUE zj_safe_mouse_dragged_call(VALUE args) {
   if(!NIL_P(mouse_dragged_proc)) rb_funcall(mouse_dragged_proc, rb_intern("call"), 3, x, y, button);
 }
 
+VALUE zj_button_to_symbol(int button) {
+  if(button == 0)
+    return ID2SYM(rb_intern("left"));
+  else if(button == 1)
+    return ID2SYM(rb_intern("center"));
+  else if(button == 2)
+    return ID2SYM(rb_intern("right"));
+  else
+    rb_bug("Received unsupported button `%d'on mouseDragged! Bailing out!", button);
+}
+
 ZajalInterpreter::ZajalInterpreter() {
   zajal_error_message = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
   currentContext = Qnil;
