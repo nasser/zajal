@@ -32,7 +32,7 @@
 class ZajalInterpreter : public ofBaseApp {
 	
 	public:
-    ZajalInterpreter(char* file_name);
+    ZajalInterpreter(char* fileName);
     
 		void setup();
 		void update();
@@ -47,19 +47,31 @@ class ZajalInterpreter : public ofBaseApp {
 		void windowResized(int w, int h);
 		
     void loadScript(char* filename);
+    void updateCurrentScript();
     
   private:
-    char* script_name;
-    long script_mtime;
+    // name of the currently executing script
+    char* scriptName;
     
-    int next_tick;
+    // modified time of the currently executing script
+    long scriptModifiedTime;
     
+    // number of frames before the next script update check
+    int nextUpdate;
+    
+    // ruby object representing the current execution context
     VALUE currentContext;
-
-    void handleError(int error_number);
-    int zajal_error;
-		ofImage zajal_last_image;
-    char* zajal_error_message;
+    
+    // last error reported by ruby. lastError == 0 means no error 
+    int lastError;
+    
+    // description of lastError
+    char* lastErrorMessage;
+    
+    // screenshot of the sketch state before the last error was encountered
+		ofImage lastErrorImage;
+    
+    void handleError(int error);
 };
 
 #endif /* ZAJAL_INTERPRETER_H */

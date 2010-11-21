@@ -103,16 +103,16 @@ VALUE zj_button_to_symbol(int button) {
     rb_bug("Received unsupported button `%d'on mouseDragged! Bailing out!", button);
 }
 
-ZajalInterpreter::ZajalInterpreter(char* file_name) {
-  script_name = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
+ZajalInterpreter::ZajalInterpreter(char* fileName) {
+  scriptName = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
   
-  strncpy(script_name, file_name, SCRIPT_NAME_SIZE);
-  strncat(script_name, "\0", SCRIPT_NAME_SIZE);
+  strncpy(scriptName, fileName, SCRIPT_NAME_SIZE);
+  strncat(scriptName, "\0", SCRIPT_NAME_SIZE);
   
-  script_mtime = 0;
+  scriptModifiedTime = 0;
   
-  next_tick = SCRIPT_UPDATE_FREQUENCY;
-  zajal_error_message = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
+  nextUpdate = SCRIPT_UPDATE_FREQUENCY;
+  lastErrorMessage = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
   currentContext = Qnil;
 }
 
@@ -129,221 +129,226 @@ void ZajalInterpreter::setup() {
   ofSetRectMode(OF_RECTMODE_CORNER);
   ofSetLineWidth(1.0);
   
-  if(!zajal_error && !NIL_P(currentContext)) {
+  if(!lastError && !NIL_P(currentContext)) {
+    // if no error exists, run user setup method, catch runtime errors
     VALUE setup_proc = rb_iv_get(currentContext, "setup_proc");
-    rb_protect(zj_safe_proc_call, setup_proc, &zajal_error);
-    handleError(zajal_error);
+    rb_protect(zj_safe_proc_call, setup_proc, &lastError);
+    handleError(lastError);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::update() {
-  if(!zajal_error && !NIL_P(currentContext)) {
+  if(!lastError && !NIL_P(currentContext)) {
+    // if no error exists, run user update method, catch runtime errors
     VALUE update_proc = rb_iv_get(currentContext, "update_proc");
-    rb_protect(zj_safe_proc_call, update_proc, &zajal_error);
-    handleError(zajal_error);
-    if(zajal_error) return;
-    
+    rb_protect(zj_safe_proc_call, update_proc, &lastError);
+    handleError(lastError);
   }
-  
-  // TODO ticks are dependant on frame rate
-  if(next_tick == 0) {
-    struct stat attrib;
-    if(stat(script_name, &attrib)) {
-      printf("Some error...\n");
-      
-    } else {
-      if(attrib.st_mtimespec.tv_sec > script_mtime) {
-        printf("Updating %s in place...\n", script_name);
-        loadScript(script_name);
-        setup();
-        
-      }
+}
+
+void ZajalInterpreter::updateCurrentScript() {
+  struct stat attrib;
+  if(stat(scriptName, &attrib)) {
+    printf("Could not stat %s!\n", scriptName);
+    
+  } else {
+    if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
+      printf("Updating %s in place...\n", scriptName);
+      scriptModifiedTime = attrib.st_mtimespec.tv_sec;
+      loadScript(scriptName);
       
     }
     
-    next_tick = SCRIPT_UPDATE_FREQUENCY;
-    
-  } else {
-    next_tick--;
-    
   }
+  
+  nextUpdate = SCRIPT_UPDATE_FREQUENCY;
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::draw() {
-  if(zajal_error && !NIL_P(currentContext)) {
+  if(lastError && !NIL_P(currentContext)) {
+    // an error exists, draw error screen
     ofSetColor(255, 255, 255, 255);
-    zajal_last_image.draw(0, 0);
+    lastErrorImage.draw(0, 0);
+    // TODO apply filters to lastErrorImage instead of drawing a rect
     ofEnableAlphaBlending();
     ofSetColor(255, 255, 255, 128);
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
     ofSetColor(255, 255, 255, 255);
     ofRect(0, ofGetHeight()/2-50, ofGetWidth(), 100);
     ofSetColor(0, 0, 0, 255);
-    ofDrawBitmapString(zajal_error_message, 10, ofGetHeight()/2-30);
+    ofDrawBitmapString(lastErrorMessage, 10, ofGetHeight()/2-30);
     
   } else {
+    // no error exists, draw next frame of user code, catch runtime errors
     zj_graphics_reset_frame();
     VALUE draw_proc = rb_iv_get(currentContext, "draw_proc");
-    rb_protect(zj_safe_proc_call, draw_proc, &zajal_error);
-    handleError(zajal_error);
+    rb_protect(zj_safe_proc_call, draw_proc, &lastError);
+    handleError(lastError);
     
   }
+  
+  // try to update script at end of setup-update-draw loop
+  if(nextUpdate-- == 0) updateCurrentScript();
 }
 
 
 //--------------------------------------------------------------
 void ZajalInterpreter::keyPressed  (int key) {
-  if(!zajal_error && !NIL_P(currentContext)) {
+  if(!lastError && !NIL_P(currentContext)) {
     // TODO convert key into symbols
     VALUE args[2];
     args[0] = rb_iv_get(currentContext, "key_pressed_proc");
     args[1] = INT2FIX(key);
     
-    rb_protect(zj_safe_key_pressed_call, (VALUE)args, &zajal_error);
-    handleError(zajal_error);
+    rb_protect(zj_safe_key_pressed_call, (VALUE)args, &lastError);
+    handleError(lastError);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::keyReleased  (int key) {
-  if(!zajal_error && !NIL_P(currentContext)) {
+  if(!lastError && !NIL_P(currentContext)) {
     // TODO convert key into symbols
     VALUE args[2];
     args[0] = rb_iv_get(currentContext, "key_released_proc");
     args[1] = INT2FIX(key);
     
-    rb_protect(zj_safe_key_released_call, (VALUE)args, &zajal_error);
-    handleError(zajal_error);
+    rb_protect(zj_safe_key_released_call, (VALUE)args, &lastError);
+    handleError(lastError);
   }
 }
 
 //--------------------------------------------------------------
 // http://www.ruby-forum.com/topic/76498
 void ZajalInterpreter::mouseMoved(int x, int y) {
-  if(!zajal_error && !NIL_P(currentContext)) {
+  if(!lastError && !NIL_P(currentContext)) {
     VALUE args[3];
     args[0] = rb_iv_get(currentContext, "mouse_moved_proc");
     args[1] = INT2FIX(x);
     args[2] = INT2FIX(y);
     
-    rb_protect(zj_safe_mouse_moved_call, (VALUE)args, &zajal_error);
-    handleError(zajal_error);
+    rb_protect(zj_safe_mouse_moved_call, (VALUE)args, &lastError);
+    handleError(lastError);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
-  if(!zajal_error && !NIL_P(currentContext)) {
+  if(!lastError && !NIL_P(currentContext)) {
     VALUE args[4];
     args[0] = rb_iv_get(currentContext, "mouse_dragged_proc");
     args[1] = INT2FIX(x);
     args[2] = INT2FIX(y);
     args[3] = zj_button_to_symbol(button);
     
-    rb_protect(zj_safe_mouse_dragged_call, (VALUE)args, &zajal_error);
-    handleError(zajal_error);
+    rb_protect(zj_safe_mouse_dragged_call, (VALUE)args, &lastError);
+    handleError(lastError);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
-  if(!zajal_error && !NIL_P(currentContext)) {
+  if(!lastError && !NIL_P(currentContext)) {
     VALUE args[4];
     args[0] = rb_iv_get(currentContext, "mouse_pressed_proc");
     args[1] = INT2FIX(x);
     args[2] = INT2FIX(y);
     args[3] = zj_button_to_symbol(button);
     
-    rb_protect(zj_safe_mouse_pressed_call, (VALUE)args, &zajal_error);
-    handleError(zajal_error);
+    rb_protect(zj_safe_mouse_pressed_call, (VALUE)args, &lastError);
+    handleError(lastError);
   }
 }
 
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
-  if(!zajal_error && !NIL_P(currentContext)) {
+  if(!lastError && !NIL_P(currentContext)) {
     VALUE args[3];
     args[0] = rb_iv_get(currentContext, "mouse_released_proc");
     args[1] = INT2FIX(x);
     args[2] = INT2FIX(y);
     args[3] = zj_button_to_symbol(button);
     
-    rb_protect(zj_safe_mouse_released_call, (VALUE)args, &zajal_error);
-    handleError(zajal_error);
+    rb_protect(zj_safe_mouse_released_call, (VALUE)args, &lastError);
+    handleError(lastError);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::windowResized(int w, int h) {
-  if(!zajal_error && !NIL_P(currentContext)) {
+  if(!lastError && !NIL_P(currentContext)) {
     VALUE args[3];
     args[0] = rb_iv_get(currentContext, "window_resized_proc");
     args[1] = INT2FIX(w);
     args[2] = INT2FIX(h);
     
-    rb_protect(zj_safe_window_resized_call, (VALUE)args, &zajal_error);
-    handleError(zajal_error);
+    rb_protect(zj_safe_window_resized_call, (VALUE)args, &lastError);
+    handleError(lastError);
   }
 }
 
 void ZajalInterpreter::loadScript(char* filename) {
-  // check file's exisitence/mtime
-  script_name = filename;
-  struct stat attrib;
-  if(!stat(script_name, &attrib)) {
-    script_mtime = attrib.st_mtimespec.tv_sec;
-  } else {
-    printf("Could not read %s!\n", script_name);
-    return;
-  }
+  scriptName = filename;
   
   // open file, measure size
-  FILE *f = fopen(script_name, "r");
-  fseek(f, 0, SEEK_END);
-  long f_size = ftell(f);
-  fseek(f, 0, SEEK_SET);
+  FILE *scriptFile = fopen(scriptName, "r");
+  fseek(scriptFile, 0, SEEK_END);
+  long scriptFileSize = ftell(scriptFile);
+  fseek(scriptFile, 0, SEEK_SET);
   
-  printf("Reading %s (%db)\n", script_name, f_size);
+  printf("Reading %s (%db)\n", scriptName, scriptFileSize);
   
   // load file into memory
-  char* f_content = (char*)malloc(f_size * sizeof(char) + 1);
-  fread(f_content, f_size, 1, f);
-  f_content[f_size * sizeof(char)] = '\0';
-  fclose(f);
+  char* scriptFileContent = (char*)malloc(scriptFileSize * sizeof(char) + 1);
+  fread(scriptFileContent, scriptFileSize, 1, scriptFile);
+  scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
+  fclose(scriptFile);
   
-  // execute contents of file, catch errors
-  ruby_script(script_name);
-  VALUE newContext = rb_protect(zj_safe_load_new_script, rb_str_new2(f_content), &zajal_error);
-  if(!zajal_error) {
-    currentContext = newContext;
+  // execute contents of file, catch syntax errors
+  ruby_script(scriptName);
+  VALUE newContext = rb_protect(zj_safe_load_new_script, rb_str_new2(scriptFileContent), &lastError);
+  if(!lastError) {
+    if(NIL_P(currentContext)) {
+      currentContext = newContext;
+      setup();
+    } else {
+      currentContext = newContext;
+      //TODO more inteligent code updating, i.e. just the draw proc
+      // currentContext = newContext;
+      // printf("currentContext.draw_proc : %s\n", RSTRING_PTR(rb_obj_as_string(rb_iv_get(currentContext, "draw_proc"))) );
+      // rb_ivar_set(currentContext, rb_intern("draw_proc"), rb_ivar_get(newContext, rb_intern("draw_proc")));
+      // printf("currentContext.draw_proc : %s\n", RSTRING_PTR(rb_obj_as_string(rb_iv_get(currentContext, "draw_proc"))) );
+    }
     
   } else {
-    handleError(zajal_error);
-    zajal_last_image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+    handleError(lastError);
+    
   }
   
 }
 
 // http://metaeditor.sourceforge.net/embed/
-void ZajalInterpreter::handleError(int error_number) {
-  if(error_number) {
+void ZajalInterpreter::handleError(int error) {
+  if(error) {
     VALUE last_error = rb_gv_get("$!");
     char* error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
     char* error_message = RSTRING_PTR(rb_obj_as_string(last_error));
-
+    
     // class
     cout << "class = " << error_class << endl; 
 
     // message
     cout << "message = " << error_message << endl;
     
+    lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+    
     size_t error_message_size = strlen(error_message);
-    memset(zajal_error_message, 0, ERROR_MESSAGE_SIZE);
-    strncpy(zajal_error_message, error_message, error_message_size);
-    strncat(zajal_error_message, "\n", ERROR_MESSAGE_SIZE);
+    memset(lastErrorMessage, 0, ERROR_MESSAGE_SIZE);
+    strncpy(lastErrorMessage, error_message, error_message_size);
+    strncat(lastErrorMessage, "\n", ERROR_MESSAGE_SIZE);
     
     // backtrace
     if(!NIL_P(last_error)) {
@@ -352,7 +357,7 @@ void ZajalInterpreter::handleError(int error_number) {
         long backtrace_length = RARRAY_LEN(backtrace);
         VALUE* backtrace_ptr = RARRAY_PTR(backtrace);
         
-        if(backtrace_length > 1) strncat(zajal_error_message, RSTRING_PTR(backtrace_ptr[0]), ERROR_MESSAGE_SIZE - error_message_size);
+        if(backtrace_length > 1) strncat(lastErrorMessage, RSTRING_PTR(backtrace_ptr[0]), ERROR_MESSAGE_SIZE - error_message_size);
         for(int c=0; c<backtrace_length; c++) {
             o << "\tfrom " << RSTRING_PTR(backtrace_ptr[c]) << "\n";
         }
