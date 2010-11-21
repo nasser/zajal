@@ -27,9 +27,6 @@
 #include "graphics.h"
 #include "events.h"
 
-void ofrb_baseapp_init(VALUE module);
-void ofrb_graphics_init(VALUE module);
-
 VALUE zj_cContext;
 
 void zj_zajal_init() {
