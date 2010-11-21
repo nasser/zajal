@@ -77,6 +77,11 @@ VALUE zj_safe_window_resized_call(VALUE args) {
   if(!NIL_P(window_resized_proc)) rb_funcall(window_resized_proc, rb_intern("call"), 2, w, h);
 }
 
+VALUE zj_safe_load_new_script(VALUE code) {
+  VALUE newContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
+  return rb_funcall(newContext, rb_intern("instance_eval"), 1, code);
+}
+
 VALUE zj_button_to_symbol(int button) {
   if(button == 0)
     return ID2SYM(rb_intern("left"));
@@ -284,15 +289,16 @@ void ZajalInterpreter::loadScript(char* filename) {
   
   // execute contents of file, catch errors
   ruby_script(script_name);
-  
-  VALUE newContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
-  rb_funcall(newContext, rb_intern("instance_eval"), 1, rb_str_new2(f_content));
-  currentContext = newContext;
+  VALUE newContext = rb_protect(zj_safe_load_new_script, rb_str_new2(f_content), &zajal_error);
+  if(!zajal_error) {
+    currentContext = newContext;
     
-  //rb_eval_string_protect(f_content, &zajal_error);
-  // handleError(zajal_error);
+  } else {
+    handleError(zajal_error);
+    
+  }
+  
 }
-
 
 // http://metaeditor.sourceforge.net/embed/
 void ZajalInterpreter::handleError(int error_number) {
