@@ -21,18 +21,4 @@
 
 VALUE zj_events_init(VALUE zj_mZajal);
 
-extern VALUE setup_proc;
-extern VALUE update_proc;
-extern VALUE draw_proc;
-extern VALUE exit_proc;
-extern VALUE window_resized_proc;
-extern VALUE key_pressed_proc;
-extern VALUE key_released_proc;
-extern VALUE mouse_moved_proc;
-extern VALUE mouse_dragged_proc;
-extern VALUE mouse_pressed_proc;
-extern VALUE mouse_released_proc;
-extern VALUE audio_received_proc;
-extern VALUE audio_requested_proc;
-
 #endif /* EVENTS_H */

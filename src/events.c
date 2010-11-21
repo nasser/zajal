@@ -21,96 +21,82 @@
 #include "macros.h"
 
 // event procs
-VALUE setup_proc;
-VALUE update_proc;
-VALUE draw_proc;
-VALUE exit_proc;
-VALUE window_resized_proc;
-VALUE key_pressed_proc;
-VALUE key_released_proc;
-VALUE mouse_moved_proc;
-VALUE mouse_dragged_proc;
-VALUE mouse_pressed_proc;
-VALUE mouse_released_proc;
-VALUE audio_received_proc;
-VALUE audio_requested_proc;
-
 extern ofBaseApp* ofAppPtr;
 
 VALUE zj_setup(VALUE self) {
-  if(rb_block_given_p()) setup_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@setup_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_update(VALUE self) {
-  if(rb_block_given_p()) update_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@update_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_draw(VALUE self) {
-  if(rb_block_given_p()) draw_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@draw_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_exit(VALUE self) {
-  if(rb_block_given_p()) exit_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@exit_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_window_resized(VALUE self) {
-  if(rb_block_given_p()) window_resized_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@window_resized_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_key_pressed(VALUE self) {
-  if(rb_block_given_p()) key_pressed_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@key_pressed_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_key_released(VALUE self) {
-  if(rb_block_given_p()) key_released_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@key_released_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_mouse_moved(VALUE self) {
-  if(rb_block_given_p()) mouse_moved_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@mouse_moved_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_mouse_dragged(VALUE self) {
-  if(rb_block_given_p()) mouse_dragged_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@mouse_dragged_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_mouse_pressed(VALUE self) {
-  if(rb_block_given_p()) mouse_pressed_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@mouse_pressed_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_mouse_released(VALUE self) {
-  if(rb_block_given_p()) mouse_released_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@mouse_released_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_audio_received(VALUE self) {
-  if(rb_block_given_p()) audio_received_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@audio_received_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_audio_requested(VALUE self) {
-  if(rb_block_given_p()) audio_requested_proc = rb_block_proc();
+  if(rb_block_given_p()) rb_iv_set(self, "@audio_requested_proc", rb_block_proc());
   
   return Qnil;
 }
@@ -125,34 +111,6 @@ VALUE zj_mouse_y(VALUE self) {
 
 VALUE zj_events_init(VALUE zj_mZajal) {
   VALUE zj_mEvents = rb_define_module_under(zj_mZajal, "Events");
-  
-  rb_global_variable(&setup_proc);
-  rb_global_variable(&update_proc);
-  rb_global_variable(&draw_proc);
-  rb_global_variable(&exit_proc);
-  rb_global_variable(&window_resized_proc);
-  rb_global_variable(&key_pressed_proc);
-  rb_global_variable(&key_released_proc);
-  rb_global_variable(&mouse_moved_proc);
-  rb_global_variable(&mouse_dragged_proc);
-  rb_global_variable(&mouse_pressed_proc);
-  rb_global_variable(&mouse_released_proc);
-  rb_global_variable(&audio_received_proc);
-  rb_global_variable(&audio_requested_proc);
-  
-  setup_proc = Qnil;
-  update_proc = Qnil;
-  draw_proc = Qnil;
-  exit_proc = Qnil;
-  window_resized_proc = Qnil;
-  key_pressed_proc = Qnil;
-  key_released_proc = Qnil;
-  mouse_moved_proc = Qnil;
-  mouse_pressed_proc = Qnil;
-  mouse_dragged_proc = Qnil;
-  mouse_released_proc = Qnil;
-  audio_received_proc = Qnil;
-  audio_requested_proc = Qnil;
   
   rb_define_method(zj_mEvents, "setup", RB_FUNC(zj_setup), 0);
   rb_define_method(zj_mEvents, "update", RB_FUNC(zj_update), 0);
