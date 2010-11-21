@@ -130,7 +130,7 @@ void ZajalInterpreter::setup() {
   ofSetLineWidth(1.0);
   
   if(!zajal_error && !NIL_P(currentContext)) {
-    VALUE setup_proc = rb_iv_get(currentContext, "@setup_proc");
+    VALUE setup_proc = rb_iv_get(currentContext, "setup_proc");
     rb_protect(zj_safe_proc_call, setup_proc, &zajal_error);
     handleError(zajal_error);
   }
@@ -139,7 +139,7 @@ void ZajalInterpreter::setup() {
 //--------------------------------------------------------------
 void ZajalInterpreter::update() {
   if(!zajal_error && !NIL_P(currentContext)) {
-    VALUE update_proc = rb_iv_get(currentContext, "@update_proc");
+    VALUE update_proc = rb_iv_get(currentContext, "update_proc");
     rb_protect(zj_safe_proc_call, update_proc, &zajal_error);
     handleError(zajal_error);
     if(zajal_error) return;
@@ -185,7 +185,7 @@ void ZajalInterpreter::draw() {
     
   } else {
     zj_graphics_reset_frame();
-    VALUE draw_proc = rb_iv_get(currentContext, "@draw_proc");
+    VALUE draw_proc = rb_iv_get(currentContext, "draw_proc");
     rb_protect(zj_safe_proc_call, draw_proc, &zajal_error);
     handleError(zajal_error);
     
@@ -198,7 +198,7 @@ void ZajalInterpreter::keyPressed  (int key) {
   if(!zajal_error && !NIL_P(currentContext)) {
     // TODO convert key into symbols
     VALUE args[2];
-    args[0] = rb_iv_get(currentContext, "@key_pressed_proc");
+    args[0] = rb_iv_get(currentContext, "key_pressed_proc");
     args[1] = INT2FIX(key);
     
     rb_protect(zj_safe_key_pressed_call, (VALUE)args, &zajal_error);
@@ -211,7 +211,7 @@ void ZajalInterpreter::keyReleased  (int key) {
   if(!zajal_error && !NIL_P(currentContext)) {
     // TODO convert key into symbols
     VALUE args[2];
-    args[0] = rb_iv_get(currentContext, "@key_released_proc");
+    args[0] = rb_iv_get(currentContext, "key_released_proc");
     args[1] = INT2FIX(key);
     
     rb_protect(zj_safe_key_released_call, (VALUE)args, &zajal_error);
@@ -224,7 +224,7 @@ void ZajalInterpreter::keyReleased  (int key) {
 void ZajalInterpreter::mouseMoved(int x, int y) {
   if(!zajal_error && !NIL_P(currentContext)) {
     VALUE args[3];
-    args[0] = rb_iv_get(currentContext, "@mouse_moved_proc");
+    args[0] = rb_iv_get(currentContext, "mouse_moved_proc");
     args[1] = INT2FIX(x);
     args[2] = INT2FIX(y);
     
@@ -237,7 +237,7 @@ void ZajalInterpreter::mouseMoved(int x, int y) {
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
   if(!zajal_error && !NIL_P(currentContext)) {
     VALUE args[4];
-    args[0] = rb_iv_get(currentContext, "@mouse_dragged_proc");
+    args[0] = rb_iv_get(currentContext, "mouse_dragged_proc");
     args[1] = INT2FIX(x);
     args[2] = INT2FIX(y);
     args[3] = zj_button_to_symbol(button);
@@ -251,7 +251,7 @@ void ZajalInterpreter::mouseDragged(int x, int y, int button) {
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
   if(!zajal_error && !NIL_P(currentContext)) {
     VALUE args[4];
-    args[0] = rb_iv_get(currentContext, "@mouse_pressed_proc");
+    args[0] = rb_iv_get(currentContext, "mouse_pressed_proc");
     args[1] = INT2FIX(x);
     args[2] = INT2FIX(y);
     args[3] = zj_button_to_symbol(button);
@@ -266,7 +266,7 @@ void ZajalInterpreter::mousePressed(int x, int y, int button) {
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
   if(!zajal_error && !NIL_P(currentContext)) {
     VALUE args[3];
-    args[0] = rb_iv_get(currentContext, "@mouse_released_proc");
+    args[0] = rb_iv_get(currentContext, "mouse_released_proc");
     args[1] = INT2FIX(x);
     args[2] = INT2FIX(y);
     args[3] = zj_button_to_symbol(button);
@@ -280,7 +280,7 @@ void ZajalInterpreter::mouseReleased(int x, int y, int button) {
 void ZajalInterpreter::windowResized(int w, int h) {
   if(!zajal_error && !NIL_P(currentContext)) {
     VALUE args[3];
-    args[0] = rb_iv_get(currentContext, "@window_resized_proc");
+    args[0] = rb_iv_get(currentContext, "window_resized_proc");
     args[1] = INT2FIX(w);
     args[2] = INT2FIX(h);
     

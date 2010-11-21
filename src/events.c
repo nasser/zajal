@@ -24,79 +24,79 @@
 extern ofBaseApp* ofAppPtr;
 
 VALUE zj_setup(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@setup_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "setup_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_update(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@update_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "update_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_draw(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@draw_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "draw_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_exit(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@exit_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "exit_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_window_resized(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@window_resized_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "window_resized_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_key_pressed(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@key_pressed_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "key_pressed_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_key_released(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@key_released_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "key_released_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_mouse_moved(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@mouse_moved_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "mouse_moved_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_mouse_dragged(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@mouse_dragged_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "mouse_dragged_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_mouse_pressed(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@mouse_pressed_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "mouse_pressed_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_mouse_released(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@mouse_released_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "mouse_released_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_audio_received(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@audio_received_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "audio_received_proc", rb_block_proc());
   
   return Qnil;
 }
 
 VALUE zj_audio_requested(VALUE self) {
-  if(rb_block_given_p()) rb_iv_set(self, "@audio_requested_proc", rb_block_proc());
+  if(rb_block_given_p()) rb_iv_set(self, "audio_requested_proc", rb_block_proc());
   
   return Qnil;
 }
