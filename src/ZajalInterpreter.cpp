@@ -154,13 +154,11 @@ void ZajalInterpreter::update() {
 //--------------------------------------------------------------
 void ZajalInterpreter::draw() {
   if(zajal_error) {
-    #ifdef USE_FANCY_ERROR
     ofSetColor(255, 255, 255, 255);
     zajal_last_image.draw(0, 0);
     ofEnableAlphaBlending();
     ofSetColor(255, 255, 255, 128);
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
-    #endif
     ofSetColor(255, 255, 255, 255);
     ofRect(0, ofGetHeight()/2-50, ofGetWidth(), 100);
     ofSetColor(0, 0, 0, 255);
@@ -169,9 +167,6 @@ void ZajalInterpreter::draw() {
   } else {
     zj_graphics_reset_frame();
     rb_protect(zj_safe_proc_call, draw_proc, &zajal_error);
-    #ifdef USE_FANCY_ERROR
-    if(!zajal_error) zajal_last_image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-    #endif
     handleError(zajal_error);
     
   }
@@ -294,6 +289,7 @@ void ZajalInterpreter::loadScript(char* filename) {
     currentContext = newContext;
     
   } else {
+    zajal_last_image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
     handleError(zajal_error);
     
   }

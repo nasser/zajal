@@ -25,8 +25,6 @@
 #include "ofMain.h"
 #include "zajal.h"
 
-// #define USE_FANCY_ERROR
-
 #define ERROR_MESSAGE_SIZE 1024
 
 class ZajalInterpreter : public ofBaseApp {
