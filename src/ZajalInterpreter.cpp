@@ -94,6 +94,7 @@ VALUE zj_button_to_symbol(int button) {
 }
 
 ZajalInterpreter::ZajalInterpreter() {
+  next_tick = SCRIPT_UPDATE_FREQUENCY;
   zajal_error_message = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
   currentContext = Qnil;
 }
@@ -127,7 +128,6 @@ void ZajalInterpreter::update() {
   }
   
   // TODO ticks are dependant on frame rate
-  static int next_tick = 1;
   if(next_tick == 0) {
     struct stat attrib;
     if(stat(script_name, &attrib)) {
@@ -143,7 +143,7 @@ void ZajalInterpreter::update() {
       
     }
     
-    next_tick = 1;
+    next_tick = SCRIPT_UPDATE_FREQUENCY;
     
   } else {
     next_tick--;

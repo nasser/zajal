@@ -26,6 +26,7 @@
 #include "zajal.h"
 
 #define ERROR_MESSAGE_SIZE 1024
+#define SCRIPT_UPDATE_FREQUENCY   1
 
 class ZajalInterpreter : public ofBaseApp {
 	
@@ -49,6 +50,8 @@ class ZajalInterpreter : public ofBaseApp {
   private:
     char* script_name;
     long script_mtime;
+    
+    int next_tick;
     
     VALUE currentContext;
 
