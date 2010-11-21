@@ -42,27 +42,25 @@ void print_version() {
 
 //========================================================================
 int main(int argc, char** argv) {
-  ZajalInterpreter* zi = new ZajalInterpreter();
   print_version();
   
   ruby_init();
   zj_zajal_init();
   
-  // load in a script and run it if possible
+  
   if(argc > 1) {
-    zi->loadScript(argv[1]);
-  	
-  	// load openframeworks as normal
+    ZajalInterpreter* zi = new ZajalInterpreter(argv[1]);
+    
   	ofAppGlutWindow window;
   	ofSetupOpenGL(&window, 500, 500, OF_WINDOW);			// <-------- setup the GL context
-
+  	
   	// this kicks off the running of my app
   	// can be OF_WINDOW or OF_FULLSCREEN
   	// pass in width and height too:
   	ofRunApp(zi);
     
   } else {
-    // TODO read from stdin
+    // TODO read from stdin or enter interactive mode
     return 1;
   }
 }

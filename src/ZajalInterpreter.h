@@ -25,13 +25,14 @@
 #include "ofMain.h"
 #include "zajal.h"
 
-#define ERROR_MESSAGE_SIZE 1024
+#define ERROR_MESSAGE_SIZE        1024
+#define SCRIPT_NAME_SIZE          255
 #define SCRIPT_UPDATE_FREQUENCY   1
 
 class ZajalInterpreter : public ofBaseApp {
 	
 	public:
-    ZajalInterpreter();
+    ZajalInterpreter(char* file_name);
     
 		void setup();
 		void update();

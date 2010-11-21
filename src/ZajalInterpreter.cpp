@@ -93,7 +93,14 @@ VALUE zj_button_to_symbol(int button) {
     rb_bug("Received unsupported button `%d'on mouseDragged! Bailing out!", button);
 }
 
-ZajalInterpreter::ZajalInterpreter() {
+ZajalInterpreter::ZajalInterpreter(char* file_name) {
+  script_name = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
+  
+  strncpy(script_name, file_name, SCRIPT_NAME_SIZE);
+  strncat(script_name, "\0", SCRIPT_NAME_SIZE);
+  
+  script_mtime = 0;
+  
   next_tick = SCRIPT_UPDATE_FREQUENCY;
   zajal_error_message = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
   currentContext = Qnil;
@@ -289,9 +296,8 @@ void ZajalInterpreter::loadScript(char* filename) {
     currentContext = newContext;
     
   } else {
-    zajal_last_image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
     handleError(zajal_error);
-    
+    zajal_last_image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
   }
   
 }
@@ -310,7 +316,8 @@ void ZajalInterpreter::handleError(int error_number) {
     cout << "message = " << error_message << endl;
     
     size_t error_message_size = strlen(error_message);
-    strncpy(zajal_error_message, error_message, ERROR_MESSAGE_SIZE);
+    memset(zajal_error_message, 0, ERROR_MESSAGE_SIZE);
+    strncpy(zajal_error_message, error_message, error_message_size);
     strncat(zajal_error_message, "\n", ERROR_MESSAGE_SIZE);
     
     // backtrace
@@ -320,8 +327,8 @@ void ZajalInterpreter::handleError(int error_number) {
         long backtrace_length = RARRAY_LEN(backtrace);
         VALUE* backtrace_ptr = RARRAY_PTR(backtrace);
         
+        if(backtrace_length > 1) strncat(zajal_error_message, RSTRING_PTR(backtrace_ptr[0]), ERROR_MESSAGE_SIZE - error_message_size);
         for(int c=0; c<backtrace_length; c++) {
-          if(c == 0) strncat(zajal_error_message, RSTRING_PTR(backtrace_ptr[c]), ERROR_MESSAGE_SIZE - error_message_size);
             o << "\tfrom " << RSTRING_PTR(backtrace_ptr[c]) << "\n";
         }
         cout << "backtrace = \n" << o.str() << endl;
