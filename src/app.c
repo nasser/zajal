@@ -22,6 +22,7 @@
 
 /*  globals */
 VALUE _zj_value_window_title = Qnil;
+VALUE _zj_value_vertical_sync = Qtrue;
 
 VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
   VALUE w;
@@ -81,6 +82,23 @@ VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE klass) {
+  VALUE new_vertical_sync;
+  rb_scan_args(argc, argv, "01", &new_vertical_sync);
+  
+  if(NIL_P(new_vertical_sync)) {
+    /*  method called without argument, treat as a getter */
+    return _zj_value_vertical_sync;
+    
+  } else {
+    /*  method called with argument, treat as setter */
+    _zj_value_vertical_sync = new_vertical_sync;
+    ofSetVerticalSync(RTEST(new_vertical_sync));
+    return Qnil;
+    
+  }
+}
+
 VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
   VALUE new_framerate;
   rb_scan_args(argc, argv, "01", &new_framerate);
@@ -121,6 +139,7 @@ VALUE zj_app_init(VALUE zj_mZajal) {
   rb_define_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
   rb_define_method(zj_mApp, "size", RB_FUNC(zj_size), -1);
   rb_define_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
+  rb_define_method(zj_mApp, "vertical_sync", RB_FUNC(zj_vertical_sync), -1);
   rb_define_method(zj_mApp, "title", RB_FUNC(zj_title), -1);
   
   return zj_mApp;

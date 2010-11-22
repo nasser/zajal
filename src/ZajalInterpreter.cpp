@@ -126,6 +126,7 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
 void ZajalInterpreter::setup() {
   // defaults
   ofSetFrameRate(30);
+  ofSetVerticalSync(true);
   ofDisableSmoothing();
   ofDisableAlphaBlending();
   ofSetColor(240, 240, 240, 255);
