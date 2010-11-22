@@ -205,9 +205,7 @@ void ZajalInterpreter::draw() {
 void ZajalInterpreter::keyPressed  (int key) {
   if(!lastError && !NIL_P(currentContext)) {
     // TODO convert key into symbols
-    VALUE args[2];
-    args[0] = rb_iv_get(currentContext, "key_pressed_proc");
-    args[1] = INT2FIX(key);
+    VALUE args[] = {rb_iv_get(currentContext, "key_pressed_proc"), INT2FIX(key)};
     
     rb_protect(zj_safe_key_pressed_call, (VALUE)args, &lastError);
     handleError(lastError);
@@ -218,9 +216,7 @@ void ZajalInterpreter::keyPressed  (int key) {
 void ZajalInterpreter::keyReleased  (int key) {
   if(!lastError && !NIL_P(currentContext)) {
     // TODO convert key into symbols
-    VALUE args[2];
-    args[0] = rb_iv_get(currentContext, "key_released_proc");
-    args[1] = INT2FIX(key);
+    VALUE args[] = {rb_iv_get(currentContext, "key_released_proc"), INT2FIX(key)};
     
     rb_protect(zj_safe_key_released_call, (VALUE)args, &lastError);
     handleError(lastError);
@@ -231,10 +227,7 @@ void ZajalInterpreter::keyReleased  (int key) {
 // http://www.ruby-forum.com/topic/76498
 void ZajalInterpreter::mouseMoved(int x, int y) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[3];
-    args[0] = rb_iv_get(currentContext, "mouse_moved_proc");
-    args[1] = INT2FIX(x);
-    args[2] = INT2FIX(y);
+    VALUE args[] = {rb_iv_get(currentContext, "mouse_moved_proc"), INT2FIX(x), INT2FIX(y)};
     
     rb_protect(zj_safe_mouse_moved_call, (VALUE)args, &lastError);
     handleError(lastError);
@@ -244,11 +237,7 @@ void ZajalInterpreter::mouseMoved(int x, int y) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[4];
-    args[0] = rb_iv_get(currentContext, "mouse_dragged_proc");
-    args[1] = INT2FIX(x);
-    args[2] = INT2FIX(y);
-    args[3] = zj_button_to_symbol(button);
+    VALUE args[] = {rb_iv_get(currentContext, "mouse_dragged_proc"), INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button)};
     
     rb_protect(zj_safe_mouse_dragged_call, (VALUE)args, &lastError);
     handleError(lastError);
@@ -258,11 +247,7 @@ void ZajalInterpreter::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[4];
-    args[0] = rb_iv_get(currentContext, "mouse_pressed_proc");
-    args[1] = INT2FIX(x);
-    args[2] = INT2FIX(y);
-    args[3] = zj_button_to_symbol(button);
+    VALUE args[] = {rb_iv_get(currentContext, "mouse_pressed_proc"), INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button)};
     
     rb_protect(zj_safe_mouse_pressed_call, (VALUE)args, &lastError);
     handleError(lastError);
@@ -273,11 +258,7 @@ void ZajalInterpreter::mousePressed(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[3];
-    args[0] = rb_iv_get(currentContext, "mouse_released_proc");
-    args[1] = INT2FIX(x);
-    args[2] = INT2FIX(y);
-    args[3] = zj_button_to_symbol(button);
+    VALUE args[] = {rb_iv_get(currentContext, "mouse_released_proc"), INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button)};
     
     rb_protect(zj_safe_mouse_released_call, (VALUE)args, &lastError);
     handleError(lastError);
@@ -287,10 +268,7 @@ void ZajalInterpreter::mouseReleased(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::windowResized(int w, int h) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[3];
-    args[0] = rb_iv_get(currentContext, "window_resized_proc");
-    args[1] = INT2FIX(w);
-    args[2] = INT2FIX(h);
+    VALUE args[] = {rb_iv_get(currentContext, "window_resized_proc"), INT2FIX(w), INT2FIX(h)};
     
     rb_protect(zj_safe_window_resized_call, (VALUE)args, &lastError);
     handleError(lastError);
