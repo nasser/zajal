@@ -312,16 +312,41 @@ void ZajalInterpreter::loadScript(char* filename) {
   ruby_script(scriptName);
   
   // make all top level local variables global
+  // remove scope-blocks, anything that redefines scope (event methods,
+  // class/method defs etc) then scan what remains for local variable
+  // declarations ("var = value") and replace every instance of each local
+  // variable in the original source with a global version of it (prefix its
+  // name with '$')
+  // 
+  // basically, do this:
+  // contents_temp = contents.clone
+  // blocks = {}
+  // blocks["setup"] = nil
+  // contents_temp.scan(/^(setup|update|draw|exit|key_pressed|key_released|mouse_moved|mouse_dragged|mouse_pressed|mouse_released|audio_requested|audio_received|def|class|module|proc|lambda|loop)(.*?)^(end|\})/m).each do |match|
+  //   type, body, ending = match
+  //   blocks[type] = match.join
+  //   contents_temp.slice! match.join
+  // end
+  // contents_temp.scan(/([a-z_][a-zA-Z0-9_]*)\s*=[^=]/).each do |match|
+  //   contents.gsub! /\b#{match.first}\b/, "$#{match.first}"
+  // end
+  
+  // load source into ruby variable and clone it
   VALUE rbScriptFileContent = rb_str_new2(scriptFileContent);
   VALUE rbScriptFileContentTemp = rb_str_new2(scriptFileContent);
   
+  // create hash to hold scope-block code for later
   VALUE blocksHash = rb_hash_new();
   rb_funcall(blocksHash, rb_intern("[]="), 2, rb_str_new2("setup"), Qnil);
+  
+  // match scope-blocks in source using a regex
   VALUE blocksRegex = rb_reg_new_str(rb_str_new2("^(setup|update|draw|exit|key_pressed|key_released|mouse_moved|mouse_dragged|mouse_pressed|mouse_released|audio_requested|audio_received|def|class|module|proc|lambda|loop)(.*?)^(end|\\})"), ONIG_OPTION_MULTILINE);
   VALUE _blockScanArray = rb_funcall(rbScriptFileContentTemp, rb_intern("scan"), 1, blocksRegex);
   VALUE* blockScanArray = RARRAY_PTR(_blockScanArray);
   long blockScanArrayLength = RARRAY_LEN(_blockScanArray);
   
+  // iterate through matching scope-blocks and delete them from the source clone
+  // also save them to the hash
   for(int i = 0; i < blockScanArrayLength; i++) {
     VALUE* matchArray = RARRAY_PTR(blockScanArray[i]);
     VALUE matchArrayJoined = rb_funcall(blockScanArray[i], rb_intern("join"), 0);
@@ -333,11 +358,13 @@ void ZajalInterpreter::loadScript(char* filename) {
     rb_funcall(rbScriptFileContentTemp, rb_intern("slice!"), 1, matchArrayJoined);
   }
   
+  // match local variable declarations in source clone using regex
   VALUE localsRegex = rb_reg_new_str(rb_str_new2("([a-z_][a-zA-Z0-9_]*)\\s*=[^=]"), 0);
   VALUE _localsArray = rb_funcall(rbScriptFileContentTemp, rb_intern("scan"), 1, localsRegex);
   VALUE* localsArray = RARRAY_PTR(_localsArray);
   long localsArrayLength = RARRAY_LEN(_localsArray);
   
+  // iterate through matching local variable declarations and prefix them with $ in the source
   for(int i = 0; i < localsArrayLength; i++) {
     VALUE* matchArray = RARRAY_PTR(localsArray[i]);
     VALUE _localVariableName = matchArray[0];
