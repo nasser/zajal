@@ -88,8 +88,12 @@ VALUE zj_safe_window_resized_call(VALUE args) {
   if(!NIL_P(window_resized_proc)) rb_funcall(window_resized_proc, rb_intern("call"), 2, w, h);
 }
 
-VALUE zj_safe_load_new_script(VALUE code) {
+VALUE zj_safe_load_new_script(VALUE args) {
+  VALUE blocksHash = ((VALUE*)args)[0];
+  VALUE code = ((VALUE*)args)[1];
   VALUE newContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
+  
+  rb_iv_set(newContext, "code_blocks", blocksHash);
   rb_funcall(newContext, rb_intern("instance_eval"), 1, code);
   return newContext;
 }
@@ -359,6 +363,8 @@ void ZajalInterpreter::loadScript(char* filename) {
     rb_funcall(rbScriptFileContentTemp, rb_intern("slice!"), 1, matchArrayJoined);
   }
   
+  rb_funcall(blocksHash, rb_intern("[]="), 2, rb_str_new2("root"), rbScriptFileContentTemp);
+  
   // match local variable declarations in source clone using regex
   VALUE localsRegex = rb_reg_new_str(rb_str_new2("([a-z_][a-zA-Z0-9_]*)\\s*=[^=]"), 0);
   VALUE _localsArray = rb_funcall(rbScriptFileContentTemp, rb_intern("scan"), 1, localsRegex);
@@ -381,8 +387,12 @@ void ZajalInterpreter::loadScript(char* filename) {
     VALUE globalizedLocalVariable = rb_str_new2(_globalizedLocalVariable);
     rb_funcall(rbScriptFileContent, rb_intern("gsub!"), 2, localVariableRegex, globalizedLocalVariable);
   }
-    
-  VALUE newContext = rb_protect(zj_safe_load_new_script, rbScriptFileContent, &lastError);
+  
+  VALUE args[2];
+  args[0] = blocksHash;
+  args[1] = rbScriptFileContent;
+  
+  VALUE newContext = rb_protect(zj_safe_load_new_script, (VALUE)args, &lastError);
   
   if(!lastError) {
     if(NIL_P(currentContext)) {
