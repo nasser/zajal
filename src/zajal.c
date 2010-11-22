@@ -42,12 +42,12 @@ void zj_zajal_init() {
   zj_cContext = rb_define_class_under(zj_mZajal, "Context", rb_cObject);
   
   /*  include ruby's math */
-  rb_include_module(zj_cContext, rb_mMath);
+  rb_include_module(zj_cObject, rb_mMath);
   
   /*  include zajal modules */
-  rb_include_module(zj_cContext, zj_mApp);
-  rb_include_module(zj_cContext, zj_mMathematics);
-  rb_include_module(zj_cContext, zj_mGraphics);
-  rb_include_module(zj_cContext, zj_mEvents);
-  rb_include_module(zj_cContext, zj_mZajal);
+  rb_include_module(zj_cObject, zj_mApp);
+  rb_include_module(zj_cObject, zj_mMathematics);
+  rb_include_module(zj_cObject, zj_mGraphics);
+  rb_include_module(zj_cObject, zj_mEvents);
+  rb_include_module(zj_cObject, zj_mZajal);
 }
