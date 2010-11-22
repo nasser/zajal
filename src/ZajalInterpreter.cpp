@@ -21,6 +21,8 @@
 #include <sys/stat.h>
 
 #include "ruby.h"
+#include "oniguruma.h"
+#include "intern.h"
 #include "ZajalInterpreter.h"
 
 #include "graphics.h"
@@ -307,9 +309,53 @@ void ZajalInterpreter::loadScript(char* filename) {
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
   
-  // execute contents of file, catch syntax errors
   ruby_script(scriptName);
-  VALUE newContext = rb_protect(zj_safe_load_new_script, rb_str_new2(scriptFileContent), &lastError);
+  
+  // make all top level local variables global
+  VALUE rbScriptFileContent = rb_str_new2(scriptFileContent);
+  VALUE rbScriptFileContentTemp = rb_str_new2(scriptFileContent);
+  
+  VALUE blocksHash = rb_hash_new();
+  rb_funcall(blocksHash, rb_intern("[]="), 2, rb_str_new2("setup"), Qnil);
+  VALUE blocksRegex = rb_reg_new_str(rb_str_new2("^(setup|update|draw|exit|key_pressed|key_released|mouse_moved|mouse_dragged|mouse_pressed|mouse_released|audio_requested|audio_received|def|class|module|proc|lambda|loop)(.*?)^(end|\\})"), ONIG_OPTION_MULTILINE);
+  VALUE _blockScanArray = rb_funcall(rbScriptFileContentTemp, rb_intern("scan"), 1, blocksRegex);
+  VALUE* blockScanArray = RARRAY_PTR(_blockScanArray);
+  long blockScanArrayLength = RARRAY_LEN(_blockScanArray);
+  
+  for(int i = 0; i < blockScanArrayLength; i++) {
+    VALUE* matchArray = RARRAY_PTR(blockScanArray[i]);
+    VALUE matchArrayJoined = rb_funcall(blockScanArray[i], rb_intern("join"), 0);
+    VALUE matchType = matchArray[0];
+    VALUE matchBody = matchArray[1];
+    VALUE matchEnding = matchArray[2];
+    
+    rb_funcall(blocksHash, rb_intern("[]="), 2, matchType, matchArrayJoined);
+    rb_funcall(rbScriptFileContentTemp, rb_intern("slice!"), 1, matchArrayJoined);
+  }
+  
+  VALUE localsRegex = rb_reg_new_str(rb_str_new2("([a-z_][a-zA-Z0-9_]*)\\s*=[^=]"), 0);
+  VALUE _localsArray = rb_funcall(rbScriptFileContentTemp, rb_intern("scan"), 1, localsRegex);
+  VALUE* localsArray = RARRAY_PTR(_localsArray);
+  long localsArrayLength = RARRAY_LEN(_localsArray);
+  
+  for(int i = 0; i < localsArrayLength; i++) {
+    VALUE* matchArray = RARRAY_PTR(localsArray[i]);
+    VALUE _localVariableName = matchArray[0];
+    char* localVariableName = StringValuePtr(_localVariableName);
+    if(strlen(localVariableName) > MAX_LOCAL_VAR_NAME_LENGTH) rb_bug("Zajal only supports variable names shorter than %d characters!", MAX_LOCAL_VAR_NAME_LENGTH);
+    
+    char _localVariableRegex[MAX_LOCAL_VAR_NAME_LENGTH+4];
+    sprintf(_localVariableRegex, "\\b%s\\b", localVariableName);
+    VALUE localVariableRegex = rb_reg_new_str(rb_str_new2(_localVariableRegex), 0);
+    
+    char _globalizedLocalVariable[MAX_LOCAL_VAR_NAME_LENGTH+1];
+    sprintf(_globalizedLocalVariable, "$%s", localVariableName);
+    VALUE globalizedLocalVariable = rb_str_new2(_globalizedLocalVariable);
+    rb_funcall(rbScriptFileContent, rb_intern("gsub!"), 2, localVariableRegex, globalizedLocalVariable);
+  }
+    
+  VALUE newContext = rb_protect(zj_safe_load_new_script, rbScriptFileContent, &lastError);
+  
   if(!lastError) {
     if(NIL_P(currentContext)) {
       currentContext = newContext;

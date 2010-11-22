@@ -28,6 +28,7 @@
 #define ERROR_MESSAGE_SIZE        1024
 #define SCRIPT_NAME_SIZE          255
 #define SCRIPT_UPDATE_FREQUENCY   1
+#define MAX_LOCAL_VAR_NAME_LENGTH 255
 
 class ZajalInterpreter : public ofBaseApp {
 	
