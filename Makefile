@@ -7,7 +7,7 @@ BINARY = $(BIN_DIR)/zajal
 ### 
 CC = gcc-4.0
 CXX = g++-4.0
-CXXFLAGS = -arch i386 -g
+CXXFLAGS = -arch i386 -g -DHAVE_STRUCT_TIMEZONE -DHAVE_STRUCT_TIMESPEC
 
 
 ### openFrameworks
@@ -22,7 +22,7 @@ OF_INCLUDES = $(addprefix -idirafter ,$(shell find $(OF_DIR)/include -type d))
 RUBY_DIR = lib/ruby
 RUBY_LIB = $(RUBY_DIR)/libruby.a
 RUBY_INCLUDE_DIR = $(RUBY_DIR)/include
-RUBY_INCLUDES = $(addprefix -idirafter ,$(shell find $(RUBY_DIR)/include -type d))
+RUBY_INCLUDES = $(addprefix -I ,$(shell find $(RUBY_DIR)/include -type d))
 
 
 ### zajal interperter
