@@ -311,6 +311,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   
   ruby_script(scriptName);
   
+  // TODO This implementation REQUIRES that ALL method/class/event code be FLUSH with the left margin!!! A Ripper based implementation will avoid this!
   // make all top level local variables global
   // remove scope-blocks, anything that redefines scope (event methods,
   // class/method defs etc) then scan what remains for local variable
