@@ -40,19 +40,28 @@ VALUE zj_image_new(VALUE klass, VALUE filename) {
 VALUE zj_image_initialize(VALUE self, VALUE filename) {
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
-  
-  printf("loading %s...", StringValuePtr(filename));
-  bool loaded = image_ptr->loadImage(StringValuePtr(filename));
-  printf("%s\n", loaded ? "OK" : "FAIL");
+  image_ptr->loadImage(StringValuePtr(filename));
   
   return self;
 }
 
-VALUE zj_image_draw(VALUE self, VALUE x, VALUE y) {
+VALUE zj_image_draw(int argc, VALUE* argv, VALUE self) {
+  VALUE x, y, w, h;
+  rb_scan_args(argc, argv, "22", &x, &y, &w, &h);
+  
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
   
-  image_ptr->draw(NUM2DBL(x), NUM2DBL(y));
+  if(NIL_P(w) && NIL_P(h)) {
+    /* called without width and height, just use coords */
+    image_ptr->draw(NUM2DBL(x), NUM2DBL(y));
+    
+  } else {
+    /* called with width and height, use coords and dimentions */
+    image_ptr->draw(NUM2DBL(x), NUM2DBL(y), NUM2DBL(w), NUM2DBL(h));
+    
+  }
+  
   
   return Qnil;
 }
@@ -62,7 +71,7 @@ VALUE zj_image_init(VALUE zj_mZajal) {
   
   rb_define_singleton_method(zj_cImage, "new", RB_FUNC(zj_image_new), 1);
   rb_define_method(zj_cImage, "initialize", RB_FUNC(zj_image_initialize), 1);
-  rb_define_method(zj_cImage, "draw", RB_FUNC(zj_image_draw), 2);
+  rb_define_method(zj_cImage, "draw", RB_FUNC(zj_image_draw), -1);
   
   return zj_cImage;
 }
