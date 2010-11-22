@@ -88,14 +88,11 @@ VALUE zj_safe_window_resized_call(VALUE args) {
   if(!NIL_P(window_resized_proc)) rb_funcall(window_resized_proc, rb_intern("call"), 2, w, h);
 }
 
-VALUE zj_safe_load_new_script(VALUE args) {
-  VALUE blocksHash = ((VALUE*)args)[0];
+VALUE zj_safe_instance_eval(VALUE args) {
+  VALUE receiver = ((VALUE*)args)[0];
   VALUE code = ((VALUE*)args)[1];
-  VALUE newContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
   
-  rb_iv_set(newContext, "code_blocks", blocksHash);
-  rb_funcall(newContext, rb_intern("instance_eval"), 1, code);
-  return newContext;
+  rb_funcall(receiver, rb_intern("instance_eval"), 1, code);
 }
 
 VALUE zj_button_to_symbol(int button) {
@@ -295,6 +292,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   ruby_script(scriptName);
   
   // TODO This implementation REQUIRES that ALL method/class/event code be FLUSH with the left margin!!! A Ripper based implementation will avoid this!
+  // TODO Code loading implementation needs clean up!
   // make all top level local variables global
   // remove scope-blocks, anything that redefines scope (event methods,
   // class/method defs etc) then scan what remains for local variable
@@ -305,7 +303,6 @@ void ZajalInterpreter::loadScript(char* filename) {
   // basically, do this:
   // contents_temp = contents.clone
   // blocks = {}
-  // blocks["setup"] = nil
   // contents_temp.scan(/^(setup|update|draw|exit|key_pressed|key_released|mouse_moved|mouse_dragged|mouse_pressed|mouse_released|audio_requested|audio_received|def|class|module|proc|lambda|loop)(.*?)^(end|\})/m).each do |match|
   //   type, body, ending = match
   //   blocks[type] = match.join
@@ -313,6 +310,9 @@ void ZajalInterpreter::loadScript(char* filename) {
   // end
   // contents_temp.scan(/([a-z_][a-zA-Z0-9_]*)\s*=[^=]/).each do |match|
   //   contents.gsub! /\b#{match.first}\b/, "$#{match.first}"
+  //   blocks.each do |k, v|
+  //     v.gsub! /\b#{match.first}\b/, "$#{match.first}"
+  //   end
   // end
   
   // load source into ruby variable and clone it
@@ -321,7 +321,6 @@ void ZajalInterpreter::loadScript(char* filename) {
   
   // create hash to hold scope-block code for later
   VALUE blocksHash = rb_hash_new();
-  rb_funcall(blocksHash, rb_intern("[]="), 2, rb_str_new2("setup"), Qnil);
   
   // match scope-blocks in source using a regex
   VALUE blocksRegex = rb_reg_new_str(rb_str_new2("^(setup|update|draw|exit|key_pressed|key_released|mouse_moved|mouse_dragged|mouse_pressed|mouse_released|audio_requested|audio_received|def|class|module|proc|lambda|loop)(.*?)^(end|\\})"), ONIG_OPTION_MULTILINE);
@@ -338,11 +337,11 @@ void ZajalInterpreter::loadScript(char* filename) {
     VALUE matchBody = matchArray[1];
     VALUE matchEnding = matchArray[2];
     
-    rb_funcall(blocksHash, rb_intern("[]="), 2, matchType, matchArrayJoined);
+    rb_hash_aset(blocksHash, matchType, matchArrayJoined);
     rb_funcall(rbScriptFileContentTemp, rb_intern("slice!"), 1, matchArrayJoined);
   }
   
-  rb_funcall(blocksHash, rb_intern("[]="), 2, rb_str_new2("root"), rbScriptFileContentTemp);
+  rb_hash_aset(blocksHash, rb_str_new2("root"), rbScriptFileContentTemp);
   
   // match local variable declarations in source clone using regex
   VALUE localsRegex = rb_reg_new_str(rb_str_new2("([a-z_][a-zA-Z0-9_]*)\\s*=[^=]"), 0);
@@ -364,28 +363,73 @@ void ZajalInterpreter::loadScript(char* filename) {
     char _globalizedLocalVariable[MAX_LOCAL_VAR_NAME_LENGTH+1];
     sprintf(_globalizedLocalVariable, "$%s", localVariableName);
     VALUE globalizedLocalVariable = rb_str_new2(_globalizedLocalVariable);
+    
     rb_funcall(rbScriptFileContent, rb_intern("gsub!"), 2, localVariableRegex, globalizedLocalVariable);
+    
+    VALUE _blocksHashArray = rb_funcall(blocksHash, rb_intern("to_a"), 0);
+    VALUE* blocksHashArray = RARRAY_PTR(_blocksHashArray);
+    long blocksHashArrayLength = RARRAY_LEN(_blocksHashArray);
+    for(int j = 0; j < blocksHashArrayLength; j++) {
+      VALUE* keyValue = RARRAY_PTR(blocksHashArray[j]);
+      VALUE value = keyValue[1];
+      rb_funcall(value, rb_intern("gsub!"), 2, localVariableRegex, globalizedLocalVariable);
+    }
   }
-  
-  VALUE args[2];
-  args[0] = blocksHash;
-  args[1] = rbScriptFileContent;
-  
-  VALUE newContext = rb_protect(zj_safe_load_new_script, (VALUE)args, &lastError);
   
   if(!lastError) {
     if(NIL_P(currentContext)) {
-      currentContext = newContext;
+      // first load, just instance_eval user code into new context
+      currentContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
+      rb_iv_set(currentContext, "code_blocks", blocksHash);
+      
+      VALUE args[] = {currentContext, rbScriptFileContent};
+      rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
       setup();
+      
     } else {
-      currentContext = newContext;
-      //TODO more inteligent code updating, i.e. just the draw proc
-      // currentContext = newContext;
-      // printf("currentContext.draw_proc : %s\n", RSTRING_PTR(rb_obj_as_string(rb_iv_get(currentContext, "draw_proc"))) );
-      // rb_ivar_set(currentContext, rb_intern("draw_proc"), rb_ivar_get(newContext, rb_intern("draw_proc")));
-      // printf("currentContext.draw_proc : %s\n", RSTRING_PTR(rb_obj_as_string(rb_iv_get(currentContext, "draw_proc"))) );
+      // live update, only instance_eval changed code
+      VALUE incomingCode = rb_str_new2("");
+      VALUE currentCodeBlocks = rb_iv_get(currentContext, "code_blocks");
+      
+      // check if root or setup block has changed, in which case instance_eval the whole script
+      VALUE currentRootCode = rb_hash_aref(currentCodeBlocks, rb_str_new2("root"));
+      VALUE newRootCode = rb_hash_aref(blocksHash, rb_str_new2("root"));
+      VALUE currentSetupCode = rb_hash_aref(currentCodeBlocks, rb_str_new2("setup"));
+      VALUE newSetupCode = rb_hash_aref(blocksHash, rb_str_new2("setup"));
+      
+      if(rb_str_hash_cmp(currentRootCode, newRootCode) || rb_str_hash_cmp(currentSetupCode, newSetupCode)) {
+        // root or setup has changed, instance_eval everything and run setup
+        VALUE args[] = {currentContext, rbScriptFileContent};
+        rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
+        setup();
+        
+      } else {
+        // root and setup have not changed, instance_eval everything but root
+        VALUE _blocksHashArray = rb_funcall(blocksHash, rb_intern("to_a"), 0);
+        VALUE* blocksHashArray = RARRAY_PTR(_blocksHashArray);
+        long blocksHashArrayLength = RARRAY_LEN(_blocksHashArray);
+        for(int i = 0; i < blocksHashArrayLength; i++) {
+          VALUE* typeBody = RARRAY_PTR(blocksHashArray[i]);
+          VALUE type = typeBody[0];
+          VALUE newBody = typeBody[1];
+          
+          if(rb_str_hash_cmp(type, rb_str_new2("root"))) {
+            incomingCode = rb_str_plus(incomingCode, newBody);
+            incomingCode = rb_str_plus(incomingCode, rb_str_new2("\n"));
+          }
+        }
+        
+      }
+      
+      printf("%s\n", RSTRING_PTR(rb_obj_as_string(incomingCode)));
+      
+      currentContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
+      rb_iv_set(currentContext, "code_blocks", blocksHash);
+      
+      VALUE args[] = {currentContext, incomingCode};
+      rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
+      
     }
-    
   } else {
     handleError(lastError);
     
