@@ -38,9 +38,7 @@ VALUE zj_image_new(VALUE klass, VALUE filename) {
 }
 
 VALUE zj_image_initialize(VALUE self, VALUE filename) {
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
-  image_ptr->loadImage(StringValuePtr(filename));
+  rb_funcall(self, rb_intern("load!"), 1, filename);
   
   return self;
 }
@@ -67,6 +65,76 @@ VALUE zj_image_draw(int argc, VALUE* argv, VALUE self) {
     
   }
   
+  return Qnil;
+}
+
+VALUE zj_image_clear(VALUE self) {
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  image_ptr->clear();
+  
+  return Qnil;
+}
+
+VALUE zj_image_load(VALUE self, VALUE filename) {
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  image_ptr->loadImage(StringValuePtr(filename));
+  
+  return Qnil;
+}
+
+VALUE zj_image_save(VALUE self, VALUE filename) {
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  image_ptr->saveImage(StringValuePtr(filename));
+  
+  return Qnil;
+}
+
+VALUE zj_image_resize(int argc, VALUE* argv, VALUE self) {
+  VALUE w, h;
+  rb_scan_args(argc, argv, "11", &w, &h);
+  
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  if(!NIL_P(w) && NIL_P(h)) {
+    /* called with one argument, scale proportionately */
+    float s = NUM2DBL(w);
+    image_ptr->resize(image_ptr->width*s, image_ptr->height*s);
+  
+  } else if(!NIL_P(w) && !NIL_P(h)) {
+    /* called with two arguments, resize to given width and height */
+    image_ptr->resize(NUM2DBL(w), NUM2DBL(h));
+    
+  } else {
+    rb_raise(rb_eTypeError, "Unexpected arguments to Image::resize!");
+    
+  }
+  
+  return Qnil;
+}
+
+VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
+  VALUE x, y, w, h;
+  rb_scan_args(argc, argv, "04", &x, &y, &w, &h);
+  
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  if(NIL_P(x) && NIL_P(y) && NIL_P(w) && NIL_P(h)) {
+    /* called without arguments, grab whole screen */
+    image_ptr->grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+    
+  } else if(!NIL_P(x) && !NIL_P(y) && !NIL_P(w) && !NIL_P(h)) {
+    /* called with all arguments, grab screen according to coords/dimentions */
+    image_ptr->grabScreen(NUM2DBL(x), NUM2DBL(y), NUM2DBL(w), NUM2DBL(h));
+    
+  } else {
+    rb_raise(rb_eTypeError, "Unexpected arguments to Image::grab_screen!");
+    
+  }
   
   return Qnil;
 }
@@ -77,6 +145,11 @@ VALUE zj_image_init(VALUE zj_mZajal) {
   rb_define_singleton_method(zj_cImage, "new", RB_FUNC(zj_image_new), 1);
   rb_define_method(zj_cImage, "initialize", RB_FUNC(zj_image_initialize), 1);
   rb_define_method(zj_cImage, "draw", RB_FUNC(zj_image_draw), -1);
+  rb_define_method(zj_cImage, "clear!", RB_FUNC(zj_image_clear), 0);
+  rb_define_method(zj_cImage, "load!", RB_FUNC(zj_image_load), 1);
+  rb_define_method(zj_cImage, "save", RB_FUNC(zj_image_save), 1);
+  rb_define_method(zj_cImage, "resize!", RB_FUNC(zj_image_resize), -1);
+  rb_define_method(zj_cImage, "grab_screen!", RB_FUNC(zj_image_grab_screen), -1);
   
   return zj_cImage;
 }
