@@ -180,11 +180,11 @@ VALUE zj_images_init(VALUE zj_mZajal) {
   rb_define_singleton_method(zj_cImage, "new", RB_FUNC(zj_image_new), 1);
   rb_define_method(zj_cImage, "initialize", RB_FUNC(zj_image_initialize), 1);
   rb_define_method(zj_cImage, "draw", RB_FUNC(zj_image_draw), -1);
-  rb_define_method(zj_cImage, "clear!", RB_FUNC(zj_image_clear), 0);
-  rb_define_method(zj_cImage, "load!", RB_FUNC(zj_image_load), 1);
+  rb_define_method(zj_cImage, "clear", RB_FUNC(zj_image_clear), 0);
+  rb_define_method(zj_cImage, "load", RB_FUNC(zj_image_load), 1);
   rb_define_method(zj_cImage, "save", RB_FUNC(zj_image_save), 1);
-  rb_define_method(zj_cImage, "resize!", RB_FUNC(zj_image_resize), -1);
-  rb_define_method(zj_cImage, "grab_screen!", RB_FUNC(zj_image_grab_screen), -1);
+  rb_define_method(zj_cImage, "resize", RB_FUNC(zj_image_resize), -1);
+  rb_define_method(zj_cImage, "grab_screen", RB_FUNC(zj_image_grab_screen), -1);
   
   return zj_mImages;
 }
