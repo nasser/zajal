@@ -299,6 +299,7 @@ void ZajalInterpreter::loadScript(char* filename) {
     
     VALUE args[] = {currentContext, rbScriptFileContent};
     rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
+    handleError(lastError);
     setup();
       
   } else {
