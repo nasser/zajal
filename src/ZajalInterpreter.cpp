@@ -28,6 +28,62 @@
 #include "graphics.h"
 #include "events.h"
 
+// the directory of the called script
+char* _zj_data_path;
+
+char* _zj_script_directory(char* script_path) {
+  // copy script_path, strip filename out
+  char* script_path_copy = (char*)calloc(strlen(script_path)+1, sizeof(char));
+  strncpy(script_path_copy, script_path, strlen(script_path)+1);
+  int i;
+  for(i = strlen(script_path_copy); script_path_copy[i] != '/' && i > 0; i--);
+  if(script_path_copy[i] == '/') script_path_copy[i] = '\0';
+  
+  // return script_path if absolute
+  if(script_path_copy[0] == '/') return script_path_copy;
+  
+  // get current working dir
+  char cwd[1024];
+  getcwd(cwd, 1024);
+  
+  // allocate space for joined path
+  long script_dir_length = strlen(script_path_copy) + strlen(cwd) + 1;
+  char* script_dir = (char*)calloc(script_dir_length, sizeof(char));
+  
+  // join path
+  strncat(script_dir, cwd, script_dir_length);
+  strncat(script_dir, "/", script_dir_length);
+  strncat(script_dir, script_path_copy, script_dir_length);
+  
+  free(script_path_copy);
+  
+  return script_dir;
+}
+
+char* zj_to_data_path(char* path) {
+  if(path[0] == '/') {
+    // path is absolute, return a copy of it
+    // allocate space for copied path
+    char* copied_path = (char*)calloc(strlen(path)+1, sizeof(char));
+    strncpy(copied_path, path, strlen(path)+1);
+    return copied_path;
+    
+  } else {
+    // path is relative, join it with _zj_data_path
+    // allocate space for joined path
+    long joined_path_length = strlen(path) + strlen(_zj_data_path) + 1;
+    char* joined_path = (char*)calloc(joined_path_length, sizeof(char));
+  
+    // join path
+    strncat(joined_path, _zj_data_path, joined_path_length);
+    strncat(joined_path, "/", joined_path_length);
+    strncat(joined_path, path, joined_path_length);
+  
+    return joined_path;
+  }
+  
+}
+
 // for procs with no arguments, no need for specialized safe function
 VALUE zj_safe_proc_call(VALUE proc) {
   if(!NIL_P(proc)) rb_funcall(proc, rb_intern("call"), 0);
@@ -117,6 +173,8 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   nextUpdate = SCRIPT_UPDATE_FREQUENCY;
   lastErrorMessage = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
   currentContext = Qnil;
+  
+  _zj_data_path = NULL;
 }
 
 //--------------------------------------------------------------
@@ -290,6 +348,9 @@ void ZajalInterpreter::loadScript(char* filename) {
   fclose(scriptFile);
   
   ruby_script(scriptName);
+  
+  // update data path
+  _zj_data_path = _zj_script_directory(scriptName);
   
   // load source into ruby variable and clone it
   VALUE rbScriptFileContent = rb_str_new2(scriptFileContent);
