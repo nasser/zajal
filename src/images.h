@@ -19,6 +19,6 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-VALUE zj_image_init(VALUE zj_mZajal);
+VALUE zj_images_init(VALUE zj_mZajal);
 
 #endif /* IMAGE_H */

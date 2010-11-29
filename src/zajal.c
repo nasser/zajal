@@ -26,7 +26,7 @@
 #include "mathematics.h"
 #include "graphics.h"
 #include "events.h"
-#include "image.h"
+#include "images.h"
 
 VALUE zj_cContext;
 
@@ -37,7 +37,7 @@ void zj_zajal_init() {
   VALUE zj_mMathematics = zj_mathematics_init(zj_mZajal);
   VALUE zj_mGraphics = zj_graphics_init(zj_mZajal);
   VALUE zj_mEvents = zj_events_init(zj_mZajal);
-  VALUE zj_cImage = zj_image_init(zj_mZajal);
+  VALUE zj_mImages = zj_images_init(zj_mZajal);
   
   /* the context in which user code is run */
   /* TODO Context is not the best name, come up with something better */
@@ -51,5 +51,6 @@ void zj_zajal_init() {
   rb_include_module(rb_cObject, zj_mMathematics);
   rb_include_module(rb_cObject, zj_mGraphics);
   rb_include_module(rb_cObject, zj_mEvents);
+  rb_include_module(rb_cObject, zj_mImages);
   rb_include_module(rb_cObject, zj_mZajal);
 }

@@ -20,8 +20,6 @@
 #include "ofMain.h"
 #include "macros.h"
 
-VALUE zj_cImage;
-
 void zj_image_dealloc(void* image) {
   delete (ofImage*)image;
 }
@@ -139,9 +137,11 @@ VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
-VALUE zj_image_init(VALUE zj_mZajal) {
-  VALUE zj_cImage = rb_define_class_under(zj_mZajal, "Image", rb_cObject);
+VALUE zj_images_init(VALUE zj_mZajal) {
+  VALUE zj_mImages = rb_define_module_under(zj_mZajal, "Images");
   
+  /* the Image class */
+  VALUE zj_cImage = rb_define_class_under(zj_mImages, "Image", rb_cObject);
   rb_define_singleton_method(zj_cImage, "new", RB_FUNC(zj_image_new), 1);
   rb_define_method(zj_cImage, "initialize", RB_FUNC(zj_image_initialize), 1);
   rb_define_method(zj_cImage, "draw", RB_FUNC(zj_image_draw), -1);
@@ -151,5 +151,5 @@ VALUE zj_image_init(VALUE zj_mZajal) {
   rb_define_method(zj_cImage, "resize!", RB_FUNC(zj_image_resize), -1);
   rb_define_method(zj_cImage, "grab_screen!", RB_FUNC(zj_image_grab_screen), -1);
   
-  return zj_cImage;
+  return zj_mImages;
 }
