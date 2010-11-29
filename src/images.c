@@ -116,7 +116,7 @@ VALUE zj_image_resize(int argc, VALUE* argv, VALUE self) {
     image_ptr->resize(NUM2DBL(w), NUM2DBL(h));
     
   } else {
-    rb_raise(rb_eTypeError, "Unexpected arguments to Image::resize!");
+    rb_raise(rb_eArgError, "Unexpected arguments to Image::resize!");
     
   }
   
@@ -139,7 +139,7 @@ VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
     image_ptr->grabScreen(NUM2DBL(x), NUM2DBL(y), NUM2DBL(w), NUM2DBL(h));
     
   } else {
-    rb_raise(rb_eTypeError, "Unexpected arguments to Image::grab_screen!");
+    rb_raise(rb_eArgError, "Unexpected arguments to Image::grab_screen!");
     
   }
   
