@@ -146,17 +146,23 @@ VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
-VALUE zj_image_image(VALUE self, VALUE filename, VALUE x, VALUE y) {
+VALUE zj_image_image(int argc, VALUE* argv, VALUE self) {
+  if(argc == 0) {
+    rb_raise(rb_eArgError, "Too few arguments to Images::image!");
+    return Qnil;
+  }
+  
+  VALUE filename = argv[0];
   VALUE cached_image = rb_hash_aref(_zj_image_hash, filename);
   
   if(NIL_P(cached_image)) {
-    /* image never used before, load it from disk, cache it and draw it */
+    /* image never used before, load it from disk, cache it */
     cached_image = rb_funcall(zj_cImage, rb_intern("new"), 1, filename);
     rb_hash_aset(_zj_image_hash, filename, cached_image);
-    printf("caching...\n");
   }
   
-  rb_funcall(cached_image, rb_intern("draw"), 2, x, y);
+  /* remove filename from args, draw cached image as normal */
+  zj_image_draw(--argc, ++argv, cached_image);
   
   return Qnil;
 }
@@ -167,7 +173,7 @@ VALUE zj_images_init(VALUE zj_mZajal) {
   /* image functions */
   rb_define_variable("_zj_image_hash", &_zj_image_hash);
   _zj_image_hash = rb_hash_new();
-  rb_define_method(zj_mImages, "image", RB_FUNC(zj_image_image), 3);
+  rb_define_method(zj_mImages, "image", RB_FUNC(zj_image_image), -1);
   
   /* the Image class */
   zj_cImage = rb_define_class_under(zj_mImages, "Image", rb_cObject);
