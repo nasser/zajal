@@ -20,6 +20,11 @@
 #include "ofMain.h"
 #include "macros.h"
 
+#include "ZajalInterpreter.h"
+
+VALUE zj_cImage = Qnil;
+VALUE _zj_image_hash = Qnil;
+
 void zj_image_dealloc(void* image) {
   delete (ofImage*)image;
 }
@@ -77,7 +82,11 @@ VALUE zj_image_clear(VALUE self) {
 VALUE zj_image_load(VALUE self, VALUE filename) {
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
-  image_ptr->loadImage(StringValuePtr(filename));
+  
+  char* data_filename = zj_to_data_path(StringValuePtr(filename));
+  image_ptr->loadImage(data_filename);
+  
+  free(data_filename);
   
   return Qnil;
 }
@@ -137,11 +146,31 @@ VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+VALUE zj_image_image(VALUE self, VALUE filename, VALUE x, VALUE y) {
+  VALUE cached_image = rb_hash_aref(_zj_image_hash, filename);
+  
+  if(NIL_P(cached_image)) {
+    /* image never used before, load it from disk, cache it and draw it */
+    cached_image = rb_funcall(zj_cImage, rb_intern("new"), 1, filename);
+    rb_hash_aset(_zj_image_hash, filename, cached_image);
+    printf("caching...\n");
+  }
+  
+  rb_funcall(cached_image, rb_intern("draw"), 2, x, y);
+  
+  return Qnil;
+}
+
 VALUE zj_images_init(VALUE zj_mZajal) {
   VALUE zj_mImages = rb_define_module_under(zj_mZajal, "Images");
   
+  /* image functions */
+  rb_define_variable("_zj_image_hash", &_zj_image_hash);
+  _zj_image_hash = rb_hash_new();
+  rb_define_method(zj_mImages, "image", RB_FUNC(zj_image_image), 3);
+  
   /* the Image class */
-  VALUE zj_cImage = rb_define_class_under(zj_mImages, "Image", rb_cObject);
+  zj_cImage = rb_define_class_under(zj_mImages, "Image", rb_cObject);
   rb_define_singleton_method(zj_cImage, "new", RB_FUNC(zj_image_new), 1);
   rb_define_method(zj_cImage, "initialize", RB_FUNC(zj_image_initialize), 1);
   rb_define_method(zj_cImage, "draw", RB_FUNC(zj_image_draw), -1);
