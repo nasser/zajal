@@ -56,6 +56,11 @@ VALUE zj_image_draw(int argc, VALUE* argv, VALUE self) {
     /* called without width and height, just use coords */
     image_ptr->draw(NUM2DBL(x), NUM2DBL(y));
     
+  } else if(!NIL_P(w) && NIL_P(h)) {
+    /* called with size, scale proportionately */
+    float s = NUM2DBL(w);
+    image_ptr->draw(NUM2DBL(x), NUM2DBL(y), image_ptr->width*s, image_ptr->height*s);
+    
   } else {
     /* called with width and height, use coords and dimentions */
     image_ptr->draw(NUM2DBL(x), NUM2DBL(y), NUM2DBL(w), NUM2DBL(h));
