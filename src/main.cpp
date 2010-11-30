@@ -19,6 +19,8 @@
 // main interpreter executable
 
 #include "ruby.h"
+#include "ruby/encoding.h"
+
 #include "ofMain.h"
 #include "ZajalInterpreter.h"
 #include "zajal.h"
@@ -53,6 +55,10 @@ int main(int argc, char** argv) {
     rb_ary_push(rb_gv_get("$:"), rb_str_new2(_zj_data_path));
     rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/ruby/stdlib"));
     
+    // load in all encodings
+    rb_enc_find("encdb");
+    
+    // start new interpreter
     ZajalInterpreter* zi = new ZajalInterpreter(argv[1]);
     
   	ofAppGlutWindow window;
