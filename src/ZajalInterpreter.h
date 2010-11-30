@@ -31,6 +31,9 @@
 #define MAX_LOCAL_VAR_NAME_LENGTH 255
 
 char* zj_to_data_path(char* path);
+char* zj_script_directory(char* script_path);
+
+extern char* _zj_data_path;
 
 class ZajalInterpreter : public ofBaseApp {
 	

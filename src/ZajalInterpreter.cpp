@@ -31,7 +31,7 @@
 // the directory of the called script
 char* _zj_data_path;
 
-char* _zj_script_directory(char* script_path) {
+char* zj_script_directory(char* script_path) {
   // copy script_path, strip filename out
   char* script_path_copy = (char*)calloc(strlen(script_path)+1, sizeof(char));
   strncpy(script_path_copy, script_path, strlen(script_path)+1);
@@ -350,7 +350,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   ruby_script(scriptName);
   
   // update data path
-  _zj_data_path = _zj_script_directory(scriptName);
+  _zj_data_path = zj_script_directory(scriptName);
   
   // load source into ruby variable and clone it
   VALUE rbScriptFileContent = rb_str_new2(scriptFileContent);
