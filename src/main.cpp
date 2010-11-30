@@ -47,12 +47,12 @@ int main(int argc, char** argv) {
   ruby_init();
   zj_zajal_init();
   
-  // establish the data path and add it to ruby's load path
-  _zj_data_path = zj_script_directory(argv[1]);
-  rb_ary_push(rb_gv_get("$:"), rb_str_new2(_zj_data_path));
-  rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal-full/lib/ruby/lib"));
-  
   if(argc > 1) {
+    // establish the data path and add it to ruby's load path
+    _zj_data_path = zj_script_directory(argv[1]);
+    rb_ary_push(rb_gv_get("$:"), rb_str_new2(_zj_data_path));
+    rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal-full/lib/ruby/lib"));
+    
     ZajalInterpreter* zi = new ZajalInterpreter(argv[1]);
     
   	ofAppGlutWindow window;
