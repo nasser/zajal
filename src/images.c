@@ -167,6 +167,120 @@ VALUE zj_image_image(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+VALUE zj_image_width(int argc, VALUE* argv, VALUE self) {
+  VALUE new_width;
+  rb_scan_args(argc, argv, "01", &new_width);
+  
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  if(NIL_P(new_width)) {
+    /* called without arguments, return width */
+    return DBL2NUM(image_ptr->width);
+    
+  } else {
+    /* called with width argument, set width=new_width */
+    image_ptr->resize(NUM2DBL(new_width), image_ptr->height);
+    
+    return Qnil;
+  }
+  
+}
+
+VALUE zj_image_set_width(VALUE self, VALUE new_width) {
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  image_ptr->resize(NUM2DBL(new_width), image_ptr->height);
+  
+  return Qnil;
+}
+
+VALUE zj_image_height(int argc, VALUE* argv, VALUE self) {
+  VALUE new_height;
+  rb_scan_args(argc, argv, "01", &new_height);
+  
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  if(NIL_P(new_height)) {
+    /* called without arguments, return width */
+    return DBL2NUM(image_ptr->height);
+    
+  } else {
+    /* called with width argument, set width=new_width */
+    image_ptr->resize(image_ptr->width, NUM2DBL(new_height));
+    
+    return Qnil;
+  }
+  
+}
+
+VALUE zj_image_set_height(VALUE self, VALUE new_height) {
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  image_ptr->resize(image_ptr->width, NUM2DBL(new_height));
+  
+  return Qnil;
+}
+
+VALUE zj_image_type(int argc, VALUE* argv, VALUE self) {
+  VALUE new_type;
+  rb_scan_args(argc, argv, "01", &new_type);
+  
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  ID grayscale_id = rb_intern("grayscale");
+  ID rgb_id = rb_intern("rgb");
+  ID rgba_id = rb_intern("rgba");
+  
+  if(NIL_P(new_type)) {
+    /* called without arguments, return image type */
+    if(image_ptr->type == OF_IMAGE_GRAYSCALE) {
+      return ID2SYM(grayscale_id);
+      
+    } else if(image_ptr->type == OF_IMAGE_COLOR) {
+      return ID2SYM(rgb_id);
+      
+    } else if(image_ptr->type == OF_IMAGE_COLOR_ALPHA) {
+      return ID2SYM(rgba_id);
+      
+    } else {
+      rb_bug("Unknown image type encountered!");
+      
+    }
+    
+  } else {
+    /* called with a new type, set type to new_type */
+    ID new_type_id = SYM2ID(new_type);
+    if(new_type_id == grayscale_id) {
+      image_ptr->setImageType(OF_IMAGE_GRAYSCALE);
+      
+    } else if(new_type_id == rgb_id) {
+      image_ptr->setImageType(OF_IMAGE_COLOR);
+      
+    } else if(new_type_id == rgba_id) {
+      image_ptr->setImageType(OF_IMAGE_COLOR_ALPHA);
+      
+    } else {
+      rb_raise(rb_eArgError, "Expected :grayscale, :rgb or :rgba !");
+      
+    }
+    
+  }
+  
+  return Qnil;
+}
+
+VALUE zj_image_bpp(VALUE self) {
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  return DBL2NUM(image_ptr->bpp);
+}
+
 VALUE zj_images_init(VALUE zj_mZajal) {
   VALUE zj_mImages = rb_define_module_under(zj_mZajal, "Images");
   
@@ -185,6 +299,15 @@ VALUE zj_images_init(VALUE zj_mZajal) {
   rb_define_method(zj_cImage, "save", RB_FUNC(zj_image_save), 1);
   rb_define_method(zj_cImage, "resize", RB_FUNC(zj_image_resize), -1);
   rb_define_method(zj_cImage, "grab_screen", RB_FUNC(zj_image_grab_screen), -1);
+  
+  rb_define_method(zj_cImage, "type", RB_FUNC(zj_image_type), -1);
+  rb_define_method(zj_cImage, "bpp", RB_FUNC(zj_image_bpp), 0);
+  
+  /* width= and height= are left in for experimental purposes */
+  rb_define_method(zj_cImage, "width", RB_FUNC(zj_image_width), -1);
+  rb_define_method(zj_cImage, "width=", RB_FUNC(zj_image_set_width), 1);
+  rb_define_method(zj_cImage, "height", RB_FUNC(zj_image_height), -1);
+  rb_define_method(zj_cImage, "height=", RB_FUNC(zj_image_set_height), 1);
   
   return zj_mImages;
 }
