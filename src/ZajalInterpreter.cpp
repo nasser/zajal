@@ -355,19 +355,13 @@ void ZajalInterpreter::loadScript(char* filename) {
   // load source into ruby variable and clone it
   VALUE rbScriptFileContent = rb_str_new2(scriptFileContent);
   
-  if(!lastError) {
-    currentContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
-    
-    VALUE args[] = {currentContext, rbScriptFileContent};
-    rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
-    handleError(lastError);
-    setup();
-      
-  } else {
-    handleError(lastError);
-    
-  }
+  currentContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
   
+  VALUE args[] = {currentContext, rbScriptFileContent};
+  rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
+  handleError(lastError);
+  
+  if(!lastError) setup();
 }
 
 // http://metaeditor.sourceforge.net/embed/
