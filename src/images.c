@@ -40,8 +40,20 @@ VALUE zj_image_new(VALUE klass, VALUE filename) {
   return image;
 }
 
+VALUE zj_image_load(VALUE self, VALUE filename) {
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  char* data_filename = zj_to_data_path(StringValuePtr(filename));
+  image_ptr->loadImage(data_filename);
+  
+  free(data_filename);
+  
+  return Qnil;
+}
+
 VALUE zj_image_initialize(VALUE self, VALUE filename) {
-  rb_funcall(self, rb_intern("load!"), 1, filename);
+  zj_image_load(self, filename);
   
   return self;
 }
@@ -75,18 +87,6 @@ VALUE zj_image_clear(VALUE self) {
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
   image_ptr->clear();
-  
-  return Qnil;
-}
-
-VALUE zj_image_load(VALUE self, VALUE filename) {
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
-  
-  char* data_filename = zj_to_data_path(StringValuePtr(filename));
-  image_ptr->loadImage(data_filename);
-  
-  free(data_filename);
   
   return Qnil;
 }
