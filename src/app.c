@@ -18,7 +18,10 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "macros.h"
+#include "zajal.h"
+
+/* global app module */
+VALUE zj_mApp;
 
 /*  globals */
 VALUE _zj_value_window_title = Qnil;
@@ -132,8 +135,8 @@ VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
   }
 }
 
-VALUE zj_app_init(VALUE zj_mZajal) {
-  VALUE zj_mApp = rb_define_module_under(zj_mZajal, "App");
+void Init_App() {
+  zj_mApp = rb_define_module_under(zj_mZajal, "App");
   
   rb_define_method(zj_mApp, "height", RB_FUNC(zj_height), -1);
   rb_define_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
@@ -141,6 +144,4 @@ VALUE zj_app_init(VALUE zj_mZajal) {
   rb_define_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
   rb_define_method(zj_mApp, "vertical_sync", RB_FUNC(zj_vertical_sync), -1);
   rb_define_method(zj_mApp, "title", RB_FUNC(zj_title), -1);
-  
-  return zj_mApp;
 }

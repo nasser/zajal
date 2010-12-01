@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
   print_version();
   
   ruby_init();
-  zj_zajal_init();
+  zajal_init();
   
   if(argc > 1) {
     // establish the data path and add it to ruby's load path

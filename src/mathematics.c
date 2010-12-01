@@ -18,7 +18,10 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "macros.h"
+#include "zajal.h"
+
+/* external math module */
+VALUE zj_mMathematics;
 
 VALUE zj_seed_random(int argc, VALUE* argv, VALUE klass) {
   VALUE val;
@@ -93,8 +96,8 @@ VALUE zj_normalize(VALUE self, VALUE min, VALUE max) {
   return DBL2NUM(ofNormalize(NUM2DBL(self), NUM2DBL(min), NUM2DBL(max)));
 }
 
-VALUE zj_mathematics_init(VALUE zj_mZajal) {
-  VALUE zj_mMathematics = rb_define_module_under(zj_mZajal, "Mathematics");
+void Init_Mathematics() {
+  zj_mMathematics = rb_define_module_under(zj_mZajal, "Mathematics");
   
   rb_define_method(zj_mMathematics, "seed_random", RB_FUNC(zj_seed_random), -1);
   rb_define_method(zj_mMathematics, "random", RB_FUNC(zj_random), -1);
@@ -111,6 +114,4 @@ VALUE zj_mathematics_init(VALUE zj_mZajal) {
   rb_define_method(rb_cNumeric, "sign", RB_FUNC(zj_sign), 0);
   rb_define_method(rb_cNumeric, "clamp", RB_FUNC(zj_clamp), 2);
   rb_define_method(rb_cNumeric, "normalize", RB_FUNC(zj_normalize), 2);
-  
-  return zj_mMathematics;
 }

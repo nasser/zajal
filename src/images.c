@@ -18,11 +18,14 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "macros.h"
+#include "zajal.h"
 
 #include "ZajalInterpreter.h"
 
-VALUE zj_cImage = Qnil;
+/* global images module and image class */
+VALUE zj_mImages;
+VALUE zj_cImage;
+
 VALUE _zj_image_hash = Qnil;
 
 void zj_image_dealloc(void* image) {
@@ -281,8 +284,8 @@ VALUE zj_image_bpp(VALUE self) {
   return DBL2NUM(image_ptr->bpp);
 }
 
-VALUE zj_images_init(VALUE zj_mZajal) {
-  VALUE zj_mImages = rb_define_module_under(zj_mZajal, "Images");
+void Init_Images() {
+  zj_mImages = rb_define_module_under(zj_mZajal, "Images");
   
   /* image functions */
   rb_define_variable("_zj_image_hash", &_zj_image_hash);
@@ -308,6 +311,4 @@ VALUE zj_images_init(VALUE zj_mZajal) {
   rb_define_method(zj_cImage, "width=", RB_FUNC(zj_image_set_width), 1);
   rb_define_method(zj_cImage, "height", RB_FUNC(zj_image_height), -1);
   rb_define_method(zj_cImage, "height=", RB_FUNC(zj_image_set_height), 1);
-  
-  return zj_mImages;
 }

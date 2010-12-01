@@ -25,7 +25,10 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "macros.h"
+#include "zajal.h"
+
+/* global graphics module */
+VALUE zj_mGraphics;
 
 /*  internal global variables */
 VALUE _zj_curve_resolution = INT2FIX(20);
@@ -680,8 +683,8 @@ VALUE zj_next_contour(VALUE self, VALUE bClose) {
   return Qnil;
 }
 
-VALUE zj_graphics_init(VALUE zj_mZajal) {
-  VALUE zj_mGraphics = rb_define_module_under(zj_mZajal, "Graphics");
+void Init_Graphics() {
+  zj_mGraphics = rb_define_module_under(zj_mZajal, "Graphics");
   
   /*  basic shapes */
   rb_define_method(zj_mGraphics, "rectangle", RB_FUNC(zj_rectangle), 4);
@@ -733,6 +736,4 @@ VALUE zj_graphics_init(VALUE zj_mZajal) {
   
   rb_define_method(zj_mGraphics, "background", RB_FUNC(zj_background), -1);
   rb_define_method(zj_mGraphics, "color", RB_FUNC(zj_color), -1);
-  
-  return zj_mGraphics;
 }

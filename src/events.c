@@ -18,7 +18,10 @@
 
 #include "ruby.h"
 #include "ofMain.h"
-#include "macros.h"
+#include "zajal.h"
+
+/* global events module */
+VALUE zj_mEvents;
 
 // event procs
 extern ofBaseApp* ofAppPtr;
@@ -109,8 +112,8 @@ VALUE zj_mouse_y(VALUE self) {
   return INT2FIX(ofAppPtr->mouseY);
 }
 
-VALUE zj_events_init(VALUE zj_mZajal) {
-  VALUE zj_mEvents = rb_define_module_under(zj_mZajal, "Events");
+void Init_Events() {
+  zj_mEvents = rb_define_module_under(zj_mZajal, "Events");
   
   rb_define_method(zj_mEvents, "setup", RB_FUNC(zj_setup), 0);
   rb_define_method(zj_mEvents, "update", RB_FUNC(zj_update), 0);
@@ -128,6 +131,4 @@ VALUE zj_events_init(VALUE zj_mZajal) {
   
   rb_define_method(zj_mEvents, "mouse_x", RB_FUNC(zj_mouse_x), 0);
   rb_define_method(zj_mEvents, "mouse_y", RB_FUNC(zj_mouse_y), 0);
-  
-  return zj_mEvents;
 }

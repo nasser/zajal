@@ -25,9 +25,6 @@
 #include "intern.h"
 #include "ZajalInterpreter.h"
 
-#include "graphics.h"
-#include "events.h"
-
 // the directory of the called script
 char* _zj_data_path;
 

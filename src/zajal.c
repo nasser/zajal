@@ -22,22 +22,21 @@
 #include "ofMain.h"
 #include "zajal.h"
 
-#include "app.h"
-#include "mathematics.h"
-#include "graphics.h"
-#include "events.h"
-#include "images.h"
-
+/* global zajal module and context */
+VALUE zj_mZajal;
 VALUE zj_cContext;
 
-void zj_zajal_init() {
-  VALUE zj_mZajal = rb_define_module("Zajal");
+/* forward declarations of module init functions */
+void Init_App();
+void Init_Events();
+void Init_Graphics();
+void Init_Images();
+void Init_Mathematics();
+
+void zajal_init() {
   
-  VALUE zj_mApp = zj_app_init(zj_mZajal);
-  VALUE zj_mMathematics = zj_mathematics_init(zj_mZajal);
-  VALUE zj_mGraphics = zj_graphics_init(zj_mZajal);
-  VALUE zj_mEvents = zj_events_init(zj_mZajal);
-  VALUE zj_mImages = zj_images_init(zj_mZajal);
+  /* define the global zajal module */
+  zj_mZajal = rb_define_module("Zajal");
   
   /* the context in which user code is run */
   /* TODO Context is not the best name, come up with something better */
@@ -46,7 +45,14 @@ void zj_zajal_init() {
   /*  include ruby's math */
   rb_include_module(rb_cObject, rb_mMath);
   
-  /*  include zajal modules */
+  /* init zajal modules */
+  Init_App();
+  Init_Events();
+  Init_Graphics();
+  Init_Images();
+  Init_Mathematics();
+  
+  /*  include zajal modules to Object, make them global */
   rb_include_module(rb_cObject, zj_mApp);
   rb_include_module(rb_cObject, zj_mMathematics);
   rb_include_module(rb_cObject, zj_mGraphics);

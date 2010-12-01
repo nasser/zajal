@@ -25,11 +25,31 @@
  extern "C" {
 #endif
 
+/*  http://fonlake.blogspot.com/2009/07/cruby.html */
+#define RB_FUNC(f) reinterpret_cast <VALUE (*)(...)>(f) 
+
+/* app */
+extern VALUE zj_mApp;
+
+/* events */
+extern VALUE zj_mEvents;
+
+/* graphics */
+extern VALUE zj_mGraphics;
+void zj_graphics_reset_frame();
+int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a);
+
+/* images */
+extern VALUE zj_mImages;
+
+/* mathematics */
+extern VALUE zj_mMathematics;
+
+/* zajal */
+extern VALUE zj_mZajal;
 extern VALUE zj_cContext;
 
-void __ofrb_graphics_reset_frame();
-
-void zj_zajal_init();
+void zajal_init();
 
 #ifdef __cplusplus
 }
