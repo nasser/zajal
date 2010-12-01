@@ -260,7 +260,11 @@ void ZajalInterpreter::draw() {
 void ZajalInterpreter::keyPressed  (int key) {
   if(!lastError && !NIL_P(currentContext)) {
     // TODO convert key into symbols
-    VALUE args[] = {rb_iv_get(currentContext, "key_pressed_proc"), INT2FIX(key)};
+    char key_string[2];
+    key_string[0] = key;
+    key_string[1] = '\0';
+    
+    VALUE args[] = {rb_iv_get(currentContext, "key_pressed_proc"), rb_str_new2(key_string)};
     
     rb_protect(zj_safe_key_pressed_call, (VALUE)args, &lastError);
     handleError(lastError);
@@ -271,7 +275,11 @@ void ZajalInterpreter::keyPressed  (int key) {
 void ZajalInterpreter::keyReleased  (int key) {
   if(!lastError && !NIL_P(currentContext)) {
     // TODO convert key into symbols
-    VALUE args[] = {rb_iv_get(currentContext, "key_released_proc"), INT2FIX(key)};
+    char key_string[2];
+    key_string[0] = key;
+    key_string[1] = '\0';
+    
+    VALUE args[] = {rb_iv_get(currentContext, "key_released_proc"), rb_str_new2(key_string)};
     
     rb_protect(zj_safe_key_released_call, (VALUE)args, &lastError);
     handleError(lastError);
