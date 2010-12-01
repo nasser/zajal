@@ -84,64 +84,9 @@ char* zj_to_data_path(char* path) {
   
 }
 
-// for procs with no arguments, no need for specialized safe function
-VALUE zj_safe_proc_call(VALUE proc) {
-  if(!NIL_P(proc)) rb_funcall(proc, rb_intern("call"), 0);
-}
-
-VALUE zj_safe_mouse_moved_call(VALUE args) {
-  VALUE mouse_moved_proc = ((VALUE*)args)[0];
-  VALUE x = ((VALUE*)args)[1];
-  VALUE y = ((VALUE*)args)[2];
-  
-  if(!NIL_P(mouse_moved_proc)) rb_funcall(mouse_moved_proc, rb_intern("call"), 2, x, y);
-}
-
-VALUE zj_safe_mouse_dragged_call(VALUE args) {
-  VALUE mouse_dragged_proc = ((VALUE*)args)[0];
-  VALUE x = ((VALUE*)args)[1];
-  VALUE y = ((VALUE*)args)[2];
-  VALUE button = ((VALUE*)args)[3];
-  
-  if(!NIL_P(mouse_dragged_proc)) rb_funcall(mouse_dragged_proc, rb_intern("call"), 3, x, y, button);
-}
-
-VALUE zj_safe_mouse_pressed_call(VALUE args) {
-  VALUE mouse_pressed_proc = ((VALUE*)args)[0];
-  VALUE x = ((VALUE*)args)[1];
-  VALUE y = ((VALUE*)args)[2];
-  VALUE button = ((VALUE*)args)[3];
-  
-  if(!NIL_P(mouse_pressed_proc)) rb_funcall(mouse_pressed_proc, rb_intern("call"), 3, x, y, button);
-}
-
-VALUE zj_safe_mouse_released_call(VALUE args) {
-  VALUE mouse_released_proc = ((VALUE*)args)[0];
-  VALUE x = ((VALUE*)args)[1];
-  VALUE y = ((VALUE*)args)[2];
-  VALUE button = ((VALUE*)args)[3];
-  
-  if(!NIL_P(mouse_released_proc)) rb_funcall(mouse_released_proc, rb_intern("call"), 3, x, y, button);
-}
-
-VALUE zj_safe_key_pressed_call(VALUE args) {
-  VALUE key_pressed_proc = ((VALUE*)args)[0];
-  VALUE key = ((VALUE*)args)[1];
-  if(!NIL_P(key_pressed_proc)) rb_funcall(key_pressed_proc, rb_intern("call"), 1, key);
-}
-
-VALUE zj_safe_key_released_call(VALUE args) {
-  VALUE key_released_proc = ((VALUE*)args)[0];
-  VALUE key = ((VALUE*)args)[1];
-  if(!NIL_P(key_released_proc)) rb_funcall(key_released_proc, rb_intern("call"), 1, key);
-}
-
-VALUE zj_safe_window_resized_call(VALUE args) {
-  VALUE window_resized_proc = ((VALUE*)args)[0];
-  VALUE w = ((VALUE*)args)[1];
-  VALUE h = ((VALUE*)args)[2];
-  
-  if(!NIL_P(window_resized_proc)) rb_funcall(window_resized_proc, rb_intern("call"), 2, w, h);
+VALUE zj_safe_proc_call(VALUE args) {
+  VALUE proc = rb_ary_shift(args);
+  if(!NIL_P(proc)) rb_proc_call(proc, args);
 }
 
 VALUE zj_safe_instance_eval(VALUE args) {
@@ -193,8 +138,8 @@ void ZajalInterpreter::setup() {
   
   if(!lastError && !NIL_P(currentContext)) {
     // if no error exists, run user setup method, catch runtime errors
-    VALUE setup_proc = rb_iv_get(currentContext, "setup_proc");
-    rb_protect(zj_safe_proc_call, setup_proc, &lastError);
+    VALUE args[] = {rb_iv_get(currentContext, "setup_proc")};
+    rb_protect(zj_safe_proc_call, rb_ary_new4(1, args), &lastError);
     handleError(lastError);
   }
 }
@@ -203,8 +148,8 @@ void ZajalInterpreter::setup() {
 void ZajalInterpreter::update() {
   if(!lastError && !NIL_P(currentContext)) {
     // if no error exists, run user update method, catch runtime errors
-    VALUE update_proc = rb_iv_get(currentContext, "update_proc");
-    rb_protect(zj_safe_proc_call, update_proc, &lastError);
+    VALUE args[] = {rb_iv_get(currentContext, "update_proc")};
+    rb_protect(zj_safe_proc_call, rb_ary_new4(1, args), &lastError);
     handleError(lastError);
   }
 }
@@ -245,8 +190,8 @@ void ZajalInterpreter::draw() {
   } else {
     // no error exists, draw next frame of user code, catch runtime errors
     zj_graphics_reset_frame();
-    VALUE draw_proc = rb_iv_get(currentContext, "draw_proc");
-    rb_protect(zj_safe_proc_call, draw_proc, &lastError);
+    VALUE args[] = {rb_iv_get(currentContext, "draw_proc")};
+    rb_protect(zj_safe_proc_call, rb_ary_new4(1, args), &lastError);
     handleError(lastError);
     
   }
@@ -266,7 +211,7 @@ void ZajalInterpreter::keyPressed  (int key) {
     
     VALUE args[] = {rb_iv_get(currentContext, "key_pressed_proc"), rb_str_new2(key_string)};
     
-    rb_protect(zj_safe_key_pressed_call, (VALUE)args, &lastError);
+    rb_protect(zj_safe_proc_call, rb_ary_new4(2, args), &lastError);
     handleError(lastError);
   }
 }
@@ -281,7 +226,7 @@ void ZajalInterpreter::keyReleased  (int key) {
     
     VALUE args[] = {rb_iv_get(currentContext, "key_released_proc"), rb_str_new2(key_string)};
     
-    rb_protect(zj_safe_key_released_call, (VALUE)args, &lastError);
+    rb_protect(zj_safe_proc_call, rb_ary_new4(2, args), &lastError);
     handleError(lastError);
   }
 }
@@ -292,7 +237,7 @@ void ZajalInterpreter::mouseMoved(int x, int y) {
   if(!lastError && !NIL_P(currentContext)) {
     VALUE args[] = {rb_iv_get(currentContext, "mouse_moved_proc"), INT2FIX(x), INT2FIX(y)};
     
-    rb_protect(zj_safe_mouse_moved_call, (VALUE)args, &lastError);
+    rb_protect(zj_safe_proc_call, rb_ary_new4(3, args), &lastError);
     handleError(lastError);
   }
 }
@@ -302,7 +247,7 @@ void ZajalInterpreter::mouseDragged(int x, int y, int button) {
   if(!lastError && !NIL_P(currentContext)) {
     VALUE args[] = {rb_iv_get(currentContext, "mouse_dragged_proc"), INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button)};
     
-    rb_protect(zj_safe_mouse_dragged_call, (VALUE)args, &lastError);
+    rb_protect(zj_safe_proc_call, rb_ary_new4(4, args), &lastError);
     handleError(lastError);
   }
 }
@@ -312,7 +257,7 @@ void ZajalInterpreter::mousePressed(int x, int y, int button) {
   if(!lastError && !NIL_P(currentContext)) {
     VALUE args[] = {rb_iv_get(currentContext, "mouse_pressed_proc"), INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button)};
     
-    rb_protect(zj_safe_mouse_pressed_call, (VALUE)args, &lastError);
+    rb_protect(zj_safe_proc_call, rb_ary_new4(4, args), &lastError);
     handleError(lastError);
   }
 }
@@ -323,7 +268,7 @@ void ZajalInterpreter::mouseReleased(int x, int y, int button) {
   if(!lastError && !NIL_P(currentContext)) {
     VALUE args[] = {rb_iv_get(currentContext, "mouse_released_proc"), INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button)};
     
-    rb_protect(zj_safe_mouse_released_call, (VALUE)args, &lastError);
+    rb_protect(zj_safe_proc_call, rb_ary_new4(4, args), &lastError);
     handleError(lastError);
   }
 }
@@ -333,7 +278,7 @@ void ZajalInterpreter::windowResized(int w, int h) {
   if(!lastError && !NIL_P(currentContext)) {
     VALUE args[] = {rb_iv_get(currentContext, "window_resized_proc"), INT2FIX(w), INT2FIX(h)};
     
-    rb_protect(zj_safe_window_resized_call, (VALUE)args, &lastError);
+    rb_protect(zj_safe_proc_call, rb_ary_new4(3, args), &lastError);
     handleError(lastError);
   }
 }
