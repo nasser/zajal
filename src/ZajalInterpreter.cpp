@@ -20,10 +20,8 @@
 
 #include <sys/stat.h>
 
-#include "ruby.h"
-#include "oniguruma.h"
-#include "intern.h"
 #include "ZajalInterpreter.h"
+#include "ruby/encoding.h"
 
 // the directory of the called script
 char* _zj_data_path;
@@ -105,6 +103,18 @@ VALUE zj_button_to_symbol(int button) {
 }
 
 ZajalInterpreter::ZajalInterpreter(char* fileName) {
+  // start ruby/zajal
+  ruby_init();
+  zajal_init();
+  
+  // establish the data path and add it to ruby's load path
+  _zj_data_path = zj_script_directory(fileName);
+  rb_ary_push(rb_gv_get("$:"), rb_str_new2(_zj_data_path));
+  rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/ruby/stdlib"));
+  
+  // load in all encodings
+  rb_enc_find("encdb");
+
   scriptName = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
   
   strncpy(scriptName, fileName, SCRIPT_NAME_SIZE);

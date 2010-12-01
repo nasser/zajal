@@ -19,7 +19,6 @@
 // main interpreter executable
 
 #include "ruby.h"
-#include "ruby/encoding.h"
 
 #include "ofMain.h"
 #include "ZajalInterpreter.h"
@@ -46,18 +45,7 @@ void print_version() {
 int main(int argc, char** argv) {
   print_version();
   
-  ruby_init();
-  zajal_init();
-  
   if(argc > 1) {
-    // establish the data path and add it to ruby's load path
-    _zj_data_path = zj_script_directory(argv[1]);
-    rb_ary_push(rb_gv_get("$:"), rb_str_new2(_zj_data_path));
-    rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/ruby/stdlib"));
-    
-    // load in all encodings
-    rb_enc_find("encdb");
-    
     // start new interpreter
     ZajalInterpreter* zi = new ZajalInterpreter(argv[1]);
     
