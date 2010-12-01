@@ -85,15 +85,15 @@ char* zj_to_data_path(char* path) {
 }
 
 VALUE zj_safe_proc_call(VALUE args) {
+  // assumes args is a ruby array with the proc as the first element
   VALUE proc = rb_ary_shift(args);
   if(!NIL_P(proc)) rb_proc_call(proc, args);
 }
 
 VALUE zj_safe_instance_eval(VALUE args) {
+  // assumes args is VALUE* array of the form {receiver, code}
   VALUE receiver = ((VALUE*)args)[0];
-  VALUE code = ((VALUE*)args)[1];
-  
-  rb_funcall(receiver, rb_intern("instance_eval"), 1, code);
+  rb_obj_instance_eval(1, ((VALUE*)args)+1, receiver);
 }
 
 VALUE zj_button_to_symbol(int button) {
@@ -308,7 +308,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   // load source into ruby variable and clone it
   VALUE rbScriptFileContent = rb_str_new2(scriptFileContent);
   
-  currentContext = rb_funcall(zj_cContext, rb_intern("new"), 0);
+  currentContext = rb_class_new_instance(0, 0, zj_cContext);
   
   VALUE args[] = {currentContext, rbScriptFileContent};
   rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
@@ -340,7 +340,7 @@ void ZajalInterpreter::handleError(int error) {
     // backtrace
     if(!NIL_P(last_error)) {
         std::ostringstream o;
-        VALUE backtrace = rb_funcall(last_error, rb_intern("backtrace"), 0);
+        VALUE backtrace = rb_attr_get(last_error, rb_intern("bt"));
         long backtrace_length = RARRAY_LEN(backtrace);
         VALUE* backtrace_ptr = RARRAY_PTR(backtrace);
         
