@@ -61,10 +61,10 @@ $(BUILD_DIR)/%.c.o: $(ZAJAL_DIR)/%.c
 $(BUILD_DIR)/version.c.o: $(ZAJAL_DIR)/version.c
 	@echo -n "Building in version information..."
 	@cp $< $<.bak
-	@sed -i '' -Ee 's/zajal_hash\[\] = "[^"]+"/zajal_hash[] = "$(ZAJAL_GIT_HASH)"/' $<
-	@sed -i '' -Ee 's/zajal_short_hash\[\] = "[^"]+"/zajal_short_hash[] = "$(ZAJAL_GIT_SHORT_HASH)"/' $<
-	@sed -i '' -Ee 's/zajal_branch\[\] = "[^"]+"/zajal_branch[] = "$(ZAJAL_GIT_BRANCH)"/' $<
-	@$(CXX) $(CXXFLAGS) -c -o $@ $<
+	@sed -i '' -Ee 's/zajal_hash\[\] = "[^"]*"/zajal_hash[] = "$(ZAJAL_GIT_HASH)"/' $<
+	@sed -i '' -Ee 's/zajal_short_hash\[\] = "[^"]*"/zajal_short_hash[] = "$(ZAJAL_GIT_SHORT_HASH)"/' $<
+	@sed -i '' -Ee 's/zajal_branch\[\] = "[^"]*"/zajal_branch[] = "$(ZAJAL_GIT_BRANCH)"/' $<
+	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@mv $<.bak $<
 	@echo "OK"
 

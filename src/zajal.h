@@ -45,6 +45,9 @@ extern VALUE zj_mImages;
 /* mathematics */
 extern VALUE zj_mMathematics;
 
+/* version */
+extern VALUE zj_mVersion;
+
 /* zajal */
 extern VALUE zj_mZajal;
 extern VALUE zj_cContext;

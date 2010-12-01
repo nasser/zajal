@@ -32,9 +32,9 @@ void Init_Events();
 void Init_Graphics();
 void Init_Images();
 void Init_Mathematics();
+void Init_Version();
 
 void zajal_init() {
-  
   /* define the global zajal module */
   zj_mZajal = rb_define_module("Zajal");
   
@@ -51,6 +51,7 @@ void zajal_init() {
   Init_Graphics();
   Init_Images();
   Init_Mathematics();
+  Init_Version();
   
   /*  include zajal modules to Object, make them global */
   rb_include_module(rb_cObject, zj_mApp);
@@ -58,5 +59,6 @@ void zajal_init() {
   rb_include_module(rb_cObject, zj_mGraphics);
   rb_include_module(rb_cObject, zj_mEvents);
   rb_include_module(rb_cObject, zj_mImages);
+  rb_include_module(rb_cObject, zj_mVersion);
   rb_include_module(rb_cObject, zj_mZajal);
 }
