@@ -18,44 +18,13 @@
 
 // main interpreter executable
 
-#include "ruby.h"
-
-#include "ofMain.h"
 #include "ZajalInterpreter.h"
-#include "zajal.h"
-#include "ofAppGlutWindow.h"
 
-extern const char zajal_version[];
-extern const char zajal_hash[];
-extern const char zajal_short_hash[];
-extern const char zajal_branch[];
-
-extern const char ruby_description[];
-
-// print version information
-void print_version() {
-  if(strcmp(zajal_branch, "master") == 0)
-    printf("zajal %s-%s\n", zajal_version, zajal_short_hash);
-  else
-    printf("zajal %s-%s [%s]\n", zajal_version, zajal_short_hash, zajal_branch);
-  printf("%s%s\n", ofGetVersionInfo().c_str(), ruby_description);
-}
-
-//========================================================================
 int main(int argc, char** argv) {
-  print_version();
-  
   if(argc > 1) {
     // start new interpreter
     ZajalInterpreter* zi = new ZajalInterpreter(argv[1]);
-    
-  	ofAppGlutWindow window;
-  	ofSetupOpenGL(&window, 500, 500, OF_WINDOW);			// <-------- setup the GL context
-  	
-  	// this kicks off the running of my app
-  	// can be OF_WINDOW or OF_FULLSCREEN
-  	// pass in width and height too:
-  	ofRunApp(zi);
+    zi->run();
     
   } else {
     // TODO read from stdin or enter interactive mode

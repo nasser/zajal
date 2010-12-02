@@ -114,7 +114,7 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   
   // load in all encodings
   rb_enc_find("encdb");
-
+  
   scriptName = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
   
   strncpy(scriptName, fileName, SCRIPT_NAME_SIZE);
@@ -127,6 +127,12 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   currentContext = Qnil;
   
   _zj_data_path = NULL;
+  
+}
+
+void ZajalInterpreter::run() {
+  ofSetupOpenGL(&window, 500, 500, OF_WINDOW);
+  ofRunApp(this);
 }
 
 //--------------------------------------------------------------

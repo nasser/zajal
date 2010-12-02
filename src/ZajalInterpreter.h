@@ -51,6 +51,7 @@ class ZajalInterpreter : public ofBaseApp {
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 		
+    void run();
     void loadScript(char* filename);
     void updateCurrentScript();
     
@@ -75,6 +76,9 @@ class ZajalInterpreter : public ofBaseApp {
     
     // screenshot of the sketch state before the last error was encountered
 		ofImage lastErrorImage;
+		
+		// the sketch window
+		ofAppGlutWindow window;
     
     void handleError(int error);
 };
