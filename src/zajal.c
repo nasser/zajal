@@ -43,9 +43,6 @@ void zajal_init() {
   /* TODO Context is not the best name, come up with something better */
   zj_cContext = rb_define_class_under(zj_mZajal, "Context", rb_cObject);
   
-  /*  include ruby's math */
-  rb_include_module(rb_cObject, rb_mMath);
-  
   /* init zajal modules */
   Init_App();
   Init_Events();

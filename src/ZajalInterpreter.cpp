@@ -115,6 +115,10 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   // load in all encodings
   rb_enc_find("encdb");
   
+  // require/include useful parts of ruby by default
+  rb_include_module(rb_cObject, rb_mMath);
+  rb_require("open-uri");
+  
   scriptName = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
   
   strncpy(scriptName, fileName, SCRIPT_NAME_SIZE);
