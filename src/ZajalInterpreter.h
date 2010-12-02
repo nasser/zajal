@@ -51,6 +51,7 @@ class ZajalInterpreter : public ofBaseApp {
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
 		
+    void printVersion();
     void run();
     void loadScript(char* filename);
     void updateCurrentScript();

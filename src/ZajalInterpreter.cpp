@@ -128,6 +128,23 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   
   _zj_data_path = NULL;
   
+  printVersion();
+}
+
+void ZajalInterpreter::printVersion() {
+  char* zj_version = RSTRING_PTR(rb_const_get(rb_cObject, rb_intern("ZAJAL_VERSION")));
+  char* zj_hash = RSTRING_PTR(rb_const_get(rb_cObject, rb_intern("ZAJAL_HASH")));
+  char* zj_branch = RSTRING_PTR(rb_const_get(rb_cObject, rb_intern("ZAJAL_BRANCH")));
+  
+  char* of_version = RSTRING_PTR(rb_const_get(rb_cObject, rb_intern("OF_VERSION")));
+  char* rb_version = RSTRING_PTR(rb_const_get(rb_cObject, rb_intern("RUBY_VERSION")));
+  
+  if(strcmp(zj_branch, "master") == 0)
+    printf("zajal %s-%s\n", zj_version, zj_hash);
+  else
+    printf("zajal %s-%s [%s]\n", zj_version, zj_hash, zj_branch);
+  
+  printf("openFrameworks %s\nruby %s\n", of_version, rb_version);
 }
 
 void ZajalInterpreter::run() {
