@@ -184,24 +184,6 @@ void ZajalInterpreter::update() {
   }
 }
 
-void ZajalInterpreter::updateCurrentScript() {
-  struct stat attrib;
-  if(stat(scriptName, &attrib)) {
-    printf("Could not stat %s!\n", scriptName);
-    
-  } else {
-    if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
-      printf("Updating %s in place...\n", scriptName);
-      scriptModifiedTime = attrib.st_mtimespec.tv_sec;
-      loadScript(scriptName);
-      
-    }
-    
-  }
-  
-  nextUpdate = SCRIPT_UPDATE_FREQUENCY;
-}
-
 //--------------------------------------------------------------
 void ZajalInterpreter::draw() {
   if(lastError && !NIL_P(currentContext)) {
@@ -230,6 +212,23 @@ void ZajalInterpreter::draw() {
   if(nextUpdate-- == 0) updateCurrentScript();
 }
 
+void ZajalInterpreter::updateCurrentScript() {
+  struct stat attrib;
+  if(stat(scriptName, &attrib)) {
+    printf("Could not stat %s!\n", scriptName);
+    
+  } else {
+    if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
+      printf("Updating %s in place...\n", scriptName);
+      scriptModifiedTime = attrib.st_mtimespec.tv_sec;
+      loadScript(scriptName);
+      
+    }
+    
+  }
+  
+  nextUpdate = SCRIPT_UPDATE_FREQUENCY;
+}
 
 //--------------------------------------------------------------
 void ZajalInterpreter::keyPressed  (int key) {
