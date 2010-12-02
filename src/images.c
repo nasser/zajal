@@ -20,8 +20,6 @@
 #include "ofMain.h"
 #include "zajal.h"
 
-#include "ZajalInterpreter.h"
-
 /* global images module and image class */
 VALUE zj_mImages;
 VALUE zj_cImage;

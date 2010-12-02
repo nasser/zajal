@@ -32,6 +32,7 @@ void Init_Events();
 void Init_Graphics();
 void Init_Images();
 void Init_Mathematics();
+void Init_Typography();
 void Init_Version();
 
 void zajal_init() {
@@ -51,6 +52,7 @@ void zajal_init() {
   Init_Graphics();
   Init_Images();
   Init_Mathematics();
+  Init_Typography();
   Init_Version();
   
   /*  include zajal modules to Object, make them global */
@@ -60,5 +62,6 @@ void zajal_init() {
   rb_include_module(rb_cObject, zj_mEvents);
   rb_include_module(rb_cObject, zj_mImages);
   rb_include_module(rb_cObject, zj_mVersion);
+  rb_include_module(rb_cObject, zj_mTypography);
   rb_include_module(rb_cObject, zj_mZajal);
 }

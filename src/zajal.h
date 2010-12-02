@@ -45,6 +45,10 @@ extern VALUE zj_mImages;
 /* mathematics */
 extern VALUE zj_mMathematics;
 
+/* typography */
+extern VALUE zj_mTypography;
+void zj_typography_reset_stacked_text();
+
 /* version */
 extern VALUE zj_mVersion;
 
@@ -53,6 +57,7 @@ extern VALUE zj_mZajal;
 extern VALUE zj_cContext;
 
 void zajal_init();
+char* zj_to_data_path(char* fileName);
 
 #ifdef __cplusplus
 }

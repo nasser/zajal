@@ -40,14 +40,9 @@ VALUE _zj_line_width = INT2FIX(1);
 VALUE _zj_background_auto = Qtrue;
 VALUE _zj_fill = Qtrue;
 
-int _zj_stacked_text_initial_y = 20;
-int _zj_stacked_text_line_height = 20;
-int _zj_stacked_text_x = 10;
-int _zj_stacked_text_y = _zj_stacked_text_initial_y;
-
 /* reset internal variables at start of each frame */
 void zj_graphics_reset_frame() {
-  _zj_stacked_text_y = _zj_stacked_text_initial_y;
+  zj_typography_reset_stacked_text();
 }
 
 /* TODO support named colors, move this to a helper source file */
@@ -238,30 +233,6 @@ VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
 
 VALUE zj_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
   ofLine(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2));
-  return Qnil;
-}
-
-/*  TODO support fonts here later */
-VALUE zj_text(int argc, VALUE* argv, VALUE klass) {
-  VALUE s, x, y;
-  rb_scan_args(argc, argv, "12", &s, &x, &y);
-  
-  VALUE text_string = rb_funcall(s, rb_intern("to_s"), 0);
-  
-  if(NIL_P(x) && NIL_P(y)) {
-    /* called without coordinates, stack the text */
-    ofDrawBitmapString(StringValuePtr(text_string), _zj_stacked_text_x, _zj_stacked_text_y);
-    _zj_stacked_text_y += _zj_stacked_text_line_height;
-    
-  } else if(!NIL_P(x) && !NIL_P(y)) {
-    /* called with coordinates, draw text at coordinates */
-    ofDrawBitmapString(StringValuePtr(text_string), NUM2DBL(x), NUM2DBL(y));
-    
-  } else {
-    rb_raise(rb_eTypeError, "Expected 1 or 3 arguments to text!");
-    
-  }
-  
   return Qnil;
 }
 
@@ -693,9 +664,6 @@ void Init_Graphics() {
   rb_define_method(zj_mGraphics, "circle", RB_FUNC(zj_circle), 3);
   rb_define_method(zj_mGraphics, "ellipse", RB_FUNC(zj_ellipse), 4);
   rb_define_method(zj_mGraphics, "line", RB_FUNC(zj_line), 4);
-  
-  /*  basic text */
-  rb_define_method(zj_mGraphics, "text", RB_FUNC(zj_text), -1);
   
   /*  curved lines */
   rb_define_method(zj_mGraphics, "curve", RB_FUNC(zj_curve), 8);
