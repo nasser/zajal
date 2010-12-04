@@ -102,6 +102,10 @@ VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE klass) {
   }
 }
 
+VALUE zj_frame(VALUE self) {
+  return INT2NUM(ofGetFrameNum());
+}
+
 VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
   VALUE new_framerate;
   rb_scan_args(argc, argv, "01", &new_framerate);
@@ -141,6 +145,7 @@ void Init_App() {
   rb_define_method(zj_mApp, "height", RB_FUNC(zj_height), -1);
   rb_define_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
   rb_define_method(zj_mApp, "size", RB_FUNC(zj_size), -1);
+  rb_define_method(zj_mApp, "frame", RB_FUNC(zj_frame), 0);
   rb_define_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
   rb_define_method(zj_mApp, "vertical_sync", RB_FUNC(zj_vertical_sync), -1);
   rb_define_method(zj_mApp, "title", RB_FUNC(zj_title), -1);
