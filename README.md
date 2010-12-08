@@ -18,4 +18,4 @@ Once more of the interpreter gets nailed down, expect easy to use one click inst
 
 Legal
 -----
-Provided under the GNU General Public License Version 3. Check [COPYING](http://github.com/nasser/zajal/blob/master/COPYING) for more on that.
+Provided under the MIT License. Check [LICENSE](http://github.com/nasser/zajal/blob/master/LICENSE) for more on that.
