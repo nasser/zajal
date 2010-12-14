@@ -4,6 +4,7 @@
 
 #include "ZajalInterpreter.h"
 #include "ruby/encoding.h"
+#include "node.h"
 
 // the directory of the called script
 char* _zj_data_path;
@@ -320,9 +321,10 @@ void ZajalInterpreter::loadScript(char* filename) {
   
   currentContext = rb_class_new_instance(0, 0, zj_cContext);
   
+  bool mustRestart = true;
+  
   // load source into ruby variable, globalize it
   VALUE incomingCode = rb_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
-  bool mustRestart = true;
   
   if(currentCode != Qnil) {
     VALUE mustRestartVal = rb_funcall(rb_cObject, rb_intern("compare_code"), 2, currentCode, incomingCode);
@@ -331,11 +333,30 @@ void ZajalInterpreter::loadScript(char* filename) {
   
   currentCode = incomingCode;
   
+  VALUE currentState = rb_funcall(rb_cObject, rb_intern("capture_state"), 0);
+  
   VALUE args[] = {currentContext, currentCode};
   rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
   handleError(lastError);
   
-  if(!lastError && mustRestart) setup();
+  if(!lastError) {
+    if(mustRestart) {
+      setup();
+    
+    } else {
+      long currentStateLen = RARRAY_LEN(currentState);
+      VALUE* currentStatePtr = RARRAY_PTR(currentState);
+      for(int i = 0; i < currentStateLen; i++) {
+        VALUE* gvValPairPtr = RARRAY_PTR(currentStatePtr[i]);
+        ID gvSymId = SYM2ID(gvValPairPtr[0]);
+        VALUE gvVal = gvValPairPtr[1];
+        printf("%s\n", rb_id2name(gvSymId));
+        rb_gv_set(rb_id2name(gvSymId), gvVal);
+      
+      }
+    }
+  }
+  
 }
 
 // http://metaeditor.sourceforge.net/embed/

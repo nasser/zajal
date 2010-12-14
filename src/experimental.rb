@@ -134,8 +134,8 @@ end
 # 
 # Returns true if the code differs enough to warrant a full reset, false otherwise
 def compare_code local_code, other_code
-  local_sexp = Ripper.sexp_simple(local_code)
-  other_sexp = Ripper.sexp_simple(other_code)
+  local_sexp = Ripper.sexp_simple(local_code)[1]
+  other_sexp = Ripper.sexp_simple(other_code)[1]
   
   # figure out what was added and removed
   removed = local_sexp - other_sexp
@@ -145,4 +145,12 @@ def compare_code local_code, other_code
   modified_methods = removed.reduce([], &$to_methods) | added.reduce([], &$to_methods)
 
   modified_methods.include?("setup") or not modified_globals.empty?
+end
+
+def capture_state
+  global_variables.reduce([]) do |state, gv|
+    # ignore unsettable, unsupported globals
+    state << [gv, eval(gv.to_s)] if not gv.to_s =~ /^\$([0-9].*|.*[^a-zA-Z0-9_].*|KCODE|FILENAME|LOAD_PATH|LOADED_FEATURES|_|SAFE|PROGRAM_NAME|VERBOSE|DEBUG|stderr|stdin|stdout)$/
+    state
+  end
 end
