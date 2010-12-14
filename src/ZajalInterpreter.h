@@ -50,6 +50,7 @@ class ZajalInterpreter : public ofBaseApp {
     
     // ruby object representing the current execution context
     VALUE currentContext;
+    VALUE currentCode;
     
     // last error reported by ruby. lastError == 0 means no error 
     int lastError;
