@@ -92,6 +92,7 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   // establish the data path and add it to ruby's load path
   _zj_data_path = zj_script_directory(fileName);
   rb_ary_push(rb_gv_get("$:"), rb_str_new2(_zj_data_path));
+  rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/src"));
   rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/ruby/stdlib"));
   
   // load in all encodings
@@ -100,6 +101,9 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   // require/include useful parts of ruby by default
   rb_include_module(rb_cObject, rb_mMath);
   rb_require("open-uri");
+  
+  // require ruby-implemented experimental functionality
+  rb_require("experimental");
   
   scriptName = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
   
@@ -111,6 +115,8 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   nextUpdate = SCRIPT_UPDATE_FREQUENCY;
   lastErrorMessage = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
   currentContext = Qnil;
+  currentCode = Qnil;
+  rb_define_variable("_current_code", &currentCode);
   
   _zj_data_path = NULL;
   
@@ -312,16 +318,24 @@ void ZajalInterpreter::loadScript(char* filename) {
   // update data path
   _zj_data_path = zj_script_directory(scriptName);
   
-  // load source into ruby variable and clone it
-  VALUE rbScriptFileContent = rb_str_new2(scriptFileContent);
-  
   currentContext = rb_class_new_instance(0, 0, zj_cContext);
   
-  VALUE args[] = {currentContext, rbScriptFileContent};
+  // load source into ruby variable, globalize it
+  VALUE incomingCode = rb_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
+  bool mustRestart = true;
+  
+  if(currentCode != Qnil) {
+    VALUE mustRestartVal = rb_funcall(rb_cObject, rb_intern("compare_code"), 2, currentCode, incomingCode);
+    mustRestart = RTEST(mustRestartVal);
+  }
+  
+  currentCode = incomingCode;
+  
+  VALUE args[] = {currentContext, currentCode};
   rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
   handleError(lastError);
   
-  if(!lastError) setup();
+  if(!lastError && mustRestart) setup();
 }
 
 // http://metaeditor.sourceforge.net/embed/
