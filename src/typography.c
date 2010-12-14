@@ -80,7 +80,7 @@ VALUE zj_typography_text(int argc, VALUE* argv, VALUE klass) {
     ofDrawBitmapString(StringValuePtr(text_string), NUM2DBL(x), NUM2DBL(y));
     
   } else {
-    rb_raise(rb_eTypeError, "Expected 1 or 3 arguments to text!");
+    rb_raise(rb_eArgError, "Expected 1 or 3 arguments to text!");
     
   }
   

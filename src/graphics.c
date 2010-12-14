@@ -101,7 +101,7 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
       ofSetRectMode(OF_RECTMODE_CORNER);
       
     } else {
-      rb_raise(rb_eTypeError, "Invalid rectangle mode!");
+      rb_raise(rb_eArgError, "Invalid rectangle mode!");
       
     }
     
@@ -329,7 +329,7 @@ VALUE zj_end_shape(int argc, VALUE* argv, VALUE klass) {
       cClosed = true;
       
     } else {
-      rb_raise(rb_eTypeError, "Expected symbol :closed or nil!");
+      rb_raise(rb_eArgError, "Expected symbol :closed or nil!");
       
     }
     
@@ -352,7 +352,7 @@ VALUE zj_shape(int argc, VALUE* argv, VALUE klass) {
       cClosed = true;
       
     } else {
-      rb_raise(rb_eTypeError, "Expected symbol :closed or nil!");
+      rb_raise(rb_eArgError, "Expected symbol :closed or nil!");
       
     }
     
@@ -435,7 +435,7 @@ VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
     ofDisableSmoothing();
     
   } else {
-    rb_raise(rb_eTypeError, "Expected true or false!");
+    rb_raise(rb_eArgError, "Expected true or false!");
     
   }
   
@@ -461,7 +461,7 @@ VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
     ofDisableAlphaBlending();
     
   } else {
-    rb_raise(rb_eTypeError, "Expected true or false!");
+    rb_raise(rb_eArgError, "Expected true or false!");
     
   }
   
@@ -487,7 +487,7 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
     ofDisableArbTex();
     
   } else {
-    rb_raise(rb_eTypeError, "Expected true or false!");
+    rb_raise(rb_eArgError, "Expected true or false!");
     
   }
   
@@ -554,7 +554,7 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
     ofSetBackgroundAuto(false);
     
   } else {
-    rb_raise(rb_eTypeError, "Expected true or false!");
+    rb_raise(rb_eArgError, "Expected true or false!");
     
   }
   
@@ -593,7 +593,7 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
     ofNoFill();
     
   } else {
-    rb_raise(rb_eTypeError, "Expected true or false!");
+    rb_raise(rb_eArgError, "Expected true or false!");
     
   }
   
