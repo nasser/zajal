@@ -1,5 +1,5 @@
 /* 
- * Graphics Methods
+ * Graphics Module
  * 
  * Methods for drawing shapes and text, changng colors and other visual
  * things. Meant to wrap the `ofGraphics.h` functions in openFrameworks.
@@ -111,12 +111,14 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
 }
 
 /*
- * Draws a rectangle
+ * Draws a rectangle.
  * 
  * x - The x coordinate of the center or corner, depending on rectangle_mode
  * y - The y coordinate of the center or corner, depending on rectangle_mode
  * w - The width of the rectangle
  * h - The height of the rectangle
+ * 
+ * See also square, rectangle_mode
  * 
  * Examples
  * 
@@ -144,7 +146,7 @@ VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
 }
 
 /*
- * Draws a square
+ * Draws a square.
  * 
  * x - The x coordinate
  * y - The y coordinate
@@ -262,6 +264,30 @@ VALUE zj_matrix(VALUE self) {
   return returnValue;
 }
 
+/* 
+ * Apply a translation transformation to the current matrix. Accepts 2D and
+ * 3D coordinates.
+ * 
+ * x - The distance to move in x
+ * y - The distance to move in y
+ * z - Optional, The distance to move in z
+ * 
+ * x - The distance to move in x
+ * y - The distance to move in y
+ * z - The distance to move in z
+ * 
+ * See also matrix, rotate, scale
+ * 
+ * Examples
+ * 
+ *   matrix {
+ *     # move origin to center of screen
+ *     translate width/2, height/2
+ *     circle 0, 0, 10
+ *   }
+ * 
+ * Returns nothing
+ */
 VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
   rb_scan_args(argc, argv, "21", &x, &y, &z);
@@ -416,6 +442,29 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * Gets and sets the smoothing setting. Smoothing determines whether shapes
+ * will be drawn antialiased or with jagged pixel edges. Smoothing slows
+ * drawing down, so it defaults to false.
+ * 
+ * state - Optional, true to enable smoothing or false to disable it
+ * 
+ * See also alpha_blending
+ * 
+ * Examples
+ * 
+ *   # draw jagged lines
+ *   smoothing false
+ *   line 10, 10, 13, 17
+ *   line 13, 17, 11, 25
+ *   
+ *   # draw smooth circles
+ *   smoothing true
+ *   circle 15, 15, 5
+ * 
+ * Returns nothing if called with an argument, otherwise current smoothing
+ * value as true or false
+ */
 VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
   VALUE new_smoothing;
   rb_scan_args(argc, argv, "01", &new_smoothing);

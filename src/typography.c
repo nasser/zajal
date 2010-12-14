@@ -1,3 +1,8 @@
+/* 
+ * Typography Module
+ * 
+ * Functionality for writing text to the sketch window.
+ */
 
 #include "ruby.h"
 #include "ofMain.h"
@@ -64,6 +69,22 @@ VALUE zj_font_draw(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Draws text to the screen.
+ * 
+ * s - The text to draw to the screen
+ * 
+ * Examples
+ * 
+ *   # draw some stacked
+ *   text "Hello, there!"
+ *   text "Buddy"
+ * 
+ *   # draw something else
+ *   text "What?!", width/2, height/2
+ * 
+ * Returns nothing
+ */
 VALUE zj_typography_text(int argc, VALUE* argv, VALUE klass) {
   VALUE s, x, y;
   rb_scan_args(argc, argv, "12", &s, &x, &y);
