@@ -28,9 +28,7 @@ source.scan(/\s+\/\*(.*?)\*+\/\s+?VALUE\s+([^(]+)/m).each do |s|
   comment.gsub! /^\s*/, ""
   rb_name = source.scan(/rb_define_method\([^,]+,\s*"([^"]+)"\s*,\s*[^(]*\(?\b#{c_name}\b\)?/).first.first
   
-  d = TomDoc::TomDoc.new rb_name, comment
-
-  documented_methods << d
+  documented_methods << TomDoc::TomDoc.new(rb_name, comment)
 end
 
 # output
