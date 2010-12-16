@@ -1,7 +1,9 @@
 # require "ripper" # why doesn't this work?
 require 'ripper/sexp'
 
+# add sugar to some each* methods
 class Array
+  alias :each_consecutive :each_cons 
   def each_pair &block
     each_cons 2, &block
   end
