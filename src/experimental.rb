@@ -8,6 +8,18 @@ class Array
     each_cons 2, &block
   end
 end
+
+# implement pattern rejection
+class String
+  def reject pattern
+    gsub pattern, ""
+  end
+  
+  def reject! pattern
+    gsub! pattern, ""
+  end
+end
+
   
 # run a block once every f frames, return true every f frame
 def once_every f
