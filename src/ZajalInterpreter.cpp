@@ -353,7 +353,6 @@ void ZajalInterpreter::loadScript(char* filename) {
         VALUE* gvValPairPtr = RARRAY_PTR(currentStatePtr[i]);
         ID gvSymId = SYM2ID(gvValPairPtr[0]);
         VALUE gvVal = gvValPairPtr[1];
-        printf("%s\n", rb_id2name(gvSymId));
         rb_gv_set(rb_id2name(gvSymId), gvVal);
       
       }
