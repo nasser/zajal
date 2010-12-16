@@ -185,6 +185,7 @@ void ZajalInterpreter::draw() {
     lastErrorImage.draw(0, 0);
     // TODO apply filters to lastErrorImage instead of drawing a rect
     ofEnableAlphaBlending();
+    ofFill();
     ofSetColor(255, 255, 255, 128);
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
     ofSetColor(255, 255, 255, 255);
