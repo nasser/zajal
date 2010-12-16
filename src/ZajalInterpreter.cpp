@@ -323,6 +323,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   currentContext = rb_class_new_instance(0, 0, zj_cContext);
   
   bool mustRestart = true;
+  bool wasLastError = (lastError != 0); // are we recovering from an error?
   
   // load source into ruby variable, globalize it
   VALUE incomingCode = rb_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
@@ -340,8 +341,9 @@ void ZajalInterpreter::loadScript(char* filename) {
   rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
   handleError(lastError);
   
+  
   if(!lastError) {
-    if(mustRestart) {
+    if(mustRestart || wasLastError) {
       setup();
     
     } else {
