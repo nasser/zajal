@@ -44,22 +44,25 @@ all: $(BINARY)
 
 $(BINARY): $(ZAJAL_OBJ)
 	@echo -n "Making binary..."
-	@mkdir -p bin
+	@mkdir -p $(BIN_DIR)
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) $(OF_FRAMEWORKS) $(ZAJAL_LIBRARIES) $(ZAJAL_OBJ) -o $(BINARY)
 	@echo "OK"
 
 $(BUILD_DIR)/%.cpp.o: $(ZAJAL_DIR)/%.cpp
 	@echo -n "Building $<..."
+	@mkdir -p $(BUILD_DIR)
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@echo "OK"
 
 $(BUILD_DIR)/%.c.o: $(ZAJAL_DIR)/%.c
 	@echo -n "Building $<..."
+	@mkdir -p $(BUILD_DIR)
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@echo "OK"
 
 $(BUILD_DIR)/version.c.o: $(ZAJAL_DIR)/version.c
 	@echo -n "Building in version information..."
+	@mkdir -p $(BIN_DIR)
 	@cp $< $<.bak
 	@sed -i '' -Ee 's/zajal_hash\[\] = "[^"]*"/zajal_hash[] = "$(ZAJAL_GIT_HASH)"/' $<
 	@sed -i '' -Ee 's/zajal_short_hash\[\] = "[^"]*"/zajal_short_hash[] = "$(ZAJAL_GIT_SHORT_HASH)"/' $<
