@@ -307,9 +307,13 @@ VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
 
 VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
-  rb_scan_args(argc, argv, "21", &x, &y, &z);
+  rb_scan_args(argc, argv, "12", &x, &y, &z);
   
-  if(NIL_P(z)) {
+  if(!NIL_P(x) && NIL_P(y) && NIL_P(z)) {
+    /*  called with one argument, x for everything */
+    ofScale(NUM2DBL(x), NUM2DBL(x), NUM2DBL(x));
+    
+  } else if(!NIL_P(x) && !NIL_P(y) && NIL_P(z)) {
     /*  called with two arguments, z is 0 */
     ofScale(NUM2DBL(x), NUM2DBL(y), 0);
     
