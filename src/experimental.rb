@@ -20,6 +20,22 @@ class String
   end
 end
 
+# make all instance variables effectively public. is this stupid?
+class Object
+  def method_missing meth, arg=nil
+    meth = meth.to_s
+    if meth =~ /=$/ and instance_variable_defined? "@#{meth.reject '='}" then
+      self.class.class_eval { attr_writer meth.reject("=").to_sym }
+      self.send meth, arg
+    elsif instance_variable_defined? "@#{meth}"
+      self.class.class_eval { attr_reader meth.to_sym }
+      self.send meth
+    else
+      raise NoMethodError, "undefined method `#{meth}' for #{self.inspect}"
+    end
+  end
+end
+
 def min *args
   args.min
 end
@@ -168,7 +184,7 @@ def compare_code local_code, other_code
 
   modified_globals = removed.reduce([], &$to_assigns) | added.reduce([], &$to_assigns)
   modified_methods = removed.reduce([], &$to_methods) | added.reduce([], &$to_methods)
-
+  
   modified_methods.include?("setup") or not modified_globals.empty?
 end
 
