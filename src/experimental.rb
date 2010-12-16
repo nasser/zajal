@@ -20,6 +20,17 @@ class String
   end
 end
 
+def min *args
+  args.min
+end
+
+def max *args
+  args.max
+end
+
+def avg *args
+  args.reduce(:+) / args.size.to_f
+end
   
 # run a block once every f frames, return true every f frame
 def once_every f
