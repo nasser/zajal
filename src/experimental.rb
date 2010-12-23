@@ -34,6 +34,18 @@ class Object
       raise NoMethodError, "undefined method `#{meth}' for #{self.inspect}"
     end
   end
+  
+  alias :old_respond_to? :respond_to?
+  def respond_to? sym, include_private=false
+    meth = sym.to_s
+    if meth =~ /=$/ and instance_variable_defined? "@#{meth[0...meth.length-1]}"
+      true
+    elsif instance_variable_defined? "@#{meth}"
+      true
+    else
+      old_respond_to? sym, include_private
+    end
+  end
 end
 
 def min *args
