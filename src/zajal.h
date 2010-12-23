@@ -37,6 +37,7 @@ extern VALUE zj_mVersion;
 /* zajal */
 extern VALUE zj_mZajal;
 extern VALUE zj_cContext;
+extern char* _zj_data_path;
 
 void zajal_init();
 char* zj_to_data_path(char* fileName);

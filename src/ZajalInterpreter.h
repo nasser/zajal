@@ -12,8 +12,6 @@
 #define SCRIPT_UPDATE_FREQUENCY   1
 #define MAX_LOCAL_VAR_NAME_LENGTH 255
 
-char* zj_to_data_path(char* path);
-
 extern char* _zj_data_path;
 
 class ZajalInterpreter : public ofBaseApp {

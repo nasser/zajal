@@ -6,9 +6,6 @@
 #include "ruby/encoding.h"
 #include "node.h"
 
-// the directory of the called script
-char* _zj_data_path;
-
 char* zj_script_directory(char* script_path) {
   // copy script_path, strip filename out
   char* script_path_copy = (char*)calloc(strlen(script_path)+1, sizeof(char));
@@ -36,30 +33,6 @@ char* zj_script_directory(char* script_path) {
   free(script_path_copy);
   
   return script_dir;
-}
-
-char* zj_to_data_path(char* path) {
-  if(path[0] == '/') {
-    // path is absolute, return a copy of it
-    // allocate space for copied path
-    char* copied_path = (char*)calloc(strlen(path)+1, sizeof(char));
-    strncpy(copied_path, path, strlen(path)+1);
-    return copied_path;
-    
-  } else {
-    // path is relative, join it with _zj_data_path
-    // allocate space for joined path
-    long joined_path_length = strlen(path) + strlen(_zj_data_path) + 1;
-    char* joined_path = (char*)calloc(joined_path_length, sizeof(char));
-  
-    // join path
-    strncat(joined_path, _zj_data_path, joined_path_length);
-    strncat(joined_path, "/", joined_path_length);
-    strncat(joined_path, path, joined_path_length);
-  
-    return joined_path;
-  }
-  
 }
 
 VALUE zj_safe_proc_call(VALUE args) {
