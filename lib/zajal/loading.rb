@@ -1,100 +1,7 @@
+# code loading logic
+
 # require "ripper" # why doesn't this work?
 require 'ripper/sexp'
-
-# add sugar to some each* methods
-class Array
-  alias :each_consecutive :each_cons 
-  def each_pair &block
-    each_cons 2, &block
-  end
-end
-
-# implement pattern rejection
-class String
-  def reject pattern
-    gsub pattern, ""
-  end
-  
-  def reject! pattern
-    gsub! pattern, ""
-  end
-end
-
-# make all instance variables effectively public. is this stupid?
-class Object
-  def method_missing meth, arg=nil
-    meth = meth.to_s
-    if meth =~ /=$/ and instance_variable_defined? "@#{meth.reject '='}" then
-      self.class.class_eval { attr_writer meth.reject("=").to_sym }
-      self.send meth, arg
-    elsif meth =~ /[a-z_][a-zA-Z0-9_]*/ and instance_variable_defined? "@#{meth}" # TODO can method names be capitalized?
-      self.class.class_eval { attr_reader meth.to_sym }
-      self.send meth
-    else
-      raise NoMethodError, "undefined method `#{meth}' for #{self.inspect}"
-    end
-  end
-  
-  alias :old_respond_to? :respond_to?
-  def respond_to? sym, include_private=false
-    meth = sym.to_s
-    if meth =~ /=$/ and instance_variable_defined? "@#{meth[0...meth.length-1]}"
-      true
-    elsif instance_variable_defined? "@#{meth}"
-      true
-    else
-      old_respond_to? sym, include_private
-    end
-  end
-end
-
-def min *args
-  args.min
-end
-
-def max *args
-  args.max
-end
-
-def avg *args
-  args.reduce(:+) / args.size.to_f
-end
-  
-# run a block once every f frames, return true every f frame
-def once_every f
-  yield if block_given? and frame % f == 0
-  return frame % f == 0
-end
-
-def point x, y
-  circle x, y, 1
-end
-
-class Point
-  attr_accessor :x, :y
-  
-  def initialize x, y
-    @x = x
-    @y = y
-  end
-  
-  def clamp! x1, x2, y1, y2
-    @x = @x.clamp x1, x2
-    @y = @y.clamp y1, y2
-  end
-  
-  def self.rand amt
-    Point.new(random(-amt, amt), random(-amt, amt))
-  end
-  
-  def + other
-    if other.respond_to? :x and other.respond_to? :y
-      Point.new(@x + other.x, @y + other.y)
-    else
-      Point.new(@x + other, @y + other)
-    end
-  end
-end
 
 class Ripper
   # return a sexp without line/column numbers. useful for code comparison
@@ -151,6 +58,7 @@ $to_methods = proc { |arr, exp|
 # Returns the code with sigils inserted in the correct places
 def globalize_code code, sigil="$"
   sexp = Ripper.sexp(code)[1]
+  
   line_inserts = {}
   code_ary = code.each_line.to_a
   

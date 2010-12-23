@@ -47,6 +47,15 @@ VALUE zj_safe_instance_eval(VALUE args) {
   rb_obj_instance_eval(1, ((VALUE*)args)+1, receiver);
 }
 
+VALUE zj_safe_funcall(VALUE args) {
+  // assumes args is VALUE* array of the form {recv, mid, argc, ...}
+  VALUE recv = ((VALUE*)args)[0];
+  ID mid = SYM2ID(((VALUE*)args)[1]);
+  int argc = FIX2INT(((VALUE*)args)[2]);
+  
+  rb_funcall2(recv, mid, argc, &((VALUE*)args)[3]);
+}
+
 VALUE zj_button_to_symbol(int button) {
   if(button == 0)
     return ID2SYM(rb_intern("left"));
@@ -66,7 +75,7 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   // establish the data path and add it to ruby's load path
   _zj_data_path = zj_script_directory(fileName);
   rb_ary_push(rb_gv_get("$:"), rb_str_new2(_zj_data_path));
-  rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/src"));
+  rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/zajal"));
   rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/ruby/stdlib"));
   
   // load in all encodings
@@ -77,7 +86,10 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   rb_require("open-uri");
   
   // require ruby-implemented experimental functionality
-  rb_require("experimental");
+  rb_require("sugar");
+  rb_require("attraway");
+  rb_require("loading");
+  rb_require("point");
   
   scriptName = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
   
@@ -293,27 +305,35 @@ void ZajalInterpreter::loadScript(char* filename) {
   // update data path
   _zj_data_path = zj_script_directory(scriptName);
   
+  // TODO check validity of code before anything else
+  
   currentContext = rb_class_new_instance(0, 0, zj_cContext);
   
   bool mustRestart = true;
   bool wasLastError = (lastError != 0); // are we recovering from an error?
   
   // load source into ruby variable, globalize it
-  VALUE incomingCode = rb_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
+  VALUE globalizeArgs[] = {rb_cObject, ID2SYM(rb_intern("globalize_code")), INT2FIX(1), rb_str_new2(scriptFileContent)};
+  VALUE incomingCode = rb_protect(zj_safe_funcall, (VALUE)globalizeArgs, &lastError);
+  handleError(lastError);
   
   if(currentCode != Qnil) {
-    VALUE mustRestartVal = rb_funcall(rb_cObject, rb_intern("compare_code"), 2, currentCode, incomingCode);
+    VALUE compareCodeArgs[] = {rb_cObject, ID2SYM(rb_intern("compare_code")), INT2FIX(2), currentCode, incomingCode};
+    VALUE mustRestartVal = rb_protect(zj_safe_funcall, (VALUE)compareCodeArgs, &lastError);
+    handleError(lastError);
+    
     mustRestart = RTEST(mustRestartVal);
   }
   
   currentCode = incomingCode;
   
-  VALUE currentState = rb_funcall(rb_cObject, rb_intern("capture_state"), 0);
-  
-  VALUE args[] = {currentContext, currentCode};
-  rb_protect(zj_safe_instance_eval, (VALUE)args, &lastError);
+  VALUE captureStateArgs[] = {rb_cObject, ID2SYM(rb_intern("capture_state")), INT2FIX(0)};
+  VALUE currentState = rb_protect(zj_safe_funcall, (VALUE)captureStateArgs, &lastError);
   handleError(lastError);
   
+  VALUE currentContextArgs[] = {currentContext, currentCode};
+  rb_protect(zj_safe_instance_eval, (VALUE)currentContextArgs, &lastError);
+  handleError(lastError);
   
   if(!lastError) {
     if(mustRestart || wasLastError) {
