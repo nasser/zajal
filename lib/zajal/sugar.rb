@@ -1,3 +1,5 @@
+# all important syntax sugar
+
 # add sugar to some each* methods
 class Array
   alias :each_consecutive :each_cons 
