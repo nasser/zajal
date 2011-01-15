@@ -273,6 +273,13 @@ VALUE zj_image_bpp(VALUE self) {
   return DBL2NUM(image_ptr->bpp);
 }
 
+VALUE zj_grab_screen(int argc, VALUE* argv, VALUE klass) {
+  VALUE new_image = image_new();
+  rb_funcall2(new_image, rb_intern("grab_screen"), argc, argv);
+  
+  return new_image;
+}
+
 void Init_Images() {
   zj_mImages = rb_define_module_under(zj_mZajal, "Images");
   
@@ -280,6 +287,7 @@ void Init_Images() {
   rb_define_variable("_zj_image_hash", &_zj_image_hash);
   _zj_image_hash = rb_hash_new();
   rb_define_method(zj_mImages, "image", RB_FUNC(zj_image_image), -1);
+  rb_define_method(zj_mImages, "grab_screen", RB_FUNC(zj_grab_screen), -1);
   
   /* the Image class */
   zj_cImage = rb_define_class_under(zj_mImages, "Image", rb_cObject);
