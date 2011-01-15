@@ -285,10 +285,4 @@ void Init_Images() {
   
   rb_define_method(zj_cImage, "type", RB_FUNC(zj_image_type), -1);
   rb_define_method(zj_cImage, "bpp", RB_FUNC(zj_image_bpp), 0);
-  
-  /* width= and height= are left in for experimental purposes */
-  rb_define_method(zj_cImage, "width", RB_FUNC(zj_image_width), -1);
-  rb_define_method(zj_cImage, "width=", RB_FUNC(zj_image_set_width), 1);
-  rb_define_method(zj_cImage, "height", RB_FUNC(zj_image_height), -1);
-  rb_define_method(zj_cImage, "height=", RB_FUNC(zj_image_set_height), 1);
 }
