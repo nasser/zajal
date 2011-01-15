@@ -12,14 +12,11 @@ void zj_image_dealloc(void* image) {
   delete (ofImage*)image;
 }
 
-VALUE zj_image_new(VALUE klass, VALUE filename) {
-  VALUE args[1];
-  args[0] = filename;
-  
+VALUE zj_image_new(int argc, VALUE* argv, VALUE klass) {
   ofImage* image_ptr = new ofImage();
   
   VALUE image = Data_Wrap_Struct(klass, 0, zj_image_dealloc, image_ptr);
-  rb_obj_call_init(image, 1, args);
+  rb_obj_call_init(image, argc, argv);
   return image;
 }
 
@@ -35,13 +32,21 @@ VALUE zj_image_load(VALUE self, VALUE filename) {
   return Qnil;
 }
 
-VALUE zj_image_initialize(VALUE self, VALUE filename) {
-  zj_image_load(self, filename);
+VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
+  VALUE filename;
+  rb_scan_args(argc, argv, "01", &filename);
+  
+  if(!NIL_P(filename)) {
+    /* called with a filename, load it */
+    zj_image_load(self, filename);
+    
+  }
   
   return self;
 }
 
 VALUE zj_image_draw(int argc, VALUE* argv, VALUE self) {
+  /* TODO should drawing an uninitialized image throw an exception? */
   VALUE x, y, w, h;
   rb_scan_args(argc, argv, "22", &x, &y, &w, &h);
   
@@ -274,8 +279,8 @@ void Init_Images() {
   
   /* the Image class */
   zj_cImage = rb_define_class_under(zj_mImages, "Image", rb_cObject);
-  rb_define_singleton_method(zj_cImage, "new", RB_FUNC(zj_image_new), 1);
-  rb_define_method(zj_cImage, "initialize", RB_FUNC(zj_image_initialize), 1);
+  rb_define_singleton_method(zj_cImage, "new", RB_FUNC(zj_image_new), -1);
+  rb_define_method(zj_cImage, "initialize", RB_FUNC(zj_image_initialize), -1);
   rb_define_method(zj_cImage, "draw", RB_FUNC(zj_image_draw), -1);
   rb_define_method(zj_cImage, "clear", RB_FUNC(zj_image_clear), 0);
   rb_define_method(zj_cImage, "load", RB_FUNC(zj_image_load), 1);
