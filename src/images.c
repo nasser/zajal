@@ -20,6 +20,10 @@ VALUE zj_image_new(int argc, VALUE* argv, VALUE klass) {
   return image;
 }
 
+VALUE image_new() {
+  return zj_image_new(0, 0, zj_cImage);
+}
+
 VALUE zj_image_load(VALUE self, VALUE filename) {
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
