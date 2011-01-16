@@ -66,7 +66,7 @@ VALUE zj_font_load(VALUE self, VALUE filename, VALUE size) {
 }
 
 VALUE zj_font_initialize(VALUE self, VALUE filename, VALUE size) {
-  zj_font_load(self, filename, size);
+  rb_funcall(self, rb_intern("load"), 2, filename, size);
   
   return self;
 }

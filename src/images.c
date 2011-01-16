@@ -42,7 +42,7 @@ VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
   
   if(!NIL_P(filename)) {
     /* called with a filename, load it */
-    zj_image_load(self, filename);
+    rb_funcall(self, rb_intern("load"), 1, filename);
     
   }
   
