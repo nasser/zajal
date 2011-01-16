@@ -90,6 +90,7 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   rb_require("attraway");
   rb_require("loading");
   rb_require("point");
+  rb_require("text");
   
   scriptName = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
   
