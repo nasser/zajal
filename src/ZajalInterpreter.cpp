@@ -356,6 +356,7 @@ void ZajalInterpreter::loadScript(char* filename) {
 // http://metaeditor.sourceforge.net/embed/
 void ZajalInterpreter::handleError(int error) {
   if(error) {
+    // stop all playing videos
     VALUE last_error = rb_gv_get("$!");
     char* error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
     char* error_message = RSTRING_PTR(rb_obj_as_string(last_error));
