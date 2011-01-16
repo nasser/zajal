@@ -105,8 +105,6 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   currentCode = Qnil;
   rb_define_variable("_current_code", &currentCode);
   
-  _zj_data_path = NULL;
-  
   printVersion();
 }
 
