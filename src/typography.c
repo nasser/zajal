@@ -8,6 +8,10 @@
 #include "ofMain.h"
 #include "zajal.h"
 
+#include "ft2build.h"
+#include "freetype/freetype.h"
+#include "freetype/ftmac.h"
+
 /* global typography module and font class */
 VALUE zj_mTypography;
 VALUE zj_cFont;
@@ -42,6 +46,16 @@ VALUE zj_font_new(VALUE klass, VALUE filename, VALUE size) {
 VALUE zj_font_load(VALUE self, VALUE filename, VALUE size) {
   ofTrueTypeFont* font_ptr;
   Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  
+  /*
+  This is how loading system fonts will probably work on mac, but the function
+  FT_GetFilePath_From_Mac_ATS_Name is not included in libof.a. Fix that and get
+  back to me.
+     
+  char path[255];
+  long face_index;
+  FT_GetFilePath_From_Mac_ATS_Name(StringValuePtr(filename), (UInt8*)&path, 255, &face_index);
+  */
   
   char* data_filename = zj_to_data_path(StringValuePtr(filename));
   font_ptr->loadFont(data_filename, NUM2INT(size));
