@@ -69,6 +69,67 @@ VALUE zj_font_draw(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+VALUE zj_font_line_height(int argc, VALUE* argv, VALUE self) {
+  VALUE new_lineheight;
+  rb_scan_args(argc, argv, "01", &new_lineheight);
+  
+  ofTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  
+  if(!NIL_P(new_lineheight)) {
+    /* called with a new line height, set it */
+    font_ptr->setLineHeight(NUM2DBL(new_lineheight));
+    
+  } else {
+    /* called without arguments, return current lineheight */
+    return DBL2NUM(font_ptr->getLineHeight());
+    
+  }
+  
+}
+
+VALUE zj_font_width_of(VALUE self, VALUE string) {
+  ofTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  
+  return DBL2NUM(font_ptr->stringWidth(StringValuePtr(string)));
+}
+
+VALUE zj_font_height_of(VALUE self, VALUE string) {
+  ofTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  
+  return DBL2NUM(font_ptr->stringHeight(StringValuePtr(string)));
+}
+
+VALUE zj_font_loaded_p(VALUE self) {
+  ofTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  
+  return font_ptr->bLoadedOk ? Qtrue : Qfalse;
+}
+
+VALUE zj_font_anti_aliased_p(VALUE self) {
+  ofTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  
+  return font_ptr->bAntiAlised ? Qtrue : Qfalse;
+}
+
+VALUE zj_font_full_character_set_p(VALUE self) {
+  ofTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  
+  return font_ptr->bFullCharacterSet ? Qtrue : Qfalse;
+}
+
+VALUE zj_font_character_count(VALUE self) {
+  ofTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  
+  return INT2FIX(font_ptr->nCharacters);
+}
+
 /* 
  * Draws text to the screen.
  * 
@@ -120,5 +181,13 @@ void Init_Typography() {
   zj_cFont = rb_define_class_under(zj_mTypography, "Font", rb_cObject);
   rb_define_singleton_method(zj_cFont, "new", RB_FUNC(zj_font_new), 2);
   rb_define_method(zj_cFont, "initialize", RB_FUNC(zj_font_initialize), 2);
+  rb_define_method(zj_cFont, "load", RB_FUNC(zj_font_load), 2);
   rb_define_method(zj_cFont, "draw", RB_FUNC(zj_font_draw), -1);
+  rb_define_method(zj_cFont, "line_height", RB_FUNC(zj_font_line_height), -1);
+  rb_define_method(zj_cFont, "width_of", RB_FUNC(zj_font_width_of), 1);
+  rb_define_method(zj_cFont, "height_of", RB_FUNC(zj_font_height_of), 1);
+  rb_define_method(zj_cFont, "loaded?", RB_FUNC(zj_font_loaded_p), 0);
+  rb_define_method(zj_cFont, "anti_aliased?", RB_FUNC(zj_font_anti_aliased_p), 0);
+  rb_define_method(zj_cFont, "full_character_set?", RB_FUNC(zj_font_full_character_set_p), 0);
+  rb_define_method(zj_cFont, "character_count", RB_FUNC(zj_font_character_count), 0);
 }
