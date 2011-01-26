@@ -1,39 +1,11 @@
 // interpreter class
 
 #include <sys/stat.h>
+#include <libgen.h>
 
 #include "ZajalInterpreter.h"
 #include "ruby/encoding.h"
 #include "node.h"
-
-char* zj_script_directory(char* script_path) {
-  // copy script_path, strip filename out
-  char* script_path_copy = (char*)calloc(strlen(script_path)+1, sizeof(char));
-  strncpy(script_path_copy, script_path, strlen(script_path)+1);
-  int i;
-  for(i = strlen(script_path_copy); script_path_copy[i] != '/' && i > 0; i--);
-  if(script_path_copy[i] == '/') script_path_copy[i] = '\0';
-  
-  // return script_path if absolute
-  if(script_path_copy[0] == '/') return script_path_copy;
-  
-  // get current working dir
-  char cwd[1024];
-  getcwd(cwd, 1024);
-  
-  // allocate space for joined path
-  long script_dir_length = strlen(script_path_copy) + strlen(cwd) + 1;
-  char* script_dir = (char*)calloc(script_dir_length, sizeof(char));
-  
-  // join path
-  strncat(script_dir, cwd, script_dir_length);
-  strncat(script_dir, "/", script_dir_length);
-  strncat(script_dir, script_path_copy, script_dir_length);
-  
-  free(script_path_copy);
-  
-  return script_dir;
-}
 
 VALUE zj_safe_proc_call(VALUE args) {
   // assumes args is a ruby array with the proc as the first element
@@ -73,7 +45,7 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   zajal_init();
   
   // establish the data path and add it to ruby's load path
-  _zj_data_path = zj_script_directory(fileName);
+  _zj_data_path = basename(fileName);
   rb_ary_push(rb_gv_get("$:"), rb_str_new2(_zj_data_path));
   rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/zajal"));
   rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/ruby/stdlib"));
@@ -302,7 +274,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   ruby_script(scriptName);
   
   // update data path
-  _zj_data_path = zj_script_directory(scriptName);
+  _zj_data_path = basename(scriptName);
   
   // TODO check validity of code before anything else
   
