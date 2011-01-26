@@ -44,6 +44,8 @@ extern char* _zj_data_path;
 
 void zajal_init();
 char* zj_to_data_path(char* fileName);
+VALUE zj_safe_proc_call(int* error, VALUE proc, int argc, ...);
+VALUE zj_safe_funcall(int* error, VALUE recv, ID mid, int argc, ...);
 
 #ifdef __cplusplus
 }

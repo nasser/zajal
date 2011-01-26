@@ -1,5 +1,6 @@
 // interpreter class
 
+#include <stdarg.h>
 #include <sys/stat.h>
 #include <libgen.h>
 
@@ -7,25 +8,10 @@
 #include "ruby/encoding.h"
 #include "node.h"
 
-VALUE zj_safe_proc_call(VALUE args) {
-  // assumes args is a ruby array with the proc as the first element
-  VALUE proc = rb_ary_shift(args);
-  if(!NIL_P(proc)) rb_proc_call(proc, args);
-}
-
 VALUE zj_safe_instance_eval(VALUE args) {
   // assumes args is VALUE* array of the form {receiver, code}
   VALUE receiver = ((VALUE*)args)[0];
   rb_obj_instance_eval(1, ((VALUE*)args)+1, receiver);
-}
-
-VALUE zj_safe_funcall(VALUE args) {
-  // assumes args is VALUE* array of the form {recv, mid, argc, ...}
-  VALUE recv = ((VALUE*)args)[0];
-  ID mid = SYM2ID(((VALUE*)args)[1]);
-  int argc = FIX2INT(((VALUE*)args)[2]);
-  
-  rb_funcall2(recv, mid, argc, &((VALUE*)args)[3]);
 }
 
 VALUE zj_button_to_symbol(int button) {
@@ -117,8 +103,7 @@ void ZajalInterpreter::setup() {
   
   if(!lastError && !NIL_P(currentContext)) {
     // if no error exists, run user setup method, catch runtime errors
-    VALUE args[] = {rb_iv_get(currentContext, "setup_proc")};
-    rb_protect(zj_safe_proc_call, rb_ary_new4(1, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "setup_proc"), 0);
     handleError(lastError);
   }
 }
@@ -127,8 +112,7 @@ void ZajalInterpreter::setup() {
 void ZajalInterpreter::update() {
   if(!lastError && !NIL_P(currentContext)) {
     // if no error exists, run user update method, catch runtime errors
-    VALUE args[] = {rb_iv_get(currentContext, "update_proc")};
-    rb_protect(zj_safe_proc_call, rb_ary_new4(1, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "update_proc"), 0);
     handleError(lastError);
   }
 }
@@ -152,8 +136,7 @@ void ZajalInterpreter::draw() {
   } else {
     // no error exists, draw next frame of user code, catch runtime errors
     zj_graphics_reset_frame();
-    VALUE args[] = {rb_iv_get(currentContext, "draw_proc")};
-    rb_protect(zj_safe_proc_call, rb_ary_new4(1, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "draw_proc"), 0);
     handleError(lastError);
     
   }
@@ -184,9 +167,7 @@ void ZajalInterpreter::updateCurrentScript() {
 void ZajalInterpreter::keyPressed  (int key) {
   if(!lastError && !NIL_P(currentContext)) {
     // TODO convert key into symbols
-    VALUE args[] = {rb_iv_get(currentContext, "key_pressed_proc"), rb_sprintf("%c", key)};
-    
-    rb_protect(zj_safe_proc_call, rb_ary_new4(2, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "key_pressed_proc"), 1, rb_sprintf("%c", key));
     handleError(lastError);
   }
 }
@@ -195,9 +176,7 @@ void ZajalInterpreter::keyPressed  (int key) {
 void ZajalInterpreter::keyReleased  (int key) {
   if(!lastError && !NIL_P(currentContext)) {
     // TODO convert key into symbols
-    VALUE args[] = {rb_iv_get(currentContext, "key_released_proc"), rb_sprintf("%c", key)};
-    
-    rb_protect(zj_safe_proc_call, rb_ary_new4(2, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "key_released_proc"), 1, rb_sprintf("%c", key));
     handleError(lastError);
   }
 }
@@ -206,9 +185,7 @@ void ZajalInterpreter::keyReleased  (int key) {
 // http://www.ruby-forum.com/topic/76498
 void ZajalInterpreter::mouseMoved(int x, int y) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[] = {rb_iv_get(currentContext, "mouse_moved_proc"), INT2FIX(x), INT2FIX(y)};
-    
-    rb_protect(zj_safe_proc_call, rb_ary_new4(3, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "mouse_moved_proc"), 2, INT2FIX(x), INT2FIX(y));
     handleError(lastError);
   }
 }
@@ -216,9 +193,7 @@ void ZajalInterpreter::mouseMoved(int x, int y) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[] = {rb_iv_get(currentContext, "mouse_dragged_proc"), INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button)};
-    
-    rb_protect(zj_safe_proc_call, rb_ary_new4(4, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "mouse_dragged_proc"), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     handleError(lastError);
   }
 }
@@ -226,9 +201,7 @@ void ZajalInterpreter::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[] = {rb_iv_get(currentContext, "mouse_pressed_proc"), INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button)};
-    
-    rb_protect(zj_safe_proc_call, rb_ary_new4(4, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "mouse_pressed_proc"), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     handleError(lastError);
   }
 }
@@ -237,9 +210,7 @@ void ZajalInterpreter::mousePressed(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[] = {rb_iv_get(currentContext, "mouse_released_proc"), INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button)};
-    
-    rb_protect(zj_safe_proc_call, rb_ary_new4(4, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "mouse_released_proc"), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     handleError(lastError);
   }
 }
@@ -247,9 +218,7 @@ void ZajalInterpreter::mouseReleased(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::windowResized(int w, int h) {
   if(!lastError && !NIL_P(currentContext)) {
-    VALUE args[] = {rb_iv_get(currentContext, "window_resized_proc"), INT2FIX(w), INT2FIX(h)};
-    
-    rb_protect(zj_safe_proc_call, rb_ary_new4(3, args), &lastError);
+    zj_safe_proc_call(&lastError, rb_iv_get(currentContext, "window_resized_proc"), 2, INT2FIX(w), INT2FIX(h));
     handleError(lastError);
   }
 }
@@ -284,13 +253,11 @@ void ZajalInterpreter::loadScript(char* filename) {
   bool wasLastError = (lastError != 0); // are we recovering from an error?
   
   // load source into ruby variable, globalize it
-  VALUE globalizeArgs[] = {rb_cObject, ID2SYM(rb_intern("globalize_code")), INT2FIX(1), rb_str_new2(scriptFileContent)};
-  VALUE incomingCode = rb_protect(zj_safe_funcall, (VALUE)globalizeArgs, &lastError);
+  VALUE incomingCode = zj_safe_funcall(&lastError, rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
   handleError(lastError);
   
   if(currentCode != Qnil) {
-    VALUE compareCodeArgs[] = {rb_cObject, ID2SYM(rb_intern("compare_code")), INT2FIX(2), currentCode, incomingCode};
-    VALUE mustRestartVal = rb_protect(zj_safe_funcall, (VALUE)compareCodeArgs, &lastError);
+    VALUE mustRestartVal = zj_safe_funcall(&lastError, rb_cObject, rb_intern("compare_code"), 2, currentCode, incomingCode);
     handleError(lastError);
     
     mustRestart = RTEST(mustRestartVal);
@@ -298,8 +265,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   
   currentCode = incomingCode;
   
-  VALUE captureStateArgs[] = {rb_cObject, ID2SYM(rb_intern("capture_state")), INT2FIX(0)};
-  VALUE currentState = rb_protect(zj_safe_funcall, (VALUE)captureStateArgs, &lastError);
+  VALUE currentState = zj_safe_funcall(&lastError, rb_cObject, rb_intern("capture_state"), 0);
   handleError(lastError);
   
   VALUE currentContextArgs[] = {currentContext, currentCode};

@@ -34,6 +34,58 @@ char* zj_to_data_path(char* path) {
   
 }
 
+VALUE _zj_safe_proc_call(VALUE args) {
+  // assumes args is a ruby array with the proc as the first element
+  VALUE proc = rb_ary_shift(args);
+  if(!NIL_P(proc)) rb_proc_call(proc, args);
+}
+
+VALUE zj_safe_proc_call(int* error, VALUE proc, int argc, ...) {
+  va_list args;
+  va_start(args, argc);
+  
+  VALUE* proc_args = (VALUE*)malloc((argc + 1)*sizeof(VALUE));
+  proc_args[0] = proc;
+  
+  for(int i = 1; i < (argc+1); i++)
+    proc_args[i] = va_arg(args, VALUE);
+  
+  VALUE return_value = rb_protect(_zj_safe_proc_call, rb_ary_new4(argc + 1, proc_args), error);
+
+  free(proc_args);
+  va_end(args);
+  
+  return return_value;
+}
+
+VALUE _zj_safe_funcall(VALUE args) {
+  // assumes args is VALUE* array of the form {recv, mid, argc, ...}
+  VALUE recv = ((VALUE*)args)[0];
+  ID mid = SYM2ID(((VALUE*)args)[1]);
+  int argc = FIX2INT(((VALUE*)args)[2]);
+  
+  rb_funcall2(recv, mid, argc, &((VALUE*)args)[3]);
+}
+
+VALUE zj_safe_funcall(int* error, VALUE recv, ID mid, int argc, ...) {
+  va_list args;
+  va_start(args, argc);
+  
+  VALUE* funcall_args = (VALUE*)malloc((3 + argc)*sizeof(VALUE));
+  funcall_args[0] = recv;
+  funcall_args[1] = ID2SYM(mid);
+  funcall_args[2] = INT2FIX(argc);
+  for(int i = 3; i < (argc+3); i++)
+    funcall_args[i] = va_arg(args, VALUE);
+  
+  VALUE return_value = rb_protect(_zj_safe_funcall, (VALUE)funcall_args, error);
+  
+  va_end(args);
+  free(funcall_args);
+  
+  return return_value;
+}
+
 /* forward declarations of module init functions */
 void Init_App();
 void Init_Events();
