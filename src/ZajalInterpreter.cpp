@@ -31,8 +31,9 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   zajal_init();
   
   // establish the data path and add it to ruby's load path
-  _zj_data_path = basename(fileName);
-  rb_ary_push(rb_gv_get("$:"), rb_str_new2(_zj_data_path));
+  VALUE script_directory = rb_str_new2(dirname(fileName));
+  INTERNAL_SET(data_path, script_directory);
+  rb_ary_push(rb_gv_get("$:"), script_directory);
   rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/zajal"));
   rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/ruby/stdlib"));
   
@@ -243,7 +244,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   ruby_script(scriptName);
   
   // update data path
-  _zj_data_path = basename(scriptName);
+  INTERNAL_SET(data_path, rb_str_new2(dirname(scriptName)));
   
   // TODO check validity of code before anything else
   

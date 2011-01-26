@@ -8,9 +8,9 @@
 VALUE zj_mZajal;
 VALUE zj_cContext;
 
-char* _zj_data_path;
-
 char* zj_to_data_path(char* path) {
+  char* _zj_data_path = RSTRING_PTR(INTERNAL_GET(data_path));
+  
   if(path[0] == '/') {
     // path is absolute, return a copy of it
     // allocate space for copied path
@@ -94,6 +94,7 @@ void Init_Images();
 void Init_Mathematics();
 void Init_Videos();
 void Init_Typography();
+void Init_Internals();
 void Init_Version();
 
 void zajal_init() {
@@ -113,6 +114,7 @@ void zajal_init() {
   Init_Videos();
   Init_Typography();
   Init_Version();
+  Init_Internals();
   
   /*  include zajal modules to Object, make them global */
   rb_include_module(rb_cObject, zj_mApp);
