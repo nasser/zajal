@@ -16,15 +16,9 @@
 VALUE zj_mTypography;
 VALUE zj_cFont;
 
-VALUE _zj_font_hash = Qnil;
-
-int _zj_stacked_text_initial_y = 20;
-int _zj_stacked_text_line_height = 20;
-int _zj_stacked_text_x = 10;
-int _zj_stacked_text_y = _zj_stacked_text_initial_y;
-
 void zj_typography_reset_stacked_text() {
-  _zj_stacked_text_y = _zj_stacked_text_initial_y;
+  INTERNAL_SET(stacked_text_x, INTERNAL_GET(stacked_text_initial_x));
+  INTERNAL_SET(stacked_text_y, INTERNAL_GET(stacked_text_initial_y));
 }
 
 void zj_font_dealloc(void* font) {
@@ -168,8 +162,8 @@ VALUE zj_typography_text(int argc, VALUE* argv, VALUE klass) {
   
   if(NIL_P(x) && NIL_P(y)) {
     /* called without coordinates, stack the text */
-    ofDrawBitmapString(StringValuePtr(text_string), _zj_stacked_text_x, _zj_stacked_text_y);
-    _zj_stacked_text_y += _zj_stacked_text_line_height;
+    ofDrawBitmapString(StringValuePtr(text_string), FIX2INT(INTERNAL_GET(stacked_text_x)), FIX2INT(INTERNAL_GET(stacked_text_y)));
+    INTERNAL_SET(stacked_text_y, INT2FIX(FIX2INT(INTERNAL_GET(stacked_text_y)) + FIX2INT(INTERNAL_GET(stacked_text_line_height))));
     
   } else if(!NIL_P(x) && !NIL_P(y)) {
     /* called with coordinates, draw text at coordinates */
@@ -186,9 +180,15 @@ VALUE zj_typography_text(int argc, VALUE* argv, VALUE klass) {
 void Init_Typography() {
   zj_mTypography = rb_define_module_under(zj_mZajal, "Typography");
   
+  INTERNAL_SET(stacked_text_initial_x, INT2FIX(10));
+  INTERNAL_SET(stacked_text_initial_y, INT2FIX(20));
+  INTERNAL_SET(stacked_text_line_height, INT2FIX(20));
+  INTERNAL_SET(stacked_text_line_height, INT2FIX(20));
+  INTERNAL_SET(stacked_text_x, INT2FIX(10));
+  INTERNAL_SET(stacked_text_y, INTERNAL_GET(stacked_text_initial_y));
+  
   /* image functions */
-  rb_define_variable("_zj_font_hash", &_zj_font_hash);
-  _zj_font_hash = rb_hash_new();
+  INTERNAL_SET(font_hash, rb_hash_new());
   rb_define_method(zj_mTypography, "text", RB_FUNC(zj_typography_text), -1);
   
   /* the Image class */
