@@ -101,6 +101,7 @@ void zajal_init() {
   zj_mZajal = rb_define_module("Zajal");
   
   /* init zajal modules */
+  Init_Internals();
   Init_App();
   Init_Events();
   Init_Graphics();
@@ -109,7 +110,6 @@ void zajal_init() {
   Init_Videos();
   Init_Typography();
   Init_Version();
-  Init_Internals();
   
   /*  include zajal modules to Object, make them global */
   rb_include_module(rb_cObject, zj_mApp);
