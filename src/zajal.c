@@ -6,7 +6,6 @@
 
 /* global zajal module and context */
 VALUE zj_mZajal;
-VALUE zj_cContext;
 
 char* zj_to_data_path(char* path) {
   char* _zj_data_path = RSTRING_PTR(INTERNAL_GET(data_path));
@@ -100,10 +99,6 @@ void Init_Version();
 void zajal_init() {
   /* define the global zajal module */
   zj_mZajal = rb_define_module("Zajal");
-  
-  /* the context in which user code is run */
-  /* TODO Context is not the best name, come up with something better */
-  zj_cContext = rb_define_class_under(zj_mZajal, "Context", rb_cObject);
   
   /* init zajal modules */
   Init_App();

@@ -44,8 +44,7 @@ class ZajalInterpreter : public ofBaseApp {
     // number of frames before the next script update check
     int nextUpdate;
     
-    // ruby object representing the current execution context
-    VALUE currentContext;
+    // ruby object representing the code currently running
     VALUE currentCode;
     
     // last error reported by ruby. lastError == 0 means no error 
