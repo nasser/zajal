@@ -2,6 +2,7 @@
 
 #include <stdarg.h>
 #include <sys/stat.h>
+#include <libgen.h>
 
 #include "ZajalInterpreter.h"
 #include "ruby/encoding.h"
@@ -30,7 +31,7 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   zajal_init();
   
   // establish the data path and add it to ruby's load path
-  VALUE script_directory = rb_str_new2(realpath(fileName, NULL));
+  VALUE script_directory = rb_str_new2(dirname(realpath(fileName, NULL)));
   INTERNAL_SET(data_path, script_directory);
   rb_ary_push(rb_gv_get("$:"), script_directory);
   rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/zajal"));
@@ -243,7 +244,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   ruby_script(scriptName);
   
   // update data path
-  INTERNAL_SET(data_path, rb_str_new2(realpath(scriptName, NULL)));
+  INTERNAL_SET(data_path, rb_str_new2(dirname(realpath(scriptName, NULL))));
   
   // TODO check validity of code before anything else
   
