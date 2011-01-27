@@ -39,8 +39,8 @@ extern VALUE zj_mVersion;
 
 /* internals */
 extern VALUE zj_mInternals;
-#define INTERNAL_GET(var)          rb_cv_get(zj_mInternals, "@@" #var)
-#define INTERNAL_SET(var, value)   rb_cv_set(zj_mInternals, "@@" #var, value)
+#define INTERNAL_GET(var)          rb_iv_get(zj_mInternals, "@" #var)
+#define INTERNAL_SET(var, value)   rb_iv_set(zj_mInternals, "@" #var, value)
 
 /* zajal */
 extern VALUE zj_mZajal;

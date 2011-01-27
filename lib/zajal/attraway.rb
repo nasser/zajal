@@ -2,16 +2,17 @@
 
 # make all instance variables effectively public. is this stupid?
 class Object
-  def method_missing meth, arg=nil
-    meth = meth.to_s
+  alias :old_method_missing :method_missing
+  def method_missing meth_id, arg=nil
+    meth = meth_id.to_s
     if meth =~ /=$/ and instance_variable_defined? "@#{meth.reject '='}" then
       self.class.class_eval { attr_writer meth.reject("=").to_sym }
       self.send meth, arg
     elsif meth =~ /[a-z_][a-zA-Z0-9_]*/ and instance_variable_defined? "@#{meth}" # TODO can method names be capitalized?
-      self.class.class_eval { attr_reader meth.to_sym }
+      self.class.class_eval { attr_reader meth_id }
       self.send meth
     else
-      raise NoMethodError, "undefined method `#{meth}' for #{self.inspect}"
+      old_method_missing meth_id, arg
     end
   end
   
