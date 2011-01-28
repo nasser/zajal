@@ -6,8 +6,6 @@
 VALUE zj_mVideos;
 VALUE zj_cVideo;
 
-VALUE _zj_video_hash = Qnil;
-
 void zj_video_dealloc(void* video) {
   delete (ofVideoPlayer*)video;
 }
@@ -113,13 +111,13 @@ VALUE zj_video_video(int argc, VALUE* argv, VALUE self) {
   }
   
   VALUE filename = argv[0];
-  VALUE cached_video = rb_hash_aref(_zj_video_hash, filename);
+  VALUE cached_video = rb_hash_aref(INTERNAL_GET(video_hash), filename);
   
   if(NIL_P(cached_video)) {
     /* video never used before, load it from disk, cache it */
     cached_video = rb_funcall(zj_cVideo, rb_intern("new"), 1, filename);
     zj_video_play(cached_video);
-    rb_hash_aset(_zj_video_hash, filename, cached_video);
+    rb_hash_aset(INTERNAL_GET(video_hash), filename, cached_video);
   }
   
   /* remove filename from args, draw cached video as normal */
@@ -132,8 +130,7 @@ VALUE zj_video_video(int argc, VALUE* argv, VALUE self) {
 void Init_Videos() {
   zj_mVideos = rb_define_module_under(zj_mZajal, "Videos");
   
-  rb_define_variable("_zj_image_hash", &_zj_video_hash);
-  _zj_video_hash = rb_hash_new();
+  INTERNAL_SET(video_hash, rb_hash_new());
   rb_define_method(zj_mVideos, "video", RB_FUNC(zj_video_video), -1);
   
   /* the Image class */
