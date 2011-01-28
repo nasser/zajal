@@ -269,7 +269,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   if(RTEST(isCodeReduced)) {
     // code is in reduced mode, does not use blocks. set draw_proc to code and just run that.
     
-    VALUE incomingCodeBlock = zj_safe_funcall(&lastError, incomingCode, rb_intern("to_proc"), 0);
+    VALUE incomingCodeBlock = zj_safe_funcall(&lastError, rb_cObject, rb_intern("proc"), 1, incomingCode);
     handleError(lastError);
     INTERNAL_SET(zj_mEvents, draw_proc, incomingCodeBlock);
     setup();

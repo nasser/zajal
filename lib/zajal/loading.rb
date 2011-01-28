@@ -31,10 +31,12 @@ class Array
   end
 end
 
-class String
-  # convert string into simple executable block
-  def to_proc
-    eval "Proc.new { #{self} }"
+alias :old_proc :proc
+def proc str=nil
+  if not str.nil?
+    eval "Proc.new { #{str} }"
+  else
+    old_proc
   end
 end
 
