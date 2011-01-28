@@ -8,12 +8,6 @@
 #include "ruby/encoding.h"
 #include "node.h"
 
-VALUE zj_safe_instance_eval(VALUE args) {
-  // assumes args is VALUE* array of the form {receiver, code}
-  VALUE receiver = ((VALUE*)args)[0];
-  rb_obj_instance_eval(1, ((VALUE*)args)+1, receiver);
-}
-
 VALUE zj_button_to_symbol(int button) {
   if(button == 0)
     return ID2SYM(rb_intern("left"));
