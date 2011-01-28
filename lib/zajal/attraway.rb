@@ -21,7 +21,7 @@ class Object
     meth = sym.to_s
     if meth =~ /=$/ and instance_variable_defined? "@#{meth[0...meth.length-1]}"
       true
-    elsif instance_variable_defined? "@#{meth}"
+    elsif not meth =~ /\?|!/ and instance_variable_defined? "@#{meth}"
       true
     else
       old_respond_to? sym, include_private

@@ -17,10 +17,32 @@ class Ripper
   end
 end
 
+class Array
+  alias :old_include? :include?
+  # like standard include, but takes an enumerable and checks inclusion of each member
+  def include? other
+    if other.respond_to? :any? then
+      other.any? do |obj|
+        old_include? obj
+      end
+    else
+      old_include? other
+    end
+  end
+end
+
+class String
+  # convert string into simple executable block
+  def to_proc
+    eval "Proc.new { #{self} }"
+  end
+end
+
 # code loading logic
 
 # syntax nodes that change the scope
 $scope_changers = [:def, :method_add_block, :class, :module]
+$event_blocks = %w(setup update draw exit window_resized key_pressed key_released mouse_moved mouse_dragged mouse_pressed mouse_released audio_requested audio_received)
 
 # reduce to assigns, pull out assigns in top level scope of exp
 $to_assigns = proc { |arr, exp|
@@ -114,4 +136,14 @@ def capture_state
     state << [gv, eval(gv.to_s)] if not gv.to_s =~ /^\$([0-9].*|.*[^a-zA-Z0-9_].*|KCODE|FILENAME|LOAD_PATH|LOADED_FEATURES|_|SAFE|PROGRAM_NAME|VERBOSE|DEBUG|stderr|stdin|stdout)$/
     state
   end
+end
+
+# Determing if code is in reduced mode or not.
+# Reduced mode is Zajal code that does not use any event blocks.
+# 
+# code - A ruby String containing the code to analyze
+# 
+# Returns true if code is in reduced mode, false otherwise
+def reduced_mode? code
+  not Ripper.sexp_simple(code)[1].reduce([], &$to_methods).include? $event_blocks
 end
