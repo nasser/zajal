@@ -8,7 +8,7 @@
 VALUE zj_mZajal;
 
 char* zj_to_data_path(char* path) {
-  char* _zj_data_path = RSTRING_PTR(INTERNAL_GET(data_path));
+  char* _zj_data_path = RSTRING_PTR(INTERNAL_GET(zj_mApp, data_path));
   
   if(path[0] == '/') {
     // path is absolute, return a copy of it
@@ -93,7 +93,6 @@ void Init_Images();
 void Init_Mathematics();
 void Init_Videos();
 void Init_Typography();
-void Init_Internals();
 void Init_Version();
 
 void zajal_init() {
@@ -101,7 +100,6 @@ void zajal_init() {
   zj_mZajal = rb_define_module("Zajal");
   
   /* init zajal modules */
-  Init_Internals();
   Init_App();
   Init_Events();
   Init_Graphics();

@@ -17,8 +17,8 @@ VALUE zj_mTypography;
 VALUE zj_cFont;
 
 void zj_typography_reset_stacked_text() {
-  INTERNAL_SET(stacked_text_x, INTERNAL_GET(stacked_text_initial_x));
-  INTERNAL_SET(stacked_text_y, INTERNAL_GET(stacked_text_initial_y));
+  INTERNAL_SET(zj_mTypography, stacked_text_x, INTERNAL_GET(zj_mTypography, stacked_text_initial_x));
+  INTERNAL_SET(zj_mTypography, stacked_text_y, INTERNAL_GET(zj_mTypography, stacked_text_initial_y));
 }
 
 void zj_font_dealloc(void* font) {
@@ -162,8 +162,8 @@ VALUE zj_typography_text(int argc, VALUE* argv, VALUE klass) {
   
   if(NIL_P(x) && NIL_P(y)) {
     /* called without coordinates, stack the text */
-    ofDrawBitmapString(StringValuePtr(text_string), FIX2INT(INTERNAL_GET(stacked_text_x)), FIX2INT(INTERNAL_GET(stacked_text_y)));
-    INTERNAL_SET(stacked_text_y, INT2FIX(FIX2INT(INTERNAL_GET(stacked_text_y)) + FIX2INT(INTERNAL_GET(stacked_text_line_height))));
+    ofDrawBitmapString(StringValuePtr(text_string), FIX2INT(INTERNAL_GET(zj_mTypography, stacked_text_x)), FIX2INT(INTERNAL_GET(zj_mTypography, stacked_text_y)));
+    INTERNAL_SET(zj_mTypography, stacked_text_y, INT2FIX(FIX2INT(INTERNAL_GET(zj_mTypography, stacked_text_y)) + FIX2INT(INTERNAL_GET(zj_mTypography, stacked_text_line_height))));
     
   } else if(!NIL_P(x) && !NIL_P(y)) {
     /* called with coordinates, draw text at coordinates */
@@ -179,16 +179,17 @@ VALUE zj_typography_text(int argc, VALUE* argv, VALUE klass) {
 
 void Init_Typography() {
   zj_mTypography = rb_define_module_under(zj_mZajal, "Typography");
+  rb_define_module_under(zj_mTypography, "Internals");
   
-  INTERNAL_SET(stacked_text_initial_x, INT2FIX(10));
-  INTERNAL_SET(stacked_text_initial_y, INT2FIX(20));
-  INTERNAL_SET(stacked_text_line_height, INT2FIX(20));
-  INTERNAL_SET(stacked_text_line_height, INT2FIX(20));
-  INTERNAL_SET(stacked_text_x, INT2FIX(10));
-  INTERNAL_SET(stacked_text_y, INTERNAL_GET(stacked_text_initial_y));
+  INTERNAL_SET(zj_mTypography, stacked_text_initial_x, INT2FIX(10));
+  INTERNAL_SET(zj_mTypography, stacked_text_initial_y, INT2FIX(20));
+  INTERNAL_SET(zj_mTypography, stacked_text_line_height, INT2FIX(20));
+  INTERNAL_SET(zj_mTypography, stacked_text_line_height, INT2FIX(20));
+  INTERNAL_SET(zj_mTypography, stacked_text_x, INT2FIX(10));
+  INTERNAL_SET(zj_mTypography, stacked_text_y, INTERNAL_GET(zj_mTypography, stacked_text_initial_y));
   
   /* image functions */
-  INTERNAL_SET(font_hash, rb_hash_new());
+  INTERNAL_SET(zj_mTypography, font_hash, rb_hash_new());
   rb_define_method(zj_mTypography, "text", RB_FUNC(zj_typography_text), -1);
   
   /* the Image class */

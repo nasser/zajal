@@ -32,7 +32,7 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   
   // establish the data path and add it to ruby's load path
   VALUE script_directory = rb_str_new2(dirname(realpath(fileName, NULL)));
-  INTERNAL_SET(data_path, script_directory);
+  INTERNAL_SET(zj_mApp, data_path, script_directory);
   rb_ary_push(rb_gv_get("$:"), script_directory);
   rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/zajal"));
   rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/ruby/stdlib"));
@@ -103,7 +103,7 @@ void ZajalInterpreter::setup() {
   
   if(!lastError) {
     // if no error exists, run user setup method, catch runtime errors
-    zj_safe_proc_call(&lastError, INTERNAL_GET(setup_proc), 0);
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, setup_proc), 0);
     handleError(lastError);
   }
 }
@@ -112,7 +112,7 @@ void ZajalInterpreter::setup() {
 void ZajalInterpreter::update() {
   if(!lastError) {
     // if no error exists, run user update method, catch runtime errors
-    zj_safe_proc_call(&lastError, INTERNAL_GET(update_proc), 0);
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, update_proc), 0);
     handleError(lastError);
   }
 }
@@ -136,7 +136,7 @@ void ZajalInterpreter::draw() {
   } else {
     // no error exists, draw next frame of user code, catch runtime errors
     zj_graphics_reset_frame();
-    zj_safe_proc_call(&lastError, INTERNAL_GET(draw_proc), 0);
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, draw_proc), 0);
     handleError(lastError);
     
   }
@@ -167,7 +167,7 @@ void ZajalInterpreter::updateCurrentScript() {
 void ZajalInterpreter::keyPressed  (int key) {
   if(!lastError) {
     // TODO convert key into symbols
-    zj_safe_proc_call(&lastError, INTERNAL_GET(key_pressed_proc), 1, rb_sprintf("%c", key));
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, rb_sprintf("%c", key));
     handleError(lastError);
   }
 }
@@ -176,7 +176,7 @@ void ZajalInterpreter::keyPressed  (int key) {
 void ZajalInterpreter::keyReleased  (int key) {
   if(!lastError) {
     // TODO convert key into symbols
-    zj_safe_proc_call(&lastError, INTERNAL_GET(key_released_proc), 1, rb_sprintf("%c", key));
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, key_released_proc), 1, rb_sprintf("%c", key));
     handleError(lastError);
   }
 }
@@ -185,7 +185,7 @@ void ZajalInterpreter::keyReleased  (int key) {
 // http://www.ruby-forum.com/topic/76498
 void ZajalInterpreter::mouseMoved(int x, int y) {
   if(!lastError) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(mouse_moved_proc), 2, INT2FIX(x), INT2FIX(y));
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_moved_proc), 2, INT2FIX(x), INT2FIX(y));
     handleError(lastError);
   }
 }
@@ -193,7 +193,7 @@ void ZajalInterpreter::mouseMoved(int x, int y) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
   if(!lastError) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(mouse_dragged_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_dragged_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     handleError(lastError);
   }
 }
@@ -201,7 +201,7 @@ void ZajalInterpreter::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
   if(!lastError) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(mouse_pressed_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     handleError(lastError);
   }
 }
@@ -210,7 +210,7 @@ void ZajalInterpreter::mousePressed(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
   if(!lastError) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(mouse_released_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_released_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     handleError(lastError);
   }
 }
@@ -218,7 +218,7 @@ void ZajalInterpreter::mouseReleased(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::windowResized(int w, int h) {
   if(!lastError) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(window_resized_proc), 2, INT2FIX(w), INT2FIX(h));
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, window_resized_proc), 2, INT2FIX(w), INT2FIX(h));
     handleError(lastError);
   }
 }
@@ -243,7 +243,7 @@ void ZajalInterpreter::loadScript(char* filename) {
   ruby_script(scriptName);
   
   // update data path
-  INTERNAL_SET(data_path, rb_str_new2(dirname(realpath(scriptName, NULL))));
+  INTERNAL_SET(zj_mApp, data_path, rb_str_new2(dirname(realpath(scriptName, NULL))));
   
   // TODO check validity of code before anything else
   

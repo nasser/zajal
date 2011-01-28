@@ -38,9 +38,8 @@ void zj_typography_reset_stacked_text();
 extern VALUE zj_mVersion;
 
 /* internals */
-extern VALUE zj_mInternals;
-#define INTERNAL_GET(var)          rb_iv_get(zj_mInternals, "@" #var)
-#define INTERNAL_SET(var, value)   rb_iv_set(zj_mInternals, "@" #var, value)
+#define INTERNAL_GET(module, var)           rb_iv_get(rb_const_get(module, rb_intern("Internals")), "@" #var)
+#define INTERNAL_SET(module, var, value)    rb_iv_set(rb_const_get(module, rb_intern("Internals")), "@" #var, value)
 
 /* zajal */
 extern VALUE zj_mZajal;

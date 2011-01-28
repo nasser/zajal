@@ -143,12 +143,12 @@ VALUE zj_image_image(int argc, VALUE* argv, VALUE self) {
   }
   
   VALUE filename = argv[0];
-  VALUE cached_image = rb_hash_aref(INTERNAL_GET(image_hash), filename);
+  VALUE cached_image = rb_hash_aref(INTERNAL_GET(zj_mImages, image_hash), filename);
   
   if(NIL_P(cached_image)) {
     /* image never used before, load it from disk, cache it */
     cached_image = rb_funcall(zj_cImage, rb_intern("new"), 1, filename);
-    rb_hash_aset(INTERNAL_GET(image_hash), filename, cached_image);
+    rb_hash_aset(INTERNAL_GET(zj_mImages, image_hash), filename, cached_image);
   }
   
   /* remove filename from args, draw cached image as normal */
@@ -280,9 +280,10 @@ VALUE zj_grab_screen(int argc, VALUE* argv, VALUE klass) {
 
 void Init_Images() {
   zj_mImages = rb_define_module_under(zj_mZajal, "Images");
+  rb_define_module_under(zj_mImages, "Internals");
   
   /* image functions */
-  INTERNAL_SET(image_hash, rb_hash_new());
+  INTERNAL_SET(zj_mImages, image_hash, rb_hash_new());
   rb_define_method(zj_mImages, "image", RB_FUNC(zj_image_image), -1);
   rb_define_method(zj_mImages, "grab_screen", RB_FUNC(zj_grab_screen), -1);
   
