@@ -158,6 +158,15 @@ void ZajalInterpreter::updateCurrentScript() {
 }
 
 //--------------------------------------------------------------
+void ZajalInterpreter::exit() {
+  if(!lastError) {
+    // TODO convert key into symbols
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, exit_proc), 0);
+    handleError(lastError);
+  }
+}
+
+//--------------------------------------------------------------
 void ZajalInterpreter::keyPressed  (int key) {
   if(!lastError) {
     // TODO convert key into symbols
