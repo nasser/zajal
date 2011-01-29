@@ -80,6 +80,7 @@ VALUE zj_normalize(VALUE self, VALUE min, VALUE max) {
 
 void Init_Mathematics() {
   zj_mMathematics = rb_define_module_under(zj_mZajal, "Mathematics");
+  rb_define_module_under(zj_mMathematics, "Internals");
   
   rb_define_method(zj_mMathematics, "seed_random", RB_FUNC(zj_seed_random), -1);
   rb_define_method(zj_mMathematics, "random", RB_FUNC(zj_random), -1);

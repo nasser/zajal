@@ -123,6 +123,7 @@ VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
 
 void Init_App() {
   zj_mApp = rb_define_module_under(zj_mZajal, "App");
+  rb_define_module_under(zj_mApp, "Internals");
   
   rb_define_method(zj_mApp, "height", RB_FUNC(zj_height), -1);
   rb_define_method(zj_mApp, "width", RB_FUNC(zj_width), -1);

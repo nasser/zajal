@@ -2,7 +2,6 @@
 class Font
   alias :c_load :load
   def load font, size
-    data_path = $:.first + "/" # TODO Kludge! _zj_data_path should be exposed to ruby!
     loaded = false
     
     # build input array
@@ -14,8 +13,8 @@ class Font
     fonts.each do |f|
       ["", ".ttf", ".otf", ".TTF", ".OTF"].each do |ext|
         # try to load font with various extensions
-        if File.exists? data_path + f + ext
-          c_load data_path + f + ext, size
+        if File.exists? App::Internals.data_path + f + ext
+          c_load App::Internals.data_path + f + ext, size
           loaded = true
           break
         end

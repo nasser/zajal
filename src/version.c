@@ -13,6 +13,7 @@ const char zajal_branch[] = "";
 
 void Init_Version() {
   zj_mVersion = rb_define_module_under(zj_mZajal, "Version");
+  rb_define_module_under(zj_mVersion, "Internals");
   
   /* TODO all caps matches RUBY_VERSION etc, but doesn't match mathematics constants... */
   rb_define_const(zj_mVersion, "ZAJAL_VERSION", rb_str_new2(zajal_version));
