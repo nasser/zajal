@@ -65,11 +65,9 @@ module TomDoc
     end
 
     def tomdoc
-      clean = raw.split("\n").map do |line|
+      raw.split("\n").map do |line|
         line =~ /^(\s*\* ?)/ ? line.sub($1, '') : nil
       end.compact.join("\n")
-
-      clean
     end
 
     def sections
@@ -80,8 +78,8 @@ module TomDoc
       sections.first
     end
 
-    def variants
-      vars = []
+    def signatures
+      sigs = []
       args_string = tomdoc.match(/\n\n(.*?)(Returns|Examples)/m)[1].strip
       
       args_string.split("\n\n").each do |variation|
@@ -98,12 +96,16 @@ module TomDoc
           end
         end
         
-        vars << args
+        sigs << args
       end
 
-      vars
+      sigs
     end
 
+    def examples?
+      examples.size > 0
+    end
+    
     def examples
       if tomdoc =~ /(\s*Examples\s*(^\s*.+?)\s*(?:Returns|Raises))/m
         $2.split("\n\n").each do |e|

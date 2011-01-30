@@ -40,13 +40,13 @@ documented_methods.each do |m|
   print "#{m.description}\n\n"
   
   print "**Usage**:\n\n"
-  m.variants.each do |args|
+  m.signatures.each do |args|
     print "`#{m.name} #{args.map {|a| a.name}.join(", ")}`\n\n"
     args.each { |a| print " * `#{a.name}` : #{a.description}\n" }
     print "\n"
   end
   
-  if m.examples.size > 0 then
+  if m.examples? then
     print "\n**Examples**:\n\n"
     m.examples.each { |e| print e.gsub /^/, "    " }
   end
