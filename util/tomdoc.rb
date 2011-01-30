@@ -19,7 +19,7 @@ module TomDoc
     attr_accessor :name, :description
 
     def initialize(name, description = '')
-      @name = name.to_s.intern
+      @name = name.to_s
       @description = description
     end
 
@@ -80,25 +80,28 @@ module TomDoc
       sections.first
     end
 
-    def args
-      args = []
-      last_indent = nil
-
-      sections[1].split("\n").each do |line|
-        next if line.strip.empty?
-        indent = line.scan(/^\s*/)[0].to_s.size
-
-        if last_indent && indent > last_indent
-          args.last.description += line.squeeze(" ")
-        else
-          param, desc = line.split(" - ")
-          args << Arg.new(param.strip, desc.strip) if param && desc
+    def variants
+      vars = []
+      args_string = tomdoc.match(/\n\n(.*)Examples|Returns/m)[1].strip
+      
+      args_string.split("\n\n").each do |variation|
+        args = []
+        
+        variation.split("\n").each do |line|
+          next if line =~ /^#{@name}/ or line.strip.empty?
+          
+          if line =~ /^[^\s]/
+            param, desc = line.split(" - ")
+            args << Arg.new(param.strip, desc.strip)
+          else
+            args.last.description += line.squeeze(" ")
+          end
         end
-
-        last_indent = indent
+        
+        vars << args
       end
 
-      args
+      vars
     end
 
     def examples
