@@ -119,8 +119,6 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  * w - The width of the rectangle
  * h - The height of the rectangle
  * 
- * See also square, rectangle_mode
- * 
  * Examples
  * 
  *   # draw a small rectangle
@@ -521,8 +519,6 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  * drawing down, so it defaults to false.
  * 
  * state - Optional, true to enable smoothing or false to disable it
- * 
- * See also alpha_blending
  * 
  * Examples
  * 
