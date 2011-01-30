@@ -41,8 +41,8 @@ documented_methods.each do |m|
   
   print "**Usage**:\n\n"
   m.signatures.each do |args|
-    print "`#{m.name} #{args.map {|a| a.name}.join(", ")}`\n\n"
-    args.each { |a| print " * `#{a.name}` : #{a.description}\n" }
+    print "`#{m.name} #{args.reject {|a| a.name =~ /^&/ }.map {|a| a.name}.join(", ")}#{args.takes_block? ? " { ... }" : ""}`\n\n"
+    args.reject {|a| a.name =~ /^&/ }.each { |a| print " * `#{a.name}` : #{a.description}\n" }
     print "\n"
   end
   

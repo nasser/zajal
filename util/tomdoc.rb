@@ -96,6 +96,10 @@ module TomDoc
           end
         end
         
+        def args.takes_block?
+          self.any? { |a| a.name =~ /^&/ }
+        end
+        
         sigs << args
       end
 
