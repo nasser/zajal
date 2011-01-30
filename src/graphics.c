@@ -311,6 +311,8 @@ VALUE zj_pop_matrix(VALUE self) {
  * Establish a separate transform matrix.
  * Isolates and localizes matrix trasnformations.
  * 
+ * &block - the block of code to run within the new matrix
+ * 
  * Examples
  * 
  *   matrix {
@@ -335,15 +337,14 @@ VALUE zj_matrix(VALUE self) {
  * Apply a translation transformation to the current matrix. Accepts 2D and
  * 3D coordinates.
  * 
+ * translate x, y
  * x - The distance to move in x
  * y - The distance to move in y
- * z - Optional, The distance to move in z
  * 
+ * translate x, y, z
  * x - The distance to move in x
  * y - The distance to move in y
  * z - The distance to move in z
- * 
- * See also matrix, rotate, scale
  * 
  * Examples
  * 
@@ -372,6 +373,25 @@ VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/*
+ * Apply a scaling transformation to the current matrix. With one parameter,
+ * scales equally in all directions. With two or three parameters, scales in
+ * the given x, y, and z directions.
+ * 
+ * scale s
+ * s - The amount to scale by in all directions
+ * 
+ * scale x, y
+ * x - The amount to scale by in x
+ * y - The amount to scale by in y
+ * 
+ * scale x, y, z
+ * x - The amount to scale by in x
+ * y - The amount to scale by in y
+ * z - The amount to scale by in z
+ * 
+ * Returns nothing
+ */
 VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
   rb_scan_args(argc, argv, "12", &x, &y, &z);
@@ -518,6 +538,9 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  * will be drawn antialiased or with jagged pixel edges. Smoothing slows
  * drawing down, so it defaults to false.
  * 
+ * smoothing
+ * 
+ * smoothing state
  * state - Optional, true to enable smoothing or false to disable it
  * 
  * Examples
@@ -720,11 +743,24 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
 
 
 /* 
- * Sets the current color
+ * Sets the current color to an RGBA value
  * 
+ * color r, g, b, a
  * r - Amount of red
  * g - Amount of green
  * b - Amount of blue
+ * a - Amount of alpha
+ * 
+ * color r, g, b
+ * r - Amount of red
+ * g - Amount of green
+ * b - Amount of blue
+ * 
+ * color grey
+ * grey - Level of grey
+ * 
+ * color grey, a
+ * grey - Level of grey
  * a - Amount of alpha
  * 
  * Examples
