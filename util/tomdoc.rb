@@ -82,7 +82,7 @@ module TomDoc
 
     def variants
       vars = []
-      args_string = tomdoc.match(/\n\n(.*)Examples|Returns/m)[1].strip
+      args_string = tomdoc.match(/\n\n(.*?)(Returns|Examples)/m)[1].strip
       
       args_string.split("\n\n").each do |variation|
         args = []
