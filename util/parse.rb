@@ -46,8 +46,10 @@ documented_methods.each do |m|
     print "\n"
   end
   
-  print "\n**Examples**:\n\n"
-  m.examples.each { |e| print e.gsub /^/, "    " }
+  if m.examples.size > 0 then
+    print "\n**Examples**:\n\n"
+    m.examples.each { |e| print e.gsub /^/, "    " }
+  end
   
   print "\n\n#{m.returns}\n\n\n"
 end
