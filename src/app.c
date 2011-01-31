@@ -15,7 +15,7 @@ VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
   
   if(NIL_P(w)) {
     /*  called without arguments, return current width */
-    return INT2FIX(ofGetWidth());
+    return rb_float_new(ofGetWidth());
     
   } else {
     /*  called with argument, set window width */
@@ -32,7 +32,7 @@ VALUE zj_height(int argc, VALUE* argv, VALUE klass) {
   
   if(NIL_P(h)) {
     /*  called without arguments, return current height */
-    return INT2FIX(ofGetHeight());
+    return rb_float_new(ofGetHeight());
     
   } else {
     /*  called with argument, set window width */
