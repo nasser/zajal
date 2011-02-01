@@ -44,6 +44,7 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   rb_require("loading");
   rb_require("point");
   rb_require("text");
+  rb_require("keyevent");
   
   scriptName = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
   
@@ -169,8 +170,11 @@ void ZajalInterpreter::exit() {
 //--------------------------------------------------------------
 void ZajalInterpreter::keyPressed  (int key) {
   if(!lastError) {
-    // TODO convert key into symbols
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, rb_sprintf("%c", key));
+    VALUE zj_cKeyEvent = rb_const_get(rb_cObject, rb_intern("KeyEvent"));
+    VALUE keyEvent = zj_safe_funcall(&lastError, zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
+    handleError(lastError);
+    
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, keyEvent);
     handleError(lastError);
   }
 }
@@ -178,8 +182,11 @@ void ZajalInterpreter::keyPressed  (int key) {
 //--------------------------------------------------------------
 void ZajalInterpreter::keyReleased  (int key) {
   if(!lastError) {
-    // TODO convert key into symbols
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, key_released_proc), 1, rb_sprintf("%c", key));
+    VALUE zj_cKeyEvent = rb_const_get(rb_cObject, rb_intern("KeyEvent"));
+    VALUE keyEvent = zj_safe_funcall(&lastError, zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
+    handleError(lastError);
+    
+    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, key_released_proc), 1, keyEvent);
     handleError(lastError);
   }
 }
