@@ -226,15 +226,6 @@ VALUE zj_image_width(int argc, VALUE* argv, VALUE self) {
   
 }
 
-VALUE zj_image_set_width(VALUE self, VALUE new_width) {
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
-  
-  image_ptr->resize(NUM2DBL(new_width), image_ptr->height);
-  
-  return Qnil;
-}
-
 VALUE zj_image_height(int argc, VALUE* argv, VALUE self) {
   VALUE new_height;
   rb_scan_args(argc, argv, "01", &new_height);
@@ -253,15 +244,6 @@ VALUE zj_image_height(int argc, VALUE* argv, VALUE self) {
     return Qnil;
   }
   
-}
-
-VALUE zj_image_set_height(VALUE self, VALUE new_height) {
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
-  
-  image_ptr->resize(image_ptr->width, NUM2DBL(new_height));
-  
-  return Qnil;
 }
 
 VALUE zj_image_type(int argc, VALUE* argv, VALUE self) {
