@@ -36,7 +36,9 @@ char* zj_to_data_path(char* path) {
 VALUE _zj_safe_proc_call(VALUE args) {
   // assumes args is a ruby array with the proc as the first element
   VALUE proc = rb_ary_shift(args);
-  if(!NIL_P(proc)) rb_proc_call(proc, args);
+  if(!NIL_P(proc)) return rb_proc_call(proc, args);
+  
+  return Qnil;
 }
 
 VALUE zj_safe_proc_call(int* error, VALUE proc, int argc, ...) {
@@ -63,7 +65,7 @@ VALUE _zj_safe_funcall(VALUE args) {
   ID mid = SYM2ID(((VALUE*)args)[1]);
   int argc = FIX2INT(((VALUE*)args)[2]);
   
-  rb_funcall2(recv, mid, argc, &((VALUE*)args)[3]);
+  return rb_funcall2(recv, mid, argc, &((VALUE*)args)[3]);
 }
 
 VALUE zj_safe_funcall(int* error, VALUE recv, ID mid, int argc, ...) {
