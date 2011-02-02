@@ -136,6 +136,23 @@ VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+VALUE zj_image_get_pixel(VALUE self, VALUE x, VALUE y) {
+  int _x = NUM2INT(x);
+  int _y = NUM2INT(y);
+  
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  if(_x > image_ptr->width || _y > image_ptr->height || _x < 0 || _y < 0)
+    return Qnil;
+  
+  int Bpp = image_ptr->bpp / 8; // bytes per pixel = 1, 3 or 4
+  unsigned char* pixels = image_ptr->getPixels();
+  int i = _x * Bpp + _y * image_ptr->width * Bpp;
+  
+  return rb_ary_new3(3, INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]));
+}
+
 VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
   // VALUE x, y, w, h;
   // rb_scan_args(argc, argv, "04", &x, &y, &w, &h);
@@ -329,6 +346,7 @@ void Init_Images() {
   rb_define_method(zj_cImage, "resize", RB_FUNC(zj_image_resize), -1);
   rb_define_method(zj_cImage, "grab_screen", RB_FUNC(zj_image_grab_screen), -1);
   
+  rb_define_method(zj_cImage, "get_pixel", RB_FUNC(zj_image_get_pixel), 2);
   rb_define_method(zj_cImage, "each_pixel", RB_FUNC(zj_image_each_pixel), -1);
   
   rb_define_method(zj_cImage, "type", RB_FUNC(zj_image_type), -1);
