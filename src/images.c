@@ -150,7 +150,14 @@ VALUE zj_image_get_pixel(VALUE self, VALUE x, VALUE y) {
   unsigned char* pixels = image_ptr->getPixels();
   int i = _x * Bpp + _y * image_ptr->width * Bpp;
   
-  return rb_ary_new3(3, INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]));
+  if(Bpp == 1)
+    return rb_ary_new3(1, INT2FIX(pixels[i]));
+  else if(Bpp == 3)
+    return rb_ary_new3(3, INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]));
+  else if(Bpp == 4)
+    return rb_ary_new3(4, INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]), INT2FIX(pixels[i+3]));
+  else
+    return Qnil;
 }
 
 VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
