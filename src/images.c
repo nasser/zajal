@@ -136,6 +136,56 @@ VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
+  // VALUE x, y, w, h;
+  // rb_scan_args(argc, argv, "04", &x, &y, &w, &h);
+  
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  unsigned char* pixels = image_ptr->getPixels();
+  int Bpp = image_ptr->bpp/8; // bytes per pixel = 1, 3 or 4
+  int total_bytes = image_ptr->width * image_ptr->height * Bpp;
+  
+  VALUE proc_return;
+  
+  bool should_update = false;
+  
+  unsigned int x = 0;
+  unsigned int y = 0;
+  
+  for(int i = 0; i < total_bytes; i += Bpp) {
+    x = i % (image_ptr->width*Bpp);
+    y = i / (image_ptr->width*Bpp);
+    
+    switch(Bpp) {
+      case 1:
+        proc_return = rb_yield_values(3, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]));
+        break;
+      case 3:
+        proc_return = rb_yield_values(5, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]));
+        break;
+      case 4:
+        proc_return = rb_yield_values(6, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]), INT2FIX(pixels[i+3]));
+        break;
+    }
+    
+    if(!NIL_P(proc_return)) {
+      should_update = true;
+      
+      pixels[i] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[0]);
+      if(Bpp > 1) pixels[i+1] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[1]);
+      if(Bpp > 1) pixels[i+2] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[2]);
+      if(Bpp > 3) pixels[i+3] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[3]);
+    }
+  }
+  
+  if(should_update)
+    image_ptr->update();
+  
+  return Qnil;
+}
+
 VALUE zj_image_image(int argc, VALUE* argv, VALUE self) {
   if(argc == 0) {
     rb_raise(rb_eArgError, "Too few arguments to Images::image!");
@@ -297,6 +347,8 @@ void Init_Images() {
   rb_define_method(zj_cImage, "save", RB_FUNC(zj_image_save), 1);
   rb_define_method(zj_cImage, "resize", RB_FUNC(zj_image_resize), -1);
   rb_define_method(zj_cImage, "grab_screen", RB_FUNC(zj_image_grab_screen), -1);
+  
+  rb_define_method(zj_cImage, "each_pixel", RB_FUNC(zj_image_each_pixel), -1);
   
   rb_define_method(zj_cImage, "type", RB_FUNC(zj_image_type), -1);
   rb_define_method(zj_cImage, "bpp", RB_FUNC(zj_image_bpp), 0);
