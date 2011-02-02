@@ -167,7 +167,7 @@ VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
         break;
     }
     
-    if(!NIL_P(proc_return)) {
+    if(TYPE(yield_return) == T_ARRAY) {
       should_update = true;
       
       pixels[i]               = (unsigned char)NUM2INT(RARRAY_PTR(yield_return)[0]);
