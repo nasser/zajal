@@ -155,9 +155,6 @@ VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
   unsigned int y = 0;
   
   for(int i = 0; i < total_bytes; i += Bpp) {
-    x = i % (image_ptr->width*Bpp);
-    y = i / (image_ptr->width*Bpp);
-    
     switch(Bpp) {
       case 1:
         proc_return = rb_yield_values(3, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]));
@@ -178,10 +175,12 @@ VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
       if(Bpp > 1) pixels[i+2] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[2]);
       if(Bpp > 3) pixels[i+3] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[3]);
     }
+    
+    if(++x >= image_ptr->width) x = 0;
+    if(x == 0) y++;
   }
   
-  if(should_update)
-    image_ptr->update();
+  if(should_update) image_ptr->update();
   
   return Qnil;
 }
