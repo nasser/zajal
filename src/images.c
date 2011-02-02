@@ -147,7 +147,7 @@ VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
   int Bpp = image_ptr->bpp/8; // bytes per pixel = 1, 3 or 4
   int total_bytes = image_ptr->width * image_ptr->height * Bpp;
   
-  VALUE proc_return;
+  VALUE yield_return;
   
   bool should_update = false;
   
@@ -157,23 +157,23 @@ VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
   for(int i = 0; i < total_bytes; i += Bpp) {
     switch(Bpp) {
       case 1:
-        proc_return = rb_yield_values(3, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]));
+        yield_return = rb_yield_values(3, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]));
         break;
       case 3:
-        proc_return = rb_yield_values(5, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]));
+        yield_return = rb_yield_values(5, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]));
         break;
       case 4:
-        proc_return = rb_yield_values(6, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]), INT2FIX(pixels[i+3]));
+        yield_return = rb_yield_values(6, INT2FIX(x), INT2FIX(y), INT2FIX(pixels[i]), INT2FIX(pixels[i+1]), INT2FIX(pixels[i+2]), INT2FIX(pixels[i+3]));
         break;
     }
     
     if(!NIL_P(proc_return)) {
       should_update = true;
       
-      pixels[i] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[0]);
-      if(Bpp > 1) pixels[i+1] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[1]);
-      if(Bpp > 1) pixels[i+2] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[2]);
-      if(Bpp > 3) pixels[i+3] = (unsigned char)FIX2INT(RARRAY_PTR(proc_return)[3]);
+      pixels[i]               = (unsigned char)NUM2INT(RARRAY_PTR(yield_return)[0]);
+      if(Bpp > 1) pixels[i+1] = (unsigned char)NUM2INT(RARRAY_PTR(yield_return)[1]);
+      if(Bpp > 1) pixels[i+2] = (unsigned char)NUM2INT(RARRAY_PTR(yield_return)[2]);
+      if(Bpp > 3) pixels[i+3] = (unsigned char)NUM2INT(RARRAY_PTR(yield_return)[3]);
     }
     
     if(++x >= image_ptr->width) x = 0;
