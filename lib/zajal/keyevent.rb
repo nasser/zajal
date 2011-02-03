@@ -48,7 +48,6 @@ class KeyEvent
       when  13 then :return
       when  27 then :escape
       when 127 then :backspace
-      when 127 then :backspace
       when 257 then :f1
       when 258 then :f2
       when 259 then :f3
