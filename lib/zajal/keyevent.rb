@@ -167,6 +167,12 @@ end
 
 class String
   trequals %{ other.printable? and self == other.to_s }
+  
+  old_add = instance_method(:+)
+  define_method(:+) do |other|
+    other = other.to_s if other.is_a? KeyEvent
+    old_add.bind(self).call(other)
+  end
 end
 
 class Symbol
