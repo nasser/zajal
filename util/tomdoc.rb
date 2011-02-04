@@ -1,5 +1,3 @@
-# Copyright (c) 2010 Tom Preston-Werner, Chris Wanstrath
-# originally from https://github.com/defunkt/tomdoc 60fd7389ba0eabf97c93
 module TomDoc
   class InvalidTomDoc < RuntimeError
     def initialize(doc)
@@ -19,7 +17,7 @@ module TomDoc
     attr_accessor :name, :description
 
     def initialize(name, description = '')
-      @name = name.to_s
+      @name = name.to_s.intern
       @description = description
     end
 
@@ -27,15 +25,12 @@ module TomDoc
       @description.downcase.include? 'optional'
     end
   end
-  
-  class TomDoc
-    attr_accessor :raw, :name
 
-    def initialize(name, text)
-      @name = name
+  class TomDoc
+    attr_accessor :raw
+
+    def initialize(text)
       @raw = text.to_s.strip
-      
-      validate
     end
 
     def to_s
@@ -54,20 +49,22 @@ module TomDoc
 
     def validate
       if !raw.include?('Returns')
-        raise InvalidTomDoc.new("Method `#{@name}' has no `Returns' statement.")
+        raise InvalidTomDoc.new("No `Returns' statement.")
       end
 
       if tomdoc.split("\n\n").size < 2
-        raise InvalidTomDoc.new("Method `#{@name}' has no description section.")
+        raise InvalidTomDoc.new("No description section found.")
       end
 
       true
     end
 
     def tomdoc
-      raw.split("\n").map do |line|
-        line =~ /^(\s*\* ?)/ ? line.sub($1, '') : nil
+      clean = raw.split("\n").map do |line|
+        line =~ /^(\s*# ?)/ ? line.sub($1, '') : nil
       end.compact.join("\n")
+
+      clean
     end
 
     def sections
@@ -78,50 +75,35 @@ module TomDoc
       sections.first
     end
 
-    def signatures
-      sigs = []
-      args_string = tomdoc.match(/\n\n(.*?)(Returns|Examples)/m)[1].strip
-      
-      args_string.split("\n\n").each do |variation|
-        args = []
-        
-        variation.split("\n").each do |line|
-          next if line =~ /^#{@name}/ or line.strip.empty?
-          
-          if line =~ /^[^\s]/
-            param, desc = line.split(" - ")
-            args << Arg.new(param.strip, desc.strip)
-          else
-            args.last.description += line.squeeze(" ")
-          end
+    def args
+      args = []
+      last_indent = nil
+
+      sections[1].split("\n").each do |line|
+        next if line.strip.empty?
+        indent = line.scan(/^\s*/)[0].to_s.size
+
+        if last_indent && indent > last_indent
+          args.last.description += line.squeeze(" ")
+        else
+          param, desc = line.split(" - ")
+          args << Arg.new(param.strip, desc.strip) if param && desc
         end
-        
-        def args.takes_block?
-          self.any? { |a| a.name =~ /^&/ }
-        end
-        
-        sigs << args
+
+        last_indent = indent
       end
 
-      sigs
+      args
     end
 
-    def examples?
-      examples.size > 0
-    end
-    
     def examples
-      if tomdoc =~ /(\s*Examples\s*(^\s*.+?)\s*(?:Returns|Raises))/m
-        $2.split("\n\n").each do |e|
-          # determine leading line's indent and adjust accordingly
-          i = e.match(/^(\s*)[^\s]/).captures.first.length
-          e.gsub! /^\s{#{i}}/, ""
-        end
+      if tomdoc =~ /(\s*Examples\s*(.+?)\s*(?:Returns|Raises))/m
+        $2.split("\n\n")
       else
         []
       end
     end
-
+    
     def returns
       if tomdoc =~ /^\s*(Returns.+)/m
         lines = $1.split("\n")

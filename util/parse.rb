@@ -1,94 +1,104 @@
 #!/usr/bin/env ruby
 # Zajal Documentation Generator
 # Ramsey Nasser, January 2011
-require "erb"
+require "rubygems"
+require "mustache"
 
-require "util/tomdoc"
-include TomDoc
+require "util/cdoc"
+
+class String
+  def titlecase
+    sub(/\b\w/) { $&.upcase }
+  end
+end
 
 source = open(ARGV[0]).read
 
+module_doc = Mustache.new
+
 # get module name from source file
-module_name = ARGV[0].scan(/([^\.]+).c/).first.first
+module_doc[:name] = ARGV[0][/.*\/([^\.]+).c/, 1].titlecase
 
 # module comment is the second comment in the file
-module_comment = source.scan(/\/\*(.*?)\*\//m)[0].first.strip.gsub!(/[^a-zA-Z\n]*\*[^a-zA-Z\n]*/m, "")
+module_doc[:description] = source.scan(/\/\*(.*?)\*\//m)[0].first.strip.gsub!(/[^a-zA-Z\n]*\*[^a-zA-Z\n]*/m, "")
 
 # remove one line comments
 source.gsub! /\/\*.*\*\//, ""
 # slice everything above the first include
 source.slice! 0, source.index("#include")
 
-# documentation coverage
-documented_methods = []
+module_doc[:meths] = []
+
+# for documentation coverage
+total_examples = 0
 total_methods = source.scan("rb_define_method").length
 
 # scan for function comments, parse
 source.scan(/\s+\/\*(.*?)\*+\/\s+?VALUE\s+([^(]+)/m).each do |s|
+  new_meth = {}
+  
   comment, c_name = s
   
   comment.gsub! /^\s*/, ""
   rb_name = source.scan(/rb_define_method\([^,]+,\s*"([^"]+)"\s*,\s*[^(]*\(?\b#{c_name}\b\)?/).first.first
   
-  documented_methods << TomDoc::TomDoc.new(rb_name, comment)
+  method_doc = CDoc.new comment
+  
+  new_meth[:name] = rb_name
+  new_meth[:description] = method_doc.description
+  
+  new_meth[:sigs] = method_doc.signatures.map do |arg_list|
+    { :arg_list => arg_list.map { |a| a.name }.join(", "),
+      :args => arg_list.map { |a| {:name => a.name, :description => a.description} } }
+  end
+  
+  new_meth[:examples] = method_doc.examples.map { |e| {:content => e} }
+  total_examples += 1 if new_meth[:examples].size > 0
+  new_meth[:returns] = method_doc.returns.join[/^Returns (.*)/, 1].titlecase
+  
+  module_doc[:meths] << new_meth
 end
 
-# output
-# print "#{module_name}\n#{'='*module_name.length}\n\n"
-# print "#{module_comment}\n\n"
-# documented_methods.each do |m|
-#   print "#{m.name}\n"
-#   print "#{'-'*m.name.length}\n"
-#   print "#{m.description}\n\n"
-#   
-#   print "**Usage**:\n\n"
-#   m.signatures.each do |args|
-#     print "`#{m.name} #{args.reject {|a| a.name =~ /^&/ }.map {|a| a.name}.join(", ")}#{args.takes_block? ? " { ... }" : ""}`\n\n"
-#     args.reject {|a| a.name =~ /^&/ }.each { |a| print " * `#{a.name}` : #{a.description}\n" }
-#     print "\n"
-#   end
-#   
-#   if m.examples? then
-#     print "\n**Examples**:\n\n"
-#     m.examples.each { |e| print e.gsub /^/, "    " }
-#   end
-#   
-#   print "\n\n#{m.returns}\n\n\n"
-# end
+puts module_doc.render DATA.read
 
-print ERB.new(DATA.read).result
-# File.open(ARGV[0].gsub("yaml", "html"), 'w') { |f| f.write ERB.new(DATA.read).result }
-$stderr.puts "#{documented_methods.length}/#{total_methods} = #{(100*documented_methods.length.to_f/total_methods).round}% documented"
+$stderr.puts "#{module_doc[:meths].size}/#{total_methods} = #{(100*module_doc[:meths].size/total_methods).round}% documented"
+$stderr.puts "#{total_examples}/#{total_methods} = #{(100*total_examples/total_methods).round}% with examples"
 
 __END__
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Zajal Documentation : <%= module_name %></title>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-    </head>
-    <body>
-        <h1><%= module_name %></h1>
-        <p><%= module_comment %></p>
-        
-        <% documented_methods.each do |m| %>
-          <h2><%= m.name %></h2>
-          <p><%= m.description %></p>
-          <h3>Usage</h3>
-          <% m.signatures.each do |args| %>
-            <p><code><%= m.name %> <%= args.reject {|a| a.name =~ /^&/ }.map {|a| a.name}.join(", ") + (args.takes_block? ? " { ... }" : "") %></code></p>
-            <ul>
-            <% args.reject {|a| a.name =~ /^&/ }.each do |arg| %>
-              <li><code><%= arg.name %></code> <%= arg.description %></li>
-            <% end %>
-            </ul>
-          <% end %>
-          <h3>Examples</h3>
-          <% m.examples.each do |e| %>
-            <pre><code><%= e %></code></pre>
-          <% end %>
-          <h3>Returns</h3>
-          <p><%= m.returns %></p>
-        <% end %>
-    </body>
-</html>
+# {{{name}}}
+{{{description}}}
+
+{{#meths}}
+# {{{name}}}
+{{{description}}}
+
+**Usage**
+
+{{#sigs}}
+`{{{name}}} {{{arg_list}}}`
+
+{{#args}}
+  * `{{{name}}}` - {{{description}}}
+{{/args}}
+
+{{/sigs}}
+
+**Examples**
+
+{{#examples}}
+```ruby
+{{{content}}}
+```
+
+{{/examples}}
+{{^examples}}
+
+**No Examples**
+
+{{/examples}}
+
+**Returns**
+
+{{{returns}}}
+
+{{/meths}}
