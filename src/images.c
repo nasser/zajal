@@ -84,7 +84,11 @@ VALUE zj_image_clear(VALUE self) {
 VALUE zj_image_save(VALUE self, VALUE filename) {
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
-  image_ptr->saveImage(StringValuePtr(filename));
+  
+  char* save_filename = zj_to_data_path(StringValuePtr(filename));
+  image_ptr->saveImage(save_filename);
+  
+  free(save_filename);
   
   return Qnil;
 }
