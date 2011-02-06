@@ -219,7 +219,7 @@ void ZajalInterpreter::loadScript(char* fileName) {
   // establish the data path and add it to ruby's load path
   VALUE script_directory = rb_str_new2(dirname(realpath(fileName, NULL)));
   INTERNAL_SET(zj_mApp, data_path, script_directory);
-  rb_ary_push(rb_gv_get("$:"), script_directory);
+  rb_ary_unshift(rb_gv_get("$:"), script_directory);
   
   ruby_script(scriptName);
   
