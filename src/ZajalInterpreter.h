@@ -15,7 +15,7 @@
 class ZajalInterpreter : public ofBaseApp {
 	
 	public:
-    ZajalInterpreter(char* fileName);
+    ZajalInterpreter();
     
 		void setup();
 		void update();
@@ -33,9 +33,19 @@ class ZajalInterpreter : public ofBaseApp {
     void printVersion();
     void run();
     void loadScript(char* filename);
+    void reloadScript();
     void updateCurrentScript();
     
+    void setVerboseMode(bool newMode);
+    void appendLoadPath(char* path);
+    
   private:
+    // verbose mode setting
+    bool verbose;
+    
+    // true if the script is running, false otherwise
+    bool running;
+    
     // name of the currently executing script
     char* scriptName;
     

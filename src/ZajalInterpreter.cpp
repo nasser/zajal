@@ -19,37 +19,13 @@ VALUE zj_button_to_symbol(int button) {
     rb_bug("Received unsupported button `%d'on mouseDragged! Bailing out!", button);
 }
 
-ZajalInterpreter::ZajalInterpreter(char* fileName) {
+ZajalInterpreter::ZajalInterpreter() {
   // start ruby/zajal
   ruby_init();
   zajal_init();
   
-  // establish the data path and add it to ruby's load path
-  VALUE script_directory = rb_str_new2(dirname(realpath(fileName, NULL)));
-  INTERNAL_SET(zj_mApp, data_path, script_directory);
-  rb_ary_push(rb_gv_get("$:"), script_directory);
-  rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/zajal"));
-  rb_ary_push(rb_gv_get("$:"), rb_str_new2("/Users/nasser/Workspace/zajal/lib/ruby/stdlib"));
-  
-  // load in all encodings
-  rb_enc_find("encdb");
-  
-  // require/include useful parts of ruby by default
-  rb_include_module(rb_cObject, rb_mMath);
-  rb_require("open-uri");
-  
-  // require ruby-implemented experimental functionality
-  rb_require("sugar");
-  rb_require("attraway");
-  rb_require("loading");
-  rb_require("point");
-  rb_require("text");
-  rb_require("keyevent");
-  
-  scriptName = (char*)malloc(SCRIPT_NAME_SIZE*sizeof(char));
-  
-  strncpy(scriptName, fileName, SCRIPT_NAME_SIZE);
-  strncat(scriptName, "\0", SCRIPT_NAME_SIZE);
+  verbose = false;
+  running = false;
   
   scriptModifiedTime = 0;
   
@@ -57,8 +33,6 @@ ZajalInterpreter::ZajalInterpreter(char* fileName) {
   lastErrorMessage = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
   currentCode = Qnil;
   rb_define_variable("_current_code", &currentCode);
-  
-  printVersion();
 }
 
 void ZajalInterpreter::printVersion() {
@@ -80,6 +54,14 @@ void ZajalInterpreter::printVersion() {
 void ZajalInterpreter::run() {
   ofSetupOpenGL(&window, 500, 500, OF_WINDOW);
   ofRunApp(this);
+}
+
+void ZajalInterpreter::appendLoadPath(char* path) {
+  rb_ary_push(rb_gv_get("$:"), rb_str_new2(realpath(path, NULL)));
+}
+
+void ZajalInterpreter::setVerboseMode(bool newMode) {
+  verbose = newMode;
 }
 
 //--------------------------------------------------------------
@@ -149,7 +131,7 @@ void ZajalInterpreter::updateCurrentScript() {
     if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
       printf("Updating %s in place...\n", scriptName);
       scriptModifiedTime = attrib.st_mtimespec.tv_sec;
-      loadScript(scriptName);
+      reloadScript();
       
     }
     
@@ -233,27 +215,47 @@ void ZajalInterpreter::windowResized(int w, int h) {
   }
 }
 
-void ZajalInterpreter::loadScript(char* filename) {
-  scriptName = filename;
+void ZajalInterpreter::loadScript(char* fileName) {
+  // establish the data path and add it to ruby's load path
+  VALUE script_directory = rb_str_new2(dirname(realpath(fileName, NULL)));
+  INTERNAL_SET(zj_mApp, data_path, script_directory);
+  rb_ary_push(rb_gv_get("$:"), script_directory);
   
+  ruby_script(scriptName);
+  
+  // load in all encodings
+  rb_enc_find("encdb");
+  
+  // require/include useful parts of ruby by default
+  rb_include_module(rb_cObject, rb_mMath);
+  rb_require("open-uri");
+  
+  // require ruby-implemented experimental functionality
+  rb_require("sugar");
+  rb_require("attraway");
+  rb_require("loading");
+  rb_require("point");
+  rb_require("text");
+  rb_require("keyevent");
+  
+  scriptName = fileName;
+}
+
+void ZajalInterpreter::reloadScript() {
   // open file, measure size
   FILE *scriptFile = fopen(scriptName, "r");
   fseek(scriptFile, 0, SEEK_END);
   long scriptFileSize = ftell(scriptFile);
   fseek(scriptFile, 0, SEEK_SET);
   
-  printf("Reading %s (%db)\n", scriptName, scriptFileSize);
+  if(verbose)
+    printf("Reading %s (%db)\n", scriptName, scriptFileSize);
   
   // load file into memory
   char* scriptFileContent = (char*)malloc(scriptFileSize * sizeof(char) + 1);
   fread(scriptFileContent, scriptFileSize, 1, scriptFile);
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
-  
-  ruby_script(scriptName);
-  
-  // update data path
-  INTERNAL_SET(zj_mApp, data_path, rb_str_new2(dirname(realpath(scriptName, NULL))));
   
   // TODO check validity of code before anything else
   
