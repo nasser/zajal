@@ -125,11 +125,14 @@ void ZajalInterpreter::draw() {
 void ZajalInterpreter::updateCurrentScript() {
   struct stat attrib;
   if(stat(scriptName, &attrib)) {
-    printf("Could not stat %s!\n", scriptName);
+    fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", scriptName);
+    fprintf(stderr, "  The file is either missing or otherwise inaccessible. Check the file name\n");
+    fprintf(stderr, "  or the file's permissions.\n");
+    abort();
     
   } else {
     if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
-      printf("Updating %s in place...\n", scriptName);
+      if(verbose) printf("Updating %s in place...\n", scriptName);
       scriptModifiedTime = attrib.st_mtimespec.tv_sec;
       reloadScript();
       
@@ -216,17 +219,10 @@ void ZajalInterpreter::windowResized(int w, int h) {
 }
 
 void ZajalInterpreter::loadScript(char* fileName) {
-  // establish the data path and add it to ruby's load path
-  VALUE script_directory = rb_str_new2(dirname(realpath(fileName, NULL)));
-  INTERNAL_SET(zj_mApp, data_path, script_directory);
-  rb_ary_unshift(rb_gv_get("$:"), script_directory);
-  
-  ruby_script(scriptName);
-  
   // try and load ZAJAL_PATH environment variable
   char* env_zajal_path = getenv("ZAJAL_PATH");
   if(env_zajal_path) {
-    if(verbose) printf("loading LOAD_PATH from environment: [");
+    if(verbose) printf("ZAJAL_PATH from environment: [");
     VALUE zajal_path_ary = rb_str_split(rb_str_new2(env_zajal_path), ":");
     long zajal_path_ary_len = RARRAY_LEN(zajal_path_ary);
     VALUE* zajal_path_ary_ptr = RARRAY_PTR(zajal_path_ary);
@@ -238,6 +234,31 @@ void ZajalInterpreter::loadScript(char* fileName) {
     
     if(verbose) printf("]\n");
   }
+  
+  // bail out if no load path was set from environment or command line
+  if(RARRAY_LEN(rb_gv_get("$:")) == 0) {
+    fprintf(stderr, "FATAL ERROR: No load path set. Zajal cannot run.\n");
+    fprintf(stderr, "  Set a load path using the -I option or the $ZAJAL_PATH environment variable\n");
+    abort();
+  }
+  
+  scriptName = fileName;
+  
+  // try to stat the file, bail out if inaccessible
+  struct stat attrib;
+  if(stat(scriptName, &attrib)) {
+    fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", scriptName);
+    fprintf(stderr, "  The file is either missing or otherwise inaccessible. Check the file name\n");
+    fprintf(stderr, "  or the file's permissions.\n");
+    abort();
+  }
+  
+  // establish the data path and add it to ruby's load path
+  VALUE script_directory = rb_str_new2(dirname(realpath(scriptName, NULL)));
+  INTERNAL_SET(zj_mApp, data_path, script_directory);
+  rb_ary_unshift(rb_gv_get("$:"), script_directory);
+  
+  ruby_script(scriptName);
   
   // load in all encodings
   rb_enc_find("encdb");
@@ -253,8 +274,6 @@ void ZajalInterpreter::loadScript(char* fileName) {
   rb_require("point");
   rb_require("text");
   rb_require("keyevent");
-  
-  scriptName = fileName;
 }
 
 void ZajalInterpreter::reloadScript() {
