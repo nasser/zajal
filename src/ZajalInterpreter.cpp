@@ -223,6 +223,22 @@ void ZajalInterpreter::loadScript(char* fileName) {
   
   ruby_script(scriptName);
   
+  // try and load ZAJAL_PATH environment variable
+  char* env_zajal_path = getenv("ZAJAL_PATH");
+  if(env_zajal_path) {
+    if(verbose) printf("loading LOAD_PATH from environment: [");
+    VALUE zajal_path_ary = rb_str_split(rb_str_new2(env_zajal_path), ":");
+    long zajal_path_ary_len = RARRAY_LEN(zajal_path_ary);
+    VALUE* zajal_path_ary_ptr = RARRAY_PTR(zajal_path_ary);
+    
+    for(int i = 0; i < zajal_path_ary_len; i++) {
+      rb_ary_unshift(rb_gv_get("$:"), zajal_path_ary_ptr[i]);
+      if(verbose) printf("'%s', ", StringValuePtr(zajal_path_ary_ptr[i]));
+    }
+    
+    if(verbose) printf("]\n");
+  }
+  
   // load in all encodings
   rb_enc_find("encdb");
   
