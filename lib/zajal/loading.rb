@@ -112,6 +112,10 @@ def globalize_code code, sigil="$"
   code_ary.join
 end
 
+def valid? code
+  not Ripper.sexp(code).nil?
+end
+
 # Compare two scripts as Zajal code and determine if a full reset it required
 # 
 # local_code - Code currently running

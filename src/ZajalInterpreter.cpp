@@ -310,7 +310,9 @@ void ZajalInterpreter::reloadScript() {
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
   
-  // TODO check validity of code before anything else
+  VALUE codeValid = zj_safe_funcall(&lastError, rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
+  handleError(lastError);
+  if(!RTEST(codeValid)) return;
   
   bool mustRestart = true;
   bool wasLastError = (lastError != 0); // are we recovering from an error?
