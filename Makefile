@@ -7,7 +7,7 @@ BINARY = $(BIN_DIR)/zajal
 ### 
 CC = gcc-4.0
 CXX = g++-4.0
-CXXFLAGS = -arch i386 -g -DHAVE_STRUCT_TIMEZONE -DHAVE_STRUCT_TIMESPEC
+override CXXFLAGS += -arch i386 -g -DHAVE_STRUCT_TIMEZONE -DHAVE_STRUCT_TIMESPEC
 
 
 ### openFrameworks

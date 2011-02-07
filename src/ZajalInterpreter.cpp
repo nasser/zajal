@@ -245,9 +245,12 @@ void ZajalInterpreter::loadScript(char* fileName) {
     if(verbose) printf("]\n");
   }
   
-  // defined in from config.h
+  #ifndef EMPTY_LOADPATH
+  // only load in defaults if EMPTY_LOADPATH is not set. constants come from
+  // config.h
   rb_ary_push(rb_gv_get("$:"), rb_str_new2(ZAJAL_LIBRARY_PATH));
   rb_ary_push(rb_gv_get("$:"), rb_str_new2(ZAJAL_RUBY_STDLIB_PATH));
+  #endif
   
   // bail out if no load path was set from environment or command line
   if(RARRAY_LEN(rb_gv_get("$:")) == 0) {
