@@ -60,7 +60,14 @@ void ZajalInterpreter::run() {
 }
 
 void ZajalInterpreter::appendLoadPath(char* path) {
-  rb_ary_push(rb_gv_get("$:"), rb_str_new2(realpath(path, NULL)));
+  char* resolved_path = realpath(path, NULL);
+  if(resolved_path) {
+    rb_ary_push(rb_gv_get("$:"), rb_str_new2(realpath(path, NULL)));
+    
+  } else {
+    fprintf(stderr, "WARNING: `%s' not a valid path. Not adding to load path.\n", path);
+    
+  }
 }
 
 void ZajalInterpreter::setVerboseMode(bool newMode) {
