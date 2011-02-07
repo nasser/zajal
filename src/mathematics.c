@@ -134,13 +134,13 @@ void Init_Mathematics() {
   zj_mMathematics = rb_define_module_under(zj_mZajal, "Mathematics");
   rb_define_module_under(zj_mMathematics, "Internals");
   
-  rb_define_method(zj_mMathematics, "seed_random", RB_FUNC(zj_seed_random), -1);
-  rb_define_method(zj_mMathematics, "random", RB_FUNC(zj_random), -1);
-  rb_define_method(zj_mMathematics, "random_width", RB_FUNC(zj_random_width), 0);
-  rb_define_method(zj_mMathematics, "random_height", RB_FUNC(zj_random_height), 0);
+  rb_define_private_method(zj_mMathematics, "seed_random", RB_FUNC(zj_seed_random), -1);
+  rb_define_private_method(zj_mMathematics, "random", RB_FUNC(zj_random), -1);
+  rb_define_private_method(zj_mMathematics, "random_width", RB_FUNC(zj_random_width), 0);
+  rb_define_private_method(zj_mMathematics, "random_height", RB_FUNC(zj_random_height), 0);
   
-  rb_define_method(zj_mMathematics, "noise", RB_FUNC(zj_noise), -1);
-  rb_define_method(zj_mMathematics, "signed_noise", RB_FUNC(zj_signed_noise), -1);
+  rb_define_private_method(zj_mMathematics, "noise", RB_FUNC(zj_noise), -1);
+  rb_define_private_method(zj_mMathematics, "signed_noise", RB_FUNC(zj_signed_noise), -1);
   
   rb_define_const(zj_mMathematics, "Pi", DBL2NUM(PI));
   rb_define_const(zj_mMathematics, "TwoPi", DBL2NUM(TWO_PI));

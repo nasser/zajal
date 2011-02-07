@@ -190,7 +190,7 @@ void Init_Typography() {
   
   /* image functions */
   INTERNAL_SET(zj_mTypography, font_hash, rb_hash_new());
-  rb_define_method(zj_mTypography, "text", RB_FUNC(zj_typography_text), -1);
+  rb_define_private_method(zj_mTypography, "text", RB_FUNC(zj_typography_text), -1);
   
   /* the Image class */
   zj_cFont = rb_define_class_under(zj_mTypography, "Font", rb_cObject);

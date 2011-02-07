@@ -343,8 +343,8 @@ void Init_Images() {
   
   /* image functions */
   INTERNAL_SET(zj_mImages, image_hash, rb_hash_new());
-  rb_define_method(zj_mImages, "image", RB_FUNC(zj_image_image), -1);
-  rb_define_method(zj_mImages, "grab_screen", RB_FUNC(zj_grab_screen), -1);
+  rb_define_private_method(zj_mImages, "image", RB_FUNC(zj_image_image), -1);
+  rb_define_private_method(zj_mImages, "grab_screen", RB_FUNC(zj_grab_screen), -1);
   
   /* the Image class */
   zj_cImage = rb_define_class_under(zj_mImages, "Image", rb_cObject);

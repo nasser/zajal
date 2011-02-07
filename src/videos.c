@@ -132,7 +132,7 @@ void Init_Videos() {
   rb_define_module_under(zj_mVideos, "Internals");
   
   INTERNAL_SET(zj_mVideos, video_hash, rb_hash_new());
-  rb_define_method(zj_mVideos, "video", RB_FUNC(zj_video_video), -1);
+  rb_define_private_method(zj_mVideos, "video", RB_FUNC(zj_video_video), -1);
   
   /* the Image class */
   zj_cVideo = rb_define_class_under(zj_mVideos, "Video", rb_cObject);

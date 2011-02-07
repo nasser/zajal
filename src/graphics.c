@@ -695,50 +695,50 @@ void Init_Graphics() {
   rb_define_module_under(zj_mGraphics, "Internals");
   
   /*  basic shapes */
-  rb_define_method(zj_mGraphics, "rectangle", RB_FUNC(zj_rectangle), 4);
-  rb_define_method(zj_mGraphics, "square", RB_FUNC(zj_square), 3);
-  rb_define_method(zj_mGraphics, "triangle", RB_FUNC(zj_triangle), 6);
-  rb_define_method(zj_mGraphics, "circle", RB_FUNC(zj_circle), 3);
-  rb_define_method(zj_mGraphics, "ellipse", RB_FUNC(zj_ellipse), 4);
-  rb_define_method(zj_mGraphics, "line", RB_FUNC(zj_line), 4);
+  rb_define_private_method(zj_mGraphics, "rectangle", RB_FUNC(zj_rectangle), 4);
+  rb_define_private_method(zj_mGraphics, "square", RB_FUNC(zj_square), 3);
+  rb_define_private_method(zj_mGraphics, "triangle", RB_FUNC(zj_triangle), 6);
+  rb_define_private_method(zj_mGraphics, "circle", RB_FUNC(zj_circle), 3);
+  rb_define_private_method(zj_mGraphics, "ellipse", RB_FUNC(zj_ellipse), 4);
+  rb_define_private_method(zj_mGraphics, "line", RB_FUNC(zj_line), 4);
   
   /*  curved lines */
-  rb_define_method(zj_mGraphics, "curve", RB_FUNC(zj_curve), 8);
-  rb_define_method(zj_mGraphics, "bezier", RB_FUNC(zj_bezier), 8);
+  rb_define_private_method(zj_mGraphics, "curve", RB_FUNC(zj_curve), 8);
+  rb_define_private_method(zj_mGraphics, "bezier", RB_FUNC(zj_bezier), 8);
   
   /*  draw states */
-  rb_define_method(zj_mGraphics, "rectangle_mode", RB_FUNC(zj_rectangle_mode), -1);
+  rb_define_private_method(zj_mGraphics, "rectangle_mode", RB_FUNC(zj_rectangle_mode), -1);
   
   /*  matrixes */
-  rb_define_method(zj_mGraphics, "push_matrix", RB_FUNC(zj_push_matrix), 0);
-  rb_define_method(zj_mGraphics, "pop_matrix", RB_FUNC(zj_pop_matrix), 0);
-  rb_define_method(zj_mGraphics, "matrix", RB_FUNC(zj_matrix), 0);
+  rb_define_private_method(zj_mGraphics, "push_matrix", RB_FUNC(zj_push_matrix), 0);
+  rb_define_private_method(zj_mGraphics, "pop_matrix", RB_FUNC(zj_pop_matrix), 0);
+  rb_define_private_method(zj_mGraphics, "matrix", RB_FUNC(zj_matrix), 0);
   
   /*  transformation */
-  rb_define_method(zj_mGraphics, "translate", RB_FUNC(zj_translate), -1);
-  rb_define_method(zj_mGraphics, "scale", RB_FUNC(zj_scale), -1);
-  rb_define_method(zj_mGraphics, "rotate", RB_FUNC(zj_rotate), -1);
+  rb_define_private_method(zj_mGraphics, "translate", RB_FUNC(zj_translate), -1);
+  rb_define_private_method(zj_mGraphics, "scale", RB_FUNC(zj_scale), -1);
+  rb_define_private_method(zj_mGraphics, "rotate", RB_FUNC(zj_rotate), -1);
   
   /*  shape blocks */
-  rb_define_method(zj_mGraphics, "begin_shape", RB_FUNC(zj_begin_shape), 0);
-  rb_define_method(zj_mGraphics, "end_shape", RB_FUNC(zj_end_shape), 1);
-  rb_define_method(zj_mGraphics, "shape", RB_FUNC(zj_shape), -1);
+  rb_define_private_method(zj_mGraphics, "begin_shape", RB_FUNC(zj_begin_shape), 0);
+  rb_define_private_method(zj_mGraphics, "end_shape", RB_FUNC(zj_end_shape), 1);
+  rb_define_private_method(zj_mGraphics, "shape", RB_FUNC(zj_shape), -1);
   
   /*  vertexes */
-  rb_define_method(zj_mGraphics, "vertex", RB_FUNC(zj_vertex), 2);
-  rb_define_method(zj_mGraphics, "curve_vertex", RB_FUNC(zj_curve_vertex), 2);
-  rb_define_method(zj_mGraphics, "bezier_vertex", RB_FUNC(zj_bezier_vertex), 6);
+  rb_define_private_method(zj_mGraphics, "vertex", RB_FUNC(zj_vertex), 2);
+  rb_define_private_method(zj_mGraphics, "curve_vertex", RB_FUNC(zj_curve_vertex), 2);
+  rb_define_private_method(zj_mGraphics, "bezier_vertex", RB_FUNC(zj_bezier_vertex), 6);
   
   /*  settings */
-  rb_define_method(zj_mGraphics, "circle_resolution", RB_FUNC(zj_circle_resolution), -1);
-  rb_define_method(zj_mGraphics, "curve_resolution", RB_FUNC(zj_circle_resolution), -1);
-  rb_define_method(zj_mGraphics, "smoothing", RB_FUNC(zj_smoothing), -1);
-  rb_define_method(zj_mGraphics, "alpha_blending", RB_FUNC(zj_alpha_blending), -1);
-  rb_define_method(zj_mGraphics, "arb_textures", RB_FUNC(zj_arb_textures), -1);
-  rb_define_method(zj_mGraphics, "line_width", RB_FUNC(zj_line_width), -1);
-  rb_define_method(zj_mGraphics, "background_auto", RB_FUNC(zj_background_auto), -1);
-  rb_define_method(zj_mGraphics, "fill", RB_FUNC(zj_fill), -1);
+  rb_define_private_method(zj_mGraphics, "circle_resolution", RB_FUNC(zj_circle_resolution), -1);
+  rb_define_private_method(zj_mGraphics, "curve_resolution", RB_FUNC(zj_circle_resolution), -1);
+  rb_define_private_method(zj_mGraphics, "smoothing", RB_FUNC(zj_smoothing), -1);
+  rb_define_private_method(zj_mGraphics, "alpha_blending", RB_FUNC(zj_alpha_blending), -1);
+  rb_define_private_method(zj_mGraphics, "arb_textures", RB_FUNC(zj_arb_textures), -1);
+  rb_define_private_method(zj_mGraphics, "line_width", RB_FUNC(zj_line_width), -1);
+  rb_define_private_method(zj_mGraphics, "background_auto", RB_FUNC(zj_background_auto), -1);
+  rb_define_private_method(zj_mGraphics, "fill", RB_FUNC(zj_fill), -1);
   
-  rb_define_method(zj_mGraphics, "background", RB_FUNC(zj_background), -1);
-  rb_define_method(zj_mGraphics, "color", RB_FUNC(zj_color), -1);
+  rb_define_private_method(zj_mGraphics, "background", RB_FUNC(zj_background), -1);
+  rb_define_private_method(zj_mGraphics, "color", RB_FUNC(zj_color), -1);
 }

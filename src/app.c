@@ -125,11 +125,11 @@ void Init_App() {
   zj_mApp = rb_define_module_under(zj_mZajal, "App");
   rb_define_module_under(zj_mApp, "Internals");
   
-  rb_define_method(zj_mApp, "height", RB_FUNC(zj_height), -1);
-  rb_define_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
-  rb_define_method(zj_mApp, "size", RB_FUNC(zj_size), -1);
-  rb_define_method(zj_mApp, "frame", RB_FUNC(zj_frame), 0);
-  rb_define_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
-  rb_define_method(zj_mApp, "vertical_sync", RB_FUNC(zj_vertical_sync), -1);
-  rb_define_method(zj_mApp, "title", RB_FUNC(zj_title), -1);
+  rb_define_private_method(zj_mApp, "height", RB_FUNC(zj_height), -1);
+  rb_define_private_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
+  rb_define_private_method(zj_mApp, "size", RB_FUNC(zj_size), -1);
+  rb_define_private_method(zj_mApp, "frame", RB_FUNC(zj_frame), 0);
+  rb_define_private_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
+  rb_define_private_method(zj_mApp, "vertical_sync", RB_FUNC(zj_vertical_sync), -1);
+  rb_define_private_method(zj_mApp, "title", RB_FUNC(zj_title), -1);
 }
