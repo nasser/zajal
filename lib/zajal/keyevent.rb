@@ -179,9 +179,11 @@ class Symbol
   trequals %{ self == other.to_sym }
 end
 
-class Regexp
-  trequals %{ other.printable? and other.to_s =~ self }
-end
+# FIXME $~ doesn't get set after when statment anymore!
+# see uri/common.rb:107 when using open-uri
+# class Regexp
+#   trequals %{ other.printable? and other.to_s =~ self }
+# end
 
 class Fixnum
   trequals %{ self == other.to_i }
