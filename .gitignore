@@ -1,3 +1,4 @@
 *.o
+src/config.h
 bin/
 scratch/
