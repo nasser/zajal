@@ -199,7 +199,7 @@ VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
     
   }
   
-  return Qnil;
+  return self;
 }
 
 VALUE zj_image_get_pixel(VALUE self, VALUE x, VALUE y) {
