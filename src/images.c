@@ -34,13 +34,75 @@ VALUE zj_image_load(VALUE self, VALUE filename) {
   return Qnil;
 }
 
-VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
-  VALUE filename;
-  rb_scan_args(argc, argv, "01", &filename);
+int zj_sym_to_image_type(VALUE sym) {
+  ID type_id = SYM2ID(sym);
   
-  if(!NIL_P(filename)) {
-    /* called with a filename, load it */
-    rb_funcall(self, rb_intern("load"), 1, filename);
+  if(type_id == rb_intern("grayscale")) {
+    return OF_IMAGE_GRAYSCALE;
+    
+  } else if(type_id == rb_intern("rgb")) {
+    return OF_IMAGE_COLOR;
+    
+  } else if(type_id == rb_intern("rgba")) {
+    return OF_IMAGE_COLOR_ALPHA;
+    
+  } else {
+    rb_raise(rb_eArgError, "Expected :grayscale, :rgb or :rgba !");
+    
+  }
+  
+  return 0;
+}
+
+VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
+  VALUE file = Qnil, width = Qnil, height = Qnil, scale = Qnil;
+  VALUE type = SYM("rgb");
+  VALUE use_texture = Qtrue;
+  
+  /* if last arg is hash, remove it from argv */
+  if(argc > 0 && TYPE(argv[argc-1]) == T_HASH) argc--;
+  
+  /* scan for normal args */
+  VALUE file_width;
+  rb_scan_args(argc, argv, "02", &file_width, &height);
+  NIL_P(height) ? file = file_width : width = file_width;
+  
+  if(argc > 0 && TYPE(argv[argc]) == T_HASH) {
+    /* last arg is options hash, extract local variables */
+    HASH_EXTRACT(argv[argc], file);
+    HASH_EXTRACT(argv[argc], width);
+    HASH_EXTRACT(argv[argc], height);
+    HASH_EXTRACT(argv[argc], scale);
+    HASH_EXTRACT(argv[argc], type);
+    HASH_EXTRACT(argv[argc], use_texture);
+    
+  }
+  
+  ofImage* image_ptr;
+  Data_Get_Struct(self, ofImage, image_ptr);
+  
+  /* TODO use existing zj_image functions instead of duplicating functionality */
+  image_ptr->setUseTexture(RTEST(use_texture));
+  
+  if(!NIL_P(file)) {
+    /* loading a file */
+    rb_funcall(self, rb_intern("load"), 1, file);
+    image_ptr->setImageType(zj_sym_to_image_type(type));
+    
+    if(!NIL_P(width) || !NIL_P(height)) {
+      int new_width = NIL_P(width) ? image_ptr->width : NUM2INT(width);
+      int new_height = NIL_P(height) ? image_ptr->height : NUM2INT(height);
+      image_ptr->resize(new_width, new_height);
+      
+    } else if(!NIL_P(scale)) {
+      float s = NUM2DBL(scale);
+      image_ptr->resize(image_ptr->width * s, image_ptr->height * s);
+      
+    }
+    
+  } else if(!NIL_P(width) && !NIL_P(height)) {
+    /* allocating a blank image */
+    image_ptr->allocate(NUM2INT(width), NUM2INT(height), zj_sym_to_image_type(type));
     
   }
   
