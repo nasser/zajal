@@ -58,23 +58,21 @@ VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
   VALUE file = Qnil, width = Qnil, height = Qnil, scale = Qnil;
   VALUE type = SYM("rgb");
   VALUE use_texture = Qtrue;
+  bool hash_given = (TYPE(argv[argc-1]) == T_HASH);
   
-  /* if last arg is hash, remove it from argv */
-  if(argc > 0 && TYPE(argv[argc-1]) == T_HASH) argc--;
-  
-  /* scan for normal args */
+  /* scan for normal args, ignore hash if given */
   VALUE file_width;
-  rb_scan_args(argc, argv, "02", &file_width, &height);
+  rb_scan_args(hash_given ? argc-1 : argc, argv, "02", &file_width, &height);
   NIL_P(height) ? file = file_width : width = file_width;
   
-  if(argc > 0 && TYPE(argv[argc]) == T_HASH) {
-    /* last arg is options hash, extract local variables */
-    HASH_EXTRACT(argv[argc], file);
-    HASH_EXTRACT(argv[argc], width);
-    HASH_EXTRACT(argv[argc], height);
-    HASH_EXTRACT(argv[argc], scale);
-    HASH_EXTRACT(argv[argc], type);
-    HASH_EXTRACT(argv[argc], use_texture);
+  /* if last arg is options hash, extract local variables */
+  if(hash_given) {
+    HASH_EXTRACT(argv[argc-1], file);
+    HASH_EXTRACT(argv[argc-1], width);
+    HASH_EXTRACT(argv[argc-1], height);
+    HASH_EXTRACT(argv[argc-1], scale);
+    HASH_EXTRACT(argv[argc-1], type);
+    HASH_EXTRACT(argv[argc-1], use_texture);
     
   }
   
