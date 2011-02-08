@@ -25,15 +25,11 @@ void zj_font_dealloc(void* font) {
   delete (ofTrueTypeFont*)font;
 }
 
-VALUE zj_font_new(VALUE klass, VALUE filename, VALUE size) {
-  VALUE args[2];
-  args[0] = filename;
-  args[1] = size;
-  
+VALUE zj_font_new(int argc, VALUE* argv, VALUE klass) {
   ofTrueTypeFont* font_ptr = new ofTrueTypeFont();
   
   VALUE font = Data_Wrap_Struct(klass, 0, zj_font_dealloc, font_ptr);
-  rb_obj_call_init(font, 2, args);
+  rb_obj_call_init(font, argc, argv);
   return font;
 }
 
@@ -59,8 +55,44 @@ VALUE zj_font_load(VALUE self, VALUE filename, VALUE size) {
   return Qnil;
 }
 
-VALUE zj_font_initialize(VALUE self, VALUE filename, VALUE size) {
-  rb_funcall(self, rb_intern("load"), 2, filename, size);
+VALUE zj_font_initialize(int argc, VALUE* argv, VALUE self) {
+  VALUE file = Qnil, size = Qnil, line_height = Qnil;
+  VALUE anti_aliased = Qtrue;
+  VALUE full_character_set = Qtrue;
+  VALUE contours = Qfalse;
+  bool hash_given = (TYPE(argv[argc-1]) == T_HASH);
+  
+  /* scan for normal args, ignore hash if given */
+  rb_scan_args(hash_given ? argc-1 : argc, argv, "02", &file, &size);
+  
+  /* if last arg is options hash, extract local variables */
+  if(hash_given) {
+    HASH_EXTRACT(argv[argc-1], file);
+    HASH_EXTRACT(argv[argc-1], size);
+    HASH_EXTRACT(argv[argc-1], line_height);
+    HASH_EXTRACT(argv[argc-1], anti_aliased);
+    HASH_EXTRACT(argv[argc-1], full_character_set);
+    HASH_EXTRACT(argv[argc-1], contours);
+    
+  }
+  
+  if(NIL_P(file)) {
+    rb_raise(rb_eArgError, "Font name not specified!");
+    return Qnil;
+  }
+  
+  if(NIL_P(size)) {
+    rb_raise(rb_eArgError, "Font size not specified!");
+    return Qnil;
+  }
+  
+  ofTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  
+  char* data_filename = zj_to_data_path(StringValuePtr(file));
+  font_ptr->loadFont(data_filename, NUM2INT(size), RTEST(anti_aliased), RTEST(full_character_set), RTEST(contours));
+  free(data_filename);
+  if(!NIL_P(line_height)) font_ptr->setLineHeight(NUM2DBL(line_height));
   
   return self;
 }
@@ -194,8 +226,8 @@ void Init_Typography() {
   
   /* the Image class */
   zj_cFont = rb_define_class_under(zj_mTypography, "Font", rb_cObject);
-  rb_define_singleton_method(zj_cFont, "new", RB_FUNC(zj_font_new), 2);
-  rb_define_method(zj_cFont, "initialize", RB_FUNC(zj_font_initialize), 2);
+  rb_define_singleton_method(zj_cFont, "new", RB_FUNC(zj_font_new), -1);
+  rb_define_method(zj_cFont, "initialize", RB_FUNC(zj_font_initialize), -1);
   rb_define_method(zj_cFont, "load", RB_FUNC(zj_font_load), 2);
   rb_define_method(zj_cFont, "draw", RB_FUNC(zj_font_draw), -1);
   rb_define_method(zj_cFont, "line_height", RB_FUNC(zj_font_line_height), -1);
