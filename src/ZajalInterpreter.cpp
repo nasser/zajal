@@ -13,11 +13,11 @@
 
 VALUE zj_button_to_symbol(int button) {
   if(button == 0)
-    return ID2SYM(rb_intern("left"));
+    return SYM("left");
   else if(button == 1)
-    return ID2SYM(rb_intern("center"));
+    return SYM("center");
   else if(button == 2)
-    return ID2SYM(rb_intern("right"));
+    return SYM("right");
   else
     rb_bug("Received unsupported button `%d'on mouseDragged! Bailing out!", button);
 }

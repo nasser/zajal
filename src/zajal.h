@@ -10,6 +10,9 @@
 /*  http://fonlake.blogspot.com/2009/07/cruby.html */
 #define RB_FUNC(f) reinterpret_cast <VALUE (*)(...)>(f) 
 
+/* convert a cstring into a ruby symbol */
+#define SYM(cstr)  ID2SYM(rb_intern(cstr))
+
 /* app */
 extern VALUE zj_mApp;
 
