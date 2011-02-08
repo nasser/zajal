@@ -13,6 +13,8 @@
 /* convert a cstring into a ruby symbol */
 #define SYM(cstr)  ID2SYM(rb_intern(cstr))
 
+#define HASH_EXTRACT(hash, var) {if( !NIL_P(rb_hash_aref(hash, SYM(#var))) ) var = rb_hash_aref(hash, SYM(#var));}
+
 /* app */
 extern VALUE zj_mApp;
 
