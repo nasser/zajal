@@ -213,10 +213,9 @@ void Init_Typography() {
   zj_mTypography = rb_define_module_under(zj_mZajal, "Typography");
   rb_define_module_under(zj_mTypography, "Internals");
   
-  INTERNAL_SET(zj_mTypography, stacked_text_initial_x, INT2FIX(10));
-  INTERNAL_SET(zj_mTypography, stacked_text_initial_y, INT2FIX(20));
-  INTERNAL_SET(zj_mTypography, stacked_text_line_height, INT2FIX(20));
-  INTERNAL_SET(zj_mTypography, stacked_text_line_height, INT2FIX(20));
+  INTERNAL_SET(zj_mTypography, stacked_text_initial_x, INT2FIX(1));
+  INTERNAL_SET(zj_mTypography, stacked_text_initial_y, INT2FIX(11));
+  INTERNAL_SET(zj_mTypography, stacked_text_line_height, INT2FIX(13));
   INTERNAL_SET(zj_mTypography, stacked_text_x, INT2FIX(10));
   INTERNAL_SET(zj_mTypography, stacked_text_y, INTERNAL_GET(zj_mTypography, stacked_text_initial_y));
   
