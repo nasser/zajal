@@ -8,6 +8,7 @@ VALUE zj_mApp;
 /*  globals */
 VALUE _zj_value_window_title = Qnil;
 VALUE _zj_value_vertical_sync = Qtrue;
+VALUE _zj_value_cursor_visible = Qtrue;
 
 VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
   VALUE w;
@@ -121,6 +122,23 @@ VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
   }
 }
 
+VALUE zj_cursor(int argc, VALUE* argv, VALUE self) {
+  VALUE cursor_visible;
+  rb_scan_args(argc, argv, "01", &cursor_visible);
+  
+  if(NIL_P(cursor_visible)) {
+    /*  method called without argument, treat as a getter */
+    return _zj_value_cursor_visible;
+    
+  } else {
+    /*  method called with argument, treat as setter */
+    _zj_value_cursor_visible = cursor_visible;
+    RTEST(_zj_value_cursor_visible) ? ofShowCursor() : ofHideCursor();
+    return Qnil;
+    
+  }
+}
+
 void Init_App() {
   zj_mApp = rb_define_module_under(zj_mZajal, "App");
   rb_define_module_under(zj_mApp, "Internals");
@@ -132,4 +150,6 @@ void Init_App() {
   rb_define_private_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
   rb_define_private_method(zj_mApp, "vertical_sync", RB_FUNC(zj_vertical_sync), -1);
   rb_define_private_method(zj_mApp, "title", RB_FUNC(zj_title), -1);
+  
+  rb_define_private_method(zj_mApp, "cursor", RB_FUNC(zj_cursor), -1);
 }
