@@ -157,6 +157,14 @@ VALUE zj_fullscreen(int argc, VALUE* argv, VALUE self) {
   }
 }
 
+VALUE zj_screen_width(VALUE self) {
+  return INT2NUM(ofGetScreenWidth());
+}
+
+VALUE zj_screen_height(VALUE self) {
+  return INT2NUM(ofGetScreenHeight());
+}
+
 void Init_App() {
   zj_mApp = rb_define_module_under(zj_mZajal, "App");
   rb_define_module_under(zj_mApp, "Internals");
@@ -170,4 +178,6 @@ void Init_App() {
   rb_define_private_method(zj_mApp, "title", RB_FUNC(zj_title), -1);
   rb_define_private_method(zj_mApp, "fullscreen", RB_FUNC(zj_fullscreen), -1);
   rb_define_private_method(zj_mApp, "cursor", RB_FUNC(zj_cursor), -1);
+  rb_define_private_method(zj_mApp, "screen_width", RB_FUNC(zj_screen_width), 0);
+  rb_define_private_method(zj_mApp, "screen_height", RB_FUNC(zj_screen_height), 0);
 }
