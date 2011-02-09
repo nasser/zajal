@@ -58,7 +58,7 @@ VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
   VALUE file = Qnil, width = Qnil, height = Qnil, scale = Qnil;
   VALUE type = SYM("rgb");
   VALUE use_texture = Qtrue;
-  bool hash_given = (TYPE(argv[argc-1]) == T_HASH);
+  bool hash_given = (argc > 0 && TYPE(argv[argc-1]) == T_HASH);
   
   /* scan for normal args, ignore hash if given */
   VALUE file_width;
