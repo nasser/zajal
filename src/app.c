@@ -165,6 +165,39 @@ VALUE zj_screen_height(VALUE self) {
   return INT2NUM(ofGetScreenHeight());
 }
 
+VALUE zj_window_x(int argc, VALUE* argv, VALUE self) {
+  VALUE new_x;
+  rb_scan_args(argc, argv, "01", &new_x);
+  
+  if(NIL_P(new_x)) {
+    /*  method called without argument, treat as a getter */
+    return INT2NUM(ofGetWindowPositionX());
+    
+  } else {
+    /*  method called with argument, treat as setter */
+    ofSetWindowPosition(NUM2INT(new_x), ofGetWindowPositionY());
+    return Qnil;
+    
+  }
+}
+
+VALUE zj_window_y(int argc, VALUE* argv, VALUE self) {
+  VALUE new_y;
+  rb_scan_args(argc, argv, "01", &new_y);
+  
+  if(NIL_P(new_y)) {
+    /*  method called without argument, treat as a getter */
+    return INT2NUM(ofGetWindowPositionY());
+    
+  } else {
+    /*  method called with argument, treat as setter */
+    ofSetWindowPosition(ofGetWindowPositionX(), NUM2INT(new_y));
+    return Qnil;
+    
+  }
+}
+
+
 void Init_App() {
   zj_mApp = rb_define_module_under(zj_mZajal, "App");
   rb_define_module_under(zj_mApp, "Internals");
@@ -180,4 +213,6 @@ void Init_App() {
   rb_define_private_method(zj_mApp, "cursor", RB_FUNC(zj_cursor), -1);
   rb_define_private_method(zj_mApp, "screen_width", RB_FUNC(zj_screen_width), 0);
   rb_define_private_method(zj_mApp, "screen_height", RB_FUNC(zj_screen_height), 0);
+  rb_define_private_method(zj_mApp, "window_x", RB_FUNC(zj_window_x), -1);
+  rb_define_private_method(zj_mApp, "window_y", RB_FUNC(zj_window_y), -1);
 }
