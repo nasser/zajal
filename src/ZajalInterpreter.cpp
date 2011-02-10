@@ -301,6 +301,9 @@ void ZajalInterpreter::reloadScript() {
   long scriptFileSize = ftell(scriptFile);
   fseek(scriptFile, 0, SEEK_SET);
   
+  bool mustRestart = true;
+  bool wasLastError = (lastError != 0); // are we recovering from an error?
+  
   if(verbose)
     printf("Reading %s (%db)\n", scriptName, scriptFileSize);
   
@@ -316,9 +319,6 @@ void ZajalInterpreter::reloadScript() {
     handleError(lastError);
     return;
   }
-  
-  bool mustRestart = true;
-  bool wasLastError = (lastError != 0); // are we recovering from an error?
   
   // load source into ruby variable, globalize it
   VALUE incomingCode = zj_safe_funcall(&lastError, rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
