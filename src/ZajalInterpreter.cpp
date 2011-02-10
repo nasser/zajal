@@ -30,6 +30,7 @@ ZajalInterpreter::ZajalInterpreter() {
   verbose = false;
   running = false;
   
+  state = INTERPRETER_LOADING;
   scriptModifiedTime = 0;
   
   nextUpdate = SCRIPT_UPDATE_FREQUENCY;
@@ -55,6 +56,7 @@ void ZajalInterpreter::printVersion() {
 }
 
 void ZajalInterpreter::run() {
+  state = INTERPRETER_RUNNING;
   ofSetupOpenGL(500, 500, OF_WINDOW);
   ofRunApp(this);
 }
@@ -88,7 +90,7 @@ void ZajalInterpreter::setup() {
   ofSetRectMode(OF_RECTMODE_CORNER);
   ofSetLineWidth(1.0);
   
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     // if no error exists, run user setup method, catch runtime errors
     zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, setup_proc), 0);
     handleError(lastError);
@@ -97,7 +99,7 @@ void ZajalInterpreter::setup() {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::update() {
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     // if no error exists, run user update method, catch runtime errors
     zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, update_proc), 0);
     handleError(lastError);
@@ -106,26 +108,29 @@ void ZajalInterpreter::update() {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::draw() {
-  if(lastError) {
-    // an error exists, draw error screen
-    ofSetColor(255, 255, 255, 255);
-    lastErrorImage.draw(0, 0);
-    // TODO apply filters to lastErrorImage instead of drawing a rect
-    ofEnableAlphaBlending();
-    ofFill();
-    ofSetColor(255, 255, 255, 128);
-    ofRect(0, 0, ofGetWidth(), ofGetHeight());
-    ofSetColor(255, 255, 255, 255);
-    ofRect(0, ofGetHeight()/2-50, ofGetWidth(), 100);
-    ofSetColor(0, 0, 0, 255);
-    ofDrawBitmapString(lastErrorMessage, 10, ofGetHeight()/2-30);
-    
-  } else {
-    // no error exists, draw next frame of user code, catch runtime errors
-    zj_graphics_reset_frame();
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, draw_proc), 0);
-    handleError(lastError);
-    
+  switch(state) {
+    case INTERPRETER_ERROR:
+      // an error exists, draw error screen
+      ofSetColor(255, 255, 255, 255);
+      lastErrorImage.draw(0, 0);
+      // TODO apply filters to lastErrorImage instead of drawing a rect
+      ofEnableAlphaBlending();
+      ofFill();
+      ofSetColor(255, 255, 255, 128);
+      ofRect(0, 0, ofGetWidth(), ofGetHeight());
+      ofSetColor(255, 255, 255, 255);
+      ofRect(0, ofGetHeight()/2-50, ofGetWidth(), 100);
+      ofSetColor(0, 0, 0, 255);
+      ofDrawBitmapString(lastErrorMessage, 10, ofGetHeight()/2-30);
+      break;
+      
+    case INTERPRETER_RUNNING:
+      // no error exists, draw next frame of user code, catch runtime errors
+      zj_graphics_reset_frame();
+      zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, draw_proc), 0);
+      handleError(lastError);
+      break;
+      
   }
   
   // try to update script at end of setup-update-draw loop
@@ -155,7 +160,7 @@ void ZajalInterpreter::updateCurrentScript() {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::exit() {
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     // TODO convert key into symbols
     zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, exit_proc), 0);
     handleError(lastError);
@@ -164,7 +169,7 @@ void ZajalInterpreter::exit() {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::keyPressed  (int key) {
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     VALUE zj_cKeyEvent = rb_const_get(rb_cObject, rb_intern("KeyEvent"));
     VALUE keyEvent = zj_safe_funcall(&lastError, zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
     handleError(lastError);
@@ -176,7 +181,7 @@ void ZajalInterpreter::keyPressed  (int key) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::keyReleased  (int key) {
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     VALUE zj_cKeyEvent = rb_const_get(rb_cObject, rb_intern("KeyEvent"));
     VALUE keyEvent = zj_safe_funcall(&lastError, zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
     handleError(lastError);
@@ -189,7 +194,7 @@ void ZajalInterpreter::keyReleased  (int key) {
 //--------------------------------------------------------------
 // http://www.ruby-forum.com/topic/76498
 void ZajalInterpreter::mouseMoved(int x, int y) {
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_moved_proc), 2, INT2FIX(x), INT2FIX(y));
     handleError(lastError);
   }
@@ -197,7 +202,7 @@ void ZajalInterpreter::mouseMoved(int x, int y) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_dragged_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     handleError(lastError);
   }
@@ -205,7 +210,7 @@ void ZajalInterpreter::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     handleError(lastError);
   }
@@ -214,7 +219,7 @@ void ZajalInterpreter::mousePressed(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_released_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     handleError(lastError);
   }
@@ -222,7 +227,7 @@ void ZajalInterpreter::mouseReleased(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::windowResized(int w, int h) {
-  if(!lastError) {
+  if(state == INTERPRETER_RUNNING) {
     zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, window_resized_proc), 2, INT2FIX(w), INT2FIX(h));
     handleError(lastError);
   }
@@ -355,7 +360,7 @@ void ZajalInterpreter::reloadScript() {
     rb_eval_string_protect(RSTRING_PTR(currentCode), &lastError);
     handleError(lastError);
   
-    if(!lastError) {
+    if(state == INTERPRETER_RUNNING) {
       
       if(mustRestart || wasLastError) {
         setup();
@@ -381,6 +386,8 @@ void ZajalInterpreter::reloadScript() {
 // http://metaeditor.sourceforge.net/embed/
 void ZajalInterpreter::handleError(int error) {
   if(error) {
+    state = INTERPRETER_ERROR;
+    
     // stop all playing videos
     VALUE last_error = rb_gv_get("$!");
     char* error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
@@ -412,5 +419,7 @@ void ZajalInterpreter::handleError(int error) {
         }
         cout << "backtrace = \n" << o.str() << endl;
     }
+  } else {
+    state = INTERPRETER_RUNNING;
   }
 }

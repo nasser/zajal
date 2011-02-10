@@ -12,6 +12,12 @@
 #define SCRIPT_UPDATE_FREQUENCY   1
 #define MAX_LOCAL_VAR_NAME_LENGTH 255
 
+enum InterpreterState {
+  INTERPRETER_LOADING,
+  INTERPRETER_RUNNING,
+  INTERPRETER_ERROR
+};
+
 class ZajalInterpreter : public ofBaseApp {
 	
 	public:
@@ -40,6 +46,9 @@ class ZajalInterpreter : public ofBaseApp {
     void appendLoadPath(char* path);
     
   private:
+    // the state the interpreter is in
+    InterpreterState state;
+    
     // verbose mode setting
     bool verbose;
     
