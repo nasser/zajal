@@ -55,7 +55,7 @@ void ZajalInterpreter::printVersion() {
 }
 
 void ZajalInterpreter::run() {
-  ofSetupOpenGL(&window, 500, 500, OF_WINDOW);
+  ofSetupOpenGL(500, 500, OF_WINDOW);
   ofRunApp(this);
 }
 

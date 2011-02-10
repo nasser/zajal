@@ -66,9 +66,6 @@ class ZajalInterpreter : public ofBaseApp {
     
     // screenshot of the sketch state before the last error was encountered
 		ofImage lastErrorImage;
-		
-		// the sketch window
-		ofAppGlutWindow window;
     
     void handleError(int error);
 };
