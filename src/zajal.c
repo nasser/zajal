@@ -33,6 +33,9 @@ char* zj_to_data_path(char* path) {
   
 }
 
+/* global indicator of last error out of the ruby vm */
+int ruby_error;
+
 VALUE _zj_safe_proc_call(VALUE args) {
   // assumes args is a ruby array with the proc as the first element
   VALUE proc = rb_ary_shift(args);
@@ -41,7 +44,7 @@ VALUE _zj_safe_proc_call(VALUE args) {
   return Qnil;
 }
 
-VALUE zj_safe_proc_call(int* error, VALUE proc, int argc, ...) {
+VALUE zj_safe_proc_call(VALUE proc, int argc, ...) {
   va_list args;
   va_start(args, argc);
   
@@ -51,7 +54,7 @@ VALUE zj_safe_proc_call(int* error, VALUE proc, int argc, ...) {
   for(int i = 1; i < (argc+1); i++)
     proc_args[i] = va_arg(args, VALUE);
   
-  VALUE return_value = rb_protect(_zj_safe_proc_call, rb_ary_new4(argc + 1, proc_args), error);
+  VALUE return_value = rb_protect(_zj_safe_proc_call, rb_ary_new4(argc + 1, proc_args), &ruby_error);
 
   free(proc_args);
   va_end(args);
@@ -68,7 +71,7 @@ VALUE _zj_safe_funcall(VALUE args) {
   return rb_funcall2(recv, mid, argc, &((VALUE*)args)[3]);
 }
 
-VALUE zj_safe_funcall(int* error, VALUE recv, ID mid, int argc, ...) {
+VALUE zj_safe_funcall(VALUE recv, ID mid, int argc, ...) {
   va_list args;
   va_start(args, argc);
   
@@ -79,7 +82,7 @@ VALUE zj_safe_funcall(int* error, VALUE recv, ID mid, int argc, ...) {
   for(int i = 3; i < (argc+3); i++)
     funcall_args[i] = va_arg(args, VALUE);
   
-  VALUE return_value = rb_protect(_zj_safe_funcall, (VALUE)funcall_args, error);
+  VALUE return_value = rb_protect(_zj_safe_funcall, (VALUE)funcall_args, &ruby_error);
   
   va_end(args);
   free(funcall_args);

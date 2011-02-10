@@ -67,16 +67,8 @@ class ZajalInterpreter : public ofBaseApp {
     // ruby object representing the code currently running
     VALUE currentCode;
     
-    // last error reported by ruby. lastError == 0 means no error 
-    int lastError;
-    
-    // description of lastError
-    char* lastErrorMessage;
-    
     // screenshot of the sketch state before the last error was encountered
 		ofImage lastErrorImage;
-    
-    void handleError(int error);
 };
 
 #endif /* ZAJAL_INTERPRETER_H */

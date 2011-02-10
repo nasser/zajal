@@ -34,7 +34,6 @@ ZajalInterpreter::ZajalInterpreter() {
   scriptModifiedTime = 0;
   
   nextUpdate = SCRIPT_UPDATE_FREQUENCY;
-  lastErrorMessage = (char*)malloc(ERROR_MESSAGE_SIZE*sizeof(char));
   currentCode = Qnil;
   rb_define_variable("_current_code", &currentCode);
 }
@@ -92,8 +91,8 @@ void ZajalInterpreter::setup() {
   
   if(state == INTERPRETER_RUNNING) {
     // if no error exists, run user setup method, catch runtime errors
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, setup_proc), 0);
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, setup_proc), 0);
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
@@ -101,8 +100,8 @@ void ZajalInterpreter::setup() {
 void ZajalInterpreter::update() {
   if(state == INTERPRETER_RUNNING) {
     // if no error exists, run user update method, catch runtime errors
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, update_proc), 0);
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, update_proc), 0);
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
@@ -110,6 +109,39 @@ void ZajalInterpreter::update() {
 void ZajalInterpreter::draw() {
   switch(state) {
     case INTERPRETER_ERROR:
+      // http://metaeditor.sourceforge.net/embed/
+      // stop all playing videos
+      VALUE last_error = rb_gv_get("$!");
+      char* error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
+      char* error_message = RSTRING_PTR(rb_obj_as_string(last_error));
+
+      // class
+      // cout << "class = " << error_class << endl; 
+
+      // message
+      // cout << "message = " << error_message << endl;
+
+      // lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+
+      // size_t error_message_size = strlen(error_message);
+      // memset(lastErrorMessage, 0, ERROR_MESSAGE_SIZE);
+      // strncpy(lastErrorMessage, error_message, error_message_size);
+      // strncat(lastErrorMessage, "\n", ERROR_MESSAGE_SIZE);
+
+      // backtrace
+      // if(!NIL_P(last_error)) {
+      //     std::ostringstream o;
+      //     VALUE backtrace = rb_attr_get(last_error, rb_intern("bt"));
+      //     long backtrace_length = RARRAY_LEN(backtrace);
+      //     VALUE* backtrace_ptr = RARRAY_PTR(backtrace);
+      // 
+      //     if(backtrace_length > 1) strncat(lastErrorMessage, RSTRING_PTR(backtrace_ptr[0]), ERROR_MESSAGE_SIZE - error_message_size);
+      //     for(int c=0; c<backtrace_length; c++) {
+      //         o << "\tfrom " << RSTRING_PTR(backtrace_ptr[c]) << "\n";
+      //     }
+      //     cout << "backtrace = \n" << o.str() << endl;
+      // }
+      
       // an error exists, draw error screen
       ofSetColor(255, 255, 255, 255);
       lastErrorImage.draw(0, 0);
@@ -121,14 +153,14 @@ void ZajalInterpreter::draw() {
       ofSetColor(255, 255, 255, 255);
       ofRect(0, ofGetHeight()/2-50, ofGetWidth(), 100);
       ofSetColor(0, 0, 0, 255);
-      ofDrawBitmapString(lastErrorMessage, 10, ofGetHeight()/2-30);
+      ofDrawBitmapString(error_message, 10, ofGetHeight()/2-30);
       break;
       
     case INTERPRETER_RUNNING:
       // no error exists, draw next frame of user code, catch runtime errors
       zj_graphics_reset_frame();
-      zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, draw_proc), 0);
-      handleError(lastError);
+      zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
+      if(ruby_error) state = INTERPRETER_ERROR;
       break;
       
   }
@@ -162,8 +194,8 @@ void ZajalInterpreter::updateCurrentScript() {
 void ZajalInterpreter::exit() {
   if(state == INTERPRETER_RUNNING) {
     // TODO convert key into symbols
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, exit_proc), 0);
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, exit_proc), 0);
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
@@ -171,11 +203,11 @@ void ZajalInterpreter::exit() {
 void ZajalInterpreter::keyPressed  (int key) {
   if(state == INTERPRETER_RUNNING) {
     VALUE zj_cKeyEvent = rb_const_get(rb_cObject, rb_intern("KeyEvent"));
-    VALUE keyEvent = zj_safe_funcall(&lastError, zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
-    handleError(lastError);
+    VALUE keyEvent = zj_safe_funcall(zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
+    if(ruby_error) state = INTERPRETER_ERROR;
     
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, keyEvent);
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, keyEvent);
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
@@ -183,11 +215,11 @@ void ZajalInterpreter::keyPressed  (int key) {
 void ZajalInterpreter::keyReleased  (int key) {
   if(state == INTERPRETER_RUNNING) {
     VALUE zj_cKeyEvent = rb_const_get(rb_cObject, rb_intern("KeyEvent"));
-    VALUE keyEvent = zj_safe_funcall(&lastError, zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
-    handleError(lastError);
+    VALUE keyEvent = zj_safe_funcall(zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
+    if(ruby_error) state = INTERPRETER_ERROR;
     
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, key_released_proc), 1, keyEvent);
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_released_proc), 1, keyEvent);
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
@@ -195,24 +227,24 @@ void ZajalInterpreter::keyReleased  (int key) {
 // http://www.ruby-forum.com/topic/76498
 void ZajalInterpreter::mouseMoved(int x, int y) {
   if(state == INTERPRETER_RUNNING) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_moved_proc), 2, INT2FIX(x), INT2FIX(y));
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_moved_proc), 2, INT2FIX(x), INT2FIX(y));
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
   if(state == INTERPRETER_RUNNING) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_dragged_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_dragged_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
   if(state == INTERPRETER_RUNNING) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
@@ -220,16 +252,16 @@ void ZajalInterpreter::mousePressed(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
   if(state == INTERPRETER_RUNNING) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, mouse_released_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_released_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::windowResized(int w, int h) {
   if(state == INTERPRETER_RUNNING) {
-    zj_safe_proc_call(&lastError, INTERNAL_GET(zj_mEvents, window_resized_proc), 2, INT2FIX(w), INT2FIX(h));
-    handleError(lastError);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, window_resized_proc), 2, INT2FIX(w), INT2FIX(h));
+    if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
 
@@ -307,7 +339,10 @@ void ZajalInterpreter::reloadScript() {
   fseek(scriptFile, 0, SEEK_SET);
   
   bool mustRestart = true;
-  bool wasLastError = (lastError != 0); // are we recovering from an error?
+  bool wasLastError = (state == INTERPRETER_ERROR); // are we recovering from an error?
+  
+  if(state == INTERPRETER_RUNNING)
+    lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
   
   if(verbose)
     printf("Reading %s (%db)\n", scriptName, scriptFileSize);
@@ -318,25 +353,26 @@ void ZajalInterpreter::reloadScript() {
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
   
-  VALUE codeValid = zj_safe_funcall(&lastError, rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
+  VALUE codeValid = zj_safe_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
   if(!RTEST(codeValid)) {
-    rb_eval_string_protect(scriptFileContent, &lastError);
-    handleError(lastError);
+    // evaluate the invalid code to generate a syntax error
+    rb_eval_string_protect(scriptFileContent, &ruby_error);
+    state = INTERPRETER_ERROR;
     return;
   }
   
   // load source into ruby variable, globalize it
-  VALUE incomingCode = zj_safe_funcall(&lastError, rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
-  handleError(lastError);
+  VALUE incomingCode = zj_safe_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
+  if(ruby_error) { state = INTERPRETER_ERROR; return; }
   
   // check if source is in reduced mode
-  VALUE isCodeReduced = zj_safe_funcall(&lastError, rb_cObject, rb_intern("reduced_mode?"), 1, incomingCode);
-  handleError(lastError);
+  VALUE isCodeReduced = zj_safe_funcall(rb_cObject, rb_intern("reduced_mode?"), 1, incomingCode);
+  if(ruby_error) { state = INTERPRETER_ERROR; return; }
   
   // compare current code to incoming code, do we have to restart?
   if(currentCode != Qnil) {
-    VALUE mustRestartVal = zj_safe_funcall(&lastError, rb_cObject, rb_intern("compare_code"), 2, currentCode, incomingCode);
-    handleError(lastError);
+    VALUE mustRestartVal = zj_safe_funcall(rb_cObject, rb_intern("compare_code"), 2, currentCode, incomingCode);
+    if(ruby_error) { state = INTERPRETER_ERROR; return; }
     
     mustRestart = RTEST(mustRestartVal);
   }
@@ -344,21 +380,35 @@ void ZajalInterpreter::reloadScript() {
   currentCode = incomingCode;
   
   // record current state (globals etc)
-  VALUE currentState = zj_safe_funcall(&lastError, rb_cObject, rb_intern("capture_state"), 0);
-  handleError(lastError);
+  VALUE currentState = zj_safe_funcall(rb_cObject, rb_intern("capture_state"), 0);
+  if(ruby_error) { state = INTERPRETER_ERROR; return; }
   
   if(RTEST(isCodeReduced)) {
     // code is in reduced mode, does not use blocks. set draw_proc to code and just run that.
     
-    VALUE incomingCodeBlock = zj_safe_funcall(&lastError, rb_cObject, rb_intern("proc"), 1, incomingCode);
-    handleError(lastError);
+    VALUE incomingCodeBlock = zj_safe_funcall(rb_cObject, rb_intern("proc"), 1, incomingCode);
+    if(ruby_error) {
+      state = INTERPRETER_ERROR;
+      return;
+      
+    } else {
+      state = INTERPRETER_RUNNING;
+      
+    }
+    
     INTERNAL_SET(zj_mEvents, draw_proc, incomingCodeBlock);
     setup();
     
   } else {
     // code is in complete mode, uses blocks. load in normally.
-    rb_eval_string_protect(RSTRING_PTR(currentCode), &lastError);
-    handleError(lastError);
+    rb_eval_string_protect(RSTRING_PTR(currentCode), &ruby_error);
+    if(ruby_error) {
+      state = INTERPRETER_ERROR;
+      
+    } else {
+      state = INTERPRETER_RUNNING;
+      
+    }
   
     if(state == INTERPRETER_RUNNING) {
       
@@ -381,45 +431,4 @@ void ZajalInterpreter::reloadScript() {
   }
   
   
-}
-
-// http://metaeditor.sourceforge.net/embed/
-void ZajalInterpreter::handleError(int error) {
-  if(error) {
-    state = INTERPRETER_ERROR;
-    
-    // stop all playing videos
-    VALUE last_error = rb_gv_get("$!");
-    char* error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
-    char* error_message = RSTRING_PTR(rb_obj_as_string(last_error));
-    
-    // class
-    cout << "class = " << error_class << endl; 
-
-    // message
-    cout << "message = " << error_message << endl;
-    
-    lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-    
-    size_t error_message_size = strlen(error_message);
-    memset(lastErrorMessage, 0, ERROR_MESSAGE_SIZE);
-    strncpy(lastErrorMessage, error_message, error_message_size);
-    strncat(lastErrorMessage, "\n", ERROR_MESSAGE_SIZE);
-    
-    // backtrace
-    if(!NIL_P(last_error)) {
-        std::ostringstream o;
-        VALUE backtrace = rb_attr_get(last_error, rb_intern("bt"));
-        long backtrace_length = RARRAY_LEN(backtrace);
-        VALUE* backtrace_ptr = RARRAY_PTR(backtrace);
-        
-        if(backtrace_length > 1) strncat(lastErrorMessage, RSTRING_PTR(backtrace_ptr[0]), ERROR_MESSAGE_SIZE - error_message_size);
-        for(int c=0; c<backtrace_length; c++) {
-            o << "\tfrom " << RSTRING_PTR(backtrace_ptr[c]) << "\n";
-        }
-        cout << "backtrace = \n" << o.str() << endl;
-    }
-  } else {
-    state = INTERPRETER_RUNNING;
-  }
 }
