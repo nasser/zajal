@@ -109,38 +109,27 @@ void ZajalInterpreter::update() {
 void ZajalInterpreter::draw() {
   switch(state) {
     case INTERPRETER_ERROR:
+      // TODO stop all playing videos
+      
       // http://metaeditor.sourceforge.net/embed/
-      // stop all playing videos
       VALUE last_error = rb_gv_get("$!");
       char* error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
       char* error_message = RSTRING_PTR(rb_obj_as_string(last_error));
-
-      // class
-      // cout << "class = " << error_class << endl; 
-
-      // message
-      // cout << "message = " << error_message << endl;
-
-      // lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-
-      // size_t error_message_size = strlen(error_message);
-      // memset(lastErrorMessage, 0, ERROR_MESSAGE_SIZE);
-      // strncpy(lastErrorMessage, error_message, error_message_size);
-      // strncat(lastErrorMessage, "\n", ERROR_MESSAGE_SIZE);
-
+      
+      ZJ_LOG("class   = %s\n", error_class); 
+      ZJ_LOG("message = %s\n", error_message); 
+      
       // backtrace
-      // if(!NIL_P(last_error)) {
-      //     std::ostringstream o;
-      //     VALUE backtrace = rb_attr_get(last_error, rb_intern("bt"));
-      //     long backtrace_length = RARRAY_LEN(backtrace);
-      //     VALUE* backtrace_ptr = RARRAY_PTR(backtrace);
-      // 
-      //     if(backtrace_length > 1) strncat(lastErrorMessage, RSTRING_PTR(backtrace_ptr[0]), ERROR_MESSAGE_SIZE - error_message_size);
-      //     for(int c=0; c<backtrace_length; c++) {
-      //         o << "\tfrom " << RSTRING_PTR(backtrace_ptr[c]) << "\n";
-      //     }
-      //     cout << "backtrace = \n" << o.str() << endl;
-      // }
+      if(!NIL_P(last_error)) {
+          VALUE backtrace = rb_attr_get(last_error, rb_intern("bt"));
+          long backtrace_length = RARRAY_LEN(backtrace);
+          VALUE* backtrace_ptr = RARRAY_PTR(backtrace);
+          // if(backtrace_length > 1) strncat(lastErrorMessage, RSTRING_PTR(backtrace_ptr[0]), ERROR_MESSAGE_SIZE - error_message_size);
+          ZJ_LOG("backtrace = \n");
+          for(int c=0; c<backtrace_length; c++) {
+            ZJ_LOG("\tfrom %s\n", RSTRING_PTR(backtrace_ptr[c]));
+          }
+      }
       
       // an error exists, draw error screen
       ofSetColor(255, 255, 255, 255);
