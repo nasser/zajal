@@ -179,7 +179,7 @@ void ZajalInterpreter::updateCurrentScript() {
     
   } else {
     if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
-      if(verbose) printf("Updating %s in place...\n", scriptName);
+      ZJ_LOG("Updating %s in place...\n", scriptName);
       scriptModifiedTime = attrib.st_mtimespec.tv_sec;
       reloadScript();
       
@@ -269,17 +269,17 @@ void ZajalInterpreter::loadScript(char* fileName) {
   // try and load ZAJAL_PATH environment variable
   char* env_zajal_path = getenv("ZAJAL_PATH");
   if(env_zajal_path) {
-    if(verbose) printf("ZAJAL_PATH from environment: [");
+    ZJ_LOG("ZAJAL_PATH from environment: [");
     VALUE zajal_path_ary = rb_str_split(rb_str_new2(env_zajal_path), ":");
     long zajal_path_ary_len = RARRAY_LEN(zajal_path_ary);
     VALUE* zajal_path_ary_ptr = RARRAY_PTR(zajal_path_ary);
     
     for(int i = 0; i < zajal_path_ary_len; i++) {
       rb_ary_push(rb_gv_get("$:"), zajal_path_ary_ptr[i]);
-      if(verbose) printf("'%s', ", StringValuePtr(zajal_path_ary_ptr[i]));
+      ZJ_LOG("'%s', ", StringValuePtr(zajal_path_ary_ptr[i]));
     }
     
-    if(verbose) printf("]\n");
+    ZJ_LOG("]\n");
   }
   
   #ifndef EMPTY_LOADPATH

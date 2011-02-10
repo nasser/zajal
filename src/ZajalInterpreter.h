@@ -12,6 +12,9 @@
 #define SCRIPT_UPDATE_FREQUENCY   1
 #define MAX_LOCAL_VAR_NAME_LENGTH 255
 
+/* logging */
+#define ZJ_LOG(format, args...)  {if(verbose) printf(format,##args);}
+
 enum InterpreterState {
   INTERPRETER_LOADING,
   INTERPRETER_RUNNING,
