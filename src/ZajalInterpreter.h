@@ -55,9 +55,6 @@ class ZajalInterpreter : public ofBaseApp {
     // verbose mode setting
     bool verbose;
     
-    // true if the script is running, false otherwise
-    bool running;
-    
     // name of the currently executing script
     char* scriptName;
     

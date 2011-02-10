@@ -28,7 +28,6 @@ ZajalInterpreter::ZajalInterpreter() {
   zajal_init();
   
   verbose = false;
-  running = false;
   
   state = INTERPRETER_LOADING;
   scriptModifiedTime = 0;
