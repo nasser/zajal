@@ -1,5 +1,12 @@
 # all important syntax sugar
 
+# lerp across ranges
+class Range
+  def % t
+    self.begin * (1.0 - t) + self.end * (t)
+  end
+end
+
 # add sugar to some each* methods
 class Array
   alias :each_consecutive :each_cons 
