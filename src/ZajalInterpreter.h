@@ -52,6 +52,9 @@ class ZajalInterpreter : public ofBaseApp {
     // the state the interpreter is in
     InterpreterState state;
     
+    // is a key being held? used to implement key_up vs key_down
+    bool keyIsPressed;
+    
     // verbose mode setting
     bool verbose;
     

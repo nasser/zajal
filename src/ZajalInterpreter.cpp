@@ -28,6 +28,7 @@ ZajalInterpreter::ZajalInterpreter() {
   zajal_init();
   
   verbose = false;
+  keyIsPressed = false;
   
   state = INTERPRETER_LOADING;
   scriptModifiedTime = 0;
@@ -199,7 +200,14 @@ void ZajalInterpreter::keyPressed  (int key) {
     VALUE keyEvent = zj_safe_funcall(zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
     if(ruby_error) state = INTERPRETER_ERROR;
     
-    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, keyEvent);
+    if(keyIsPressed) {
+      zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, keyEvent);
+      
+    } else {
+      zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_down_proc), 1, keyEvent);
+      keyIsPressed = true;
+    }
+    
     if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
@@ -213,6 +221,8 @@ void ZajalInterpreter::keyReleased  (int key) {
     
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_released_proc), 1, keyEvent);
     if(ruby_error) state = INTERPRETER_ERROR;
+    
+    keyIsPressed = false;
   }
 }
 

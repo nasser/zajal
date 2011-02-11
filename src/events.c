@@ -38,6 +38,12 @@ VALUE zj_window_resized(VALUE self) {
   return Qnil;
 }
 
+VALUE zj_key_down(VALUE self) {
+  if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_down_proc, rb_block_proc());
+  
+  return Qnil;
+}
+
 VALUE zj_key_pressed(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_pressed_proc, rb_block_proc());
   
@@ -103,6 +109,7 @@ void Init_Events() {
   rb_define_private_method(zj_mEvents, "draw", RB_FUNC(zj_draw), 0);
   rb_define_private_method(zj_mEvents, "exit", RB_FUNC(zj_exit), 0);
   rb_define_private_method(zj_mEvents, "window_resized", RB_FUNC(zj_window_resized), 0);
+  rb_define_private_method(zj_mEvents, "key_down", RB_FUNC(zj_key_down), 0);
   rb_define_private_method(zj_mEvents, "key_pressed", RB_FUNC(zj_key_pressed), 0);
   rb_define_private_method(zj_mEvents, "key_released", RB_FUNC(zj_key_released), 0);
   rb_define_private_method(zj_mEvents, "mouse_moved", RB_FUNC(zj_mouse_moved), 0);
