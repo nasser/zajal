@@ -1,6 +1,4 @@
 /* 
- * Graphics Module
- * 
  * Methods for drawing shapes and text, changng colors and other visual
  * things. Meant to wrap the `ofGraphics.h` functions in openFrameworks.
  */
@@ -73,6 +71,29 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
   
 }
 
+/* 
+ * Gets and sets the current rectangle mode. The rectangle mode controls
+ * whether rectangles are drawn from corner to corner or not.
+ * 
+ * rectangle_mode
+ * rectangle_mode mode
+ * 
+ * mode - The new rectangle mode, either `:corner` or `:center`
+ * 
+ * Examples
+ * 
+ *  size 200
+ *  
+ *  color 128
+ *  rectangle_mode :center
+ *  square 100, 100, 75
+ *  
+ *  color 240
+ *  rectangle_mode :corner
+ *  square 100, 100, 75
+ * 
+ * Returns nothing
+ */
 VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   VALUE new_rectmode;
   rb_scan_args(argc, argv, "01", &new_rectmode);
@@ -114,6 +135,8 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
 /*
  * Draws a rectangle.
  * 
+ * rectangle x, y, w, h
+ * 
  * x - The x coordinate of the center or corner, depending on rectangle_mode
  * y - The y coordinate of the center or corner, depending on rectangle_mode
  * w - The width of the rectangle
@@ -146,6 +169,8 @@ VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
 
 /*
  * Draws a square.
+ * 
+ * square x, y, s
  * 
  * x - The x coordinate
  * y - The y coordinate
@@ -282,6 +307,26 @@ VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
   return Qnil;
 }
 
+/* 
+ * Draw a line between two points. The color and width of the line are
+ * determined by previous calls to the `color` and `line_width` methods.
+ * 
+ * line x1, y1, x2, y2
+ * 
+ * x1 - the x coordinate of the first point
+ * y1 - the y coordinate of the first point
+ * x2 - the x coordinate of the second point
+ * y2 - the y coordinate of the second point
+ * 
+ * Examples
+ * 
+ *   # draw a triangle that fills the window
+ *   line 0, 0, width, 0
+ *   line 0, 0, width/2, height
+ *   line width/2, height, width, 0
+ * 
+ * Returns nothing
+ */
 VALUE zj_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
   ofLine(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2));
   return Qnil;
@@ -302,6 +347,17 @@ VALUE zj_push_matrix(VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Pops the current matrix off the stack
+ * 
+ * Examples
+ * 
+ *   push_matrix
+ *   # do some stuff
+ *   pop_matrix
+ * 
+ * Returns nothing
+ */
 VALUE zj_pop_matrix(VALUE self) {
   ofPopMatrix();
   return Qnil;
@@ -311,7 +367,9 @@ VALUE zj_pop_matrix(VALUE self) {
  * Establish a separate transform matrix.
  * Isolates and localizes matrix trasnformations.
  * 
- * &block - the block of code to run within the new matrix
+ * matrix { ... }
+ * 
+ * The block
  * 
  * Examples
  * 
@@ -338,10 +396,8 @@ VALUE zj_matrix(VALUE self) {
  * 3D coordinates.
  * 
  * translate x, y
- * x - The distance to move in x
- * y - The distance to move in y
- * 
  * translate x, y, z
+ * 
  * x - The distance to move in x
  * y - The distance to move in y
  * z - The distance to move in z
@@ -379,13 +435,10 @@ VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
  * the given x, y, and z directions.
  * 
  * scale s
- * s - The amount to scale by in all directions
- * 
  * scale x, y
- * x - The amount to scale by in x
- * y - The amount to scale by in y
- * 
  * scale x, y, z
+ * 
+ * s - The amount to scale by in all directions
  * x - The amount to scale by in x
  * y - The amount to scale by in y
  * z - The amount to scale by in z
@@ -705,7 +758,9 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
 /* 
  * Controls whether shapes are filled in or not
  * 
- * f - true or false, enabling or disabling filling respectively
+ * fill state
+ * 
+ * state - true or false, enabling or disabling filling respectively
  * 
  * Examples
  * 
@@ -746,22 +801,15 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
  * Sets the current color to an RGBA value
  * 
  * color r, g, b, a
- * r - Amount of red
- * g - Amount of green
- * b - Amount of blue
- * a - Amount of alpha
- * 
  * color r, g, b
+ * color grey
+ * color grey, a
+ * 
  * r - Amount of red
  * g - Amount of green
  * b - Amount of blue
- * 
- * color grey
- * grey - Level of grey
- * 
- * color grey, a
- * grey - Level of grey
  * a - Amount of alpha
+ * grey - Level of grey
  * 
  * Examples
  * 

@@ -8,31 +8,32 @@ class CDoc < TomDoc::TomDoc
   end
   
   def signatures
-    sigs = []
-    args_string = tomdoc.match(/\n\n(.*?)(Returns|Examples)/m)[1].strip
-    
-    args_string.split("\n\n").each do |variation|
-      args = []
-      
-      variation.split("\n").each do |line|
-        next if not line =~ /^[^\s]\s\-\s/ or line.strip.empty?
-        
-        if line =~ /^[^\s]/
-          param, desc = line.split(" - ")
-          args << TomDoc::Arg.new(param.strip, desc.strip)
-        else
-          args.last.description += line.squeeze(" ")
-        end
-      end
-      
-      def args.takes_block?
-        self.any? { |a| a.name =~ /^&/ }
-      end
-      
-      sigs << args
+    unless sections[1] =~ /^(Examples|Returns)/
+      sig_string = sections[1]
+      arg_string = sections[2]
+    else
+      return []
     end
-
-    sigs
+    
+    # build hash of args
+    last_arg = nil
+    args = {}
+    arg_string.split("\n").each do |line|
+      next if not line =~ /^[^\s]+\s\-\s/ or line.strip.empty?
+      
+      if line =~ /^[^\s]/
+        param, desc = line.split(" - ")
+        args[param.strip] = TomDoc::Arg.new(param.strip, desc.strip)
+        last_arg = args[param.strip]
+      else
+        last_arg.description += line.squeeze(" ")
+      end
+    end
+    
+    # tie signatures to args
+    sig_string.split("\n").reduce([]) do |sigs, line|
+      sigs << line[/[^\s]+\s*(.*)/, 1].split(", ").map { |arg| args[arg] }
+    end
   end
   
   def examples
