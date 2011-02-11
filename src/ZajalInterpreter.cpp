@@ -87,6 +87,7 @@ void ZajalInterpreter::setup() {
   ofSetCircleResolution(32);
   ofSetRectMode(OF_RECTMODE_CORNER);
   ofSetLineWidth(1.0);
+  ofFill();
   
   if(state == INTERPRETER_RUNNING) {
     // if no error exists, run user setup method, catch runtime errors
