@@ -72,8 +72,12 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
 }
 
 /* 
- * Gets and sets the current rectangle mode. The rectangle mode controls
- * whether rectangles are drawn from corner to corner or not.
+ * Gets and sets the current rectangle mode. Calling without an argument
+ * returns the current mode, calling with a Symbol sets it. The rectangle mode
+ * controls how rectangles and squares are drawn. A rectangle mode of
+ * `:center` means squares and rectangles are centered at their x and y
+ * coordinates, while `:corner` places their top left corner at the their x
+ * and y coordinates. The default is `:corner`.
  * 
  * rectangle_mode
  * rectangle_mode mode
@@ -82,17 +86,18 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
  * 
  * Examples
  * 
- *  size 200
- *  
- *  color 128
- *  rectangle_mode :center
- *  square 100, 100, 75
- *  
- *  color 240
- *  rectangle_mode :corner
- *  square 100, 100, 75
+ *   size 200
+ *   
+ *   color 128
+ *   rectangle_mode :center
+ *   square 100, 100, 75
+ *   
+ *   color 240
+ *   rectangle_mode :corner
+ *   square 100, 100, 75
  * 
- * Returns nothing
+ * Returns `:corner` or `:center` if called without an argument, nothing
+ * otherwise
  */
 VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   VALUE new_rectmode;
@@ -133,12 +138,13 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
 }
 
 /*
- * Draws a rectangle.
+ * Draws a rectangle. The way the x and y arguments are interpreted depends on
+ * the current rectangle mode.
  * 
  * rectangle x, y, w, h
  * 
- * x - The x coordinate of the center or corner, depending on rectangle_mode
- * y - The y coordinate of the center or corner, depending on rectangle_mode
+ * x - The x coordinate of the center or corner, depending on `rectangle_mode`
+ * y - The y coordinate of the center or corner, depending on `rectangle_mode`
  * w - The width of the rectangle
  * h - The height of the rectangle
  * 
@@ -168,7 +174,8 @@ VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
 }
 
 /*
- * Draws a square.
+ * Draws a square.The way the x and y arguments are interpreted depends on
+ * the current rectangle mode.
  * 
  * square x, y, s
  * 
@@ -279,6 +286,18 @@ VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+
+/* 
+ * Draws a circle.
+ * 
+ * circle x, y, r
+ * 
+ * x - the x coordinate of the circle's center
+ * y - the y coordinate of the circle's center
+ * r - the circle's radius
+ * 
+ * Returns nothing
+ */
 VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
   ofCircle(NUM2DBL(x), NUM2DBL(y), NUM2DBL(radius));
   
@@ -293,6 +312,18 @@ VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
   return Qnil;
 }
 
+/* 
+ * Draws an ellipse.
+ * 
+ * ellipse x, y, w, h
+ * 
+ * x - the x coordinate of the ellipse's center
+ * y - the y coordinate of the ellipse's center
+ * w - the width of the ellipse
+ * h - the height of the ellipse
+ * 
+ * Returns nothing
+ */
 VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
   ofEllipse(NUM2DBL(x), NUM2DBL(y), NUM2DBL(width), NUM2DBL(height));
   
@@ -308,8 +339,8 @@ VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
 }
 
 /* 
- * Draw a line between two points. The color and width of the line are
- * determined by previous calls to the `color` and `line_width` methods.
+ * Draw a line between two points. The width of the line is determined by
+ * `line_width` methods.
  * 
  * line x1, y1, x2, y2
  * 
@@ -592,8 +623,8 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  * drawing down, so it defaults to false.
  * 
  * smoothing
- * 
  * smoothing state
+ * 
  * state - Optional, true to enable smoothing or false to disable it
  * 
  * Examples
