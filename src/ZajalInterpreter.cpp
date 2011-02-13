@@ -219,7 +219,7 @@ void ZajalInterpreter::keyReleased  (int key) {
     VALUE keyEvent = zj_safe_funcall(zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
     if(ruby_error) state = INTERPRETER_ERROR;
     
-    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_released_proc), 1, keyEvent);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_up_proc), 1, keyEvent);
     if(ruby_error) state = INTERPRETER_ERROR;
     
     keyIsPressed = false;

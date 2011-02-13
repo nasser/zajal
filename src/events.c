@@ -50,8 +50,8 @@ VALUE zj_key_pressed(VALUE self) {
   return Qnil;
 }
 
-VALUE zj_key_released(VALUE self) {
-  if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_released_proc, rb_block_proc());
+VALUE zj_key_up(VALUE self) {
+  if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_up_proc, rb_block_proc());
   
   return Qnil;
 }
@@ -111,7 +111,7 @@ void Init_Events() {
   rb_define_private_method(zj_mEvents, "window_resized", RB_FUNC(zj_window_resized), 0);
   rb_define_private_method(zj_mEvents, "key_down", RB_FUNC(zj_key_down), 0);
   rb_define_private_method(zj_mEvents, "key_pressed", RB_FUNC(zj_key_pressed), 0);
-  rb_define_private_method(zj_mEvents, "key_released", RB_FUNC(zj_key_released), 0);
+  rb_define_private_method(zj_mEvents, "key_up", RB_FUNC(zj_key_up), 0);
   rb_define_private_method(zj_mEvents, "mouse_moved", RB_FUNC(zj_mouse_moved), 0);
   rb_define_private_method(zj_mEvents, "mouse_dragged", RB_FUNC(zj_mouse_dragged), 0);
   rb_define_private_method(zj_mEvents, "mouse_pressed", RB_FUNC(zj_mouse_pressed), 0);
