@@ -2,6 +2,9 @@
 
 # require "ripper" # why doesn't this work?
 require 'ripper/sexp'
+require 'ripper/lexer'
+require "joyofsexp"
+require "pp"
 
 class Ripper
   # return a sexp without line/column numbers. useful for code comparison
@@ -129,7 +132,7 @@ def compare_code local_code, other_code
   # figure out what was added and removed
   removed = local_sexp - other_sexp
   added   = other_sexp - local_sexp
-
+  
   modified_globals = removed.reduce([], &$to_assigns) | added.reduce([], &$to_assigns)
   modified_methods = removed.reduce([], &$to_methods) | added.reduce([], &$to_methods)
   
@@ -153,3 +156,64 @@ end
 def reduced_mode? code
   not Ripper.sexp_simple(code)[1].reduce([], &$to_methods).include? $event_blocks
 end
+
+EventPath = "method_add_block/method_add_arg/fcall"
+MethodPath = "def"
+ClassPath = "class/const_ref"
+ModulePath = "module/const_ref"
+
+def live_load new_code, old_code
+  # eval invalid code to generate syntax errors
+  return eval new_code if not valid? new_code
+  
+  # eval new code if this is the first loading
+  return eval new_code if old_code.nil?
+  
+  # new_code = globalize_code new_code
+  
+  new_sexp = Ripper.sexp_simple(new_code)[1]
+  old_sexp = Ripper.sexp_simple(old_code)[1]
+  new_sexp_lines = Ripper.sexp(new_code)[1]
+  old_sexp_lines = Ripper.sexp(old_code)[1]
+  
+  removed = old_sexp - new_sexp
+  added = new_sexp - old_sexp
+  
+  
+  # get rid of deleted events
+  removed_events = removed.fetch EventPath + "/@ident"
+  removed_events.each { |event| eval "Events::Internals.#{event}_proc = nil" }
+  
+  # get rid of deleted methods
+  removed_methods = removed.fetch MethodPath + "/@ident"
+  removed_methods.each { |method| eval "undef #{method}" }
+  
+  # get rid of deleted classes
+  removed_classes = removed.fetch ClassPath + "/@const"
+  removed_classes.each { |klass| Object.send(:remove_const, klass.to_sym) }
+  
+  # get rid of deleted modules
+  removed_modules = removed.fetch ModulePath + "/@const"
+  removed_modules.each { |modul| Object.send(:remove_const, modul.to_sym) }
+  
+  new_code_ary = new_code.lines.to_a
+  blank_code_ary = new_code.lines.to_a.map { "" }
+  
+  pp Ripper.sexp_raw new_code
+  
+  # add new events
+  new_sexp_lines.fetch(EventPath + "/@ident").each do |ident_exp|
+    if added.fetch(EventPath).include? ident_exp[1] then
+      name, line, column = ident_exp.drop(1).flatten
+      
+    end
+  end
+  
+  # added_events = added.fetch EventPath
+  # added_methods = added.fetch MethodPath
+  # added_classes = added.fetch ClassPath
+  # added_modules = added.fetch ModulePath
+end
+
+# pp Ripper::SCANNER_EVENTS
+# pp Ripper::PARSER_EVENTS

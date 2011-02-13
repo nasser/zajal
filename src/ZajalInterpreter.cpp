@@ -357,6 +357,15 @@ void ZajalInterpreter::reloadScript() {
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
   
+  zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), currentCode);
+  if(ruby_error) { state = INTERPRETER_ERROR; return; }
+  
+  currentCode = rb_str_new2(scriptFileContent);
+  
+  return;
+  
+  zj_safe_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
+  
   VALUE codeValid = zj_safe_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
   if(!RTEST(codeValid)) {
     // evaluate the invalid code to generate a syntax error
