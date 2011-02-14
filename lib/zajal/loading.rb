@@ -191,41 +191,52 @@ def live_load new_code, old_code
   
   
   # get rid of deleted events
-  removed_events = removed.fetch "method_add_block/method_add_arg/fcall/@ident"
-  removed_events.each { |event| eval "Events::Internals.#{event}_proc = nil" }
+  removed.fetch("method_add_block/method_add_arg/fcall/@ident").each do |event|
+    eval "Events::Internals.#{event}_proc = nil"
+  end
   
   # get rid of deleted methods
-  removed_methods = removed.fetch "def/@ident"
-  removed_methods.each { |method| eval "undef #{method}" }
+  removed.fetch("def/@ident").each do |method|
+    eval "undef :#{method}"
+  end
   
   # get rid of deleted classes
-  removed_classes = removed.fetch "class/const_ref/@const"
-  removed_classes.each { |klass| Object.send(:remove_const, klass.to_sym) }
+  removed.fetch("class/const_ref/@const").each do |klass|
+    Object.send(:remove_const, klass.to_sym)
+  end
   
   # get rid of deleted modules
-  removed_modules = removed.fetch "module/const_ref/@const"
-  removed_modules.each { |modul| Object.send(:remove_const, modul.to_sym) }
+  removed.fetch("module/const_ref/@const").each do |modul|
+    Object.send(:remove_const, modul.to_sym)
+  end
+  
   
   new_code_ary = new_code.lines.to_a
-  blank_code_ary = new_code.lines.to_a.map { "" }
+  final_code_ary = []
   
-  heads = new_sexp_lines.fetch("method_add_block/method_add_arg/fcall/@ident").each_slice(2).to_a
-  tails = new_sexp_lines.fetch "method_add_block/@end"
-  pp heads.zip(tails).map { |e| e.flatten(2).values_at(0, 1, 3) }
+  # copy lines that need to be added to final_code_ary
+  # looks at added sexp to determine what needs to be added
+  # uses head and tail path to pull out event/method/class/module code
+  copy_lines = proc do |head, tail|
+    heads = new_sexp_lines.fetch(head).each_slice(2).to_a
+    tails = new_sexp_lines.fetch tail
+    added_things = added.fetch head
+    
+    heads.zip(tails).select { |e|
+      added_things.include? e.first
+    }.map { |e|
+      e.flatten(2).values_at(0, 1, 3)
+    }.each { |event, start, stop|
+      final_code_ary[start-1..stop] = new_code_ary[start-1..stop]
+    }
+  end
   
-  # add new events
-  # new_sexp_lines.fetch("method_add_block/method_add_arg/fcall/@ident").each do |ident_exp|
-  #   if added.fetch("method_add_block/method_add_arg/fcall").include? ident_exp[1] then
-  #     name, line, column = ident_exp.drop(1).flatten
-  #     
-  #   end
-  # end
+  # event blocks
+  copy_lines.call "method_add_block/method_add_arg/fcall/@ident", "method_add_block/@end"
+  copy_lines.call "def/@ident", "def/@end"
+  copy_lines.call "class/const_ref/@const", "class/@end"
+  copy_lines.call "module/const_ref/@const", "module/@end"
   
-  # added_events = added.fetch EventPath
-  # added_methods = added.fetch MethodPath
-  # added_classes = added.fetch ClassPath
-  # added_modules = added.fetch ModulePath
+  puts final_code_ary
+  eval final_code_ary.join
 end
-
-# pp Ripper::SCANNER_EVENTS
-# pp Ripper::PARSER_EVENTS
