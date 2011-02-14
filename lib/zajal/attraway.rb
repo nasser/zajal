@@ -3,16 +3,16 @@
 # make all instance variables effectively public. is this stupid?
 class Object
   alias :old_method_missing :method_missing
-  def method_missing meth_id, arg=nil
+  def method_missing meth_id, *args
     meth = meth_id.to_s
     if meth =~ /=$/ and instance_variable_defined? "@#{meth.reject '='}" then
       self.class.class_eval { attr_writer meth.reject("=").to_sym }
-      self.send meth, arg
+      self.send meth, *args
     elsif meth =~ /[a-z_][a-zA-Z0-9_]*/ and instance_variable_defined? "@#{meth}" # TODO can method names be capitalized?
       self.class.class_eval { attr_reader meth_id }
       self.send meth
     else
-      old_method_missing meth_id, arg
+      old_method_missing meth_id, *args
     end
   end
   
