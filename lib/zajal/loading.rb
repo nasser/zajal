@@ -2,21 +2,36 @@
 
 # require "ripper" # why doesn't this work?
 require 'ripper/sexp'
-require 'ripper/lexer'
 require "joyofsexp"
 require "pp"
 
 class Ripper
-  # return a sexp without line/column numbers. useful for code comparison
-  def Ripper.sexp_simple(src, filename = '-', lineno = 1)
-    SexpBuilderPPSimple.new(src, filename, lineno).parse
+  # Like SexpBuilderPP, but adds @end expression at the end of important blocks
+  class TerminatedSexpBuilder < SexpBuilderPP
+    private
+    [:method_add_block, :def, :class, :module].each do |event|
+      module_eval(<<-End, __FILE__, __LINE__ + 1)
+        def on_#{event}(*args)
+          [:#{event}, *args, [:@end, [lineno(), column()]]]
+        end
+      End
+    end
   end
   
-  class SexpBuilderPPSimple < SexpBuilderPP
+  def Ripper.terminated_sexp(src, filename = '-', lineno = 1)
+    TerminatedSexpBuilder.new(src, filename, lineno).parse
+  end
+  
+  # Like SexpBuilderPP, but leaves out line/column numbers
+  class SimpleSexpBuilder < SexpBuilderPP
     private
     SCANNER_EVENTS.each do |event|
       module_eval("def on_#{event}(tok); [:@#{event}, tok]; end", __FILE__, __LINE__ + 1)
     end
+  end
+  
+  def Ripper.sexp_simple(src, filename = '-', lineno = 1)
+    SimpleSexpBuilder.new(src, filename, lineno).parse
   end
 end
 
@@ -157,11 +172,6 @@ def reduced_mode? code
   not Ripper.sexp_simple(code)[1].reduce([], &$to_methods).include? $event_blocks
 end
 
-EventPath = "method_add_block/method_add_arg/fcall"
-MethodPath = "def"
-ClassPath = "class/const_ref"
-ModulePath = "module/const_ref"
-
 def live_load new_code, old_code
   # eval invalid code to generate syntax errors
   return eval new_code if not valid? new_code
@@ -173,41 +183,43 @@ def live_load new_code, old_code
   
   new_sexp = Ripper.sexp_simple(new_code)[1]
   old_sexp = Ripper.sexp_simple(old_code)[1]
-  new_sexp_lines = Ripper.sexp(new_code)[1]
-  old_sexp_lines = Ripper.sexp(old_code)[1]
+  new_sexp_lines = Ripper.terminated_sexp(new_code)[1]
+  old_sexp_lines = Ripper.terminated_sexp(old_code)[1]
   
   removed = old_sexp - new_sexp
   added = new_sexp - old_sexp
   
   
   # get rid of deleted events
-  removed_events = removed.fetch EventPath + "/@ident"
+  removed_events = removed.fetch "method_add_block/method_add_arg/fcall/@ident"
   removed_events.each { |event| eval "Events::Internals.#{event}_proc = nil" }
   
   # get rid of deleted methods
-  removed_methods = removed.fetch MethodPath + "/@ident"
+  removed_methods = removed.fetch "def/@ident"
   removed_methods.each { |method| eval "undef #{method}" }
   
   # get rid of deleted classes
-  removed_classes = removed.fetch ClassPath + "/@const"
+  removed_classes = removed.fetch "class/const_ref/@const"
   removed_classes.each { |klass| Object.send(:remove_const, klass.to_sym) }
   
   # get rid of deleted modules
-  removed_modules = removed.fetch ModulePath + "/@const"
+  removed_modules = removed.fetch "module/const_ref/@const"
   removed_modules.each { |modul| Object.send(:remove_const, modul.to_sym) }
   
   new_code_ary = new_code.lines.to_a
   blank_code_ary = new_code.lines.to_a.map { "" }
   
-  pp Ripper.sexp_raw new_code
+  heads = new_sexp_lines.fetch("method_add_block/method_add_arg/fcall/@ident").each_slice(2).to_a
+  tails = new_sexp_lines.fetch "method_add_block/@end"
+  pp heads.zip(tails).map { |e| e.flatten(2).values_at(0, 1, 3) }
   
   # add new events
-  new_sexp_lines.fetch(EventPath + "/@ident").each do |ident_exp|
-    if added.fetch(EventPath).include? ident_exp[1] then
-      name, line, column = ident_exp.drop(1).flatten
-      
-    end
-  end
+  # new_sexp_lines.fetch("method_add_block/method_add_arg/fcall/@ident").each do |ident_exp|
+  #   if added.fetch("method_add_block/method_add_arg/fcall").include? ident_exp[1] then
+  #     name, line, column = ident_exp.drop(1).flatten
+  #     
+  #   end
+  # end
   
   # added_events = added.fetch EventPath
   # added_methods = added.fetch MethodPath
