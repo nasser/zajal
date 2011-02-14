@@ -13,7 +13,7 @@
 #define MAX_LOCAL_VAR_NAME_LENGTH 255
 
 /* logging */
-#define ZJ_LOG(format, args...)  {if(verbose) printf(format,##args);}
+#define ZJ_LOG(format, args...)  {if(INTERNAL_GET(zj_mApp, verbose)) printf(format,##args);}
 
 enum InterpreterState {
   INTERPRETER_LOADING,
@@ -55,9 +55,6 @@ class ZajalInterpreter : public ofBaseApp {
     // is a key being held? used to implement key_up vs key_down
     bool keyIsPressed;
     
-    // verbose mode setting
-    bool verbose;
-    
     // name of the currently executing script
     char* scriptName;
     
@@ -66,9 +63,6 @@ class ZajalInterpreter : public ofBaseApp {
     
     // number of frames before the next script update check
     int nextUpdate;
-    
-    // ruby object representing the code currently running
-    VALUE currentCode;
     
     // screenshot of the sketch state before the last error was encountered
 		ofImage lastErrorImage;

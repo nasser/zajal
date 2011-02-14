@@ -27,15 +27,15 @@ ZajalInterpreter::ZajalInterpreter() {
   ruby_init();
   zajal_init();
   
-  verbose = false;
   keyIsPressed = false;
   
   state = INTERPRETER_LOADING;
   scriptModifiedTime = 0;
   
   nextUpdate = SCRIPT_UPDATE_FREQUENCY;
-  currentCode = Qnil;
-  rb_define_variable("_current_code", &currentCode);
+  
+  INTERNAL_SET(zj_mApp, current_code, Qnil);
+  INTERNAL_SET(zj_mApp, verbose, Qfalse);
 }
 
 void ZajalInterpreter::printVersion() {
@@ -72,7 +72,7 @@ void ZajalInterpreter::appendLoadPath(char* path) {
 }
 
 void ZajalInterpreter::setVerboseMode(bool newMode) {
-  verbose = newMode;
+  INTERNAL_SET(zj_mApp, verbose, newMode ? Qtrue : Qfalse);
 }
 
 //--------------------------------------------------------------
@@ -120,7 +120,7 @@ void ZajalInterpreter::draw() {
         error_message_ptr = RSTRING_PTR(error_message);
       }
       
-      if(verbose) {
+      if(RTEST(INTERNAL_GET(zj_mApp, verbose))) {
         // http://metaeditor.sourceforge.net/embed/
         VALUE last_error = rb_gv_get("$!");
         char* error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
@@ -352,8 +352,7 @@ void ZajalInterpreter::reloadScript() {
   if(state == INTERPRETER_RUNNING)
     lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
   
-  if(verbose)
-    printf("Reading %s (%db)\n", scriptName, scriptFileSize);
+  ZJ_LOG("Reading %s (%db)\n", scriptName, scriptFileSize);
   
   // load file into memory
   char* scriptFileContent = (char*)malloc(scriptFileSize * sizeof(char) + 1);
