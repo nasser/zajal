@@ -340,8 +340,6 @@ void ZajalInterpreter::loadScript(char* fileName) {
   
   zj_safe_require("loading");
   if(ruby_error) { state = INTERPRETER_ERROR; return; }
-  zj_safe_require("ripper/ripper_builder");
-  if(ruby_error) { state = INTERPRETER_ERROR; return; }
 }
 
 void ZajalInterpreter::reloadScript() {
