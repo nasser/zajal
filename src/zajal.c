@@ -90,6 +90,14 @@ VALUE zj_safe_funcall(VALUE recv, ID mid, int argc, ...) {
   return return_value;
 }
 
+VALUE _zj_safe_require(VALUE lib) {
+  return rb_require(StringValuePtr(lib));
+}
+
+VALUE zj_safe_require(char* lib) {
+  return rb_protect(_zj_safe_require, rb_str_new2(lib), &ruby_error);
+}
+
 /* forward declarations of module init functions */
 void Init_App();
 void Init_Events();

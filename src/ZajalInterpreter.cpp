@@ -328,11 +328,15 @@ void ZajalInterpreter::loadScript(char* fileName) {
   // require ruby-implemented experimental functionality
   rb_require("sugar");
   rb_require("attraway");
-  rb_require("loading");
   rb_require("point");
   rb_require("text");
   rb_require("keyevent");
   rb_require("error");
+  
+  zj_safe_require("loading");
+  if(ruby_error) { state = INTERPRETER_ERROR; return; }
+  zj_safe_require("ripper/ripper_builder");
+  if(ruby_error) { state = INTERPRETER_ERROR; return; }
 }
 
 void ZajalInterpreter::reloadScript() {
@@ -357,10 +361,24 @@ void ZajalInterpreter::reloadScript() {
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
   
-  zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), currentCode);
+  VALUE loadingHash = zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), currentCode);
   if(ruby_error) { state = INTERPRETER_ERROR; return; }
   
-  currentCode = rb_str_new2(scriptFileContent);
+  VALUE codeToRun = Qnil, newCode = Qnil;
+  HASH_EXTRACT(loadingHash, codeToRun);
+  HASH_EXTRACT(loadingHash, newCode);
+  
+  currentCode = newCode;
+  
+  printf("%s\n", RSTRING_PTR(codeToRun));
+  rb_eval_string_protect(RSTRING_PTR(codeToRun), &ruby_error);
+  if(ruby_error) {
+    state = INTERPRETER_ERROR;
+    return;
+    
+  } else {
+    state = INTERPRETER_RUNNING;
+  }
   
   return;
   

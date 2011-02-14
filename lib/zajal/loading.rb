@@ -173,18 +173,18 @@ def reduced_mode? code
 end
 
 def live_load new_code, old_code
+  new_code = globalize_code new_code
+  
   # eval invalid code to generate syntax errors
-  return eval new_code if not valid? new_code
+  return {codeToRun:new_code, newCode:new_code} if not valid? new_code
   
   # eval new code if this is the first loading
-  return eval new_code if old_code.nil?
+  return {codeToRun:new_code, newCode:new_code} if old_code.nil?
   
-  # new_code = globalize_code new_code
   
   new_sexp = Ripper.sexp_simple(new_code)[1]
   old_sexp = Ripper.sexp_simple(old_code)[1]
   new_sexp_lines = Ripper.terminated_sexp(new_code)[1]
-  old_sexp_lines = Ripper.terminated_sexp(old_code)[1]
   
   removed = old_sexp - new_sexp
   added = new_sexp - old_sexp
@@ -230,13 +230,19 @@ def live_load new_code, old_code
       final_code_ary[start-1..stop] = new_code_ary[start-1..stop]
     }
   end
-  
-  # event blocks
+    
   copy_lines.call "method_add_block/method_add_arg/fcall/@ident", "method_add_block/@end"
   copy_lines.call "def/@ident", "def/@end"
   copy_lines.call "class/const_ref/@const", "class/@end"
   copy_lines.call "module/const_ref/@const", "module/@end"
   
-  puts final_code_ary
-  eval final_code_ary.join
+  # re-run setup if setup modified
+  if added.fetch("method_add_block/method_add_arg/fcall/@ident").include? "setup"
+    final_code_ary << "Events::Internals.setup_proc.call"
+  end
+  
+  # puts final_code_ary.map { |e| e.to_s.rstrip }.join "\n"
+  final_code = final_code_ary.map { |e| e.to_s.rstrip }.join "\n"
+  
+  return { codeToRun: final_code, newCode: new_code }
 end

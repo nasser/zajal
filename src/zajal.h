@@ -55,6 +55,7 @@ void zajal_init();
 char* zj_to_data_path(char* fileName);
 
 extern int ruby_error;
+VALUE zj_safe_require(char* lib);
 VALUE zj_safe_proc_call(VALUE proc, int argc, ...);
 VALUE zj_safe_funcall(VALUE recv, ID mid, int argc, ...);
 
