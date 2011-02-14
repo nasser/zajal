@@ -121,4 +121,19 @@ void Init_Events() {
   
   rb_define_private_method(zj_mEvents, "mouse_x", RB_FUNC(zj_mouse_x), 0);
   rb_define_private_method(zj_mEvents, "mouse_y", RB_FUNC(zj_mouse_y), 0);
+  
+  INTERNAL_SET(zj_mEvents, setup_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, update_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, draw_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, exit_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, window_resized_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, key_down_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, key_pressed_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, key_released_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, mouse_moved_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, mouse_dragged_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, mouse_pressed_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, mouse_released_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, audio_requested_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, audio_received_proc, Qnil);
 }
