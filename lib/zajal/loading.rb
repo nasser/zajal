@@ -5,6 +5,8 @@ require 'ripper/sexp'
 require "joyofsexp"
 require "pp"
 
+include ObjectSpace
+
 class Ripper
   # Like SexpBuilderPP, but adds @end expression at the end of important blocks
   class TerminatedSexpBuilder < SexpBuilderPP
@@ -155,9 +157,18 @@ def compare_code local_code, other_code
 end
 
 def capture_state
-  global_variables.reduce([]) do |state, gv|
+  global_variables.reduce([[],[]]) do |state, gv|
     # ignore unsettable, unsupported globals
-    state << [gv, eval(gv.to_s)] if not gv.to_s =~ /^\$([0-9].*|.*[^a-zA-Z0-9_].*|KCODE|FILENAME|LOAD_PATH|LOADED_FEATURES|_|SAFE|PROGRAM_NAME|VERBOSE|DEBUG|stderr|stdin|stdout)$/
+    if not gv.to_s =~ /^\$([0-9].*|.*[^a-zA-Z0-9_].*|KCODE|FILENAME|LOAD_PATH|LOADED_FEATURES|_|SAFE|PROGRAM_NAME|VERBOSE|DEBUG|stderr|stdin|stdout)$/
+      val = eval(gv.to_s)
+      
+      if [Fixnum, Symbol, TrueClass, FalseClass, NilClass].include? val.class
+        state.first << [gv, val]
+      else
+        state.last << [gv, val.object_id]
+      end
+    end
+    
     state
   end
 end
@@ -172,15 +183,32 @@ def reduced_mode? code
   not Ripper.sexp_simple(code)[1].reduce([], &ToMethods).include? EventBlocks
 end
 
+def try_eval code
+  begin
+    eval code
+  rescue 
+    return false
+  end
+  
+  return true
+end
+
 def live_load new_code, old_code
+  # stay out of the way, you
+  GC.disable
+  
   new_code = globalize_code new_code
   
+  # TODO move to ZajalInterpreter.cpp
+  App::Internals.current_code = new_code
+  
+  # TODO reduced mode, hard/soft restarts
+  
   # eval invalid code to generate syntax errors
-  return {codeToRun:new_code, newCode:new_code} if not valid? new_code
+  return try_eval new_code if not valid? new_code
   
   # eval new code if this is the first loading
-  return {codeToRun:new_code, newCode:new_code} if old_code.nil?
-  
+  return try_eval new_code if old_code.nil?
   
   new_sexp = Ripper.sexp_simple(new_code)[1]
   old_sexp = Ripper.sexp_simple(old_code)[1]
@@ -189,60 +217,52 @@ def live_load new_code, old_code
   removed = old_sexp - new_sexp
   added = new_sexp - old_sexp
   
+  old_state = capture_state
   
   # get rid of deleted events
-  removed.fetch("method_add_block/method_add_arg/fcall/@ident").each do |event|
+  old_sexp.fetch("method_add_block/method_add_arg/fcall/@ident").each do |event|
     eval "Events::Internals.#{event}_proc = nil"
   end
   
   # get rid of deleted methods
-  removed.fetch("def/@ident").each do |method|
+  old_sexp.fetch("def/@ident").each do |method|
     eval "undef :#{method}"
   end
   
   # get rid of deleted classes
-  removed.fetch("class/const_ref/@const").each do |klass|
+  old_sexp.fetch("class/const_ref/@const").each do |klass|
     Object.send(:remove_const, klass.to_sym)
   end
   
   # get rid of deleted modules
-  removed.fetch("module/const_ref/@const").each do |modul|
+  old_sexp.fetch("module/const_ref/@const").each do |modul|
     Object.send(:remove_const, modul.to_sym)
   end
   
-  
-  new_code_ary = new_code.lines.to_a
-  final_code_ary = []
-  
-  # copy lines that need to be added to final_code_ary
-  # looks at added sexp to determine what needs to be added
-  # uses head and tail path to pull out event/method/class/module code
-  copy_lines = proc do |head, tail|
-    heads = new_sexp_lines.fetch(head).each_slice(2).to_a
-    tails = new_sexp_lines.fetch tail
-    added_things = added.fetch head
-    
-    heads.zip(tails).select { |e|
-      added_things.include? e.first
-    }.map { |e|
-      e.flatten(2).values_at(0, 1, 3)
-    }.each { |event, start, stop|
-      final_code_ary[start-1..stop] = new_code_ary[start-1..stop]
-    }
-  end
-    
-  copy_lines.call "method_add_block/method_add_arg/fcall/@ident", "method_add_block/@end"
-  copy_lines.call "def/@ident", "def/@end"
-  copy_lines.call "class/const_ref/@const", "class/@end"
-  copy_lines.call "module/const_ref/@const", "module/@end"
-  
   # re-run setup if setup modified
   if added.fetch("method_add_block/method_add_arg/fcall/@ident").include? "setup"
-    final_code_ary << "Events::Internals.setup_proc.call"
+    new_code += "\nEvents::Internals.setup_proc.call"
+  end
+
+  
+  begin
+    # run the new code
+    eval new_code
+  ensure
+    # dont want to leave this off!
+    GC.enable
   end
   
-  # puts final_code_ary.map { |e| e.to_s.rstrip }.join "\n"
-  final_code = final_code_ary.map { |e| e.to_s.rstrip }.join "\n"
+  puts "whew..."
   
-  return { codeToRun: final_code, newCode: new_code }
+  # recreate state
+  immediate_state, ref_state = old_state
+  immediate_state.each { |gv, val| eval "#{gv.to_s} = #{val}" }
+  ref_state.each { |gv, val| eval "#{gv.to_s} = ObjectSpace._id2ref(#{val})" }
+  
+  # as you were
+  GC.enable
+  ObjectSpace.garbage_collect
+  
+  return true
 end

@@ -361,105 +361,13 @@ void ZajalInterpreter::reloadScript() {
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
   
-  VALUE loadingHash = zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), currentCode);
-  if(ruby_error) { state = INTERPRETER_ERROR; return; }
-  
-  VALUE codeToRun = Qnil, newCode = Qnil;
-  HASH_EXTRACT(loadingHash, codeToRun);
-  HASH_EXTRACT(loadingHash, newCode);
-  
-  currentCode = newCode;
-  
-  printf("%s\n", RSTRING_PTR(codeToRun));
-  rb_eval_string_protect(RSTRING_PTR(codeToRun), &ruby_error);
+  zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), INTERNAL_GET(zj_mApp, current_code));
   if(ruby_error) {
     state = INTERPRETER_ERROR;
-    return;
     
   } else {
     state = INTERPRETER_RUNNING;
-  }
-  
-  return;
-  
-  zj_safe_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
-  
-  VALUE codeValid = zj_safe_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
-  if(!RTEST(codeValid)) {
-    // evaluate the invalid code to generate a syntax error
-    rb_eval_string_protect(scriptFileContent, &ruby_error);
-    state = INTERPRETER_ERROR;
-    return;
-  }
-  
-  // load source into ruby variable, globalize it
-  VALUE incomingCode = zj_safe_funcall(rb_cObject, rb_intern("globalize_code"), 1, rb_str_new2(scriptFileContent));
-  if(ruby_error) { state = INTERPRETER_ERROR; return; }
-  
-  // check if source is in reduced mode
-  VALUE isCodeReduced = zj_safe_funcall(rb_cObject, rb_intern("reduced_mode?"), 1, incomingCode);
-  if(ruby_error) { state = INTERPRETER_ERROR; return; }
-  
-  // compare current code to incoming code, do we have to restart?
-  if(currentCode != Qnil) {
-    VALUE mustRestartVal = zj_safe_funcall(rb_cObject, rb_intern("compare_code"), 2, currentCode, incomingCode);
-    if(ruby_error) { state = INTERPRETER_ERROR; return; }
-    
-    mustRestart = RTEST(mustRestartVal);
-  }
-  
-  currentCode = incomingCode;
-  
-  // record current state (globals etc)
-  VALUE currentState = zj_safe_funcall(rb_cObject, rb_intern("capture_state"), 0);
-  if(ruby_error) { state = INTERPRETER_ERROR; return; }
-  
-  if(RTEST(isCodeReduced)) {
-    // code is in reduced mode, does not use blocks. set draw_proc to code and just run that.
-    
-    VALUE incomingCodeBlock = zj_safe_funcall(rb_cObject, rb_intern("proc"), 1, incomingCode);
-    if(ruby_error) {
-      state = INTERPRETER_ERROR;
-      return;
-      
-    } else {
-      state = INTERPRETER_RUNNING;
-      
-    }
-    
-    INTERNAL_SET(zj_mEvents, draw_proc, incomingCodeBlock);
-    setup();
-    
-  } else {
-    // code is in complete mode, uses blocks. load in normally.
-    rb_eval_string_protect(RSTRING_PTR(currentCode), &ruby_error);
-    if(ruby_error) {
-      state = INTERPRETER_ERROR;
-      
-    } else {
-      state = INTERPRETER_RUNNING;
-      
-    }
-  
-    if(state == INTERPRETER_RUNNING) {
-      
-      if(mustRestart || wasLastError) {
-        setup();
-    
-      } else {
-        long currentStateLen = RARRAY_LEN(currentState);
-        VALUE* currentStatePtr = RARRAY_PTR(currentState);
-        for(int i = 0; i < currentStateLen; i++) {
-          VALUE* gvValPairPtr = RARRAY_PTR(currentStatePtr[i]);
-          ID gvSymId = SYM2ID(gvValPairPtr[0]);
-          VALUE gvVal = gvValPairPtr[1];
-          rb_gv_set(rb_id2name(gvSymId), gvVal);
-      
-        }
-      }
-    }
     
   }
-  
   
 }
