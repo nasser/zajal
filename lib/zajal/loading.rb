@@ -61,28 +61,28 @@ end
 # code loading logic
 
 # syntax nodes that change the scope
-$scope_changers = [:def, :method_add_block, :class, :module]
-$event_blocks = %w(setup update draw exit window_resized key_pressed key_released mouse_moved mouse_dragged mouse_pressed mouse_released audio_requested audio_received)
+ScopeChangers = [:def, :method_add_block, :class, :module]
+EventBlocks = %w(setup update draw exit window_resized key_pressed key_released mouse_moved mouse_dragged mouse_pressed mouse_released audio_requested audio_received)
 
 # reduce to assigns, pull out assigns in top level scope of exp
-$to_assigns = proc { |arr, exp|
+ToAssigns = proc { |arr, exp|
   if exp.respond_to? :first and exp.first == :assign
     arr << exp[1][1][1]
   elsif exp.respond_to? :first and exp.first == :massign
     exp[1].each { |asn| arr << asn[1] }
-  elsif exp.respond_to? :reduce and not $scope_changers.include? exp.first
-    exp.reduce(arr, &$to_assigns)
+  elsif exp.respond_to? :reduce and not ScopeChangers.include? exp.first
+    exp.reduce(arr, &ToAssigns)
   end
 
   arr
 }
 
 # reduce to methods, pull out method invocations from exp
-$to_methods = proc { |arr, exp|
+ToMethods = proc { |arr, exp|
   if exp.respond_to? :first and exp.first == :method_add_block
     arr << exp[1][1][1][1]
   elsif exp.respond_to? :reduce
-    exp.reduce(arr, &$to_methods)
+    exp.reduce(arr, &ToMethods)
   end
   
   arr
@@ -122,7 +122,7 @@ def globalize_code code, sigil="$"
   end
   
   # extract top level locals to be globalized
-  top_level_locals = sexp.reduce([], &$to_assigns)
+  top_level_locals = sexp.reduce([], &ToAssigns)
   
   # globalize each top level local
   top_level_locals.each { |l| globalize_one_ident.call l, sexp }
@@ -148,8 +148,8 @@ def compare_code local_code, other_code
   removed = local_sexp - other_sexp
   added   = other_sexp - local_sexp
   
-  modified_globals = removed.reduce([], &$to_assigns) | added.reduce([], &$to_assigns)
-  modified_methods = removed.reduce([], &$to_methods) | added.reduce([], &$to_methods)
+  modified_globals = removed.reduce([], &ToAssigns) | added.reduce([], &ToAssigns)
+  modified_methods = removed.reduce([], &ToAssigns) | added.reduce([], &ToMethods)
   
   modified_methods.include?("setup") or not modified_globals.empty?
 end
@@ -169,7 +169,7 @@ end
 # 
 # Returns true if code is in reduced mode, false otherwise
 def reduced_mode? code
-  not Ripper.sexp_simple(code)[1].reduce([], &$to_methods).include? $event_blocks
+  not Ripper.sexp_simple(code)[1].reduce([], &ToMethods).include? EventBlocks
 end
 
 def live_load new_code, old_code
