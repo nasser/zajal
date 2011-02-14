@@ -75,8 +75,7 @@ void ZajalInterpreter::setVerboseMode(bool newMode) {
   INTERNAL_SET(zj_mApp, verbose, newMode ? Qtrue : Qfalse);
 }
 
-//--------------------------------------------------------------
-void ZajalInterpreter::setup() {
+void ZajalInterpreter::defaults() {
   // defaults
   ofSetFrameRate(30);
   ofSetVerticalSync(true);
@@ -89,6 +88,11 @@ void ZajalInterpreter::setup() {
   ofSetRectMode(OF_RECTMODE_CORNER);
   ofSetLineWidth(1.0);
   ofFill();
+}
+
+//--------------------------------------------------------------
+void ZajalInterpreter::setup() {
+  defaults();
   
   if(state == INTERPRETER_RUNNING) {
     // if no error exists, run user setup method, catch runtime errors
@@ -148,6 +152,7 @@ void ZajalInterpreter::draw() {
       ofRect(0, ofGetHeight()/2-25, ofGetWidth(), 35);
       ofSetColor(0, 0, 0, 255);
       ofDrawBitmapString(error_message_ptr, 10, ofGetHeight()/2-10);
+      defaults();
       break;
       
     case INTERPRETER_RUNNING:

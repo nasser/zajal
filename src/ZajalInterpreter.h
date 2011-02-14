@@ -48,6 +48,8 @@ class ZajalInterpreter : public ofBaseApp {
     void setVerboseMode(bool newMode);
     void appendLoadPath(char* path);
     
+    void defaults();
+    
   private:
     // the state the interpreter is in
     InterpreterState state;
