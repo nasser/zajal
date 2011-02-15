@@ -122,6 +122,7 @@ void Init_Events() {
   rb_define_private_method(zj_mEvents, "mouse_x", RB_FUNC(zj_mouse_x), 0);
   rb_define_private_method(zj_mEvents, "mouse_y", RB_FUNC(zj_mouse_y), 0);
   
+  INTERNAL_SET(zj_mEvents, defaults_proc, Qnil);
   INTERNAL_SET(zj_mEvents, setup_proc, Qnil);
   INTERNAL_SET(zj_mEvents, update_proc, Qnil);
   INTERNAL_SET(zj_mEvents, draw_proc, Qnil);
