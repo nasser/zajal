@@ -190,8 +190,8 @@ def live_load new_code
     Object.send(:remove_const, modul.to_sym)
   end
   
-  
   begin
+    Events::Internals.defaults_proc.call
     if new_sexp.fetch("/method_add_block/method_add_arg/fcall/@ident").empty?
       # no blocks are used, we're in reduced mode
       Events::Internals.draw_proc = proc new_code
