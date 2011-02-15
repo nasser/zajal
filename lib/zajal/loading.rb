@@ -195,9 +195,15 @@ def live_load new_code
     if new_sexp.fetch("/method_add_block/method_add_arg/fcall/@ident").empty?
       # no blocks are used, we're in reduced mode
       Events::Internals.draw_proc = proc new_code
+      Events::Internals.draw_proc.call
     else
       # blocks are used, we're in complete mode
       eval new_code
+      # kind of a kludge!
+      Typography::Internals.stacked_text_x = Typography::Internals.stacked_text_initial_x
+      Typography::Internals.stacked_text_y = Typography::Internals.stacked_text_initial_y
+      Events::Internals.update_proc.call unless Events::Internals.update_proc.nil?
+      Events::Internals.draw_proc.call unless Events::Internals.draw_proc.nil?
     end
   ensure
     # dont want to leave this off!
