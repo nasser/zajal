@@ -86,6 +86,10 @@ VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE klass) {
   }
 }
 
+VALUE zj_time(VALUE self) {
+  return INT2NUM(ofGetElapsedTimeMillis());
+}
+
 VALUE zj_frame(VALUE self) {
   return INT2NUM(ofGetFrameNum());
 }
@@ -205,6 +209,7 @@ void Init_App() {
   rb_define_private_method(zj_mApp, "height", RB_FUNC(zj_height), -1);
   rb_define_private_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
   rb_define_private_method(zj_mApp, "size", RB_FUNC(zj_size), -1);
+  rb_define_private_method(zj_mApp, "time", RB_FUNC(zj_time), 0);
   rb_define_private_method(zj_mApp, "frame", RB_FUNC(zj_frame), 0);
   rb_define_private_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
   rb_define_private_method(zj_mApp, "vertical_sync", RB_FUNC(zj_vertical_sync), -1);
