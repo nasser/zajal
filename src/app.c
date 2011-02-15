@@ -201,11 +201,17 @@ VALUE zj_window_y(int argc, VALUE* argv, VALUE self) {
   }
 }
 
+VALUE zj_segfault(VALUE self) {
+  int* iWillCrash;
+  int a = iWillCrash[92089];
+}
+
 
 void Init_App() {
   zj_mApp = rb_define_module_under(zj_mZajal, "App");
   rb_define_module_under(zj_mApp, "Internals");
   
+  rb_define_private_method(zj_mApp, "segfault", RB_FUNC(zj_segfault), 0);
   rb_define_private_method(zj_mApp, "height", RB_FUNC(zj_height), -1);
   rb_define_private_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
   rb_define_private_method(zj_mApp, "size", RB_FUNC(zj_size), -1);
