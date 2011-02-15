@@ -54,7 +54,7 @@ end
 alias :old_proc :proc
 def proc str=nil
   if not str.nil?
-    eval "Proc.new { #{str} }"
+    eval "Proc.new { #{str} \n}"
   else
     old_proc
   end
@@ -141,30 +141,25 @@ def capture_state
   end
 end
 
+def live_load new_code
+  return eval new_code if not valid? new_code
   
-  return true
-end
-
-def live_load new_code, old_code
   # stay out of the way, you
   GC.disable
   
   new_code = globalize_code new_code
+  old_code = App::Internals.current_code
   
-  # TODO move to ZajalInterpreter.cpp
   App::Internals.current_code = new_code
   
-  # TODO reduced mode, hard/soft restarts
-  
   # eval invalid code to generate syntax errors
-  return try_eval new_code if not valid? new_code
   
   # eval new code if this is the first loading
-  return try_eval new_code if old_code.nil?
   
   new_sexp = Ripper.sexp_simple(new_code)[1]
-  old_sexp = Ripper.sexp_simple(old_code)[1]
   new_sexp_lines = Ripper.terminated_sexp(new_code)[1]
+  
+  old_sexp = Ripper.sexp_simple(old_code)[1]
   
   removed = old_sexp - new_sexp
   added = new_sexp - old_sexp
@@ -172,49 +167,55 @@ def live_load new_code, old_code
   old_state = capture_state
   
   # get rid of deleted events
-  old_sexp.fetch("method_add_block/method_add_arg/fcall/@ident").each do |event|
-    eval "Events::Internals.#{event}_proc = nil"
+  old_sexp.fetch("/method_add_block/method_add_arg/fcall/@ident").each do |event|
+    eval "Events::Internals.#{event}_proc = nil unless Events::Internals.#{event}_proc.nil?"
   end
   
-  # get rid of deleted methods
-  old_sexp.fetch("def/@ident").each do |method|
+  # get rid of old globals
+  old_sexp.fetch("/assign/var_field/@gvar").each do |gv|
+    eval "#{gv} = nil"
+  end
+  
+  old_sexp.fetch("/def/@ident").each do |method|
     eval "undef :#{method}"
   end
   
-  # get rid of deleted classes
-  old_sexp.fetch("class/const_ref/@const").each do |klass|
+  # get rid of old classes
+  old_sexp.fetch("/class/const_ref/@const").each do |klass|
     Object.send(:remove_const, klass.to_sym)
   end
   
-  # get rid of deleted modules
-  old_sexp.fetch("module/const_ref/@const").each do |modul|
+  # get rid of old modules
+  old_sexp.fetch("/module/const_ref/@const").each do |modul|
     Object.send(:remove_const, modul.to_sym)
   end
   
-  # re-run setup if setup modified
-  if added.fetch("method_add_block/method_add_arg/fcall/@ident").include? "setup"
-    new_code += "\nEvents::Internals.setup_proc.call"
-  end
-
   
   begin
-    # run the new code
-    eval new_code
+    if new_sexp.fetch("/method_add_block/method_add_arg/fcall/@ident").empty?
+      # no blocks are used, we're in reduced mode
+      Events::Internals.draw_proc = proc new_code
+    else
+      # blocks are used, we're in complete mode
+      eval new_code
+    end
   ensure
     # dont want to leave this off!
     GC.enable
   end
   
-  puts "whew..."
-  
-  # recreate state
-  immediate_state, ref_state = old_state
-  immediate_state.each { |gv, val| eval "#{gv.to_s} = #{val}" }
-  ref_state.each { |gv, val| eval "#{gv.to_s} = ObjectSpace._id2ref(#{val})" }
+  # TODO support global assigns burried under if/while/etc blocks
+  if added.fetch("/method_add_block/method_add_arg/fcall/@ident").include? "setup" or not added.fetch("/assign/var_field/@gvar").empty?
+    # re-run setup if setup modified
+    Events::Internals.setup_proc.call unless Events::Internals.setup_proc.nil?
+  else
+    # recreate state otherwise
+    immediate_state, ref_state = old_state
+    immediate_state.each { |gv, val| eval "#{gv.to_s} = #{val.inspect}" }
+    ref_state.each { |gv, val| eval "#{gv.to_s} = ObjectSpace._id2ref(#{val})" }
+  end
   
   # as you were
   GC.enable
   ObjectSpace.garbage_collect
-  
-  return true
 end

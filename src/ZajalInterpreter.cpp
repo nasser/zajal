@@ -34,7 +34,7 @@ ZajalInterpreter::ZajalInterpreter() {
   
   nextUpdate = SCRIPT_UPDATE_FREQUENCY;
   
-  INTERNAL_SET(zj_mApp, current_code, Qnil);
+  INTERNAL_SET(zj_mApp, current_code, rb_str_new2(""));
   INTERNAL_SET(zj_mApp, verbose, Qfalse);
 }
 
@@ -363,13 +363,7 @@ void ZajalInterpreter::reloadScript() {
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
   
-  zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), INTERNAL_GET(zj_mApp, current_code));
-  if(ruby_error) {
-    state = INTERPRETER_ERROR;
-    
-  } else {
-    state = INTERPRETER_RUNNING;
-    
-  }
+  zj_safe_funcall(rb_cObject, rb_intern("live_load"), 1, rb_str_new2(scriptFileContent));
+  state = ruby_error ? INTERPRETER_ERROR : INTERPRETER_RUNNING;
   
 }
