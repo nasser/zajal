@@ -152,10 +152,6 @@ def live_load new_code
   
   App::Internals.current_code = new_code
   
-  # eval invalid code to generate syntax errors
-  
-  # eval new code if this is the first loading
-  
   new_sexp = Ripper.sexp_simple(new_code)[1]
   new_sexp_lines = Ripper.terminated_sexp(new_code)[1]
   
@@ -190,10 +186,12 @@ def live_load new_code
     Object.send(:remove_const, modul.to_sym)
   end
   
+  
+  # run the code
   begin
-    Events::Internals.defaults_proc.call
     if new_sexp.fetch("/method_add_block/method_add_arg/fcall/@ident").empty?
       # no blocks are used, we're in reduced mode
+      Events::Internals.defaults_proc.call
       Events::Internals.draw_proc = proc new_code
       Events::Internals.draw_proc.call
     else
@@ -210,9 +208,11 @@ def live_load new_code
     GC.enable
   end
   
+  
   # TODO support global assigns burried under if/while/etc blocks
   if added.fetch("/method_add_block/method_add_arg/fcall/@ident").include? "setup" or not added.fetch("/assign/var_field/@gvar").empty?
     # re-run setup if setup modified
+    Events::Internals.defaults_proc.call
     Events::Internals.setup_proc.call unless Events::Internals.setup_proc.nil?
   else
     # recreate state otherwise
