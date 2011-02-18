@@ -422,7 +422,7 @@ VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
   } else {
     /*  called with argument, set curve resolution */
     _zj_curve_resolution = new_resolution;
-    ofSetCurveResolution(FIX2INT(_zj_curve_resolution));
+    ofSetCurveResolution(NUM2INT(_zj_curve_resolution));
     
   }
   
@@ -440,7 +440,7 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
   } else {
     /*  called with argument, set circle resolution */
     _zj_circle_resolution = new_resolution;
-    ofSetCircleResolution(FIX2INT(_zj_circle_resolution));
+    ofSetCircleResolution(NUM2INT(_zj_circle_resolution));
     
   }
   
