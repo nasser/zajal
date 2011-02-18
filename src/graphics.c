@@ -174,13 +174,81 @@ VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
   return Qnil;
 }
 
-VALUE zj_triangle(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
-  ofTriangle(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
+/* 
+ * Draws an equilateral, isosceles or scalene triangle.
+ * 
+ * triangle x, y, r
+ * triangle x, y, r, a
+ * triangle x1, y1, x2, y2, x3, y3
+ * 
+ * x - x coordinate of the triangle's center
+ * y - y coordinate of the triangle's center
+ * r - The "radius" of the triangle. More specifically, the radius of the
+ *     circle the triangle is inscribed in.
+ * a - The size of the isosceles angle in radians
+ * x1 - x coordinate of the triangle's first point
+ * y1 - y coordinate of the triangle's first point
+ * x2 - x coordinate of the triangle's second point
+ * y2 - y coordinate of the triangle's second point
+ * x3 - x coordinate of the triangle's third point
+ * y4 - y coordinate of the triangle's third point
+ * 
+ * Returns nothing
+ */
+VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
+  float x1, y1, x2, y2, x3, y3;
+  VALUE x_x1, y_y1, r_x2, a_y2, _x3, _y3;
+  rb_scan_args(argc, argv, "06", &x_x1, &y_y1, &r_x2, &a_y2, &_x3, &_y3);
   
+  if(!NIL_P(x_x1) && !NIL_P(y_y1) && !NIL_P(r_x2) && NIL_P(a_y2) && NIL_P(_x3) && NIL_P(_y3)) {
+    /* called with three arguments, equilateral */
+    float x = NUM2DBL(x_x1);
+    float y = NUM2DBL(y_y1);
+    float r = NUM2DBL(r_x2);
+    float a = PI - PI/3;
+    
+    x1 = x + cos(PI/2) * r;
+    y1 = y - sin(PI/2) * r;
+    x2 = x + cos(PI/2 + a) * r;
+    y2 = y - sin(PI/2 + a) * r;
+    x3 = x + cos(PI/2 + 2*a) * r;
+    y3 = y - sin(PI/2 + 2*a) * r;
+    
+  } else if(!NIL_P(x_x1) && !NIL_P(y_y1) && !NIL_P(r_x2) && !NIL_P(a_y2) && NIL_P(_x3) && NIL_P(_y3)) {
+    /* called with four arguments, isosceles */
+    float x = NUM2DBL(x_x1);
+    float y = NUM2DBL(y_y1);
+    float r = NUM2DBL(r_x2);
+    float a = PI - NUM2DBL(a_y2);
+    float h = (r+r/2) / sin(a/2); /* sine law, bitches */
+    
+    x1 = x + cos(PI/2) * r;
+    y1 = y - sin(PI/2) * r;
+    x2 = x1 + cos(PI + (PI - a/2)) * h;
+    y2 = y1 - sin(PI + (PI - a/2)) * h;
+    x3 = x1 + cos(a/2 - PI) * h;
+    y3 = y1 - sin(a/2 - PI) * h;
+    
+  } else if(!NIL_P(x_x1) && !NIL_P(y_y1) && !NIL_P(r_x2) && !NIL_P(a_y2) && !NIL_P(_x3) && !NIL_P(_y3)) {
+    /* called with six arguments, scalene */
+    x1 = NUM2DBL(x_x1);
+    y1 = NUM2DBL(y_y1);
+    x2 = NUM2DBL(r_x2);
+    y2 = NUM2DBL(a_y2);
+    x3 = NUM2DBL(_x3);
+    y3 = NUM2DBL(_y3);
+    
+  } else {
+    /* some other number, raise exception */
+    rb_raise(rb_eArgError, "wrong number of arguments, expected 3, 4 or 6");
+    
+  }
+  
+  ofTriangle(x1, y1, x2, y2, x3, y3);
   if(_zj_smoothing == Qtrue && _zj_fill == Qtrue) {
     /*  smoothing is on and the triangle was filled. draw a smooth outline. */
     ofNoFill();
-    ofTriangle(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
+    ofTriangle(x1, y1, x2, y2, x3, y3);
     ofFill();
     
   }
@@ -697,7 +765,7 @@ void Init_Graphics() {
   /*  basic shapes */
   rb_define_private_method(zj_mGraphics, "rectangle", RB_FUNC(zj_rectangle), 4);
   rb_define_private_method(zj_mGraphics, "square", RB_FUNC(zj_square), 3);
-  rb_define_private_method(zj_mGraphics, "triangle", RB_FUNC(zj_triangle), 6);
+  rb_define_private_method(zj_mGraphics, "triangle", RB_FUNC(zj_triangle), -1);
   rb_define_private_method(zj_mGraphics, "circle", RB_FUNC(zj_circle), 3);
   rb_define_private_method(zj_mGraphics, "ellipse", RB_FUNC(zj_ellipse), 4);
   rb_define_private_method(zj_mGraphics, "line", RB_FUNC(zj_line), 4);
