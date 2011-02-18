@@ -7,6 +7,18 @@ class Range
   end
 end
 
+class Float 
+  alias :old_mult :*
+  def * other
+    if other.is_a? Range then
+      other * self
+    else
+      self.old_mult(other)
+    end
+  end
+end
+
+
 # add sugar to some each* methods
 class Array
   alias :each_consecutive :each_cons 
