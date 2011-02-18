@@ -2,10 +2,6 @@
 
 # lerp across ranges
 class Range
-  def % t
-    self.begin * (1.0 - t) + self.end * (t)
-  end
-  
   def * t
     self.begin * (1.0 - t) + self.end * (t)
   end
