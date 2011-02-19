@@ -1,4 +1,4 @@
-require "util/tomdoc"
+require "util/doclib/tomdoc"
 
 class CDoc < TomDoc::TomDoc
   def tomdoc

@@ -5,7 +5,7 @@ require "rubygems"
 require "mustache"
 
 require "pp"
-require "util/cdoc"
+require "util/doclib/cdoc"
 
 class String
   def titlecase
