@@ -126,7 +126,7 @@ __END__
 ---
 
 {{#stats}}
-Generated **{{{date}}}** against [{{{short_hash}}}](https://github.com/nasser/zajal/commit/{{{hash}}})
+Generated **{{{date}}}** against [{{{short_hash}}}](https://github.com/nasser/zajal/tree/{{{hash}}})
 
 {{{documented_percent}}}% of methods documented, {{{exampled_percent}}}% given examples.
 {{/stats}}
