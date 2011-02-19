@@ -8,20 +8,23 @@ class CDoc < TomDoc::TomDoc
   end
   
   def signatures
-    unless sections[1] =~ /^(Examples|Returns)/
-      sig_string = sections[1]
-      arg_string = sections[2]
-    else
+    sig_string = sections[1] =~ /^(Examples|Returns)/ ? nil : sections[1]
+    arg_string = sections[1] =~ /^(Examples|Returns)/ ? nil : sections[2]
+    
+    if sig_string.nil? and arg_string.nil?
       return []
+    elsif (not sig_string.nil?) and arg_string.nil?
+      raise "Signatures given, but no argument lists found!"
     end
     
     # build hash of args
     last_arg = nil
     args = {}
     arg_string.split("\n").each do |line|
-      next if not line =~ /^[^\s]+\s\-\s/ or line.strip.empty?
+      # next if not line =~ /^[^\s]+\s\-\s/ or line.strip.empty?
+      next if line.strip.empty?
       
-      if line =~ /^[^\s]/
+      if line =~ /^[^\s]+\s\-\s/
         param, desc = line.split(" - ")
         args[param.strip] = TomDoc::Arg.new(param.strip, desc.strip)
         last_arg = args[param.strip]
@@ -32,8 +35,15 @@ class CDoc < TomDoc::TomDoc
     
     # tie signatures to args
     sig_string.split("\n").reduce([]) do |sigs, line|
-      sigs << line[/[^\s]+\s*(.*)/, 1].split(", ").map { |arg| args[arg] }
+      sigs << line[/[^\s]+\s*(.*)/, 1].split(", ").map do |arg|
+        if args[arg].nil?
+          raise "unknown argument `#{arg}' used in signature `#{line}', but not found in argument list!"
+        else
+          args[arg];
+        end
+      end
     end
+    
   end
   
   def examples
