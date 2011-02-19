@@ -27,9 +27,9 @@ RUBY_INCLUDES = $(addprefix -I ,$(shell find $(RUBY_DIR)/include -type d))
 
 
 ### zajal interperter
-ZAJAL_GIT_BRANCH = $(shell $(GIT) branch | sed -e '/^[^\*]/d' -e 's/\* //')
-ZAJAL_GIT_HASH = $(shell $(GIT) show-ref '$(ZAJAL_GIT_BRANCH)' --hash --heads)
-ZAJAL_GIT_SHORT_HASH = $(shell $(GIT) show-ref '$(ZAJAL_GIT_BRANCH)' --hash=8 --heads)
+ZAJAL_GIT_BRANCH = $(shell $(GIT) name-rev --name-only HEAD)
+ZAJAL_GIT_HASH = $(shell $(GIT) log -1 --pretty=format:%H)
+ZAJAL_GIT_SHORT_HASH = $(shell $(GIT) log -1 --pretty=format:%h)
 
 ZAJAL_INCLUDES = -I$(ZAJAL_DIR)
 ZAJAL_SRC = $(shell find -E $(ZAJAL_DIR) -regex ".*\.c(pp)?$$")
