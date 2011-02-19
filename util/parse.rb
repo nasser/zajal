@@ -4,15 +4,14 @@
 require "rubygems"
 require "mustache"
 
+require "pp"
 require "util/cdoc"
 
 class String
   def titlecase
-    sub(/\b\w/) { $&.upcase }
+    self =~ /^\w/ ? sub(/\b\w/) { $&.upcase } : self
   end
 end
-
-puts "Here we go..."
 
 module_doc = Mustache.new
 
@@ -25,27 +24,32 @@ module_doc[:description] = source[0, 1] == "/" ? source[/^\/\*.*?\*\//m].gsub(/^
 
 # pull declarations out of Init_* function
 module_doc[:name] = module_name = init_func[/void Init_([^\(]+)/, 1]
+
 module_var  = init_func[/([^\s=]+)\s*=\s*rb_define_module[^\(]*\([^"]+"#{module_doc[:name]}"/, 1]
 
 # for documentation coverage
 total_examples = 0
+documented_methods = 0
 total_methods = source.scan("rb_define_private_method").length
 
 # extract private module methods
 module_doc[:methods] = []
+module_doc[:nodoc_methods] = []
 init_func.scan(/rb_define_private_method\(#{module_var}[^"]+"([^"]+)"[^"]+RB_FUNC\(([^\)]+)/).each do |private_method|
   method_hash = {}
   method_hash[:name], c_name = private_method
-  
   # diamonds are a hacker's best friend...
   comment = source_body.gsub(/ *(?:\/\*|\*\/)/, "◊").scan(/\s+◊([^◊]+?)◊\s+?VALUE\s+#{c_name}\b/m).first.to_s
-  next if comment.empty?
+  if comment.empty?
+    module_doc[:nodoc_methods] << method_hash
+    next
+  end
+  
+  
   method_doc = CDoc.new comment
 
   method_hash[:description] = method_doc.description
   
-  p method_doc.signatures
-
   method_hash[:signatures] = method_doc.signatures.map do |arg_list|
     { :arg_list => arg_list.map { |a| a.name }.join(", "),
       :args => arg_list.map { |a| {:name => a.name, :description => a.description} } }
@@ -53,57 +57,27 @@ init_func.scan(/rb_define_private_method\(#{module_var}[^"]+"([^"]+)"[^"]+RB_FUN
   
   method_hash[:examples] = method_doc.examples.map { |e| {:content => e} }
   total_examples += 1 if method_hash[:examples].size > 0
-  method_hash[:returns] = method_doc.returns.join#[/^Returns (.*)/, 1].titlecase
+  documented_methods += 1
+  method_hash[:returns] = method_doc.returns.join(" ")[/^Returns (.*)/, 1]
   
   module_doc[:methods] << method_hash
 end
 
-exit
-puts module_doc.render DATA.read
+stats = {}
 
-# get module name from source file
-module_doc[:name] = ARGV[0][/.*\/([^\.]+).c/, 1].titlecase
+stats[:total_methods] = total_methods
+stats[:documented_methods] = documented_methods
+stats[:documented_percent] = (documented_methods/total_methods.to_f * 100).round
+stats[:exampled_methods] = total_examples
+stats[:exampled_percent] = (total_examples/total_methods.to_f * 100).round
 
-# module comment is the second comment in the file
-module_doc[:description] = source.scan(/\/\*(.*?)\*\//m)[0].first.strip.gsub!(/[^a-zA-Z\n]*\*[^a-zA-Z\n]*/m, "")
+stats[:date] = Time.now.strftime "%F %R"
+stats[:hash] = `git log -1 --pretty=format:%H`
+stats[:short_hash] = `git log -1 --pretty=format:%h`
 
-# remove one line comments
-source.gsub! /\/\*.*\*\//, ""
-# slice everything above the first include
-source.slice! 0, source.index("#include")
-
-module_doc[:meths] = []
-
-# scan for function comments, parse
-source.scan(/\s+\/\*(.*?)\*+\/\s+?VALUE\s+([^(]+)/m).each do |s|
-  new_meth = {}
-  
-  comment, c_name = s
-  
-  comment.gsub! /^\s*/, ""
-  rb_name = source.scan(/rb_define_method\([^,]+,\s*"([^"]+)"\s*,\s*[^(]*\(?\b#{c_name}\b\)?/).first.first
-  
-  method_doc = CDoc.new comment
-  
-  new_meth[:name] = rb_name
-  new_meth[:description] = method_doc.description
-  
-  new_meth[:sigs] = method_doc.signatures.map do |arg_list|
-    { :arg_list => arg_list.map { |a| a.name }.join(", "),
-      :args => arg_list.map { |a| {:name => a.name, :description => a.description} } }
-  end
-  
-  new_meth[:examples] = method_doc.examples.map { |e| {:content => e} }
-  total_examples += 1 if new_meth[:examples].size > 0
-  new_meth[:returns] = method_doc.returns.join[/^Returns (.*)/, 1].titlecase
-  
-  module_doc[:meths] << new_meth
-end
+module_doc[:stats] = stats
 
 puts module_doc.render DATA.read
-
-$stderr.puts "#{module_doc[:meths].size}/#{total_methods} = #{(100*module_doc[:meths].size/total_methods).round}% documented"
-$stderr.puts "#{total_examples}/#{total_methods} = #{(100*total_examples/total_methods).round}% with examples"
 
 __END__
 # {{{name}}}
@@ -113,16 +87,19 @@ __END__
 # {{{name}}}
 {{{description}}}
 
-**Usage**
+**Syntax**
 
-{{#sigs}}
+{{#signatures}}
 `{{{name}}} {{{arg_list}}}`
 
 {{#args}}
-  * `{{{name}}}` - {{{description}}}
+  * {{{name}}} - {{{description}}}
 {{/args}}
 
-{{/sigs}}
+{{/signatures}}
+{{^signatures}}
+`{{{name}}}`
+{{/signatures}}
 
 **Examples**
 
@@ -130,16 +107,26 @@ __END__
 ```ruby
 {{{content}}}
 ```
-
 {{/examples}}
 {{^examples}}
-
-**No Examples**
-
+*No examples provided*
 {{/examples}}
 
-**Returns**
-
-{{{returns}}}
+**Returns** {{{returns}}}
 
 {{/methods}}
+
+{{#nodoc_methods}}
+# {{{name}}}
+*Not documented yet*
+
+{{/nodoc_methods}}
+
+
+---
+
+{{#stats}}
+Generated **{{{date}}}** against [{{{short_hash}}}](https://github.com/nasser/zajal/commit/{{{hash}}})
+
+{{{documented_percent}}}% of methods documented, {{{exampled_percent}}}% given examples.
+{{/stats}}
