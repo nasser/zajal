@@ -157,7 +157,7 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  *   rectangle_mode :center
  *   rectangle 10, 10, 50, 50
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
   ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(w), NUM2DBL(h));
@@ -188,7 +188,7 @@ VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
  *   # draw a small square
  *   square 100, 100, 5
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
   ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(s), NUM2DBL(s));
@@ -221,9 +221,9 @@ VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
  * x2 - x coordinate of the triangle's second point
  * y2 - y coordinate of the triangle's second point
  * x3 - x coordinate of the triangle's third point
- * y4 - y coordinate of the triangle's third point
+ * y3 - y coordinate of the triangle's third point
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
   float x1, y1, x2, y2, x3, y3;
@@ -296,7 +296,7 @@ VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
  * y - the y coordinate of the circle's center
  * r - the circle's radius
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
   ofCircle(NUM2DBL(x), NUM2DBL(y), NUM2DBL(radius));
@@ -322,7 +322,7 @@ VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
  * w - the width of the ellipse
  * h - the height of the ellipse
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
   ofEllipse(NUM2DBL(x), NUM2DBL(y), NUM2DBL(width), NUM2DBL(height));
@@ -356,7 +356,7 @@ VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
  *   line 0, 0, width/2, height
  *   line width/2, height, width, 0
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
   ofLine(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2));
@@ -378,43 +378,11 @@ VALUE zj_push_matrix(VALUE self) {
   return Qnil;
 }
 
-/* 
- * Pops the current matrix off the stack
- * 
- * Examples
- * 
- *   push_matrix
- *   # do some stuff
- *   pop_matrix
- * 
- * Returns nothing
- */
 VALUE zj_pop_matrix(VALUE self) {
   ofPopMatrix();
   return Qnil;
 }
 
-/* 
- * Establish a separate transform matrix.
- * Isolates and localizes matrix trasnformations.
- * 
- * matrix { ... }
- * 
- * The block
- * 
- * Examples
- * 
- *   matrix {
- *     # this translation will only affect drawings inside the matrix block
- *     translate 30, 30
- *     circle 0, 0, 10
- *     square 10, 11, 5
- *   }
- *   # the rectangle is unaffected
- *   rectangle 0, 0, 50, 150
- * 
- * Returns nothing
- */
 VALUE zj_matrix(VALUE self) {
   ofPushMatrix();
   VALUE returnValue = rb_yield(Qnil);
@@ -441,7 +409,7 @@ VALUE zj_matrix(VALUE self) {
  *     circle 0, 0, 10
  *   }
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
@@ -474,7 +442,7 @@ VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
  * y - The amount to scale by in y
  * z - The amount to scale by in z
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
@@ -638,7 +606,7 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  *   smoothing true
  *   circle 15, 15, 5
  * 
- * Returns nothing if called with an argument, otherwise current smoothing
+ * Returns `nil` if called with an argument, otherwise current smoothing
  * value as true or false
  */
 VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
@@ -791,7 +759,7 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
  * 
  * fill state
  * 
- * state - true or false, enabling or disabling filling respectively
+ * state - `true` or `false`, enabling or disabling filling respectively
  * 
  * Examples
  * 
@@ -799,7 +767,7 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
  *   fill false
  *   circle 10, 10, 5
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
   VALUE new_fill;
@@ -854,7 +822,7 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
  *   color 200, 0, 0, 255
  *   rectangle 0, 100, 50, 200
  * 
- * Returns nothing
+ * Returns `nil`
  */
 VALUE zj_color(int argc, VALUE* argv, VALUE klass) {
   int r, g, b, a;
