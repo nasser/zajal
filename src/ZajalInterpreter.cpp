@@ -324,6 +324,7 @@ void ZajalInterpreter::loadScript(char* fileName) {
   rb_require("text");
   rb_require("keyevent");
   rb_require("loading");
+  rb_require("colors");
 }
 
 void ZajalInterpreter::reloadScript() {
