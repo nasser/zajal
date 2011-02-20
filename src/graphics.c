@@ -33,23 +33,57 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
   
   switch(argca) {
     case 1:
-      /*  one argument, treat as grayscale at full alpha */
-      *r = NUM2INT(arg1);
-      *g = *r;
-      *b = *r;
-      *a = 255;
+      if(TYPE(arg1) == T_SYMBOL) {
+        /* one symbol argument, treat as named color at full alpha */
+        VALUE color_ary = rb_hash_aref(INTERNAL_GET(zj_mGraphics, named_colors), arg1);
+        if(NIL_P(color_ary)) {
+          rb_raise(rb_eArgError, "Unknown named color!");
+          
+        } else {
+          *r = FIX2INT(RARRAY_PTR(color_ary)[0]);
+          *g = FIX2INT(RARRAY_PTR(color_ary)[1]);
+          *b = FIX2INT(RARRAY_PTR(color_ary)[2]);
+          *a = 255;
+          
+        }
+        
+      } else {
+        /* one non-symbol argument, treat as grayscale at full alpha */
+        *r = NUM2INT(arg1);
+        *g = *r;
+        *b = *r;
+        *a = 255;
+        
+      }
       break;
     
     case 2:
-      /*  two arguments, treat as grayscale and alpha */
-      *r = NUM2INT(arg1);
-      *g = *r;
-      *b = *r;
-      *a = NUM2INT(arg2);
+      if(TYPE(arg1) == T_SYMBOL) {
+        /* two arguments, first is symbol, treat as named color and alpha */
+        VALUE color_ary = rb_hash_aref(INTERNAL_GET(zj_mGraphics, named_colors), arg1);
+        if(NIL_P(color_ary)) {
+          rb_raise(rb_eArgError, "Unknown named color!");
+          
+        } else {
+          *r = FIX2INT(RARRAY_PTR(color_ary)[0]);
+          *g = FIX2INT(RARRAY_PTR(color_ary)[1]);
+          *b = FIX2INT(RARRAY_PTR(color_ary)[2]);
+          *a = NUM2INT(arg2);
+          
+        }
+        
+      } else {
+        /* two arguments, treat as grayscale and alpha */
+        *r = NUM2INT(arg1);
+        *g = *r;
+        *b = *r;
+        *a = NUM2INT(arg2);
+        
+      }
       break;
     
     case 3:
-      /*  three arguments, treat as rgb at full alpha */
+      /* three arguments, treat as rgb at full alpha */
       *r = NUM2INT(arg1);
       *g = NUM2INT(arg2);
       *b = NUM2INT(arg3);
@@ -57,7 +91,7 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
       break;
     
     case 4:
-      /*  four arguments, treat as rgba */
+      /* four arguments, treat as rgba */
       *r = NUM2INT(arg1);
       *g = NUM2INT(arg2);
       *b = NUM2INT(arg3);
