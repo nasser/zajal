@@ -159,7 +159,7 @@ void ZajalInterpreter::updateCurrentScript() {
     fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", scriptName);
     fprintf(stderr, "  The file is either missing or otherwise inaccessible. Check the file name\n");
     fprintf(stderr, "  or the file's permissions.\n");
-    abort();
+    ::exit(1);
     
   } else {
     if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
@@ -286,7 +286,7 @@ void ZajalInterpreter::loadScript(char* fileName) {
   if(RARRAY_LEN(rb_gv_get("$:")) == 0) {
     fprintf(stderr, "FATAL ERROR: No load path set. Zajal cannot run.\n");
     fprintf(stderr, "  Set a load path using the -I option or the $ZAJAL_PATH environment variable\n");
-    abort();
+    ::exit(2);
   }
   
   scriptName = fileName;
@@ -297,7 +297,7 @@ void ZajalInterpreter::loadScript(char* fileName) {
     fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", scriptName);
     fprintf(stderr, "  The file is either missing or otherwise inaccessible. Check the file name\n");
     fprintf(stderr, "  or the file's permissions.\n");
-    abort();
+    ::exit(1);
   }
   
   // establish the data path and add it to ruby's load path
