@@ -316,15 +316,16 @@ void ZajalInterpreter::loadScript(char* fileName) {
   rb_require("open-uri");
   
   // require ruby-implemented experimental functionality
+  rb_require("attraway");
   rb_require("error");
   rb_require("defaults");
   rb_require("sugar");
-  rb_require("attraway");
   rb_require("point");
   rb_require("text");
   rb_require("keyevent");
   rb_require("loading");
   rb_require("colors");
+  rb_require("experimental");
 }
 
 void ZajalInterpreter::reloadScript() {
