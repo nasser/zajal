@@ -108,6 +108,28 @@ void Init_Videos();
 void Init_Typography();
 void Init_Version();
 
+VALUE zj_ary_each(int argc, VALUE* argv, VALUE self) {
+  if(argc == 0) return rb_ary_each(self);
+  
+  VALUE _n;
+  long n;
+  rb_scan_args(argc, argv, "01", &_n);
+  NIL_P(_n) ? n = 1 : n = NUM2LONG(_n);
+  
+  long i, j;
+  VALUE yield_ary = rb_ary_new2(n+1);
+
+  RETURN_ENUMERATOR(self, 0, 0);
+  for (i = 0; i<RARRAY_LEN(self)-n; i++) {
+    for(j = 0; j < n; j++) rb_ary_push(yield_ary, RARRAY_PTR(self)[i+j]);
+    rb_ary_push(yield_ary, LONG2FIX(i));
+    rb_yield_splat(yield_ary);
+    rb_ary_clear(yield_ary);
+  }
+  
+  return self;
+}
+
 void zajal_init() {
   /* define the global zajal module */
   zj_mZajal = rb_define_module("Zajal");
@@ -121,6 +143,8 @@ void zajal_init() {
   Init_Videos();
   Init_Typography();
   Init_Version();
+  
+  rb_define_method(rb_cArray, "each", RB_FUNC(zj_ary_each), -1);
   
   /*  include zajal modules to Object, make them global */
   rb_include_module(rb_cObject, zj_mApp);
