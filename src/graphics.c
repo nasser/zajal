@@ -29,46 +29,44 @@ void zj_graphics_reset_frame() {
 /* TODO support named colors, move this to a helper source file */
 int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a) {
   VALUE arg1, arg2, arg3, arg4;
-  rb_scan_args(argc, argv, "04", &arg1, &arg2, &arg3, &arg4);
+  int argca = rb_scan_args(argc, argv, "04", &arg1, &arg2, &arg3, &arg4);
   
-  if( !NIL_P(arg1) && NIL_P(arg2) && NIL_P(arg3) && NIL_P(arg4) ) {
-    /*  one argument, treat as grayscale at full alpha */
-    *r = NUM2INT(arg1);
-    *g = *r;
-    *b = *r;
-    *a = 255;
-    return 1;
+  switch(argca) {
+    case 1:
+      /*  one argument, treat as grayscale at full alpha */
+      *r = NUM2INT(arg1);
+      *g = *r;
+      *b = *r;
+      *a = 255;
+      break;
     
-  } else if( !NIL_P(arg1) && !NIL_P(arg2) && NIL_P(arg3) && NIL_P(arg4) ) {
-    /*  two arguments, treat as grayscale and alpha */
-    *r = NUM2INT(arg1);
-    *g = *r;
-    *b = *r;
-    *a = NUM2INT(arg2);
-    return 2;
+    case 2:
+      /*  two arguments, treat as grayscale and alpha */
+      *r = NUM2INT(arg1);
+      *g = *r;
+      *b = *r;
+      *a = NUM2INT(arg2);
+      break;
     
-  } else if( !NIL_P(arg1) && !NIL_P(arg2) && !NIL_P(arg3) && NIL_P(arg4) ) {
-    /*  three arguments, treat as rgb at full alpha */
-    *r = NUM2INT(arg1);
-    *g = NUM2INT(arg2);
-    *b = NUM2INT(arg3);
-    *a = 255;
-    return 3;
+    case 3:
+      /*  three arguments, treat as rgb at full alpha */
+      *r = NUM2INT(arg1);
+      *g = NUM2INT(arg2);
+      *b = NUM2INT(arg3);
+      *a = 255;
+      break;
     
-  } else if( !NIL_P(arg1) && !NIL_P(arg2) && !NIL_P(arg3) && !NIL_P(arg4) ) {
-    /*  four arguments, treat as rgba */
-    *r = NUM2INT(arg1);
-    *g = NUM2INT(arg2);
-    *b = NUM2INT(arg3);
-    *a = NUM2INT(arg4);
-    return 4;
-    
-  } else {
-    return 0;
+    case 4:
+      /*  four arguments, treat as rgba */
+      *r = NUM2INT(arg1);
+      *g = NUM2INT(arg2);
+      *b = NUM2INT(arg3);
+      *a = NUM2INT(arg4);
+      break;
     
   }
   
-  
+  return argca;
 }
 
 /* 
@@ -101,37 +99,41 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
  */
 VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   VALUE new_rectmode;
-  rb_scan_args(argc, argv, "01", &new_rectmode);
+  int argca = rb_scan_args(argc, argv, "01", &new_rectmode);
   
   ID center_id = rb_intern("center");
   ID corner_id = rb_intern("corner");
   
-  if(NIL_P(new_rectmode)) {
-    /*  called without argument, return current rect mode */
-    int rect_mode = ofGetRectMode();
+  switch(argca) {
+    case 0:
+      /*  called without argument, return current rect mode */
+      int rect_mode = ofGetRectMode();
     
-    if(rect_mode == OF_RECTMODE_CENTER) {
-      return ID2SYM(center_id);
+      if(rect_mode == OF_RECTMODE_CENTER) {
+        return ID2SYM(center_id);
         
-    } else if(rect_mode == OF_RECTMODE_CORNER) {
-      return ID2SYM(corner_id);
-    }
+      } else if(rect_mode == OF_RECTMODE_CORNER) {
+        return ID2SYM(corner_id);
         
-  } else {
-    /*  called with argument, set new rectmode */
-    ID new_rectmode_id = SYM2ID(new_rectmode);
+      }
+      break;
     
-    if(new_rectmode_id == center_id) {
-      ofSetRectMode(OF_RECTMODE_CENTER);
-      
-    } else if(new_rectmode_id == corner_id) {
-      ofSetRectMode(OF_RECTMODE_CORNER);
-      
-    } else {
-      rb_raise(rb_eArgError, "Invalid rectangle mode!");
-      
-    }
+    case 1:
+      /*  called with argument, set new rectmode */
+      ID new_rectmode_id = SYM2ID(new_rectmode);
     
+      if(new_rectmode_id == center_id) {
+        ofSetRectMode(OF_RECTMODE_CENTER);
+      
+      } else if(new_rectmode_id == corner_id) {
+        ofSetRectMode(OF_RECTMODE_CORNER);
+      
+      } else {
+        rb_raise(rb_eArgError, "Invalid rectangle mode!");
+      
+      }
+      break;
+      
   }
   
   return Qnil;
@@ -227,51 +229,55 @@ VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
  */
 VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
   float x1, y1, x2, y2, x3, y3;
+  float x, y, r, a, h;
   VALUE x_x1, y_y1, r_x2, a_y2, _x3, _y3;
-  rb_scan_args(argc, argv, "06", &x_x1, &y_y1, &r_x2, &a_y2, &_x3, &_y3);
+  int argca = rb_scan_args(argc, argv, "33", &x_x1, &y_y1, &r_x2, &a_y2, &_x3, &_y3);
   
-  if(!NIL_P(x_x1) && !NIL_P(y_y1) && !NIL_P(r_x2) && NIL_P(a_y2) && NIL_P(_x3) && NIL_P(_y3)) {
-    /* called with three arguments, equilateral */
-    float x = NUM2DBL(x_x1);
-    float y = NUM2DBL(y_y1);
-    float r = NUM2DBL(r_x2);
-    float a = PI - PI/3;
+  switch(argca) {
+    case 3:
+      /* called with three arguments, equilateral */
+      x = NUM2DBL(x_x1);
+      y = NUM2DBL(y_y1);
+      r = NUM2DBL(r_x2);
+      a = PI - PI/3;
     
-    x1 = x + cos(PI/2) * r;
-    y1 = y - sin(PI/2) * r;
-    x2 = x + cos(PI/2 + a) * r;
-    y2 = y - sin(PI/2 + a) * r;
-    x3 = x + cos(PI/2 + 2*a) * r;
-    y3 = y - sin(PI/2 + 2*a) * r;
+      x1 = x + cos(PI/2) * r;
+      y1 = y - sin(PI/2) * r;
+      x2 = x + cos(PI/2 + a) * r;
+      y2 = y - sin(PI/2 + a) * r;
+      x3 = x + cos(PI/2 + 2*a) * r;
+      y3 = y - sin(PI/2 + 2*a) * r;
+      break;
     
-  } else if(!NIL_P(x_x1) && !NIL_P(y_y1) && !NIL_P(r_x2) && !NIL_P(a_y2) && NIL_P(_x3) && NIL_P(_y3)) {
-    /* called with four arguments, isosceles */
-    float x = NUM2DBL(x_x1);
-    float y = NUM2DBL(y_y1);
-    float r = NUM2DBL(r_x2);
-    float a = PI - NUM2DBL(a_y2);
-    float h = (r+r/2) / sin(a/2); /* sine law, bitches */
+    case 4:
+      /* called with four arguments, isosceles */
+      x = NUM2DBL(x_x1);
+      y = NUM2DBL(y_y1);
+      r = NUM2DBL(r_x2);
+      a = PI - NUM2DBL(a_y2);
+      h = (r+r/2) / sin(a/2); /* sine law, bitches */
     
-    x1 = x + cos(PI/2) * r;
-    y1 = y - sin(PI/2) * r;
-    x2 = x1 + cos(PI + (PI - a/2)) * h;
-    y2 = y1 - sin(PI + (PI - a/2)) * h;
-    x3 = x1 + cos(a/2 - PI) * h;
-    y3 = y1 - sin(a/2 - PI) * h;
+      x1 = x + cos(PI/2) * r;
+      y1 = y - sin(PI/2) * r;
+      x2 = x1 + cos(PI + (PI - a/2)) * h;
+      y2 = y1 - sin(PI + (PI - a/2)) * h;
+      x3 = x1 + cos(a/2 - PI) * h;
+      y3 = y1 - sin(a/2 - PI) * h;
+      break;
     
-  } else if(!NIL_P(x_x1) && !NIL_P(y_y1) && !NIL_P(r_x2) && !NIL_P(a_y2) && !NIL_P(_x3) && !NIL_P(_y3)) {
-    /* called with six arguments, scalene */
-    x1 = NUM2DBL(x_x1);
-    y1 = NUM2DBL(y_y1);
-    x2 = NUM2DBL(r_x2);
-    y2 = NUM2DBL(a_y2);
-    x3 = NUM2DBL(_x3);
-    y3 = NUM2DBL(_y3);
+    case 6:
+      /* called with six arguments, scalene */
+      x1 = NUM2DBL(x_x1);
+      y1 = NUM2DBL(y_y1);
+      x2 = NUM2DBL(r_x2);
+      y2 = NUM2DBL(a_y2);
+      x3 = NUM2DBL(_x3);
+      y3 = NUM2DBL(_y3);
+      break;
     
-  } else {
-    /* some other number, raise exception */
-    rb_raise(rb_eArgError, "wrong number of arguments, expected 3, 4 or 6");
-    
+    default:
+      /* some other number, raise exception */
+      rb_raise(rb_eArgError, "wrong number of arguments, expected 3, 4 or 6");
   }
   
   ofTriangle(x1, y1, x2, y2, x3, y3);
@@ -413,16 +419,18 @@ VALUE zj_matrix(VALUE self) {
  */
 VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
-  rb_scan_args(argc, argv, "21", &x, &y, &z);
+  int argca = rb_scan_args(argc, argv, "21", &x, &y, &z);
   
-  if(NIL_P(z)) {
-    /*  called with two arguments, z is 0 */
-    ofTranslate(NUM2DBL(x), NUM2DBL(y), 0);
-    
-  } else {
-    /*  called with three arguments, use all of them */
-    ofTranslate(NUM2DBL(x), NUM2DBL(y), NUM2DBL(z));
-    
+  switch(argca) {
+    case 2:
+      /*  called with two arguments, z is 0 */
+      ofTranslate(NUM2DBL(x), NUM2DBL(y), 0);
+      break;
+      
+    case 3:
+      /*  called with three arguments, use all of them */
+      ofTranslate(NUM2DBL(x), NUM2DBL(y), NUM2DBL(z));
+      break;
   }
   
   return Qnil;
@@ -446,20 +454,23 @@ VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
  */
 VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
-  rb_scan_args(argc, argv, "12", &x, &y, &z);
+  int argca = rb_scan_args(argc, argv, "12", &x, &y, &z);
   
-  if(!NIL_P(x) && NIL_P(y) && NIL_P(z)) {
-    /*  called with one argument, x for everything */
-    ofScale(NUM2DBL(x), NUM2DBL(x), NUM2DBL(x));
+  switch(argca) {
+    case 1:
+      /*  called with one argument, x for everything */
+      ofScale(NUM2DBL(x), NUM2DBL(x), NUM2DBL(x));
+      break;
     
-  } else if(!NIL_P(x) && !NIL_P(y) && NIL_P(z)) {
-    /*  called with two arguments, z is 0 */
-    ofScale(NUM2DBL(x), NUM2DBL(y), 0);
+    case 2:
+      /*  called with two arguments, z is 0 */
+      ofScale(NUM2DBL(x), NUM2DBL(y), 0);
+      break;
     
-  } else {
-    /*  called with three arguments, use all of them */
-    ofScale(NUM2DBL(x), NUM2DBL(y), NUM2DBL(z));
-    
+    case 3:
+      /*  called with three arguments, use all of them */
+      ofScale(NUM2DBL(x), NUM2DBL(y), NUM2DBL(z));
+      break;
   }
   
   return Qnil;
@@ -469,12 +480,12 @@ VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
 /*  TODO finish rotate method */
 VALUE zj_rotate(int argc, VALUE* argv, VALUE klass) {
   VALUE arg1, arg2, arg3;
-  rb_scan_args(argc, argv, "12", &arg1, &arg2, &arg3);
+  int argca = rb_scan_args(argc, argv, "12", &arg1, &arg2, &arg3);
   
-  if(NIL_P(arg2) && NIL_P(arg3)) {
+  switch(argca) {
+    case 1:
     /*  called with one argument, treat it as z */
     ofRotate(NUM2DBL(arg1), 0, 0, 1);
-    
   }
   
   return Qnil;
@@ -488,20 +499,22 @@ VALUE zj_begin_shape(VALUE self) {
 VALUE zj_end_shape(int argc, VALUE* argv, VALUE klass) {
   VALUE rbClosed = Qnil;
   bool cClosed = false;
-  rb_scan_args(argc, argv, "01", &rbClosed);
+  int argca = rb_scan_args(argc, argv, "01", &rbClosed);
   
-  if(NIL_P(rbClosed)) {
-    cClosed = false;
-    
-  } else {
-    if(SYM2ID(rbClosed) == rb_intern("closed")) {
-      cClosed = true;
+  switch(argca) {
+    case 0:
+      cClosed = false;
+      break;
       
-    } else {
-      rb_raise(rb_eArgError, "Expected symbol :closed or nil!");
+    case 1:
+      if(SYM2ID(rbClosed) == rb_intern("closed")) {
+        cClosed = true;
       
-    }
-    
+      } else {
+        rb_raise(rb_eArgError, "Expected symbol :closed or nil!");
+      
+      }
+      break;
   }
   
   ofEndShape(cClosed);
@@ -511,20 +524,22 @@ VALUE zj_end_shape(int argc, VALUE* argv, VALUE klass) {
 VALUE zj_shape(int argc, VALUE* argv, VALUE klass) {
   VALUE rbClosed = Qnil;
   bool cClosed = false;
-  rb_scan_args(argc, argv, "01", &rbClosed);
+  int argca = rb_scan_args(argc, argv, "01", &rbClosed);
   
-  if(NIL_P(rbClosed)) {
-    cClosed = false;
-    
-  } else {
-    if(SYM2ID(rbClosed) == rb_intern("closed")) {
-      cClosed = true;
+  switch(argca) {
+    case 0:
+      cClosed = false;
+      break;
       
-    } else {
-      rb_raise(rb_eArgError, "Expected symbol :closed or nil!");
+    case 1:
+      if(SYM2ID(rbClosed) == rb_intern("closed")) {
+        cClosed = true;
       
-    }
-    
+      } else {
+        rb_raise(rb_eArgError, "Expected symbol :closed or nil!");
+      
+      }
+      break;
   }
   
   ofBeginShape();
@@ -551,17 +566,18 @@ VALUE zj_bezier_vertex(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE
 
 VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
   VALUE new_resolution;
-  rb_scan_args(argc, argv, "01", &new_resolution);
+  int argca = rb_scan_args(argc, argv, "01", &new_resolution);
   
-  if(NIL_P(new_resolution)) {
-    /*  called without argument, return current curve resolution */
-    return _zj_curve_resolution;
+  switch(argca) {
+    case 0:
+      /*  called without argument, return current curve resolution */
+      return _zj_curve_resolution;
     
-  } else {
-    /*  called with argument, set curve resolution */
-    _zj_curve_resolution = new_resolution;
-    ofSetCurveResolution(NUM2INT(_zj_curve_resolution));
-    
+    case 1:
+      /*  called with argument, set curve resolution */
+      _zj_curve_resolution = new_resolution;
+      ofSetCurveResolution(NUM2INT(_zj_curve_resolution));
+      break;
   }
   
   return Qnil;
@@ -569,17 +585,18 @@ VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
 
 VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
   VALUE new_resolution;
-  rb_scan_args(argc, argv, "01", &new_resolution);
+  int argca = rb_scan_args(argc, argv, "01", &new_resolution);
   
-  if(NIL_P(new_resolution)) {
-    /*  called without argument, return current circle resolution */
-    return _zj_circle_resolution;
-    
-  } else {
-    /*  called with argument, set circle resolution */
-    _zj_circle_resolution = new_resolution;
-    ofSetCircleResolution(NUM2INT(_zj_circle_resolution));
-    
+  switch(argca) {
+    case 0:
+      /*  called without argument, return current circle resolution */
+      return _zj_circle_resolution;
+      
+    case 1:
+      /*  called with argument, set circle resolution */
+      _zj_circle_resolution = new_resolution;
+      ofSetCircleResolution(NUM2INT(_zj_circle_resolution));
+      break;
   }
   
   return Qnil;
@@ -611,25 +628,29 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  */
 VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
   VALUE new_smoothing;
-  rb_scan_args(argc, argv, "01", &new_smoothing);
-  
-  if(NIL_P(new_smoothing)) {
-    /*  called without argument, return current smoothing */
-    return _zj_smoothing;
-    
-  } else if(new_smoothing == Qtrue) {
-    /*  called with true, enable smoothing */
-    _zj_smoothing = new_smoothing;
-    ofEnableSmoothing();
-    
-  } else if(new_smoothing == Qfalse) {
-    /*  called with false, disable smoothing */
-    _zj_smoothing = new_smoothing;
-    ofDisableSmoothing();
-    
-  } else {
-    rb_raise(rb_eArgError, "Expected true or false!");
-    
+  int argca = rb_scan_args(argc, argv, "01", &new_smoothing);
+
+  switch(argca) {
+    case 0:
+      /*  called without argument, return current smoothing */
+      return _zj_smoothing;
+
+    case 1:
+      if(new_smoothing == Qtrue) {
+        /*  called with true, enable smoothing */
+        _zj_smoothing = new_smoothing;
+        ofEnableSmoothing();
+        
+      } else if(new_smoothing == Qfalse) {
+        /*  called with false, disable smoothing */
+        _zj_smoothing = new_smoothing;
+        ofDisableSmoothing();
+        
+      } else {
+        rb_raise(rb_eArgError, "Expected true or false!");
+        
+      }
+      break;
   }
   
   return Qnil;
@@ -637,25 +658,29 @@ VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
 
 VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
   VALUE new_alpha_blending;
-  rb_scan_args(argc, argv, "01", &new_alpha_blending);
-  
-  if(NIL_P(new_alpha_blending)) {
-    /*  called without argument, return current alpha blending */
-    return _zj_alpha_blending;
-    
-  } else if(new_alpha_blending == Qtrue) {
-    /*  called with true, enable alpha blending */
-    _zj_alpha_blending = new_alpha_blending;
-    ofEnableAlphaBlending();
-    
-  } else if(new_alpha_blending == Qfalse) {
-    /*  called with false, disable alpha blending */
-    _zj_alpha_blending = new_alpha_blending;
-    ofDisableAlphaBlending();
-    
-  } else {
-    rb_raise(rb_eArgError, "Expected true or false!");
-    
+  int argca = rb_scan_args(argc, argv, "01", &new_alpha_blending);
+
+  switch(argca) {
+    case 0:
+      /*  called without argument, return current alpha blending */
+      return _zj_alpha_blending;
+
+    case 1:
+      if(new_alpha_blending == Qtrue) {
+        /*  called with true, enable alpha blending */
+        _zj_alpha_blending = new_alpha_blending;
+        ofEnableAlphaBlending();
+        
+      } else if(new_alpha_blending == Qfalse) {
+        /*  called with false, disable alpha blending */
+        _zj_alpha_blending = new_alpha_blending;
+        ofDisableAlphaBlending();
+        
+      } else {
+        rb_raise(rb_eArgError, "Expected true or false!");
+        
+      }
+      break;
   }
   
   return Qnil;
@@ -663,25 +688,29 @@ VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
 
 VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
   VALUE new_arb_textures;
-  rb_scan_args(argc, argv, "01", &new_arb_textures);
-  
-  if(NIL_P(new_arb_textures)) {
-    /*  called without argument, return current arb texture setting */
-    return _zj_arb_textures;
-    
-  } else if(new_arb_textures == Qtrue) {
-    /*  called with true, enable arb textures */
-    _zj_arb_textures = new_arb_textures;
-    ofEnableArbTex();
-    
-  } else if(new_arb_textures == Qfalse) {
-    /*  called with false, disable arb textures */
-    _zj_arb_textures = new_arb_textures;
-    ofDisableArbTex();
-    
-  } else {
-    rb_raise(rb_eArgError, "Expected true or false!");
-    
+  int argca = rb_scan_args(argc, argv, "01", &new_arb_textures);
+
+  switch(argca) {
+    case 0:
+      /*  called without argument, return current arb texture setting */
+      return _zj_arb_textures;
+
+    case 1:
+      if(new_arb_textures == Qtrue) {
+        /*  called with true, enable arb textures */
+        _zj_arb_textures = new_arb_textures;
+        ofEnableArbTex();
+        
+      } else if(new_arb_textures == Qfalse) {
+        /*  called with false, disable arb textures */
+        _zj_arb_textures = new_arb_textures;
+        ofDisableArbTex();
+        
+      } else {
+        rb_raise(rb_eArgError, "Expected true or false!");
+        
+      }
+      break;
   }
   
   return Qnil;
@@ -689,16 +718,17 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
 
 VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
   VALUE new_line_width;
-  rb_scan_args(argc, argv, "01", &new_line_width);
-  
-  if(NIL_P(new_line_width)) {
-    /*  called without argument, return current line width */
-    return _zj_line_width;
-    
-  } else {
-    /*  called with argument, set line width */
-    ofSetLineWidth(NUM2DBL(new_line_width));
-    
+  int argca = rb_scan_args(argc, argv, "01", &new_line_width);
+
+  switch(argca) {
+    case 0:
+      /*  called without argument, return current line width */
+      return _zj_line_width;
+
+    case 1:
+      /*  called with argument, set line width */
+      ofSetLineWidth(NUM2DBL(new_line_width));
+      break;
   }
   
   return Qnil;
@@ -724,31 +754,34 @@ VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
     
   }
   
-  
   return Qnil;
 }
 
 VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
   VALUE new_background_auto;
-  rb_scan_args(argc, argv, "01", &new_background_auto);
-  
-  if(NIL_P(new_background_auto)) {
-    /*  called without argument, return current background auto setting */
-    return _zj_background_auto;
-    
-  } else if(new_background_auto == Qtrue){
-    /*  called with true, enable auto background */
-    _zj_background_auto = new_background_auto;
-    ofSetBackgroundAuto(true);
-    
-  } else if(new_background_auto == Qfalse) {
-    /*  called with false, disable auto background */
-    _zj_background_auto = new_background_auto;
-    ofSetBackgroundAuto(false);
-    
-  } else {
-    rb_raise(rb_eArgError, "Expected true or false!");
-    
+  int argca = rb_scan_args(argc, argv, "01", &new_background_auto);
+
+  switch(argca) {
+    case 0:
+      /*  called without argument, return current background auto setting */
+      return _zj_background_auto;
+
+    case 1:
+      if(new_background_auto == Qtrue){
+        /*  called with true, enable auto background */
+        _zj_background_auto = new_background_auto;
+        ofSetBackgroundAuto(true);
+        
+      } else if(new_background_auto == Qfalse) {
+        /*  called with false, disable auto background */
+        _zj_background_auto = new_background_auto;
+        ofSetBackgroundAuto(false);
+        
+      } else {
+        rb_raise(rb_eArgError, "Expected true or false!");
+        
+      }
+      break;
   }
   
   return Qnil;
@@ -771,25 +804,29 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
  */
 VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
   VALUE new_fill;
-  rb_scan_args(argc, argv, "01", &new_fill);
-  
-  if(NIL_P(new_fill)) {
-    /*  called without argument, return current fill setting */
-    return _zj_fill;
-    
-  } else if(new_fill == Qtrue) {
-    /*  called with true, enable fill */
-    _zj_fill = new_fill;
-    ofFill();
-    
-  } else if(new_fill == Qfalse) {
-    /*  called with false, disable fill */
-    _zj_fill = new_fill;
-    ofNoFill();
-    
-  } else {
-    rb_raise(rb_eArgError, "Expected true or false!");
-    
+  int argca = rb_scan_args(argc, argv, "01", &new_fill);
+
+  switch(argca) {
+    case 0:
+      /*  called without argument, return current fill setting */
+      return _zj_fill;
+
+    case 1:
+      if(new_fill == Qtrue) {
+        /*  called with true, enable fill */
+        _zj_fill = new_fill;
+        ofFill();
+        
+      } else if(new_fill == Qfalse) {
+        /*  called with false, disable fill */
+        _zj_fill = new_fill;
+        ofNoFill();
+        
+      } else {
+        rb_raise(rb_eArgError, "Expected true or false!");
+        
+      }
+      break;
   }
   
   return Qnil;
