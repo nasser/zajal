@@ -1,9 +1,3 @@
-/* 
- * Typography Module
- * 
- * Functionality for writing text to the sketch window.
- */
-
 #include "ruby.h"
 #include "ofMain.h"
 #include "zajal.h"
@@ -14,6 +8,10 @@
 
 /* global typography module and font class */
 VALUE zj_mTypography;
+
+/* 
+ * Is this where you do it?
+ */
 VALUE zj_cFont;
 
 void zj_typography_reset_stacked_text() {
@@ -173,18 +171,34 @@ VALUE zj_font_character_count(VALUE self) {
 /* 
  * Draws text to the screen.
  * 
- * s - The text to draw to the screen
+ * @overload text str
+ *   Without a position, {#text} will automatically stack the given string in
+ *   the corner of the window. This is very useful for debugging.
  * 
- * Examples
+ *   @param [#to_s] str The text to draw to the screen
  * 
- *   # draw some stacked
- *   text "Hello, there!"
- *   text "Buddy"
+ *   @example Stacked text
+ *     text "hello"
+ *     text "there"
+ *     text "buddy"
+ *   @example Non-string objects
+ *     text Image.new
+ *     text "there"
+ *     text "buddy"
+ *   @example Debugging
+ *     text framerate
  * 
- *   # draw something else
- *   text "What?!", width/2, height/2
+ * @overload text str, x, y
+ *   Given a position, {#text} will draw the given string there
  * 
- * Returns nothing
+ *   @param [#to_s] str The text to draw to the screen
+ *   @param [Numeric] x x coordinate of the left-most character
+ *   @param [Numeric] y y coordinate of the baseline.
+ * 
+ *   @example Positioned text
+ *     text "Center", width/2, height/2
+ * 
+ * @todo Support TrueType fonts
  */
 VALUE zj_typography_text(int argc, VALUE* argv, VALUE klass) {
   VALUE s, x, y;
@@ -223,7 +237,6 @@ void Init_Typography() {
   INTERNAL_SET(zj_mTypography, font_hash, rb_hash_new());
   rb_define_private_method(zj_mTypography, "text", RUBY_METHOD_FUNC(zj_typography_text), -1);
   
-  /* the Image class */
   zj_cFont = rb_define_class_under(zj_mTypography, "Font", rb_cObject);
   rb_define_singleton_method(zj_cFont, "new", RUBY_METHOD_FUNC(zj_font_new), -1);
   rb_define_method(zj_cFont, "initialize", RUBY_METHOD_FUNC(zj_font_initialize), -1);

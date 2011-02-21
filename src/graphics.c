@@ -1,6 +1,6 @@
 /* 
  * Methods for drawing shapes and text, changng colors and other visual
- * things. Meant to wrap the `ofGraphics.h` functions in openFrameworks.
+ * things. Meant to wrap the +ofGraphics.h+ functions in openFrameworks.
  */
 
 #include "ruby.h"
@@ -104,32 +104,15 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
 }
 
 /* 
- * Gets and sets the current rectangle mode. Calling without an argument
- * returns the current mode, calling with a Symbol sets it. The rectangle mode
- * controls how rectangles and squares are drawn. A rectangle mode of
- * `:center` means squares and rectangles are centered at their x and y
- * coordinates, while `:corner` places their top left corner at the their x
- * and y coordinates. The default is `:corner`.
+ * Gets and sets the current rectangle mode.
  * 
- * rectangle_mode
- * rectangle_mode mode
+ * @overload rectangle_mode
+ *   Get the current +rectangle_mode+
+ *   @return [Symbol] +:corner+ or +:center+
  * 
- * mode - The new rectangle mode, either `:corner` or `:center`
- * 
- * Examples
- * 
- *   size 200
- *   
- *   color 128
- *   rectangle_mode :center
- *   square 100, 100, 75
- *   
- *   color 240
- *   rectangle_mode :corner
- *   square 100, 100, 75
- * 
- * Returns `:corner` or `:center` if called without an argument, nothing
- * otherwise
+ * @overload rectangle_mode mode
+ *   Set the current +rectangle_mode+
+ *   @param [Symbol] mode +:corner+ or +:center+
  */
 VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   VALUE new_rectmode;
@@ -174,26 +157,23 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
 }
 
 /*
- * Draws a rectangle. The way the x and y arguments are interpreted depends on
- * the current rectangle mode.
+ * Draws a rectangle. The way the +x+ and +y+ arguments are interpreted
+ * depends on the current rectangle mode.
  * 
- * rectangle x, y, w, h
+ * @overload rectangle x, y, w, h
  * 
- * x - The x coordinate of the center or corner, depending on `rectangle_mode`
- * y - The y coordinate of the center or corner, depending on `rectangle_mode`
- * w - The width of the rectangle
- * h - The height of the rectangle
+ * @param [Numeric] x The x coordinate of the center or corner, depending on rectangle mode
+ * @param [Numeric] y The y coordinate of the center or corner, depending on rectangle_mode
+ * @param [Numeric] w The width of the rectangle
+ * @param [Numeric] h The height of the rectangle
  * 
- * Examples
- * 
+ * @example
  *   # draw a small rectangle
  *   rectangle 20, 20, 5, 10
  * 
  *   # draw a centered rectangle
  *   rectangle_mode :center
  *   rectangle 10, 10, 50, 50
- * 
- * Returns `nil`
  */
 VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
   ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(w), NUM2DBL(h));
@@ -213,18 +193,14 @@ VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
  * Draws a square.The way the x and y arguments are interpreted depends on
  * the current rectangle mode.
  * 
- * square x, y, s
+ * @overload square x, y, s
  * 
- * x - The x coordinate
- * y - The y coordinate
- * s - The side of the square's sides
+ * @param [Numeric] x The x coordinate
+ * @param [Numeric] y The y coordinate
+ * @param [Numeric] s The side of the square's sides
  * 
- * Examples
- * 
- *   # draw a small square
+ * @example Small square
  *   square 100, 100, 5
- * 
- * Returns `nil`
  */
 VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
   ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(s), NUM2DBL(s));
@@ -243,23 +219,21 @@ VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
 /* 
  * Draws an equilateral, isosceles or scalene triangle.
  * 
- * triangle x, y, r
- * triangle x, y, r, a
- * triangle x1, y1, x2, y2, x3, y3
+ * @overload triangle x, y, r
+ * @overload triangle x, y, r, a
+ * @overload triangle x1, y1, x2, y2, x3, y3
  * 
- * x - x coordinate of the triangle's center
- * y - y coordinate of the triangle's center
- * r - The "radius" of the triangle. More specifically, the radius of the
- *     circle the triangle is inscribed in.
- * a - The size of the isosceles angle in radians
- * x1 - x coordinate of the triangle's first point
- * y1 - y coordinate of the triangle's first point
- * x2 - x coordinate of the triangle's second point
- * y2 - y coordinate of the triangle's second point
- * x3 - x coordinate of the triangle's third point
- * y3 - y coordinate of the triangle's third point
- * 
- * Returns `nil`
+ * @param [Numeric] x x coordinate of the triangle's center
+ * @param [Numeric] y y coordinate of the triangle's center
+ * @param [Numeric] r The "radius" of the triangle. More specifically, the
+ *                    radius of the circle the triangle is inscribed in.
+ * @param [Numeric] a The size of the isosceles angle in radians
+ * @param [Numeric] x1 x coordinate of the triangle's first point
+ * @param [Numeric] y1 y coordinate of the triangle's first point
+ * @param [Numeric] x2 x coordinate of the triangle's second point
+ * @param [Numeric] y2 y coordinate of the triangle's second point
+ * @param [Numeric] x3 x coordinate of the triangle's third point
+ * @param [Numeric] y3 y coordinate of the triangle's third point
  */
 VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
   float x1, y1, x2, y2, x3, y3;
@@ -330,13 +304,11 @@ VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
 /* 
  * Draws a circle.
  * 
- * circle x, y, r
+ * @overload circle x, y, r
  * 
- * x - the x coordinate of the circle's center
- * y - the y coordinate of the circle's center
- * r - the circle's radius
- * 
- * Returns `nil`
+ * @param [Numeric] x The x coordinate of the circle's center
+ * @param [Numeric] y The y coordinate of the circle's center
+ * @param [Numeric] r The circle's radius
  */
 VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
   ofCircle(NUM2DBL(x), NUM2DBL(y), NUM2DBL(radius));
@@ -355,14 +327,12 @@ VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
 /* 
  * Draws an ellipse.
  * 
- * ellipse x, y, w, h
+ * @overload ellipse x, y, w, h
  * 
- * x - the x coordinate of the ellipse's center
- * y - the y coordinate of the ellipse's center
- * w - the width of the ellipse
- * h - the height of the ellipse
- * 
- * Returns `nil`
+ * @param [Numeric] x the x coordinate of the ellipse's center
+ * @param [Numeric] y the y coordinate of the ellipse's center
+ * @param [Numeric] w the width of the ellipse
+ * @param [Numeric] h the height of the ellipse
  */
 VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
   ofEllipse(NUM2DBL(x), NUM2DBL(y), NUM2DBL(width), NUM2DBL(height));
@@ -380,23 +350,19 @@ VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
 
 /* 
  * Draw a line between two points. The width of the line is determined by
- * `line_width` methods.
+ * {#line_width}.
  * 
- * line x1, y1, x2, y2
+ * @overload line x1, y1, x2, y2
  * 
- * x1 - the x coordinate of the first point
- * y1 - the y coordinate of the first point
- * x2 - the x coordinate of the second point
- * y2 - the y coordinate of the second point
+ * @param [Numeric] x1 the x coordinate of the first point
+ * @param [Numeric] y1 the y coordinate of the first point
+ * @param [Numeric] x2 the x coordinate of the second point
+ * @param [Numeric] y2 the y coordinate of the second point
  * 
- * Examples
- * 
- *   # draw a triangle that fills the window
+ * @example A triangle that fills the window
  *   line 0, 0, width, 0
  *   line 0, 0, width/2, height
  *   line width/2, height, width, 0
- * 
- * Returns `nil`
  */
 VALUE zj_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
   ofLine(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2));
@@ -423,6 +389,22 @@ VALUE zj_pop_matrix(VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Runs code in an isolated matrix. Using this method is equivalent to calling
+ * {#push_matrix}, running the code in the block, then calling {#pop_matrix},
+ * just cleaner. It is useful when using {#translate}, {#rotate} and {#scale}
+ * as it contains their effects (in fact, if not using any transform methods
+ * {#matrix} will have no visible effect).
+ * 
+ * @example Draw objects centered
+ *   matrix {
+ *     translate width/2, height/2
+ *     circle 0, 0, 30 # this circle is drawn in the center of the window
+ *   }
+ *   circle 0, 0, 30 # this circle -- with the same arguments -- is drawn in the corner
+ * 
+ * @yield The code to run, usually containing transform and drawing commands
+ */
 VALUE zj_matrix(VALUE self) {
   ofPushMatrix();
   VALUE returnValue = rb_yield(Qnil);
@@ -434,22 +416,18 @@ VALUE zj_matrix(VALUE self) {
  * Apply a translation transformation to the current matrix. Accepts 2D and
  * 3D coordinates.
  * 
- * translate x, y
- * translate x, y, z
+ * @overload translate x, y, z=0
  * 
- * x - The distance to move in x
- * y - The distance to move in y
- * z - The distance to move in z
+ * @param [Numeric] x The distance to move in x
+ * @param [Numeric] y The distance to move in y
+ * @param [Numeric] z The distance to move in z
  * 
- * Examples
- * 
+ * @example
  *   matrix {
  *     # move origin to center of screen
  *     translate width/2, height/2
  *     circle 0, 0, 10
  *   }
- * 
- * Returns `nil`
  */
 VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
@@ -471,20 +449,17 @@ VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
 }
 
 /*
- * Apply a scaling transformation to the current matrix. With one parameter,
- * scales equally in all directions. With two or three parameters, scales in
- * the given x, y, and z directions.
+ * Apply a scaling transformation to the current matrix about the origin.
  * 
- * scale s
- * scale x, y
- * scale x, y, z
+ * @overload scale s
+ *   Called with one parameter, scales equally in all directions
+ *   @param [Numeric] s The amount to scale by
  * 
- * s - The amount to scale by in all directions
- * x - The amount to scale by in x
- * y - The amount to scale by in y
- * z - The amount to scale by in z
- * 
- * Returns `nil`
+ * @overload scale x, y, z=1
+ *   Called with two or three parameter, scales in x, y and z directions
+ *   @param [Numeric] x The amount to scale by in x
+ *   @param [Numeric] y The amount to scale by in y
+ *   @param [Numeric] z The amount to scale by in z
  */
 VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
@@ -510,8 +485,10 @@ VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-/*  TODO rotate method deviates significantly from of and disables advanced functionality. fix this. */
-/*  TODO finish rotate method */
+/* 
+ * @overload rotate angle
+ * @todo finish rotate method, it deviates significantly from OF and disables advanced functionality
+ */
 VALUE zj_rotate(int argc, VALUE* argv, VALUE klass) {
   VALUE arg1, arg2, arg3;
   int argca = rb_scan_args(argc, argv, "12", &arg1, &arg2, &arg3);
@@ -641,13 +618,13 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  * will be drawn antialiased or with jagged pixel edges. Smoothing slows
  * drawing down, so it defaults to false.
  * 
- * smoothing
- * smoothing state
+ * @overload smoothing
+ *   @return [Boolean] +true+ if smoothing is on, +false+ if it is off.
  * 
- * state - Optional, true to enable smoothing or false to disable it
+ * @overload smoothing state
+ *   @param [Boolean] state +true+ to enable smoothing or +false+ to disable it
  * 
- * Examples
- * 
+ * @example
  *   # draw jagged lines
  *   smoothing false
  *   line 10, 10, 13, 17
@@ -656,9 +633,6 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  *   # draw smooth circles
  *   smoothing true
  *   circle 15, 15, 5
- * 
- * Returns `nil` if called with an argument, otherwise current smoothing
- * value as true or false
  */
 VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
   VALUE new_smoothing;
@@ -690,6 +664,22 @@ VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * Alpha blending setting. Also known as transparency, alpha blending allows
+ * you to specify alpha values in colors and have them blend together. It is
+ * enabled by default, but disabling it might improve performance.
+ * 
+ * @overload alpha_blending
+ *   Called with no argument, returns the current alpha blending state
+ *   @return [Boolean] +true+ if blending is on, +false+ if its off
+ * @overload alpha_blending state
+ *   Called with an argument, sets the current alpha blending state
+ *   @param [Boolean] state +true+ to turn blending on, +false+ to turn it off
+ *   @return [nil] Nothing
+ * 
+ * @see #color 
+ * @see #background 
+ */
 VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
   VALUE new_alpha_blending;
   int argca = rb_scan_args(argc, argv, "01", &new_alpha_blending);
@@ -720,6 +710,10 @@ VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * @overload arb_textures
+ * @overload arb_textures state
+ */
 VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
   VALUE new_arb_textures;
   int argca = rb_scan_args(argc, argv, "01", &new_arb_textures);
@@ -750,6 +744,10 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * @overload line_width
+ * @overload line_width wid
+ */
 VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
   VALUE new_line_width;
   int argca = rb_scan_args(argc, argv, "01", &new_line_width);
@@ -768,6 +766,14 @@ VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * @overload background name
+ * @overload background name, a
+ * @overload background grey
+ * @overload background grey, a
+ * @overload background r, g, b
+ * @overload background r, g, b, a
+ */
 VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
   int r, g, b, a;
   if(zj_graphics_make_color(argc, argv, &r, &g, &b, &a)) {
@@ -824,17 +830,16 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
 /* 
  * Controls whether shapes are filled in or not
  * 
- * fill state
+ * @overload fill
+ *   @return [Boolean]
+ * @overload fill state
  * 
- * state - `true` or `false`, enabling or disabling filling respectively
+ * @param [Boolean] state +true+ or +false+, enabling or disabling filling respectively
  * 
- * Examples
- * 
+ * @example
  *   # draw outlines
  *   fill false
  *   circle 10, 10, 5
- * 
- * Returns `nil`
  */
 VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
   VALUE new_fill;
@@ -868,32 +873,34 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
 
 
 /* 
- * Sets the current color to an RGBA value
+ * Sets the current color. Everything drawn following this command will be in
+ * this color. All +color+ parameters are numbers from 0 to 255.
  * 
- * color r, g, b, a
- * color r, g, b
- * color grey
- * color grey, a
+ * @overload color name
+ * @overload color name, a
+ * @overload color grey
+ * @overload color grey, a
+ * @overload color r, g, b
+ * @overload color r, g, b, a
  * 
- * r - Amount of red
- * g - Amount of green
- * b - Amount of blue
- * a - Amount of alpha
- * grey - Level of grey
- * 
- * Examples
- * 
- *   # draws the french flag
- *   color 0, 0, 200, 255
- *   rectangle 0, 0, 50, 200
+ * @example Drawing the french flag
+ *   color 0, 0, 200
+ *   rectangle 0, 0, 50, 100
  *   
- *   color 200, 200, 200, 255
- *   rectangle 0, 50, 50, 200
- *   
- *   color 200, 0, 0, 255
- *   rectangle 0, 100, 50, 200
+ *   color 200, 200, 200
+ *   rectangle 50, 0, 50, 100
+ *     
+ *   color 200, 0, 0
+ *   rectangle 100, 0, 50, 100
  * 
- * Returns `nil`
+ * @see #alpha_blending
+ * 
+ * @param [Fixnum] r Amount of red
+ * @param [Fixnum] g Amount of green
+ * @param [Fixnum] b Amount of blue
+ * @param [Fixnum] a Amount of alpha
+ * 
+ * @todo Should return the current color when called without arguments.
  */
 VALUE zj_color(int argc, VALUE* argv, VALUE klass) {
   int r, g, b, a;
