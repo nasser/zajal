@@ -1,0 +1,1 @@
+YARD::Templates::Engine.register_template_path "/Users/nasser/Workspace/zajal/util/docs/templates"
