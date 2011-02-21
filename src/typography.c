@@ -221,19 +221,19 @@ void Init_Typography() {
   
   /* image functions */
   INTERNAL_SET(zj_mTypography, font_hash, rb_hash_new());
-  rb_define_private_method(zj_mTypography, "text", RB_FUNC(zj_typography_text), -1);
+  rb_define_private_method(zj_mTypography, "text", RUBY_METHOD_FUNC(zj_typography_text), -1);
   
   /* the Image class */
   zj_cFont = rb_define_class_under(zj_mTypography, "Font", rb_cObject);
-  rb_define_singleton_method(zj_cFont, "new", RB_FUNC(zj_font_new), -1);
-  rb_define_method(zj_cFont, "initialize", RB_FUNC(zj_font_initialize), -1);
-  rb_define_method(zj_cFont, "load", RB_FUNC(zj_font_load), 2);
-  rb_define_method(zj_cFont, "draw", RB_FUNC(zj_font_draw), -1);
-  rb_define_method(zj_cFont, "line_height", RB_FUNC(zj_font_line_height), -1);
-  rb_define_method(zj_cFont, "width_of", RB_FUNC(zj_font_width_of), 1);
-  rb_define_method(zj_cFont, "height_of", RB_FUNC(zj_font_height_of), 1);
-  rb_define_method(zj_cFont, "loaded?", RB_FUNC(zj_font_loaded_p), 0);
-  rb_define_method(zj_cFont, "anti_aliased?", RB_FUNC(zj_font_anti_aliased_p), 0);
-  rb_define_method(zj_cFont, "full_character_set?", RB_FUNC(zj_font_full_character_set_p), 0);
-  rb_define_method(zj_cFont, "character_count", RB_FUNC(zj_font_character_count), 0);
+  rb_define_singleton_method(zj_cFont, "new", RUBY_METHOD_FUNC(zj_font_new), -1);
+  rb_define_method(zj_cFont, "initialize", RUBY_METHOD_FUNC(zj_font_initialize), -1);
+  rb_define_method(zj_cFont, "load", RUBY_METHOD_FUNC(zj_font_load), 2);
+  rb_define_method(zj_cFont, "draw", RUBY_METHOD_FUNC(zj_font_draw), -1);
+  rb_define_method(zj_cFont, "line_height", RUBY_METHOD_FUNC(zj_font_line_height), -1);
+  rb_define_method(zj_cFont, "width_of", RUBY_METHOD_FUNC(zj_font_width_of), 1);
+  rb_define_method(zj_cFont, "height_of", RUBY_METHOD_FUNC(zj_font_height_of), 1);
+  rb_define_method(zj_cFont, "loaded?", RUBY_METHOD_FUNC(zj_font_loaded_p), 0);
+  rb_define_method(zj_cFont, "anti_aliased?", RUBY_METHOD_FUNC(zj_font_anti_aliased_p), 0);
+  rb_define_method(zj_cFont, "full_character_set?", RUBY_METHOD_FUNC(zj_font_full_character_set_p), 0);
+  rb_define_method(zj_cFont, "character_count", RUBY_METHOD_FUNC(zj_font_character_count), 0);
 }

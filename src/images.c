@@ -403,26 +403,26 @@ void Init_Images() {
   
   /* image functions */
   INTERNAL_SET(zj_mImages, image_hash, rb_hash_new());
-  rb_define_private_method(zj_mImages, "image", RB_FUNC(zj_image_image), -1);
-  rb_define_private_method(zj_mImages, "grab_screen", RB_FUNC(zj_grab_screen), -1);
+  rb_define_private_method(zj_mImages, "image", RUBY_METHOD_FUNC(zj_image_image), -1);
+  rb_define_private_method(zj_mImages, "grab_screen", RUBY_METHOD_FUNC(zj_grab_screen), -1);
   
   /* the Image class */
   zj_cImage = rb_define_class_under(zj_mImages, "Image", rb_cObject);
-  rb_define_singleton_method(zj_cImage, "new", RB_FUNC(zj_image_new), -1);
-  rb_define_method(zj_cImage, "initialize", RB_FUNC(zj_image_initialize), -1);
-  rb_define_method(zj_cImage, "draw", RB_FUNC(zj_image_draw), -1);
-  rb_define_method(zj_cImage, "clear", RB_FUNC(zj_image_clear), 0);
-  rb_define_method(zj_cImage, "load", RB_FUNC(zj_image_load), 1);
-  rb_define_method(zj_cImage, "save", RB_FUNC(zj_image_save), 1);
-  rb_define_method(zj_cImage, "resize", RB_FUNC(zj_image_resize), -1);
-  rb_define_method(zj_cImage, "grab_screen", RB_FUNC(zj_image_grab_screen), -1);
+  rb_define_singleton_method(zj_cImage, "new", RUBY_METHOD_FUNC(zj_image_new), -1);
+  rb_define_method(zj_cImage, "initialize", RUBY_METHOD_FUNC(zj_image_initialize), -1);
+  rb_define_method(zj_cImage, "draw", RUBY_METHOD_FUNC(zj_image_draw), -1);
+  rb_define_method(zj_cImage, "clear", RUBY_METHOD_FUNC(zj_image_clear), 0);
+  rb_define_method(zj_cImage, "load", RUBY_METHOD_FUNC(zj_image_load), 1);
+  rb_define_method(zj_cImage, "save", RUBY_METHOD_FUNC(zj_image_save), 1);
+  rb_define_method(zj_cImage, "resize", RUBY_METHOD_FUNC(zj_image_resize), -1);
+  rb_define_method(zj_cImage, "grab_screen", RUBY_METHOD_FUNC(zj_image_grab_screen), -1);
   
-  rb_define_method(zj_cImage, "get_pixel", RB_FUNC(zj_image_get_pixel), 2);
-  rb_define_method(zj_cImage, "each_pixel", RB_FUNC(zj_image_each_pixel), -1);
+  rb_define_method(zj_cImage, "get_pixel", RUBY_METHOD_FUNC(zj_image_get_pixel), 2);
+  rb_define_method(zj_cImage, "each_pixel", RUBY_METHOD_FUNC(zj_image_each_pixel), -1);
   
-  rb_define_method(zj_cImage, "type", RB_FUNC(zj_image_type), -1);
-  rb_define_method(zj_cImage, "bpp", RB_FUNC(zj_image_bpp), 0);
+  rb_define_method(zj_cImage, "type", RUBY_METHOD_FUNC(zj_image_type), -1);
+  rb_define_method(zj_cImage, "bpp", RUBY_METHOD_FUNC(zj_image_bpp), 0);
   
-  rb_define_method(zj_cImage, "width", RB_FUNC(zj_image_width), -1);
-  rb_define_method(zj_cImage, "height", RB_FUNC(zj_image_height), -1);
+  rb_define_method(zj_cImage, "width", RUBY_METHOD_FUNC(zj_image_width), -1);
+  rb_define_method(zj_cImage, "height", RUBY_METHOD_FUNC(zj_image_height), -1);
 }

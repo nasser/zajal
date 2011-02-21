@@ -134,22 +134,22 @@ void Init_Mathematics() {
   zj_mMathematics = rb_define_module_under(zj_mZajal, "Mathematics");
   rb_define_module_under(zj_mMathematics, "Internals");
   
-  rb_define_private_method(zj_mMathematics, "seed_random", RB_FUNC(zj_seed_random), -1);
-  rb_define_private_method(zj_mMathematics, "random", RB_FUNC(zj_random), -1);
-  rb_define_private_method(zj_mMathematics, "random_width", RB_FUNC(zj_random_width), 0);
-  rb_define_private_method(zj_mMathematics, "random_height", RB_FUNC(zj_random_height), 0);
+  rb_define_private_method(zj_mMathematics, "seed_random", RUBY_METHOD_FUNC(zj_seed_random), -1);
+  rb_define_private_method(zj_mMathematics, "random", RUBY_METHOD_FUNC(zj_random), -1);
+  rb_define_private_method(zj_mMathematics, "random_width", RUBY_METHOD_FUNC(zj_random_width), 0);
+  rb_define_private_method(zj_mMathematics, "random_height", RUBY_METHOD_FUNC(zj_random_height), 0);
   
-  rb_define_private_method(zj_mMathematics, "noise", RB_FUNC(zj_noise), -1);
-  rb_define_private_method(zj_mMathematics, "signed_noise", RB_FUNC(zj_signed_noise), -1);
+  rb_define_private_method(zj_mMathematics, "noise", RUBY_METHOD_FUNC(zj_noise), -1);
+  rb_define_private_method(zj_mMathematics, "signed_noise", RUBY_METHOD_FUNC(zj_signed_noise), -1);
   
   rb_define_const(zj_mMathematics, "Pi", DBL2NUM(PI));
   rb_define_const(zj_mMathematics, "TwoPi", DBL2NUM(TWO_PI));
   rb_define_const(zj_mMathematics, "FourPi", DBL2NUM(FOUR_PI));
   rb_define_const(zj_mMathematics, "HalfPi", DBL2NUM(HALF_PI));
   
-  rb_define_method(rb_cNumeric, "to_deg", RB_FUNC(zj_to_deg), 0);
-  rb_define_method(rb_cNumeric, "to_rad", RB_FUNC(zj_to_rad), 0);
-  rb_define_method(rb_cNumeric, "sign", RB_FUNC(zj_sign), 0);
-  rb_define_method(rb_cNumeric, "clamp", RB_FUNC(zj_clamp), 2);
-  rb_define_method(rb_cNumeric, "normalize", RB_FUNC(zj_normalize), 2);
+  rb_define_method(rb_cNumeric, "to_deg", RUBY_METHOD_FUNC(zj_to_deg), 0);
+  rb_define_method(rb_cNumeric, "to_rad", RUBY_METHOD_FUNC(zj_to_rad), 0);
+  rb_define_method(rb_cNumeric, "sign", RUBY_METHOD_FUNC(zj_sign), 0);
+  rb_define_method(rb_cNumeric, "clamp", RUBY_METHOD_FUNC(zj_clamp), 2);
+  rb_define_method(rb_cNumeric, "normalize", RUBY_METHOD_FUNC(zj_normalize), 2);
 }

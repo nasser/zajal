@@ -132,17 +132,17 @@ void Init_Videos() {
   rb_define_module_under(zj_mVideos, "Internals");
   
   INTERNAL_SET(zj_mVideos, video_hash, rb_hash_new());
-  rb_define_private_method(zj_mVideos, "video", RB_FUNC(zj_video_video), -1);
+  rb_define_private_method(zj_mVideos, "video", RUBY_METHOD_FUNC(zj_video_video), -1);
   
   /* the Image class */
   zj_cVideo = rb_define_class_under(zj_mVideos, "Video", rb_cObject);
-  rb_define_singleton_method(zj_cVideo, "new", RB_FUNC(zj_video_new), -1);
-  rb_define_method(zj_cVideo, "initialize", RB_FUNC(zj_video_initialize), -1);
-  rb_define_method(zj_cVideo, "draw", RB_FUNC(zj_video_draw), -1);
-  rb_define_method(zj_cVideo, "load", RB_FUNC(zj_video_load), 1);
-  rb_define_method(zj_cVideo, "close", RB_FUNC(zj_video_close), 0);
-  rb_define_method(zj_cVideo, "update", RB_FUNC(zj_video_update), 0);
-  rb_define_method(zj_cVideo, "play", RB_FUNC(zj_video_play), 0);
-  rb_define_method(zj_cVideo, "stop", RB_FUNC(zj_video_stop), 0);
-  // rb_define_method(zj_cImage, "playing?", RB_FUNC(zj_video_playing_p), 0);
+  rb_define_singleton_method(zj_cVideo, "new", RUBY_METHOD_FUNC(zj_video_new), -1);
+  rb_define_method(zj_cVideo, "initialize", RUBY_METHOD_FUNC(zj_video_initialize), -1);
+  rb_define_method(zj_cVideo, "draw", RUBY_METHOD_FUNC(zj_video_draw), -1);
+  rb_define_method(zj_cVideo, "load", RUBY_METHOD_FUNC(zj_video_load), 1);
+  rb_define_method(zj_cVideo, "close", RUBY_METHOD_FUNC(zj_video_close), 0);
+  rb_define_method(zj_cVideo, "update", RUBY_METHOD_FUNC(zj_video_update), 0);
+  rb_define_method(zj_cVideo, "play", RUBY_METHOD_FUNC(zj_video_play), 0);
+  rb_define_method(zj_cVideo, "stop", RUBY_METHOD_FUNC(zj_video_stop), 0);
+  // rb_define_method(zj_cImage, "playing?", RUBY_METHOD_FUNC(zj_video_playing_p), 0);
 }

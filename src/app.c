@@ -211,19 +211,19 @@ void Init_App() {
   zj_mApp = rb_define_module_under(zj_mZajal, "App");
   rb_define_module_under(zj_mApp, "Internals");
   
-  rb_define_private_method(zj_mApp, "segfault", RB_FUNC(zj_segfault), 0);
-  rb_define_private_method(zj_mApp, "height", RB_FUNC(zj_height), -1);
-  rb_define_private_method(zj_mApp, "width", RB_FUNC(zj_width), -1);
-  rb_define_private_method(zj_mApp, "size", RB_FUNC(zj_size), -1);
-  rb_define_private_method(zj_mApp, "time", RB_FUNC(zj_time), 0);
-  rb_define_private_method(zj_mApp, "frame", RB_FUNC(zj_frame), 0);
-  rb_define_private_method(zj_mApp, "framerate", RB_FUNC(zj_framerate), -1);
-  rb_define_private_method(zj_mApp, "vertical_sync", RB_FUNC(zj_vertical_sync), -1);
-  rb_define_private_method(zj_mApp, "title", RB_FUNC(zj_title), -1);
-  rb_define_private_method(zj_mApp, "fullscreen", RB_FUNC(zj_fullscreen), -1);
-  rb_define_private_method(zj_mApp, "cursor", RB_FUNC(zj_cursor), -1);
-  rb_define_private_method(zj_mApp, "screen_width", RB_FUNC(zj_screen_width), 0);
-  rb_define_private_method(zj_mApp, "screen_height", RB_FUNC(zj_screen_height), 0);
-  rb_define_private_method(zj_mApp, "window_x", RB_FUNC(zj_window_x), -1);
-  rb_define_private_method(zj_mApp, "window_y", RB_FUNC(zj_window_y), -1);
+  rb_define_private_method(zj_mApp, "segfault", RUBY_METHOD_FUNC(zj_segfault), 0);
+  rb_define_private_method(zj_mApp, "height", RUBY_METHOD_FUNC(zj_height), -1);
+  rb_define_private_method(zj_mApp, "width", RUBY_METHOD_FUNC(zj_width), -1);
+  rb_define_private_method(zj_mApp, "size", RUBY_METHOD_FUNC(zj_size), -1);
+  rb_define_private_method(zj_mApp, "time", RUBY_METHOD_FUNC(zj_time), 0);
+  rb_define_private_method(zj_mApp, "frame", RUBY_METHOD_FUNC(zj_frame), 0);
+  rb_define_private_method(zj_mApp, "framerate", RUBY_METHOD_FUNC(zj_framerate), -1);
+  rb_define_private_method(zj_mApp, "vertical_sync", RUBY_METHOD_FUNC(zj_vertical_sync), -1);
+  rb_define_private_method(zj_mApp, "title", RUBY_METHOD_FUNC(zj_title), -1);
+  rb_define_private_method(zj_mApp, "fullscreen", RUBY_METHOD_FUNC(zj_fullscreen), -1);
+  rb_define_private_method(zj_mApp, "cursor", RUBY_METHOD_FUNC(zj_cursor), -1);
+  rb_define_private_method(zj_mApp, "screen_width", RUBY_METHOD_FUNC(zj_screen_width), 0);
+  rb_define_private_method(zj_mApp, "screen_height", RUBY_METHOD_FUNC(zj_screen_height), 0);
+  rb_define_private_method(zj_mApp, "window_x", RUBY_METHOD_FUNC(zj_window_x), -1);
+  rb_define_private_method(zj_mApp, "window_y", RUBY_METHOD_FUNC(zj_window_y), -1);
 }

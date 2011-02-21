@@ -144,7 +144,7 @@ void zajal_init() {
   Init_Typography();
   Init_Version();
   
-  rb_define_method(rb_cArray, "each", RB_FUNC(zj_ary_each), -1);
+  rb_define_method(rb_cArray, "each", RUBY_METHOD_FUNC(zj_ary_each), -1);
   
   /*  include zajal modules to Object, make them global */
   rb_include_module(rb_cObject, zj_mApp);

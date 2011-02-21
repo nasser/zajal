@@ -104,23 +104,23 @@ void Init_Events() {
   zj_mEvents = rb_define_module_under(zj_mZajal, "Events");
   rb_define_module_under(zj_mEvents, "Internals");
   
-  rb_define_private_method(zj_mEvents, "setup", RB_FUNC(zj_setup), 0);
-  rb_define_private_method(zj_mEvents, "update", RB_FUNC(zj_update), 0);
-  rb_define_private_method(zj_mEvents, "draw", RB_FUNC(zj_draw), 0);
-  rb_define_private_method(zj_mEvents, "exit", RB_FUNC(zj_exit), 0);
-  rb_define_private_method(zj_mEvents, "window_resized", RB_FUNC(zj_window_resized), 0);
-  rb_define_private_method(zj_mEvents, "key_down", RB_FUNC(zj_key_down), 0);
-  rb_define_private_method(zj_mEvents, "key_pressed", RB_FUNC(zj_key_pressed), 0);
-  rb_define_private_method(zj_mEvents, "key_up", RB_FUNC(zj_key_up), 0);
-  rb_define_private_method(zj_mEvents, "mouse_moved", RB_FUNC(zj_mouse_moved), 0);
-  rb_define_private_method(zj_mEvents, "mouse_dragged", RB_FUNC(zj_mouse_dragged), 0);
-  rb_define_private_method(zj_mEvents, "mouse_pressed", RB_FUNC(zj_mouse_pressed), 0);
-  rb_define_private_method(zj_mEvents, "mouse_released", RB_FUNC(zj_mouse_released), 0);
-  rb_define_private_method(zj_mEvents, "audio_requested", RB_FUNC(zj_audio_requested), 0);
-  rb_define_private_method(zj_mEvents, "audio_received", RB_FUNC(zj_audio_received), 0);
+  rb_define_private_method(zj_mEvents, "setup", RUBY_METHOD_FUNC(zj_setup), 0);
+  rb_define_private_method(zj_mEvents, "update", RUBY_METHOD_FUNC(zj_update), 0);
+  rb_define_private_method(zj_mEvents, "draw", RUBY_METHOD_FUNC(zj_draw), 0);
+  rb_define_private_method(zj_mEvents, "exit", RUBY_METHOD_FUNC(zj_exit), 0);
+  rb_define_private_method(zj_mEvents, "window_resized", RUBY_METHOD_FUNC(zj_window_resized), 0);
+  rb_define_private_method(zj_mEvents, "key_down", RUBY_METHOD_FUNC(zj_key_down), 0);
+  rb_define_private_method(zj_mEvents, "key_pressed", RUBY_METHOD_FUNC(zj_key_pressed), 0);
+  rb_define_private_method(zj_mEvents, "key_up", RUBY_METHOD_FUNC(zj_key_up), 0);
+  rb_define_private_method(zj_mEvents, "mouse_moved", RUBY_METHOD_FUNC(zj_mouse_moved), 0);
+  rb_define_private_method(zj_mEvents, "mouse_dragged", RUBY_METHOD_FUNC(zj_mouse_dragged), 0);
+  rb_define_private_method(zj_mEvents, "mouse_pressed", RUBY_METHOD_FUNC(zj_mouse_pressed), 0);
+  rb_define_private_method(zj_mEvents, "mouse_released", RUBY_METHOD_FUNC(zj_mouse_released), 0);
+  rb_define_private_method(zj_mEvents, "audio_requested", RUBY_METHOD_FUNC(zj_audio_requested), 0);
+  rb_define_private_method(zj_mEvents, "audio_received", RUBY_METHOD_FUNC(zj_audio_received), 0);
   
-  rb_define_private_method(zj_mEvents, "mouse_x", RB_FUNC(zj_mouse_x), 0);
-  rb_define_private_method(zj_mEvents, "mouse_y", RB_FUNC(zj_mouse_y), 0);
+  rb_define_private_method(zj_mEvents, "mouse_x", RUBY_METHOD_FUNC(zj_mouse_x), 0);
+  rb_define_private_method(zj_mEvents, "mouse_y", RUBY_METHOD_FUNC(zj_mouse_y), 0);
   
   INTERNAL_SET(zj_mEvents, defaults_proc, Qnil);
   INTERNAL_SET(zj_mEvents, setup_proc, Qnil);
