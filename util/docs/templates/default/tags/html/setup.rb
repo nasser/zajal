@@ -9,9 +9,6 @@ require 'base64'
 
 # converts code to the base64 representation of a screenshot of that code
 def screenshot code
-  puts code
-  puts "====="
-  
   # prepare screenshot file
   shotpath = "shot.png"
   
