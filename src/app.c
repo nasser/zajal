@@ -261,7 +261,7 @@ VALUE zj_window_y(int argc, VALUE* argv, VALUE self) {
 /* 
  * Trigger a nasty segmentation fault. Don't use this.
  * 
- * @private
+ * @api private
  */
 VALUE zj_segfault(VALUE self) {
   int* iWillCrash;
