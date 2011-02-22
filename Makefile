@@ -37,7 +37,10 @@ ZAJAL_OBJ = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(notdir $(ZAJAL_SRC))))
 ZAJAL_LIBRARIES = $(OF_LIB) $(RUBY_LIB)
 
 
-.PHONY: all clean configure $(BUILD_DIR)/version.c.o
+.PHONY: all clean configure docs $(BUILD_DIR)/version.c.o
+
+docs:
+	yardoc -e util/docs/screenshots src
 
 all: $(BINARY)
 	@echo
