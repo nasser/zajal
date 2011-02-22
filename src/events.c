@@ -27,7 +27,11 @@ VALUE zj_draw(VALUE self) {
 }
 
 VALUE zj_exit(VALUE self) {
-  if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, exit_proc, rb_block_proc());
+  if(rb_block_given_p()) {
+    INTERNAL_SET(zj_mEvents, exit_proc, rb_block_proc());
+  } else {
+    ::exit(0);
+  }
   
   return Qnil;
 }

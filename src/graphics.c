@@ -1,6 +1,10 @@
 /* 
+ * Document-module: Zajal::Graphics
+ * 
  * Methods for drawing shapes and text, changng colors and other visual
- * things. Meant to wrap the +ofGraphics.h+ functions in openFrameworks.
+ * things.
+ * 
+ * @see http://www.openframeworks.cc/documentation?detail=ofGraphics ofGraphics, the openFrameworks functions used internally
  */
 
 #include "ruby.h"
@@ -200,7 +204,11 @@ VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
  * @param [Numeric] s The side of the square's sides
  * 
  * @example Small square
- *   square 100, 100, 5
+ *   square 10, 10, 5 
+ *   square 15, 15, 10
+ *   square 25, 25, 15
+ *   square 40, 40, 20
+ *   square 60, 60, 25
  */
 VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
   ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(s), NUM2DBL(s));
@@ -220,20 +228,43 @@ VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
  * Draws an equilateral, isosceles or scalene triangle.
  * 
  * @overload triangle x, y, r
+ *   @param [Numeric] x x coordinate of the triangle's center               
+ *   @param [Numeric] y y coordinate of the triangle's center               
+ *   @param [Numeric] s The "size" of the triangle. More specifically, the
+ *                      radius of the circle the triangle is inscribed in.  
+ *   @example Nested equilaterals
+ *     fill false
+ *     triangle width/2, height/2, 50
+ *     triangle width/2, height/2, 40
+ *     triangle width/2, height/2, 30
+ *     triangle width/2, height/2, 20
+ *     triangle width/2, height/2, 10
+ *   
  * @overload triangle x, y, r, a
- * @overload triangle x1, y1, x2, y2, x3, y3
+ *   @param [Numeric] x x coordinate of the triangle's center               
+ *   @param [Numeric] y y coordinate of the triangle's center               
+ *   @param [Numeric] s The "size" of the triangle. More specifically, the
+ *                      distance from the center point to the top.
+ *   @param [Numeric] a The size of the isosceles angle in radians
+ *   @example Nested isosceles
+ *     fill false
+ *     triangle width/2, height/2, 50, 60.to_rad
+ *     triangle width/2, height/2, 50, 50.to_rad
+ *     triangle width/2, height/2, 50, 40.to_rad
+ *     triangle width/2, height/2, 50, 30.to_rad
+ *     triangle width/2, height/2, 50, 20.to_rad
+ *     triangle width/2, height/2, 50, 10.to_rad
  * 
- * @param [Numeric] x x coordinate of the triangle's center
- * @param [Numeric] y y coordinate of the triangle's center
- * @param [Numeric] r The "radius" of the triangle. More specifically, the
- *                    radius of the circle the triangle is inscribed in.
- * @param [Numeric] a The size of the isosceles angle in radians
- * @param [Numeric] x1 x coordinate of the triangle's first point
- * @param [Numeric] y1 y coordinate of the triangle's first point
- * @param [Numeric] x2 x coordinate of the triangle's second point
- * @param [Numeric] y2 y coordinate of the triangle's second point
- * @param [Numeric] x3 x coordinate of the triangle's third point
- * @param [Numeric] y3 y coordinate of the triangle's third point
+ * @overload triangle x1, y1, x2, y2, x3, y3
+ *   @param [Numeric] x1 x coordinate of the triangle's first point
+ *   @param [Numeric] y1 y coordinate of the triangle's first point
+ *   @param [Numeric] x2 x coordinate of the triangle's second point
+ *   @param [Numeric] y2 y coordinate of the triangle's second point
+ *   @param [Numeric] x3 x coordinate of the triangle's third point
+ *   @param [Numeric] y3 y coordinate of the triangle's third point
+ *   @example Aribitrary triangle
+ *     triangle 40, 5, 85, 40, 12, 90
+ *   
  */
 VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
   float x1, y1, x2, y2, x3, y3;
@@ -300,11 +331,21 @@ VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
-
 /* 
  * Draws a circle.
  * 
  * @overload circle x, y, r
+ * 
+ * @example One circle
+ *   circle 50, 50, 20
+ * 
+ * @example Five circles
+ *   circle 50, 50, 30
+ *   
+ *   circle 20, 20, 10
+ *   circle 20, 80, 10
+ *   circle 80, 20, 10
+ *   circle 80, 80, 10
  * 
  * @param [Numeric] x The x coordinate of the circle's center
  * @param [Numeric] y The y coordinate of the circle's center
@@ -369,11 +410,17 @@ VALUE zj_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
   return Qnil;
 }
 
+/* 
+ * @overload curve x0, y0, x1, y1, x2, y2, x3, y3
+ */
 VALUE zj_curve(VALUE self, VALUE x0, VALUE y0, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
   ofCurve(NUM2DBL(x0), NUM2DBL(y0), NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
   return Qnil;
 }
 
+/* 
+ * @overload bezier x0, y0, x1, y1, x2, y2, x3, y3
+ */
 VALUE zj_bezier(VALUE self, VALUE x0, VALUE y0, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
   ofBezier(NUM2DBL(x0), NUM2DBL(y0), NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
   return Qnil;
@@ -871,34 +918,66 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-
 /* 
  * Sets the current color. Everything drawn following this command will be in
  * this color. All +color+ parameters are numbers from 0 to 255.
  * 
  * @overload color name
- * @overload color name, a
- * @overload color grey
- * @overload color grey, a
- * @overload color r, g, b
- * @overload color r, g, b, a
+ *   @param [Symbol] name The name of the color
  * 
- * @example Drawing the french flag
- *   color 0, 0, 200
- *   rectangle 0, 0, 50, 100
- *   
- *   color 200, 200, 200
- *   rectangle 50, 0, 50, 100
+ * @overload color name, a
+ *   @param [Symbol] name The name of the color
+ *   @param [Fixnum] a Amount of alpha
+ *   @example The Sun
+ *     alpha_blending true
  *     
- *   color 200, 0, 0
- *   rectangle 100, 0, 50, 100
+ *     color :orange, 8
+ *     circle width/2, height/2, 45
+ *     
+ *     color :orange, 16
+ *     circle width/2, height/2, 40
+ *     
+ *     color :orange, 32
+ *     circle width/2, height/2, 35
+ *     
+ *     color :orange, 64
+ *     circle width/2, height/2, 30
+ *     
+ *     color :orange, 128
+ *     circle width/2, height/2, 25
+ *     
+ *     color :orange, 255
+ *     circle width/2, height/2, 20
+ * 
+ * @overload color grey
+ *   @param [Fixnum] grey Shade of grey
+ * 
+ * @overload color grey, a
+ *   @param [Fixnum] grey Shade of grey
+ *   @param [Fixnum] a Amount of alpha
+ * 
+ * @overload color r, g, b
+ *   @param [Fixnum] r Amount of red
+ *   @param [Fixnum] g Amount of green
+ *   @param [Fixnum] b Amount of blue
+ * 
+ *   @example Drawing the french flag
+ *     color 0, 0, 200
+ *     rectangle 5, 5, 30, 90
+ *   
+ *     color 200, 200, 200
+ *     rectangle 35, 5, 30, 90
+ *   
+ *     color 200, 0, 0
+ *     rectangle 65, 5, 30, 90
+ * 
+ * @overload color r, g, b, a
+ *   @param [Fixnum] r Amount of red
+ *   @param [Fixnum] g Amount of green
+ *   @param [Fixnum] b Amount of blue
+ *   @param [Fixnum] a Amount of alpha
  * 
  * @see #alpha_blending
- * 
- * @param [Fixnum] r Amount of red
- * @param [Fixnum] g Amount of green
- * @param [Fixnum] b Amount of blue
- * @param [Fixnum] a Amount of alpha
  * 
  * @todo Should return the current color when called without arguments.
  */

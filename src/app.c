@@ -86,14 +86,24 @@ VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE klass) {
   }
 }
 
+/* 
+ * @return [Fixnum] The current elapsed time in milliseconds
+ */
 VALUE zj_time(VALUE self) {
   return INT2NUM(ofGetElapsedTimeMillis());
 }
 
+/* 
+ * @return [Fixnum] The current frame
+ */
 VALUE zj_frame(VALUE self) {
   return INT2NUM(ofGetFrameNum());
 }
 
+/* 
+ * @overload framerate
+ * @overload framerate new_framerate
+ */
 VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
   VALUE new_framerate;
   rb_scan_args(argc, argv, "01", &new_framerate);
@@ -110,6 +120,10 @@ VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
   }
 }
 
+/* 
+ * @overload title
+ * @overload title new_title
+ */
 VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
   VALUE new_title;
   rb_scan_args(argc, argv, "01", &new_title);
@@ -127,6 +141,10 @@ VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
   }
 }
 
+/* 
+ * @overload cursor
+ * @overload cursor state
+ */
 VALUE zj_cursor(int argc, VALUE* argv, VALUE self) {
   VALUE cursor_visible;
   rb_scan_args(argc, argv, "01", &cursor_visible);
@@ -144,6 +162,10 @@ VALUE zj_cursor(int argc, VALUE* argv, VALUE self) {
   }
 }
 
+/* 
+ * @overload fullscreen
+ * @overload fullscreen state
+ */
 VALUE zj_fullscreen(int argc, VALUE* argv, VALUE self) {
   VALUE fullscreen_mode;
   rb_scan_args(argc, argv, "01", &fullscreen_mode);
@@ -161,14 +183,24 @@ VALUE zj_fullscreen(int argc, VALUE* argv, VALUE self) {
   }
 }
 
+/* 
+ * @return [Fixnum] The width of the screen
+ */
 VALUE zj_screen_width(VALUE self) {
   return INT2NUM(ofGetScreenWidth());
 }
 
+/* 
+ * @return [Fixnum] The height of the screen
+ */
 VALUE zj_screen_height(VALUE self) {
   return INT2NUM(ofGetScreenHeight());
 }
 
+/* 
+ * @overload window_x
+ * @overload window_x new_x
+ */
 VALUE zj_window_x(int argc, VALUE* argv, VALUE self) {
   VALUE new_x;
   rb_scan_args(argc, argv, "01", &new_x);
@@ -185,6 +217,31 @@ VALUE zj_window_x(int argc, VALUE* argv, VALUE self) {
   }
 }
 
+/* 
+ * Controls the y position of the window. Use this to move the sketch window
+ * around on the screen. The window's position is measured from the top left
+ * corner.
+ * 
+ * @overload window_y
+ *   Called without an argument, returns the current y position of the window
+ *   
+ *   @return [Fixnum] The y position of the window
+ * 
+ * @overload window_y new_y
+ *   Called with an argument, sets the current y position of the window.
+ *   
+ *   @example Move window to top of screen
+ *     window_y 0
+ *   
+ *   @example Bob window up and down
+ *     update do
+ *       window_y 200 + sin(time * 0.1)
+ *     end
+ *   
+ *   @param [Numeric] new_y The new y position of the window
+ *   
+ *   @return [nil] Nothing
+ */
 VALUE zj_window_y(int argc, VALUE* argv, VALUE self) {
   VALUE new_y;
   rb_scan_args(argc, argv, "01", &new_y);
@@ -201,6 +258,11 @@ VALUE zj_window_y(int argc, VALUE* argv, VALUE self) {
   }
 }
 
+/* 
+ * Trigger a nasty segmentation fault. Don't use this.
+ * 
+ * @private
+ */
 VALUE zj_segfault(VALUE self) {
   int* iWillCrash;
   int a = iWillCrash[92089];

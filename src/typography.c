@@ -178,15 +178,17 @@ VALUE zj_font_character_count(VALUE self) {
  *   @param [#to_s] str The text to draw to the screen
  * 
  *   @example Stacked text
- *     text "hello"
- *     text "there"
- *     text "buddy"
+ *     text "one"
+ *     text "on top"
+ *     text "of the other"
  *   @example Non-string objects
  *     text Image.new
- *     text "there"
- *     text "buddy"
+ *     text 809
+ *     text [1, 2, "three"]
  *   @example Debugging
  *     text framerate
+ *     k = 9.5/3
+ *     text k
  * 
  * @overload text str, x, y
  *   Given a position, {#text} will draw the given string there
