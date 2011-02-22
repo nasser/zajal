@@ -2,3 +2,5 @@
 src/config.h
 bin/
 scratch/
+.yardoc
+doc
