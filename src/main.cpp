@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
         break;
 
       case 'V':
-        zi->setVerboseMode(true);
+        INTERNAL_SET(zj_mApp, verbose, Qtrue);
         break;
 
       case 'h':

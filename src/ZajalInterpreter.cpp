@@ -73,10 +73,6 @@ void ZajalInterpreter::appendLoadPath(char* path) {
   }
 }
 
-void ZajalInterpreter::setVerboseMode(bool newMode) {
-  INTERNAL_SET(zj_mApp, verbose, newMode ? Qtrue : Qfalse);
-}
-
 //--------------------------------------------------------------
 void ZajalInterpreter::setup() {
   zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);

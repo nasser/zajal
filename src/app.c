@@ -211,6 +211,8 @@ void Init_App() {
   zj_mApp = rb_define_module_under(zj_mZajal, "App");
   rb_define_module_under(zj_mApp, "Internals");
   
+  INTERNAL_SET(zj_mApp, verbose, Qfalse);
+  
   rb_define_private_method(zj_mApp, "segfault", RUBY_METHOD_FUNC(zj_segfault), 0);
   rb_define_private_method(zj_mApp, "height", RUBY_METHOD_FUNC(zj_height), -1);
   rb_define_private_method(zj_mApp, "width", RUBY_METHOD_FUNC(zj_width), -1);

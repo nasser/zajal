@@ -45,7 +45,6 @@ class ZajalInterpreter : public ofBaseApp {
     void reloadScript();
     void updateCurrentScript();
     
-    void setVerboseMode(bool newMode);
     void appendLoadPath(char* path);
     
   private:
