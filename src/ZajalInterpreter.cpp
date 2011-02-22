@@ -56,7 +56,9 @@ void ZajalInterpreter::printVersion() {
 
 void ZajalInterpreter::run() {
   state = INTERPRETER_RUNNING;
-  ofSetupOpenGL(500, 500, OF_WINDOW);
+  // FIXME set to 100x100 as a workaround to get documentation screenshots working
+  // this should be handled by a more robust presetup system. see issue 17.
+  ofSetupOpenGL(100, 100, OF_WINDOW);
   ofRunApp(this);
 }
 
