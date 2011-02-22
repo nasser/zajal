@@ -5,6 +5,23 @@
 /* external math module */
 VALUE zj_mMathematics;
 
+/* 
+ * @overload seed_random
+ * @overload seed_random k
+ *   @example Seeding
+ *     seed_random 0
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ *     text ""
+ *     
+ *     seed_random 9000
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ *     text ""
+ *     
+ *     seed_random 0
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ */
 VALUE zj_seed_random(int argc, VALUE* argv, VALUE klass) {
   VALUE val;
   rb_scan_args(argc, argv, "01", &val);
@@ -44,6 +61,35 @@ VALUE zj_random(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * @return [0...width] A pseudorandom value
+ * @example Bars
+ *   rectangle_mode :center
+ *   
+ *   rectangle width/2, 10, random_width, 20
+ *   rectangle width/2, 30, random_width, 20
+ *   rectangle width/2, 50, random_width, 20
+ *   rectangle width/2, 70, random_width, 20
+ *   rectangle width/2, 90, random_width, 20
+ * 
+ * @example Squares
+ *   rectangle_mode :center
+ *   
+ *   color 240
+ *   square random_width, 10, 5
+ *   
+ *   color 200
+ *   square random_width, 30, 5
+ *   
+ *   color 160
+ *   square random_width, 50, 5
+ *   
+ *   color 120
+ *   square random_width, 70, 5
+ *   
+ *   color 80
+ *   square random_width, 90, 5
+ */
 VALUE zj_random_width(VALUE self) {
   return DBL2NUM(ofRandomWidth());
 }
@@ -52,6 +98,59 @@ VALUE zj_random_height(VALUE self) {
   return DBL2NUM(ofRandomHeight());
 }
 
+/* 
+ * @overload noise x
+ *   @return [0...1] A pseudorandom value
+ *   @example Noise across x
+ *     for x in 0..width
+ *       noise_height = height * noise(x)
+ *       line x, noise_height, x, height
+ *     end
+ *   
+ *   @example Smoother noise
+ *     for x in 0..width
+ *       noise_height = height * noise(x*0.05)
+ *       line x, noise_height, x, height
+ *     end
+ *   
+ *   @example Complex effect
+ *     x, y = width/2, height/2
+ *     s = 70
+ *     
+ *     for i in 0..600
+ *       a = i / 600.0 * (0..TwoPi)
+ *       r = noise(a+1) * (200..255)
+ *       g = noise(a+2) * (200..32)
+ *       b = noise(a) * (32..255)
+ *       
+ *       color r, g, b
+ *       line x, y, x + cos(a) * s, y + sin(a) * s
+ *     end
+ * 
+ * @overload noise x, y
+ *   @return [0...1] A pseudorandom value
+ *   @example Snow
+ *     for x in 0..width
+ *       for y in 0..height
+ *         color 255 * noise(x, y)
+ *         point x, y
+ *       end
+ *     end
+ * 
+ *   @example Smoother snow
+ *     for x in 0..width
+ *       for y in 0..height
+ *         color 255 * noise(x*0.02, y*0.02)
+ *         point x, y
+ *       end
+ *     end
+ * 
+ * @overload noise x, y, z
+ *   @return [0...1] A pseudorandom value
+ * 
+ * @overload noise x, y, z, w
+ *   @return [0...1] A pseudorandom value
+ */
 VALUE zj_noise(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z, w;
   rb_scan_args(argc, argv, "13", &x, &y, &z, &w);
@@ -78,6 +177,19 @@ VALUE zj_noise(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * @overload signed_noise x
+ *   @return [-1..1] A pseudorandom value
+ * 
+ * @overload signed_noise x, y
+ *   @return [-1..1] A pseudorandom value
+ * 
+ * @overload signed_noise x, y, z
+ *   @return [-1..1] A pseudorandom value
+ * 
+ * @overload signed_noise x, y, z, w
+ *   @return [-1..1] A pseudorandom value
+ */
 VALUE zj_signed_noise(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z, w;
   rb_scan_args(argc, argv, "13", &x, &y, &z, &w);
@@ -142,10 +254,17 @@ void Init_Mathematics() {
   rb_define_private_method(zj_mMathematics, "noise", RUBY_METHOD_FUNC(zj_noise), -1);
   rb_define_private_method(zj_mMathematics, "signed_noise", RUBY_METHOD_FUNC(zj_signed_noise), -1);
   
-  rb_define_const(zj_mMathematics, "Pi", DBL2NUM(PI));
-  rb_define_const(zj_mMathematics, "TwoPi", DBL2NUM(TWO_PI));
-  rb_define_const(zj_mMathematics, "FourPi", DBL2NUM(FOUR_PI));
-  rb_define_const(zj_mMathematics, "HalfPi", DBL2NUM(HALF_PI));
+  /* 3.141592654 */
+  rb_define_const(zj_mMathematics, "PI", DBL2NUM(PI));
+  
+  /* 6.283185307 */
+  rb_define_const(zj_mMathematics, "TWO_PI", DBL2NUM(TWO_PI));
+  
+  /* 12.56637061 */
+  rb_define_const(zj_mMathematics, "FOUR_PI", DBL2NUM(FOUR_PI));
+  
+  /* 1.570796327 */
+  rb_define_const(zj_mMathematics, "HALF_PI", DBL2NUM(HALF_PI));
   
   rb_define_method(rb_cNumeric, "to_deg", RUBY_METHOD_FUNC(zj_to_deg), 0);
   rb_define_method(rb_cNumeric, "to_rad", RUBY_METHOD_FUNC(zj_to_rad), 0);
