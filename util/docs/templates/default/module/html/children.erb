@@ -1,0 +1,49 @@
+<% @inner.each do |name, list| %> 
+  <% if list.size > 0 %>
+    <% list.each do |child| %>
+    
+    <% grandchildren = children_hash child  %>    
+    <h2><%= linkify(child, child.name) %> <%= child.type %></h2> <!-- need to label 'module' or 'class' somehow -->
+    
+    <% if grandchildren[:class] %>
+    <h3>Classes</h3>
+    <ul class="summary compact">
+      <% grandchildren[:class].sort {|a,b| a.name.to_s <=> b.name.to_s }.each do |klass| %>
+      <li>
+        <span class="summary_signature">
+          <%= linkify(klass, klass.name) %>
+        </span>
+      </li>
+      <% end %>
+    </ul>
+    <% end %>
+      
+    <% if grandchildren[:method] %>
+    <h3>Methods</h3>
+    <ul class="summary compact">
+      <% grandchildren[:method].sort {|a,b| a.name.to_s <=> b.name.to_s }.each do |meth| %>
+      <li class="<%= meth.visibility %> <%= meth.has_tag?(:deprecated) ? 'deprecated' : '' %>">
+        <span class="summary_signature">
+          <%= signature(meth, true, false, false).gsub(/(\+|-)\s\([^\)]+\)\s*/, "").gsub(/<\/?strong>/, "") %>
+        </span>
+      </li>
+      <% end %>
+    </ul>
+    <% end %>
+      
+    <% if grandchildren[:constant] %>
+    <h3>Constants</h3>
+    <ul class="summary compact">
+      <% grandchildren[:constant].sort {|a,b| a.name.to_s <=> b.name.to_s }.each do |const| %>
+      <li>
+        <span class="summary_signature">
+        <%= linkify(const, const.name) %>
+        </span>
+      </li>
+      <% end %>
+    </ul>
+    <% end %>
+    
+    <% end %>
+  <% end %>
+<% end %>

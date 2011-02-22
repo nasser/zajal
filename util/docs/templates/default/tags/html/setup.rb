@@ -1,12 +1,6 @@
 require 'tempfile'
 require 'base64'
 
-# def init
-#   super
-#   sections.last.place(:shot).before(:source)
-# end
-# 
-
 # converts code to the base64 representation of a screenshot of that code
 def screenshot code
   # prepare screenshot file
