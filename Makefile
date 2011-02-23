@@ -39,12 +39,12 @@ ZAJAL_LIBRARIES = $(OF_LIB) $(RUBY_LIB)
 
 .PHONY: all clean configure docs $(BUILD_DIR)/version.c.o
 
-docs:
-	yardoc -e util/docs/screenshots src
-
 all: $(BINARY)
 	@echo
 	@echo "Built Zajal $(ZAJAL_GIT_SHORT_HASH) to $(BINARY)"
+
+docs:
+	yardoc -e util/docs/screenshots src
 
 $(BINARY): $(ZAJAL_OBJ)
 	@echo -n "Making binary..."
