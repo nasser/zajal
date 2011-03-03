@@ -230,14 +230,6 @@ VALUE zj_window_x(int argc, VALUE* argv, VALUE self) {
  * @overload window_y new_y
  *   Called with an argument, sets the current y position of the window.
  *   
- *   @example Move window to top of screen
- *     window_y 0
- *   
- *   @example Bob window up and down
- *     update do
- *       window_y 200 + sin(time * 0.1)
- *     end
- *   
  *   @param [Numeric] new_y The new y position of the window
  *   
  *   @return [nil] Nothing
@@ -259,7 +251,7 @@ VALUE zj_window_y(int argc, VALUE* argv, VALUE self) {
 }
 
 /* 
- * Trigger a nasty segmentation fault. Don't use this.
+ * Triggers a nasty segmentation fault. Used for debugging, don't use this.
  * 
  * @api private
  */

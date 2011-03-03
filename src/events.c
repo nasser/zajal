@@ -96,10 +96,16 @@ VALUE zj_audio_requested(VALUE self) {
   return Qnil;
 }
 
+/* 
+ * @return [Float] The current x position of the mouse
+ */
 VALUE zj_mouse_x(VALUE self) {
   return INT2FIX(ofAppPtr->mouseX);
 }
 
+/* 
+ * @return [Float] The current y position of the mouse
+ */
 VALUE zj_mouse_y(VALUE self) {
   return INT2FIX(ofAppPtr->mouseY);
 }

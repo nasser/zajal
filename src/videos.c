@@ -10,6 +10,11 @@ void zj_video_dealloc(void* video) {
   delete (ofVideoPlayer*)video;
 }
 
+/* 
+ * Create a new video object
+ * 
+ * @param [String] filename File name of the video to load
+ */
 VALUE zj_video_new(int argc, VALUE* argv, VALUE klass) {
   ofVideoPlayer* video_ptr = new ofVideoPlayer();
   
@@ -18,6 +23,11 @@ VALUE zj_video_new(int argc, VALUE* argv, VALUE klass) {
   return video;
 }
 
+/* 
+ * Load a video from the computer to play.
+ * 
+ * @param [String] filename File name of the video to load
+ */
 VALUE zj_video_load(VALUE self, VALUE filename) {
   ofVideoPlayer* video_ptr;
   Data_Get_Struct(self, ofVideoPlayer, video_ptr);
@@ -61,6 +71,9 @@ VALUE zj_video_update(VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Start playing the video.
+ */
 VALUE zj_video_play(VALUE self) {
   ofVideoPlayer* video_ptr;
   Data_Get_Struct(self, ofVideoPlayer, video_ptr);
@@ -70,6 +83,9 @@ VALUE zj_video_play(VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Stop playing the video.
+ */
 VALUE zj_video_stop(VALUE self) {
   ofVideoPlayer* video_ptr;
   Data_Get_Struct(self, ofVideoPlayer, video_ptr);
@@ -104,7 +120,26 @@ VALUE zj_video_draw(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
-VALUE zj_video_video(int argc, VALUE* argv, VALUE self) {
+/* 
+ * @overload video filename, x, y
+ *   Draws a video at the given +x+ and +y+ position. The video will play
+ *   normally with audio as long as this method is called every frame.
+ *   @param [String] filename File name of the video
+ *   @param [Numeric] x Distance from the left side of the window to draw the video
+ *   @param [Numeric] y Distance from the top side of the window to draw the video
+ * 
+ * @overload video filename, x, y, w, h
+ *   Draws a video at the given +x+ and +y+ position with a given width and height.
+ *   The video will play normally with audio as long as this method is called
+ *   every frame.
+ *   @param [String] filename File name of the video
+ *   @param [Numeric] x Distance from the left side of the window to draw the video
+ *   @param [Numeric] y Distance from the top side of the window to draw the video
+ *   @param [Numeric] w Width to draw the video at
+ *   @param [Numeric] h Height to draw the video at
+ */
+VALUE zj_video_video(int argc, VALUE* argv, VALUE self)
+{
   if(argc == 0) {
     rb_raise(rb_eArgError, "Too few arguments to Videos::video!");
     return Qnil;

@@ -7,8 +7,26 @@ VALUE zj_mMathematics;
 
 /* 
  * @overload seed_random
+ *   Seeds random values using the current time. Useful to have unpredictable
+ *   series of random numbers.
+ *   @example Predictable random numbers
+ *     seed_random
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ *     text ""
+ *     
+ *     seed_random
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ *     text ""
+ *     
+ *     seed_random
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ *     text [(random*10).round, (random*10).round, (random*10).round]
+ * 
  * @overload seed_random k
- *   @example Seeding
+ *   Seeds random values using +k+. Useful to have predictable series of
+ *   random numbers.
+ *   @example Predictable random numbers
  *     seed_random 0
  *     text [(random*10).round, (random*10).round, (random*10).round]
  *     text [(random*10).round, (random*10).round, (random*10).round]
@@ -94,6 +112,9 @@ VALUE zj_random_width(VALUE self) {
   return DBL2NUM(ofRandomWidth());
 }
 
+/* 
+ * @return [0...height] A pseudorandom value
+ */
 VALUE zj_random_height(VALUE self) {
   return DBL2NUM(ofRandomHeight());
 }
@@ -113,18 +134,21 @@ VALUE zj_random_height(VALUE self) {
  *       line x, noise_height, x, height
  *     end
  *   
+ *   @todo `x, y = width/2, height/2` does not work!
  *   @example Complex effect
- *     x, y = width/2, height/2
+ *     x = width/2
+ *     y = height/2
  *     s = 70
  *     
  *     for i in 0..600
- *       a = i / 600.0 * (0..TwoPi)
+ *       a = i / 600.0 * (0..TWO_PI)
  *       r = noise(a+1) * (200..255)
  *       g = noise(a+2) * (200..32)
  *       b = noise(a) * (32..255)
  *       
  *       color r, g, b
- *       line x, y, x + cos(a) * s, y + sin(a) * s
+ *       line x, y,
+ *       x + cos(a) * s, y + sin(a) * s
  *     end
  * 
  * @overload noise x, y
@@ -180,6 +204,17 @@ VALUE zj_noise(int argc, VALUE* argv, VALUE klass) {
 /* 
  * @overload signed_noise x
  *   @return [-1..1] A pseudorandom value
+ *   @example Signed noise
+ *     for x in 0..width
+ *       noise_height = height/2 * signed_noise(x)
+ *       rectangle x, height/2, 1, noise_height
+ *     end
+ * 
+ *   @example Smoother signed noise
+ *     for x in 0..width
+ *       noise_height = height/2 * signed_noise(x*0.05)
+ *       rectangle x, height/2, 1, noise_height
+ *     end
  * 
  * @overload signed_noise x, y
  *   @return [-1..1] A pseudorandom value

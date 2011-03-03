@@ -171,13 +171,44 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  * @param [Numeric] w The width of the rectangle
  * @param [Numeric] h The height of the rectangle
  * 
- * @example
- *   # draw a small rectangle
- *   rectangle 20, 20, 5, 10
+ * @example Single rectangle
+ *   rectangle 10, 10, 80, 20
  * 
- *   # draw a centered rectangle
+ * @example Single centered rectangle
  *   rectangle_mode :center
- *   rectangle 10, 10, 50, 50
+ *   rectangle 50, 50, 80, 20
+ * 
+ * @example Corner mode rectangles
+ *   rectangle 10, 10, 80, 10
+ *   rectangle 10, 20, 70, 10
+ *   rectangle 10, 30, 60, 10
+ *   rectangle 10, 40, 50, 10
+ *   rectangle 10, 50, 40, 10
+ *   rectangle 10, 60, 30, 10
+ *   rectangle 10, 70, 20, 10
+ *   rectangle 10, 80, 10, 10
+ * 
+ * @example Center mode rectangles
+ *   rectangle_mode :center
+ *   rectangle 50, 10, 80, 10
+ *   rectangle 50, 20, 70, 10
+ *   rectangle 50, 30, 60, 10
+ *   rectangle 50, 40, 50, 10
+ *   rectangle 50, 50, 40, 10
+ *   rectangle 50, 60, 30, 10
+ *   rectangle 50, 70, 20, 10
+ *   rectangle 50, 80, 10, 10
+ * 
+ * @example Center/corner mode comparison
+ *   fill false
+ *   
+ *   color :red
+ *   rectangle_mode :center
+ *   rectangle 50, 50, 30, 40
+ *   
+ *   color :green
+ *   rectangle_mode :corner
+ *   rectangle 50, 50, 30, 40
  */
 VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
   ofRect(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(w), NUM2DBL(h));
@@ -369,6 +400,13 @@ VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
  * Draws an ellipse.
  * 
  * @overload ellipse x, y, w, h
+ *   @example One ellipse
+ *     ellipse width/2, height/2, 90, 50
+ * 
+ *   @example Different sizes
+ *     ellipse 50, 15, 50, 10
+ *     ellipse 50, 37, 10, 25
+ *     ellipse 50, 75, 50, 40
  * 
  * @param [Numeric] x the x coordinate of the ellipse's center
  * @param [Numeric] y the y coordinate of the ellipse's center
@@ -400,10 +438,35 @@ VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
  * @param [Numeric] x2 the x coordinate of the second point
  * @param [Numeric] y2 the y coordinate of the second point
  * 
- * @example A triangle that fills the window
- *   line 0, 0, width, 0
- *   line 0, 0, width/2, height
- *   line width/2, height, width, 0
+ * @example Single line
+ *   line 25, 25, 75, 75
+ * 
+ * @example More lines
+ *   line 25, 25, 75, 75
+ *   line 75, 25, 25, 75
+ *   line 50, 25, 50, 75
+ *   line 75, 50, 25, 50
+ * 
+ * @example Complex lines
+ *   line 0, 10, 10, 100
+ *   line 0, 20, 20, 100
+ *   line 0, 30, 30, 100
+ *   line 0, 40, 40, 100
+ *   line 0, 50, 50, 100
+ *   line 0, 60, 60, 100
+ *   line 0, 70, 70, 100
+ *   line 0, 80, 80, 100
+ *   line 0, 90, 90, 100
+ *   
+ *   line 100, 90, 90, 0
+ *   line 100, 80, 80, 0
+ *   line 100, 70, 70, 0
+ *   line 100, 60, 60, 0
+ *   line 100, 50, 50, 0
+ *   line 100, 40, 40, 0
+ *   line 100, 30, 30, 0
+ *   line 100, 20, 20, 0
+ *   line 100, 10, 10, 0
  */
 VALUE zj_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
   ofLine(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2));
@@ -443,13 +506,6 @@ VALUE zj_pop_matrix(VALUE self) {
  * as it contains their effects (in fact, if not using any transform methods
  * {#matrix} will have no visible effect).
  * 
- * @example Draw objects centered
- *   matrix {
- *     translate width/2, height/2
- *     circle 0, 0, 30 # this circle is drawn in the center of the window
- *   }
- *   circle 0, 0, 30 # this circle -- with the same arguments -- is drawn in the corner
- * 
  * @yield The code to run, usually containing transform and drawing commands
  */
 VALUE zj_matrix(VALUE self) {
@@ -468,13 +524,6 @@ VALUE zj_matrix(VALUE self) {
  * @param [Numeric] x The distance to move in x
  * @param [Numeric] y The distance to move in y
  * @param [Numeric] z The distance to move in z
- * 
- * @example
- *   matrix {
- *     # move origin to center of screen
- *     translate width/2, height/2
- *     circle 0, 0, 10
- *   }
  */
 VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
@@ -622,6 +671,10 @@ VALUE zj_bezier_vertex(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE
   return Qnil;
 }
 
+/* 
+ * @overload curve_resolution
+ * @overload curve_resolution res
+ */
 VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
   VALUE new_resolution;
   int argca = rb_scan_args(argc, argv, "01", &new_resolution);
@@ -641,6 +694,47 @@ VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * @example Reslution series
+ *   circle_resolution 3
+ *   circle 20, 20, 10
+ *   
+ *   circle_resolution 4
+ *   circle 50, 20, 10
+ *   
+ *   circle_resolution 5
+ *   circle 80, 20, 10
+ *   
+ *   circle_resolution 6
+ *   circle 20, 50, 10
+ *   
+ *   circle_resolution 7
+ *   circle 50, 50, 10
+ *   
+ *   circle_resolution 8
+ *   circle 80, 50, 10
+ *   
+ *   circle_resolution 9
+ *   circle 20, 80, 10
+ *   
+ *   circle_resolution 10
+ *   circle 50, 80, 10
+ *   
+ *   circle_resolution 11
+ *   circle 80, 80, 10
+ * 
+ * @example Closeup @ 64
+ *   circle_resolution 64
+ *   circle 185, 185, 200
+ * 
+ * @example Closeup @ 32
+ *   circle_resolution 32
+ *   circle 185, 185, 200
+ * 
+ * @example Closeup @ 16
+ *   circle_resolution 16
+ *   circle 185, 185, 200
+ */
 VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
   VALUE new_resolution;
   int argca = rb_scan_args(argc, argv, "01", &new_resolution);
@@ -670,16 +764,16 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  * 
  * @overload smoothing state
  *   @param [Boolean] state +true+ to enable smoothing or +false+ to disable it
- * 
- * @example
- *   # draw jagged lines
- *   smoothing false
- *   line 10, 10, 13, 17
- *   line 13, 17, 11, 25
- *   
- *   # draw smooth circles
- *   smoothing true
- *   circle 15, 15, 5
+ *   @example
+ *     smoothing false
+ *     circle 25, 15, 10
+ *     square 15, 30, 20
+ *     triangle 25, 75, 20
+ *     
+ *     smoothing true
+ *     circle 75, 15, 10
+ *     square 65, 30, 20
+ *     triangle 75, 75, 20
  */
 VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
   VALUE new_smoothing;
@@ -794,9 +888,67 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
 /* 
  * @overload line_width
  * @overload line_width wid
- */
-VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
-  VALUE new_line_width;
+ *   @example Blinds
+ *     line_width 1
+ *     line 0, 10, width, 10
+ *     
+ *     line_width 2
+ *     line 0, 20, width, 20
+ *     
+ *     line_width 3
+ *     line 0, 30, width, 30
+ *     
+ *     line_width 4
+ *     line 0, 40, width, 40
+ *     
+ *     line_width 5
+ *     line 0, 50, width, 50
+ *     
+ *     line_width 6
+ *     line 0, 60, width, 60
+ *     
+ *     line_width 7
+ *     line 0, 70, width, 70
+ *     
+ *     line_width 8
+ *     line 0, 80, width, 80
+ *     
+ *     line_width 9
+ *     line 0, 90, width, 90
+ *     
+ *     line_width 10
+ *     line 0, 100, width, 100
+ * 
+ *   @example Cone
+ *     line_width 1
+ *     line 0, height/2, width, height/2
+ *     
+ *     line_width 2
+ *     line 10, height/2, width, height/2
+ *     
+ *     line_width 3
+ *     line 20, height/2, width, height/2
+ *     
+ *     line_width 4
+ *     line 30, height/2, width, height/2
+ *     
+ *     line_width 5
+ *     line 40, height/2, width, height/2
+ *     
+ *     line_width 6
+ *     line 50, height/2, width, height/2
+ *     
+ *     line_width 7
+ *     line 60, height/2, width, height/2
+ *     
+ *     line_width 8
+ *     line 70, height/2, width, height/2
+ *     
+ *     line_width 9
+ *     line 80, height/2, width, height/2
+ */    
+VALUE zline_width 10                     j_line_width(int argc, VALUE* argv, VALUE klass) {
+  VALUEline 90, height/2, width, height/2 new_line_width;
   int argca = rb_scan_args(argc, argv, "01", &new_line_width);
 
   switch(argca) {
@@ -815,11 +967,20 @@ VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
 
 /* 
  * @overload background name
- * @overload background name, a
+ *   @example Default
+ *     background :dark
+ *   @example Orange
+ *     background :orange
+ * 
  * @overload background grey
- * @overload background grey, a
+ *   @example Light
+ *     background 200
+ *   @example Dark
+ *     background 50
+ * 
  * @overload background r, g, b
- * @overload background r, g, b, a
+ *   @example Blueish
+ *     background 64, 99, 128
  */
 VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
   int r, g, b, a;
@@ -884,9 +1045,15 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
  * @param [Boolean] state +true+ or +false+, enabling or disabling filling respectively
  * 
  * @example
- *   # draw outlines
+ *   fill true
+ *   circle 25, 15, 10
+ *   square 15, 30, 20
+ *   triangle 25, 75, 20
+ *   
  *   fill false
- *   circle 10, 10, 5
+ *   circle 75, 15, 10
+ *   square 65, 30, 20
+ *   triangle 75, 75, 20
  */
 VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
   VALUE new_fill;
