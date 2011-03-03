@@ -8,7 +8,14 @@ def screenshot code
   
   # append screenshot command and write incoming code to a temp file
   # TODO zajal should support piped input and a screenshot-output switch
-  injected_code = "size 100\n#{code}\ngrab_screen.save '#{shotpath}'\nexit"
+  injected_code = <<-CODE
+  size 100
+  #{code}
+  if frame > 1 then
+    grab_screen.save '#{shotpath}'
+    exit
+  end
+  CODE
   codefile = Tempfile.new "zajal_code"
   codefile.write injected_code
   codefile.rewind
