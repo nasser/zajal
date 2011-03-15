@@ -55,3 +55,19 @@ def once_every f
   yield if block_given? and frame % f == 0
   return frame % f == 0
 end
+
+def horizontal y, x1=nil, x2=nil
+  if x1 and x2
+    line x1, y, x2, y
+  else
+    line 0, y, width, y
+  end
+end
+
+def vertical x, y1=nil, y2=nil
+  if y1 and y2
+    line x, y1, x, y2
+  else
+    line x, 0, x, height
+  end
+end
