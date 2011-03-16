@@ -121,6 +121,8 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
 VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   VALUE new_rectmode;
   int argca = rb_scan_args(argc, argv, "01", &new_rectmode);
+  int rect_mode;
+  ID new_rectmode_id;
   
   ID center_id = rb_intern("center");
   ID corner_id = rb_intern("corner");
@@ -128,7 +130,7 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   switch(argca) {
     case 0:
       /*  called without argument, return current rect mode */
-      int rect_mode = ofGetRectMode();
+      rect_mode = ofGetRectMode();
     
       if(rect_mode == OF_RECTMODE_CENTER) {
         return ID2SYM(center_id);
@@ -141,7 +143,7 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
     
     case 1:
       /*  called with argument, set new rectmode */
-      ID new_rectmode_id = SYM2ID(new_rectmode);
+      new_rectmode_id = SYM2ID(new_rectmode);
     
       if(new_rectmode_id == center_id) {
         ofSetRectMode(OF_RECTMODE_CENTER);
