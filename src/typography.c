@@ -99,10 +99,12 @@ VALUE zj_font_draw(int argc, VALUE* argv, VALUE self) {
   VALUE s, x, y;
   rb_scan_args(argc, argv, "30", &s, &x, &y);
   
+  VALUE draw_string = rb_funcall(s, rb_intern("to_s"), 0);
+  
   ofTrueTypeFont* font_ptr;
   Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
   
-  font_ptr->drawString(StringValuePtr(s), NUM2DBL(x), NUM2DBL(y));
+  font_ptr->drawString(StringValuePtr(draw_string), NUM2DBL(x), NUM2DBL(y));
   
   return Qnil;
 }
