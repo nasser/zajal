@@ -8,10 +8,6 @@
 
 /* global typography module and font class */
 VALUE zj_mTypography;
-
-/* 
- * Is this where you do it?
- */
 VALUE zj_cFont;
 
 void zj_typography_reset_stacked_text() {
@@ -204,7 +200,11 @@ VALUE zj_font_character_count(VALUE self) {
  * 
  * @todo Support TrueType fonts
  */
-VALUE zj_typography_text(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_typography_text(int argc, VALUE* argv, VALUE self) {
+  // VALUE text_string = rb_funcall(s, rb_intern("to_s"), 0);
+  // ofDrawBitmapString(StringValuePtr(text_string), NUM2DBL(x), NUM2DBL(y));
+  // 
+  // return Qnil;
   VALUE s, x, y;
   rb_scan_args(argc, argv, "12", &s, &x, &y);
   
@@ -230,12 +230,6 @@ VALUE zj_typography_text(int argc, VALUE* argv, VALUE klass) {
 void Init_Typography() {
   zj_mTypography = rb_define_module_under(zj_mZajal, "Typography");
   rb_define_module_under(zj_mTypography, "Internals");
-  
-  INTERNAL_SET(zj_mTypography, stacked_text_initial_x, INT2FIX(1));
-  INTERNAL_SET(zj_mTypography, stacked_text_initial_y, INT2FIX(11));
-  INTERNAL_SET(zj_mTypography, stacked_text_line_height, INT2FIX(13));
-  INTERNAL_SET(zj_mTypography, stacked_text_x, INT2FIX(10));
-  INTERNAL_SET(zj_mTypography, stacked_text_y, INTERNAL_GET(zj_mTypography, stacked_text_initial_y));
   
   /* image functions */
   INTERNAL_SET(zj_mTypography, font_hash, rb_hash_new());
