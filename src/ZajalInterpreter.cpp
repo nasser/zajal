@@ -317,17 +317,8 @@ void ZajalInterpreter::loadScript(char* fileName) {
   rb_include_module(rb_cObject, rb_mMath);
   rb_require("open-uri");
   
-  // require ruby-implemented experimental functionality
-  rb_require("attraway");
-  rb_require("error");
-  rb_require("defaults");
-  rb_require("sugar");
-  rb_require("point");
-  rb_require("text");
-  rb_require("keyevent");
-  rb_require("loading");
-  rb_require("colors");
-  rb_require("experimental");
+  // require ruby-implemented functionality
+  rb_require("zajal");
 }
 
 void ZajalInterpreter::reloadScript() {
