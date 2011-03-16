@@ -949,8 +949,8 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
  *     line_width 9
  *     line 80, height/2, width, height/2
  */    
-VALUE zline_width 10                     j_line_width(int argc, VALUE* argv, VALUE klass) {
-  VALUEline 90, height/2, width, height/2 new_line_width;
+VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
+  VALUE new_line_width;
   int argca = rb_scan_args(argc, argv, "01", &new_line_width);
 
   switch(argca) {
