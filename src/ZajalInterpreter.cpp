@@ -95,12 +95,16 @@ void ZajalInterpreter::update() {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::draw() {
+  VALUE error_message, last_error, backtrace;
+  VALUE* backtrace_ptr;
+  char* error_message_ptr, *error_class;
+  long backtrace_length;
+  
   switch(state) {
     case INTERPRETER_ERROR:
       // TODO stop all playing videos
       
-      char* error_message_ptr;
-      VALUE error_message = zj_safe_funcall(rb_cObject, rb_intern("process_error"), 0);
+      error_message = zj_safe_funcall(rb_cObject, rb_intern("process_error"), 0);
       if(ruby_error) {
         error_message_ptr = RSTRING_PTR(rb_obj_as_string(rb_gv_get("$!")));
       } else {
@@ -109,16 +113,16 @@ void ZajalInterpreter::draw() {
       
       if(RTEST(INTERNAL_GET(zj_mApp, verbose))) {
         // http://metaeditor.sourceforge.net/embed/
-        VALUE last_error = rb_gv_get("$!");
-        char* error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
-        char* error_message = RSTRING_PTR(rb_obj_as_string(last_error));
+        last_error = rb_gv_get("$!");
+        error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
+        error_message_ptr = RSTRING_PTR(rb_obj_as_string(last_error));
         ZJ_LOG("class   = %s\n", error_class); 
         ZJ_LOG("message = %s\n", error_message_ptr); 
         
         ZJ_LOG("backtrace = \n");
-        VALUE backtrace = rb_attr_get(last_error, rb_intern("bt"));
-        long backtrace_length = RARRAY_LEN(backtrace);
-        VALUE* backtrace_ptr = RARRAY_PTR(backtrace);
+        backtrace = rb_attr_get(last_error, rb_intern("bt"));
+        backtrace_length = RARRAY_LEN(backtrace);
+        backtrace_ptr = RARRAY_PTR(backtrace);
         for(int i=0; i<backtrace_length; i++)
           ZJ_LOG("\tfrom %s\n", RSTRING_PTR(backtrace_ptr[i]));
       }
@@ -339,7 +343,7 @@ void ZajalInterpreter::reloadScript() {
   if(state == INTERPRETER_RUNNING)
     lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
   
-  ZJ_LOG("Reading %s (%db)\n", scriptName, scriptFileSize);
+  ZJ_LOG("Reading %s (%db)\n", scriptName, (int)scriptFileSize);
   
   // load file into memory
   char* scriptFileContent = (char*)malloc(scriptFileSize * sizeof(char) + 1);
