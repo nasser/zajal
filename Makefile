@@ -40,7 +40,6 @@ ZAJAL_LIBRARIES = $(OF_LIB) $(RUBY_LIB)
 .PHONY: all clean configure docs $(BUILD_DIR)/version.c.o
 
 all: $(BINARY)
-	@echo
 	@echo "Built Zajal $(ZAJAL_GIT_SHORT_HASH) to $(BINARY)"
 
 docs:
