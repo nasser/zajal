@@ -107,6 +107,7 @@ void Init_Mathematics();
 void Init_Videos();
 void Init_Typography();
 void Init_Version();
+void Init_Hardware();
 
 VALUE zj_ary_every(int argc, VALUE* argv, VALUE self) {
   long n = argc == 0 ? 1 : NUM2LONG(argv[0]);
@@ -144,6 +145,7 @@ void zajal_init() {
   Init_Videos();
   Init_Typography();
   Init_Version();
+  Init_Hardware();
   
   rb_define_method(rb_cArray, "each", RUBY_METHOD_FUNC(zj_ary_each), -1);
   rb_define_method(rb_cArray, "every", RUBY_METHOD_FUNC(zj_ary_every), -1);
@@ -157,5 +159,6 @@ void zajal_init() {
   rb_include_module(rb_cObject, zj_mVideos);
   rb_include_module(rb_cObject, zj_mVersion);
   rb_include_module(rb_cObject, zj_mTypography);
+  rb_include_module(rb_cObject, zj_mHardware);
   rb_include_module(rb_cObject, zj_mZajal);
 }
