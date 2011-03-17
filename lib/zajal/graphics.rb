@@ -1,14 +1,7 @@
 module Graphics
-  def named_color c, val=nil
-    if val.nil?
-      Internals.named_colors[c]
-    else
-      Internals.named_colors[c] = val
-    end
-  end
-  
   module Internals
     @named_colors = {}
+    
     # X11/SVG color http://www.w3.org/TR/css3-color/#svg-color
     @named_colors[:snow] = [255, 250, 250]
     @named_colors[:ghost_white] = [248, 248, 255]
@@ -157,5 +150,71 @@ module Graphics
     # Zajal colors
     @named_colors[:light] = [240, 240, 240]
     @named_colors[:dark] = [32, 32, 32]
+  end
+  
+  def named_color c, val=nil
+    if val.nil?
+      Internals.named_colors[c]
+    else
+      Internals.named_colors[c] = val
+    end
+  end
+  
+  def point x=nil, y=nil
+    p, = Mathematics::Internals.scan_for_vectors 2, x, y
+    circle p.x, p.y, 1
+  end
+  
+  alias :__circle :circle
+  def circle *args
+    r = args.pop
+    v, = Mathematics::Internals.scan_for_vectors 2, *args
+    __circle v.x, v.y, r
+  end
+  
+  alias :__bezier :bezier
+  def bezier *args
+    a, b, c, d = Mathematics::Internals.scan_for_vectors 2, *args
+    __bezier a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y
+  end
+  
+  alias :__curve :curve
+  def curve *args
+    a, b, c, d = Mathematics::Internals.scan_for_vectors 2, *args
+    __curve a.x, a.y, b.x, b.y, c.x, c.y, d.x, d.y
+  end
+  
+  alias :__ellipse :ellipse
+  def ellipse *args
+    w, h = args.pop 2
+    v, = Mathematics::Internals.scan_for_vectors 2, *args
+    __ellipse v.x, v.y, w, h
+  end
+  
+  alias :__line :line
+  def line *args
+    a, b = Mathematics::Internals.scan_for_vectors 2, *args
+    __line a.x, a.y, b.x, b.y
+  end
+  
+  alias :__rectangle :rectangle
+  def rectangle *args
+    w, h = args.pop 2
+    v, = Mathematics::Internals.scan_for_vectors 2, *args
+    __rectangle v.x, v.y, w, h
+  end
+  
+  alias :__square :square
+  def square *args
+    s = args.pop
+    v, = Mathematics::Internals.scan_for_vectors 2, *args
+    __square v.x, v.y, s
+  end
+  
+  # TODO triangle method. move logic from c to here
+  alias :__triangle :triangle
+  def triangle *args
+    a, b, c = Mathematics::Internals.scan_for_vectors 2, *args
+    __triangle a.x, a.y, b.x, b.y, c.x, c.y
   end
 end

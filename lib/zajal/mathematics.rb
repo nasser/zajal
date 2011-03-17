@@ -7,15 +7,12 @@ module Mathematics
     @epsilon = 0.01
     
     def self.scan_for_vectors dim, *args
+      args.compact!
       raise ArgumentError, "can't mix Vectors and non-Vectors!" if args.any? { |v| v.is_a? Vector } and args.any? { |v| not v.is_a? Vector } 
       
       args.all? { |v| v.is_a? Vector } ? args : args.each_slice(dim).map { |coords| Vector.new coords }
     end
     
-  end
-  
-  def point x, y
-    circle x, y, 1
   end
   
   class Vector < ::Vector
