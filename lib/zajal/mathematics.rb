@@ -1,6 +1,5 @@
 # point drawing and class
 require "matrix"
-require "pp"
 
 module Mathematics
   module Internals
