@@ -6,7 +6,11 @@
 VALUE zj_mEvents;
 
 // event procs
-extern ofBaseApp* ofAppPtr;
+#ifdef __cplusplus
+ extern "C" {
+    ofBaseApp* ofAppPtr;
+  }
+#endif
 
 VALUE zj_setup(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, setup_proc, rb_block_proc());

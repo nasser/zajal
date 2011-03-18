@@ -34,7 +34,7 @@ VALUE zj_image_load(VALUE self, VALUE filename) {
   return Qnil;
 }
 
-int zj_sym_to_image_type(VALUE sym) {
+ofImageType zj_sym_to_image_type(VALUE sym) {
   ID type_id = SYM2ID(sym);
   
   if(type_id == rb_intern("grayscale")) {
@@ -51,7 +51,7 @@ int zj_sym_to_image_type(VALUE sym) {
     
   }
   
-  return 0;
+  return OF_IMAGE_UNDEFINED;
 }
 
 VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
