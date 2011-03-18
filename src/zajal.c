@@ -10,8 +10,8 @@ VALUE zj_mZajal;
 char* zj_to_data_path(char* path) {
   char* _zj_data_path = RSTRING_PTR(INTERNAL_GET(zj_mApp, data_path));
   
-  if(path[0] == '/') {
-    // path is absolute, return a copy of it
+  if(path[0] == '/' || strstr(path, "http://") != NULL) {
+    // path is absolute or remote, return a copy of it
     // allocate space for copied path
     char* copied_path = (char*)calloc(strlen(path)+1, sizeof(char));
     strncpy(copied_path, path, strlen(path)+1);
