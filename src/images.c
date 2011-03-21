@@ -11,30 +11,11 @@ void zj_image_dealloc(void* image) {
 }
 
 VALUE zj_image_new(int argc, VALUE* argv, VALUE klass) {
-  if(argc > 0 && TYPE(argv[0] == T_STRING)) {
-    /* loading an image, check if its cached first */
-    VALUE cached_image = rb_hash_aref(INTERNAL_GET(zj_mImages, image_hash), argv[0]);
-    
-    if(NIL_P(cached_image)) {
-      /* image never used before, load it from disk, cache it */
-      ofImage* image_ptr = new ofImage();
-      cached_image = Data_Wrap_Struct(klass, 0, zj_image_dealloc, image_ptr);
-      rb_obj_call_init(cached_image, argc, argv);
-      rb_hash_aset(INTERNAL_GET(zj_mImages, image_hash), argv[0], cached_image);
-    }
-    
-    return cached_image;
-    
-  } else {
-    /* creating a blank image, don't check cache */
-    ofImage* image_ptr = new ofImage();
-    VALUE image = Data_Wrap_Struct(klass, 0, zj_image_dealloc, image_ptr);
-    rb_obj_call_init(image, argc, argv);
-    
-    return image;
-  }
+  ofImage* image_ptr = new ofImage();
   
-  return Qnil;
+  VALUE image = Data_Wrap_Struct(klass, 0, zj_image_dealloc, image_ptr);
+  rb_obj_call_init(image, argc, argv);
+  return image;
 }
 
 VALUE image_new() {
