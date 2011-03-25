@@ -114,7 +114,7 @@ VALUE zj_ary_every(int argc, VALUE* argv, VALUE self) {
   VALUE* yield_ary = (VALUE*)malloc((n + 1)*sizeof(VALUE));
   
   RETURN_ENUMERATOR(self, 0, 0);
-  for(long i = 0; i < RARRAY_LEN(self)-n; i++) {
+  for(long i = 0; i < RARRAY_LEN(self)-(n-1); i++) {
     for(long j = 0; j < n; j++) yield_ary[j] = RARRAY_PTR(self)[i+j];
     yield_ary[n] = LONG2FIX(i);
     
@@ -123,13 +123,6 @@ VALUE zj_ary_every(int argc, VALUE* argv, VALUE self) {
   
   free(yield_ary);
   return self;
-}
-
-VALUE zj_ary_each(int argc, VALUE* argv, VALUE self) {
-  // needed to deal with each do |*arg| case
-  // TODO how slow is this?
-  if(rb_proc_arity(rb_block_proc()) < 0) return rb_ary_each(self);
-  return zj_ary_every(argc, argv, self);
 }
 
 void zajal_init() {
@@ -147,7 +140,6 @@ void zajal_init() {
   Init_Version();
   Init_Hardware();
   
-  rb_define_method(rb_cArray, "each", RUBY_METHOD_FUNC(zj_ary_each), -1);
   rb_define_method(rb_cArray, "every", RUBY_METHOD_FUNC(zj_ary_every), -1);
   
   /*  include zajal modules to Object, make them global */
