@@ -18,6 +18,10 @@ VALUE zj_arduino_new(int argc, VALUE* argv, VALUE klass) {
   
   VALUE arduino = Data_Wrap_Struct(klass, 0, zj_arduino_dealloc, arduino_ptr);
   rb_obj_call_init(arduino, argc, argv);
+  
+  /* TODO arduino objects are never inaccessible! */
+  rb_ary_push(INTERNAL_GET(zj_mHardware, arduino_ary), arduino);
+  
   return arduino;
 }
 
@@ -155,10 +159,28 @@ VALUE zj_arduino_setup(VALUE self) {
   }
 }
 
+VALUE zj_hardware_update_hook(VALUE self, VALUE id) {
+  VALUE arduino_ary = INTERNAL_GET(zj_mHardware, arduino_ary);
+  VALUE* arduino_ary_ptr = RARRAY_PTR(arduino_ary);
+  int arduino_ary_len = RARRAY_LEN(arduino_ary);
+  
+  for(int i = 0; i < arduino_ary_len; i++) {
+    zj_arduino_update(arduino_ary_ptr[i]);
+    printf("Updating arduino: %d\n", arduino_ary_ptr[i]);
+  }
+  
+  return Qnil;
+}
+
 
 void Init_Hardware() {
   zj_mHardware = rb_define_module_under(zj_mZajal, "Hardware");
   rb_define_module_under(zj_mHardware, "Internals");
+  INTERNAL_SET(zj_mHardware, arduino_hash, rb_hash_new());
+  INTERNAL_SET(zj_mHardware, arduino_ary, rb_ary_new());
+  
+  VALUE hardware_update_hook = rb_proc_new(RUBY_METHOD_FUNC(zj_hardware_update_hook), zj_mHardware);
+  rb_ary_push(INTERNAL_GET(zj_mEvents, update_hooks), hardware_update_hook);
   
   zj_cArduino = rb_define_class_under(zj_mHardware, "Arduino", rb_cObject);
   rb_define_singleton_method(zj_cArduino, "new", RUBY_METHOD_FUNC(zj_arduino_new), -1);

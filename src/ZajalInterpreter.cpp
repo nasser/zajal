@@ -87,6 +87,14 @@ void ZajalInterpreter::setup() {
 //--------------------------------------------------------------
 void ZajalInterpreter::update() {
   if(state == INTERPRETER_RUNNING) {
+    
+    VALUE hooks_ary = INTERNAL_GET(zj_mEvents, update_hooks);
+    VALUE* hooks_ptr = RARRAY_PTR(hooks_ary);
+    int hooks_len = RARRAY_LEN(hooks_ary);
+    
+    for(int i = 0; i < hooks_len; i++)
+      zj_safe_proc_call(hooks_ptr[i], 0);
+    
     // if no error exists, run user update method, catch runtime errors
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, update_proc), 0);
     if(ruby_error) state = INTERPRETER_ERROR;
