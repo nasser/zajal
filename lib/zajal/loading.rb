@@ -115,7 +115,9 @@ def globalize_code code, sigil="$"
   top_level_locals = sexp.reduce([], &to_assigns)
   
   # globalize each top level local
-  top_level_locals.each { |l| globalize_one_ident.call l, sexp }
+  top_level_locals.each { |l|
+    globalize_one_ident.call l, sexp
+  }
   
   code_ary.join
 end
@@ -162,6 +164,8 @@ def live_load new_code
   
   old_state = capture_state
   
+  global_lines = new_sexp_lines.fetch("/assign/var_field/@gvar").map { |s| s[0] if s.is_a? Array }.compact
+  
   # get rid of deleted events
   old_sexp.fetch("/method_add_block/method_add_arg/fcall/@ident").each do |event|
     eval "Events::Internals.#{event}_proc = nil unless Events::Internals.#{event}_proc.nil?"
@@ -186,7 +190,6 @@ def live_load new_code
     Object.send(:remove_const, modul.to_sym)
   end
   
-  
   # run the code
   begin
     if new_sexp.fetch("/method_add_block/method_add_arg/fcall/@ident").empty?
@@ -194,34 +197,36 @@ def live_load new_code
       Events::Internals.defaults_proc.call
       Events::Internals.draw_proc = proc new_code
       Events::Internals.draw_proc.call
+      
     else
       # blocks are used, we're in complete mode
-      eval new_code
-      # kind of a kludge!
-      Typography::Internals.stacked_text_x = Typography::Internals.stacked_text_initial_x
-      Typography::Internals.stacked_text_y = Typography::Internals.stacked_text_initial_y
-      Events::Internals.update_proc.call unless Events::Internals.update_proc.nil?
-      Events::Internals.draw_proc.call unless Events::Internals.draw_proc.nil?
+      
+      # TODO support global assigns burried under if/while/etc blocks
+      if added.fetch("/method_add_block/method_add_arg/fcall/@ident").include? "setup" or not added.fetch("/assign/var_field/@gvar").empty?
+        # setup/globals modified, restart
+        eval new_code
+        
+        Events::Internals.defaults_proc.call
+        Events::Internals.setup_proc.call unless Events::Internals.setup_proc.nil?
+      else
+        # otherwise, sculpt, recreate global state
+        
+        # create version of new_code that has no global declarations
+        new_code_no_globals = new_code.each_line.each_with_index.map do |line, lineno|
+          global_lines.any? { |l| l == lineno+1 } ? "\n" : line
+        end.join
+        
+        eval new_code_no_globals
+        
+        immediate_state, ref_state = old_state
+        immediate_state.each { |gv, val| eval "#{gv.to_s} = #{val.inspect}" }
+        ref_state.each { |gv, val| eval "#{gv.to_s} = ObjectSpace._id2ref(#{val})" }
+      end
     end
   ensure
-    # dont want to leave this off!
+    # as you were
     GC.enable
+    ObjectSpace.garbage_collect
   end
   
-  
-  # TODO support global assigns burried under if/while/etc blocks
-  if added.fetch("/method_add_block/method_add_arg/fcall/@ident").include? "setup" or not added.fetch("/assign/var_field/@gvar").empty?
-    # re-run setup if setup modified
-    Events::Internals.defaults_proc.call
-    Events::Internals.setup_proc.call unless Events::Internals.setup_proc.nil?
-  else
-    # recreate state otherwise
-    immediate_state, ref_state = old_state
-    immediate_state.each { |gv, val| eval "#{gv.to_s} = #{val.inspect}" }
-    ref_state.each { |gv, val| eval "#{gv.to_s} = ObjectSpace._id2ref(#{val})" }
-  end
-  
-  # as you were
-  GC.enable
-  ObjectSpace.garbage_collect
 end
