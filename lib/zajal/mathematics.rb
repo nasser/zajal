@@ -91,7 +91,7 @@ module Mathematics
     end
     
     def distance other
-      sqrt distance(other)
+      sqrt distance_squared(other)
     end
     
     def normalize
