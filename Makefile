@@ -2,6 +2,7 @@ ZAJAL_DIR = src
 BUILD_DIR = build
 BIN_DIR = bin
 BINARY = $(BIN_DIR)/zajal
+LIBRARY = $(BIN_DIR)/libzajal.a
 
 
 ### 
@@ -37,10 +38,13 @@ ZAJAL_OBJ = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(notdir $(ZAJAL_SRC))))
 ZAJAL_LIBRARIES = $(OF_LIB) $(RUBY_LIB)
 
 
-.PHONY: all clean configure docs $(BUILD_DIR)/version.c.o
+.PHONY: all static clean configure docs $(BUILD_DIR)/version.c.o
 
 all: $(BINARY)
-	@echo "Built Zajal $(ZAJAL_GIT_SHORT_HASH) to $(BINARY)"
+	@echo "Built Zajal $(ZAJAL_GIT_SHORT_HASH) binary to $(BINARY)"
+
+static: $(LIBRARY) $(ZAJAL_LIBRARIES)
+	@echo "Built Zajal $(ZAJAL_GIT_SHORT_HASH) static library to $(LIBRARY)"
 
 docs:
 	yardoc -e util/docs/screenshots src
@@ -49,6 +53,12 @@ $(BINARY): $(ZAJAL_OBJ)
 	@echo -n "Making binary..."
 	@mkdir -p $(BIN_DIR)
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) $(OF_FRAMEWORKS) $(ZAJAL_LIBRARIES) $(ZAJAL_OBJ) -o $(BINARY)
+	@echo "OK"
+
+$(LIBRARY): $(ZAJAL_OBJ)
+	@echo -n "Making static library..."
+	@mkdir -p $(BIN_DIR)
+	@libtool -static -o $(LIBRARY) $(ZAJAL_OBJ) $(ZAJAL_LIBRARIES)
 	@echo "OK"
 
 configure: $(ZAJAL_DIR)/config.h
@@ -82,7 +92,7 @@ $(BUILD_DIR)/%.c.o: $(ZAJAL_DIR)/%.c
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@echo "OK"
 
-$(BUILD_DIR)/version.c.o: $(ZAJAL_DIR)/version.c
+$(BUILD_DIR)/version.cpp.o: $(ZAJAL_DIR)/version.cpp
 	@echo -n "Building in version information..."
 	@mkdir -p $(BIN_DIR)
 	@cp $< $<.bak

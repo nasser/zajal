@@ -62,6 +62,14 @@ void ZajalInterpreter::run() {
   ofRunApp(this);
 }
 
+void ZajalInterpreter::run(ofAppBaseWindow* window) {
+  state = INTERPRETER_RUNNING;
+  // FIXME set to 100x100 as a workaround to get documentation screenshots working
+  // this should be handled by a more robust presetup system. see issue 17.
+  ofSetupOpenGL(window, 100, 100, OF_WINDOW);
+  ofRunApp(this);
+}
+
 void ZajalInterpreter::appendLoadPath(char* path) {
   char* resolved_path = realpath(path, NULL);
   if(resolved_path) {
@@ -291,7 +299,8 @@ void ZajalInterpreter::loadScript(char* fileName) {
     ::exit(2);
   }
   
-  scriptName = fileName;
+  scriptName = (char*)calloc(strlen(fileName)+1, sizeof(char));
+  strncpy(scriptName, fileName, strlen(fileName)+1);
   
   // try to stat the file, bail out if inaccessible
   struct stat attrib;
