@@ -40,6 +40,7 @@ class ZajalInterpreter : public ofBaseApp {
 		void windowResized(int w, int h);
 		
     void printVersion();
+    void run(ofAppBaseWindow* window);
     void run();
     void loadScript(char* filename);
     void reloadScript();
