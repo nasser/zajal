@@ -4,6 +4,13 @@
 #include "ofMain.h"
 #include "zajal.h"
 
+#include "ofCairoRenderer.h"
+#include "ofGLRenderer.h"
+#include "ofRendererCollection.h"
+
+ofGLRenderer gl;
+ofRendererCollection renderer;
+
 /* global zajal module and context */
 VALUE zj_mZajal;
 
@@ -125,9 +132,28 @@ VALUE zj_ary_every(int argc, VALUE* argv, VALUE self) {
   return self;
 }
 
+VALUE zj_export(VALUE self, VALUE filename) {
+  ofCairoRenderer* cairo = new ofCairoRenderer();
+  
+  char* filename_ptr = zj_to_data_path(StringValuePtr(filename));
+  cairo->setup(filename_ptr, ofCairoRenderer::PDF, false);
+  
+  renderer.renderers.pop_back();
+  renderer.renderers.push_back(cairo);
+  zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
+  zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
+  renderer.renderers.pop_back();
+  
+  renderer.renderers.push_back(&gl);
+  
+  delete cairo;
+}
+
 void zajal_init() {
   /* define the global zajal module */
   zj_mZajal = rb_define_module("Zajal");
+  
+  renderer.renderers.push_back(&gl);
   
   /* init zajal modules */
   Init_App();
@@ -140,6 +166,7 @@ void zajal_init() {
   Init_Version();
   Init_Hardware();
   
+  rb_define_method(zj_mZajal, "export", RUBY_METHOD_FUNC(zj_export), 1);
   rb_define_method(rb_cArray, "every", RUBY_METHOD_FUNC(zj_ary_every), -1);
   
   /*  include zajal modules to Object, make them global */
