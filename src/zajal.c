@@ -132,21 +132,52 @@ VALUE zj_ary_every(int argc, VALUE* argv, VALUE self) {
   return self;
 }
 
+// a hack!
+VALUE zj_grab_screen(int argc, VALUE* argv, VALUE klass);
+VALUE zj_image_save(VALUE self, VALUE filename);
+
 VALUE zj_export(VALUE self, VALUE filename) {
-  ofCairoRenderer* cairo = new ofCairoRenderer();
+  string filename_str = string(zj_to_data_path(StringValuePtr(filename)));
+  char* filename_ptr = (char*)filename_str.c_str();
   
-  char* filename_ptr = zj_to_data_path(StringValuePtr(filename));
-  cairo->setup(filename_ptr, ofCairoRenderer::PDF, false);
+  // TODO fix PNG bug in OF and streamline this code
+  if(filename_str.find(".png") != filename_str.npos) {
+    VALUE screen = zj_grab_screen(0, NULL, 0);
+    zj_image_save(screen, filename);
+      
+  } else {
+    ofCairoRenderer* cairo = new ofCairoRenderer();
   
-  renderer.renderers.pop_back();
-  renderer.renderers.push_back(cairo);
-  zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
-  zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
-  renderer.renderers.pop_back();
+    if(filename_str.find(".pdf") != filename_str.npos) {
+      cairo->setup(filename_ptr, ofCairoRenderer::PDF, false);
+      
+    } else if(filename_str.find(".svg") != filename_str.npos) {
+      cairo->setup(filename_ptr, ofCairoRenderer::SVG, false);
+      
+    }
+    
+    renderer.renderers.pop_back();
+    renderer.renderers.push_back(cairo);
   
-  renderer.renderers.push_back(&gl);
+    // background hack!
+    cairo_t* cr = cairo->getCairoContext();
+    float* bg = gl.getBgColor().v;
+    if(bg[3] > 0) {
+      cairo_rectangle(cr, 0.0, 0.0, ofGetWidth(), ofGetHeight());
+    	cairo_set_source_rgba(cr, bg[0], bg[1], bg[2], bg[3]);
+    	cairo_fill(cr);
+    }
   
-  delete cairo;
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
+    // draw twice for background to work, this sucks!
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
+    renderer.renderers.pop_back();
+  
+    renderer.renderers.push_back(&gl);
+  
+    delete cairo;
+  }
 }
 
 void zajal_init() {
