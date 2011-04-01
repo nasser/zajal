@@ -212,9 +212,9 @@ module Graphics
   end
   
   # TODO triangle method. move logic from c to here
-  alias :__triangle :triangle
-  def triangle *args
-    a, b, c = Mathematics::Internals.scan_for_vectors 2, *args
-    __triangle a.x, a.y, b.x, b.y, c.x, c.y
-  end
+  # alias :__triangle :triangle
+  # def triangle *args
+  #   a, b, c = Mathematics::Internals.scan_for_vectors 2, *args
+  #   __triangle a.x, a.y, b.x, b.y, c.x, c.y
+  # end
 end
