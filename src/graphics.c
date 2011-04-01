@@ -594,7 +594,7 @@ VALUE zj_rotate(int argc, VALUE* argv, VALUE klass) {
   switch(argca) {
     case 1:
     /*  called with one argument, treat it as z */
-    ofRotate(NUM2DBL(arg1), 0, 0, 1);
+    ofRotateZ(NUM2DBL(arg1));
   }
   
   return Qnil;
