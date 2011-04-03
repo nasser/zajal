@@ -1,14 +1,29 @@
 #import <Cocoa/Cocoa.h>
 #import "ofxCocoa.h"
 #import "ZajalInterpreter.h"
+#import "ofGLRenderer.h"
 
 int main(int argc, char *argv[])
 {
     ZajalInterpreter* zi = new ZajalInterpreter();
     zi->loadScript("/Users/nasser/Workspace/zajal/scratch/brownian.rb");
-    zi->run();
-
-//    return NSApplicationMain(argc, (const char **)argv);
+//    zi->run();
+    MSA::ofxCocoa::InitSettings      initSettings;
+    initSettings.initRect.size.width = 500;
+    initSettings.initRect.size.height  = 500;
+    initSettings.windowStyle = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+    initSettings.numFSAASamples = 4;
+    
+    MSA::ofxCocoa::AppWindow* cocoaWindow = new MSA::ofxCocoa::AppWindow(initSettings);
+    MSA::ofxCocoa::ofWindowPtr = cocoaWindow;
+    
+    cocoaWindow->setWindowTitle("ofxCocoa FTW!");
+    
+    ofSetAppPtr(zi);
+    ofSetAppWindowPtr(cocoaWindow);
+    
+    return NSApplicationMain(argc, (const char **)argv);
+    
 //    ZajalInterpreter* zi = new ZajalInterpreter();
 //    zi->loadScript("/Users/nasser/Workspace/zajal/scratch/new.rb");
 //    
@@ -33,12 +48,6 @@ int main(int argc, char *argv[])
 //    ofRunApp(zi);
 //    
 //    zi->run(&cocoaWindow);
-
     
-//    This works on its own...
-//    ZajalInterpreter* zi = new ZajalInterpreter();
-//    zi->loadScript("/Users/nasser/Workspace/zajal/scratch/new.rb");
-//    zi->run();
-//
 //    return 0;
 }
