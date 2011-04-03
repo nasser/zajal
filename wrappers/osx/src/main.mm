@@ -1,5 +1,6 @@
 #include "ofMain.h"
 #include "testApp.h"
+#include "ZajalInterpreter.h"
 
 #include "ofAppCocoaWindow.h"
 
@@ -15,8 +16,12 @@ int main(int argc, char *argv[]){
 	initSettings.initRect.size.height	= 500;
 	initSettings.windowMode				= OF_WINDOW;
     
+    ZajalInterpreter* zi = new ZajalInterpreter();
+    zi->loadScript("/Users/nasser/Workspace/zajal/scratch/brownian.rb");
+    
     ofSetAppWindowPtr(new ofAppCocoaWindow(initSettings));
-    ofSetAppPtr(new testApp());
+//    ofSetAppPtr(new testApp());
+    ofSetAppPtr(zi);
 	
     return NSApplicationMain(argc, (const char **)argv);
 }
