@@ -33,7 +33,7 @@ ZAJAL_GIT_HASH = $(shell $(GIT) log -1 --pretty=format:%H)
 ZAJAL_GIT_SHORT_HASH = $(shell $(GIT) log -1 --pretty=format:%h)
 
 ZAJAL_INCLUDES = -I$(ZAJAL_DIR)
-ZAJAL_SRC = $(shell find -E $(ZAJAL_DIR) -regex ".*\.c(pp)?$$")
+ZAJAL_SRC = $(shell find -E $(ZAJAL_DIR) -regex ".*\.cc?$$")
 ZAJAL_OBJ = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(notdir $(ZAJAL_SRC))))
 ZAJAL_LIBRARIES = $(OF_LIB) $(RUBY_LIB)
 
@@ -86,7 +86,7 @@ $(BUILD_DIR)/%.cpp.o: $(ZAJAL_DIR)/%.cpp
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@echo "OK"
 
-$(BUILD_DIR)/%.c.o: $(ZAJAL_DIR)/%.c
+$(BUILD_DIR)/%.cc.o: $(ZAJAL_DIR)/%.cc
 	@echo -n "Building $<..."
 	@mkdir -p $(BUILD_DIR)
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
