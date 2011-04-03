@@ -35,32 +35,51 @@
  ***************/ 
 
 
-#pragma once
-
-#import "GLWindow.h"
+#include "ofMain.h"
 #import "GLView.h"
+#import "GLWindow.h"
 
-@interface AppDelegate : NSObject {
-	IBOutlet GLWindow			*_glWindow;	// points to current window
-	IBOutlet GLView				*_glView;
+@implementation GLWindow
+
+-(id) initWithContentRect:(NSRect)windowRect styleMask:(int)styleMask {
+    ofAppCocoaWindow* appWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+    
+	if((self = [super initWithContentRect:windowRect styleMask:styleMask backing:NSBackingStoreBuffered defer:YES])) {
+		[self setOpaque:appWindow->initSettings().isOpaque];
+		if(appWindow->initSettings().isOpaque) {
+			[self setBackgroundColor:[NSColor blackColor]]; 
+		} else {
+			[self setBackgroundColor:[NSColor clearColor]]; 
+		}
+		
+		[self setLevel:appWindow->initSettings().windowLevel];
+		[self setHasShadow:appWindow->initSettings().hasWindowShadow];
+
+		[self setMovableByWindowBackground:NO]; 
+		[self makeKeyAndOrderFront:self];
+		[self setAcceptsMouseMovedEvents:YES];
+		self.delegate = self;
+	}
+	return self;
+}		
+
+- (void)windowDidResize:(NSNotification *)notification {
+	NSLog(@"windowDidResize");
+	
+	static ofResizeEventArgs resizeEventArgs;
+	
+	int w = self.frame.size.width;
+	int h = self.frame.size.height;
+	
+	
+	ofNotifyWindowResized(w, h);
+	
+	[self.contentView setNeedsDisplay:YES];
+}
+
+- (BOOL)canBecomeKeyWindow {
+	return YES;
 }
 
 
-@property (readonly) GLWindow	*_glWindow;
-@property (readonly) GLView		*_glView;
-
-+(AppDelegate*)instance;
-
--(IBAction) startAnimation:(id)sender;
--(IBAction) stopAnimation:(id)sender;
--(IBAction) toggleAnimation:(id)sender;
-
--(IBAction) goFullscreen:(id)sender;
--(IBAction) goWindow:(id)sender;
--(IBAction) toggleFullscreen:(id)sender;
-
 @end
-
-/*************************************************************/
-
-

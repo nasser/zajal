@@ -1,0 +1,28 @@
+<install>
+
+	<version>0.1</version>
+	<author>Mehmet Akten</author>
+	<url></url>
+
+	<requires>
+	</requires>
+    
+	<add>	
+		<src>
+			<folder name="addons/ofxMac/src">			
+				<file>../../../addons/ofxMac/src/ofxMac.h</file>
+				<file>../../../addons/ofxMac/src/ofxMac.cpp</file>
+			</folder>
+		</src>
+
+		<include>
+			<path>../../../addons/ofxMac/src</path>
+			<path>../../../addons/ofxMac/src/ofxCocoaShared</path>
+		</include>
+		
+		<link>
+		</link>
+
+	</add>
+	
+</install>

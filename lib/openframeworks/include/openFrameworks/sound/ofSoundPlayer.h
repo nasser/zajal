@@ -2,7 +2,7 @@
 
 #include "ofConstants.h"
 
-#if !defined( TARGET_OF_IPHONE ) && !defined(TARGET_ANDROID)
+#if !defined( TARGET_OF_IPHONE ) && !defined(TARGET_ANDROID) && !defined(OF_SOUND_PLAYER_QUICKTIME)
 extern "C" {
 #include "fmod.h"
 #include "fmod_errors.h"
