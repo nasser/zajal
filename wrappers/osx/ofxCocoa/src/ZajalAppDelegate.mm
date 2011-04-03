@@ -34,31 +34,83 @@
  - NONE
  ***************/ 
 
+#include "ofMain.h"
 
-#pragma once
+#import "ZajalAppDelegate.h"
+#import "ofAppCocoaWindow.h"
+#import "ofGLRenderer.h"
 
-#import "GLWindow.h"
-#import "GLView.h"
+@implementation ZajalAppDelegate
 
-@interface AppDelegate : NSObject {
-	IBOutlet GLWindow			*_glWindow;	// points to current window
-	IBOutlet GLView				*_glView;
+@synthesize _glWindow;
+@synthesize _glView;
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
+	return YES;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification*)n {
+    ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+	
+	if(_glWindow == nil) { // if no window in xib
+        NSLog(@"Can't find window in nib!");
+	}
+    
+    cocoaWindow->setGLView(_glView);
+    cocoaWindow->setGLWindow(_glWindow);
+    
+    // TODO is this the best place for this? -nasser
+    ofSetDefaultRenderer(new ofGLRenderer(false));
+	
+	ofNotifySetup();
+	
+	[self startAnimation:self];
+	
+	// clear background
+	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+- (BOOL)applicationShouldTerminate:(NSNotification*)n {
+	ofNotifyExit();
+	
+	[self stopAnimation:self];
+	return NSTerminateNow;
 }
 
 
-@property (readonly) GLWindow	*_glWindow;
-@property (readonly) GLView		*_glView;
+-(void) dealloc {
+	[_glWindow release];
+    [super dealloc];
+}
 
--(IBAction) startAnimation:(id)sender;
--(IBAction) stopAnimation:(id)sender;
--(IBAction) toggleAnimation:(id)sender;
+// the following is app-specific, should be moved somewhere -nasser
 
--(IBAction) goFullscreen:(id)sender;
--(IBAction) goWindow:(id)sender;
--(IBAction) toggleFullscreen:(id)sender;
+- (IBAction) startAnimation:(id)sender {
+	[_glView startAnimation];
+}
+
+- (IBAction) stopAnimation:(id)sender {
+	[_glView stopAnimation];
+}
+
+- (IBAction) toggleAnimation:(id)sender {
+	[_glView toggleAnimation];
+}
+
+-(IBAction) goFullscreen:(id)sender {
+    ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+    cocoaWindow->goFullscreenOnCurrent();
+}
+
+-(IBAction) goWindow:(id)sender {
+	ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+    cocoaWindow->goWindow();
+}
+
+-(IBAction) toggleFullscreen:(id)sender {
+	ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+    cocoaWindow->toggleFullscreen();
+}
 
 @end
-
-/*************************************************************/
-
-
