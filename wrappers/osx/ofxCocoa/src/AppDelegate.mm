@@ -34,36 +34,83 @@
  - NONE
  ***************/ 
 
+#include "ofMain.h"
 
-#pragma once
+#import "AppDelegate.h"
+#import "ofAppCocoaWindow.h"
+#import "ofGLRenderer.h"
 
-#import <Cocoa/Cocoa.h>
+@implementation AppDelegate
 
-namespace MSA {
-	namespace ofxCocoa {
-		
-		struct InitSettings {
-			inline InitSettings();
-			
-			bool				isOpaque;
-			NSUInteger			windowStyle;
-			int					windowLevel;
-			bool				hasWindowShadow;
-			int					numFSAASamples;
-			NSRect				initRect;
-			int					windowMode;
-		};
-		
-		
-		
-		InitSettings::InitSettings() {
-			isOpaque			= true;
-			windowStyle			= NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
-			windowLevel			= NSNormalWindowLevel;
-			hasWindowShadow		= true;
-			numFSAASamples		= 0;
-			initRect			= NSMakeRect(100, 100, 1024, 768);
-			windowMode			= OF_WINDOW;
-		}
-	}
+@synthesize _glWindow;
+@synthesize _glView;
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
+	return YES;
 }
+
+- (void)applicationDidFinishLaunching:(NSNotification*)n {
+    ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+	
+	if(_glWindow == nil) { // if no window in xib
+        NSLog(@"Can't find window in nib!");
+	}
+    
+    cocoaWindow->setGLView(_glView);
+    cocoaWindow->setGLWindow(_glWindow);
+    
+    // TODO is this the best place for this? -nasser
+    ofSetDefaultRenderer(new ofGLRenderer(false));
+	
+	ofNotifySetup();
+	
+	[self startAnimation:self];
+	
+	// clear background
+	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+- (BOOL)applicationShouldTerminate:(NSNotification*)n {
+	ofNotifyExit();
+	
+	[self stopAnimation:self];
+	return NSTerminateNow;
+}
+
+
+-(void) dealloc {
+	[_glWindow release];
+    [super dealloc];
+}
+
+// the following is app-specific, should be moved somewhere -nasser
+
+- (IBAction) startAnimation:(id)sender {
+	[_glView startAnimation];
+}
+
+- (IBAction) stopAnimation:(id)sender {
+	[_glView stopAnimation];
+}
+
+- (IBAction) toggleAnimation:(id)sender {
+	[_glView toggleAnimation];
+}
+
+-(IBAction) goFullscreen:(id)sender {
+    ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+    cocoaWindow->goFullscreenOnCurrent();
+}
+
+-(IBAction) goWindow:(id)sender {
+	ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+    cocoaWindow->goWindow();
+}
+
+-(IBAction) toggleFullscreen:(id)sender {
+	ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+    cocoaWindow->toggleFullscreen();
+}
+
+@end

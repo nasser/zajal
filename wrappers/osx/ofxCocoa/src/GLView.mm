@@ -34,6 +34,7 @@
  - NONE
  ***************/ 
 
+#include "ofMain.h"
 
 #import "GLView.h"
 #import <OpenGL/gl.h>
@@ -41,20 +42,12 @@
 #import <OpenGL/glext.h>
 #import <OpenGL/glu.h>
 
-#import "ofxCocoa.h"
-
-using namespace MSA;
-using namespace ofxCocoa;
-
-
 @implementation GLView
 
 @synthesize useDisplayLink;
 @synthesize windowMode;
-@synthesize glDidInit;
-//@synthesize openGLContext;
-//@synthesize pixelFormat;
-
+@synthesize openGLContext;
+@synthesize pixelFormat;
 
 //------ DISPLAY LINK STUFF ------
 -(CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime {
@@ -63,13 +56,11 @@ using namespace ofxCocoa;
     return kCVReturnSuccess;
 }
 
-
 // This is the renderer output callback function
 static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext){
     CVReturn result = [(GLView*)displayLinkContext getFrameForTime:outputTime];
     return result;
 }
-
 
 -(void)setupDisplayLink {
 	NSLog(@"glView::setupDisplayLink");
@@ -185,11 +176,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 
 -(void)updateAndDraw {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    ofAppCocoaWindow* appWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
     
-    if (![self glDidInit]) {
-        [self rockAndRoll];
-    }
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	// Update the animation
 	//	CFAbsoluteTime currentTime = CFAbsoluteTimeGetCurrent();
@@ -202,76 +191,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	if(useDisplayLink) CGLLockContext((CGLContextObj)[[self openGLContext] CGLContextObj]);
 	
 	// Make sure we draw to the right context
-    [[self openGLContext] update];
 	[[self openGLContext] makeCurrentContext];
 	
-	appWindow()->updateAndDraw();
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-//
-//    glLoadIdentity();									// Reset The Current Modelview Matrix
-//	glTranslatef(-1.5f,0.0f,-6.0f);						// Move Left 1.5 Units And Into The Screen 6.0
-//	glBegin(GL_TRIANGLES);								// Start Drawing A Triangle
-//    glColor3f(1.0f,0.0f,0.0f);						// Red
-//    glVertex3f( 0.0f, 1.0f, 0.0f);					// Top Of Triangle (Front)
-//    glColor3f(0.0f,1.0f,0.0f);						// Green
-//    glVertex3f(-1.0f,-1.0f, 1.0f);					// Left Of Triangle (Front)
-//    glColor3f(0.0f,0.0f,1.0f);						// Blue
-//    glVertex3f( 1.0f,-1.0f, 1.0f);					// Right Of Triangle (Front)
-//    glColor3f(1.0f,0.0f,0.0f);						// Red
-//    glVertex3f( 0.0f, 1.0f, 0.0f);					// Top Of Triangle (Right)
-//    glColor3f(0.0f,0.0f,1.0f);						// Blue
-//    glVertex3f( 1.0f,-1.0f, 1.0f);					// Left Of Triangle (Right)
-//    glColor3f(0.0f,1.0f,0.0f);						// Green
-//    glVertex3f( 1.0f,-1.0f, -1.0f);					// Right Of Triangle (Right)
-//    glColor3f(1.0f,0.0f,0.0f);						// Red
-//    glVertex3f( 0.0f, 1.0f, 0.0f);					// Top Of Triangle (Back)
-//    glColor3f(0.0f,1.0f,0.0f);						// Green
-//    glVertex3f( 1.0f,-1.0f, -1.0f);					// Left Of Triangle (Back)
-//    glColor3f(0.0f,0.0f,1.0f);						// Blue
-//    glVertex3f(-1.0f,-1.0f, -1.0f);					// Right Of Triangle (Back)
-//    glColor3f(1.0f,0.0f,0.0f);						// Red
-//    glVertex3f( 0.0f, 1.0f, 0.0f);					// Top Of Triangle (Left)
-//    glColor3f(0.0f,0.0f,1.0f);						// Blue
-//    glVertex3f(-1.0f,-1.0f,-1.0f);					// Left Of Triangle (Left)
-//    glColor3f(0.0f,1.0f,0.0f);						// Green
-//    glVertex3f(-1.0f,-1.0f, 1.0f);					// Right Of Triangle (Left)
-//	glEnd();											// Done Drawing The Pyramid
-//    
-//	glLoadIdentity();									// Reset The Current Modelview Matrix
-//	glTranslatef(1.5f,0.0f,-7.0f);						// Move Right 1.5 Units And Into The Screen 7.0
-//	glBegin(GL_QUADS);									// Draw A Quad
-//    glColor3f(0.0f,1.0f,0.0f);						// Set The Color To Green
-//    glVertex3f( 1.0f, 1.0f,-1.0f);					// Top Right Of The Quad (Top)
-//    glVertex3f(-1.0f, 1.0f,-1.0f);					// Top Left Of The Quad (Top)
-//    glVertex3f(-1.0f, 1.0f, 1.0f);					// Bottom Left Of The Quad (Top)
-//    glVertex3f( 1.0f, 1.0f, 1.0f);					// Bottom Right Of The Quad (Top)
-//    glColor3f(1.0f,0.5f,0.0f);						// Set The Color To Orange
-//    glVertex3f( 1.0f,-1.0f, 1.0f);					// Top Right Of The Quad (Bottom)
-//    glVertex3f(-1.0f,-1.0f, 1.0f);					// Top Left Of The Quad (Bottom)
-//    glVertex3f(-1.0f,-1.0f,-1.0f);					// Bottom Left Of The Quad (Bottom)
-//    glVertex3f( 1.0f,-1.0f,-1.0f);					// Bottom Right Of The Quad (Bottom)
-//    glColor3f(1.0f,0.0f,0.0f);						// Set The Color To Red
-//    glVertex3f( 1.0f, 1.0f, 1.0f);					// Top Right Of The Quad (Front)
-//    glVertex3f(-1.0f, 1.0f, 1.0f);					// Top Left Of The Quad (Front)
-//    glVertex3f(-1.0f,-1.0f, 1.0f);					// Bottom Left Of The Quad (Front)
-//    glVertex3f( 1.0f,-1.0f, 1.0f);					// Bottom Right Of The Quad (Front)
-//    glColor3f(1.0f,1.0f,0.0f);						// Set The Color To Yellow
-//    glVertex3f( 1.0f,-1.0f,-1.0f);					// Top Right Of The Quad (Back)
-//    glVertex3f(-1.0f,-1.0f,-1.0f);					// Top Left Of The Quad (Back)
-//    glVertex3f(-1.0f, 1.0f,-1.0f);					// Bottom Left Of The Quad (Back)
-//    glVertex3f( 1.0f, 1.0f,-1.0f);					// Bottom Right Of The Quad (Back)
-//    glColor3f(0.0f,0.0f,1.0f);						// Set The Color To Blue
-//    glVertex3f(-1.0f, 1.0f, 1.0f);					// Top Right Of The Quad (Left)
-//    glVertex3f(-1.0f, 1.0f,-1.0f);					// Top Left Of The Quad (Left)
-//    glVertex3f(-1.0f,-1.0f,-1.0f);					// Bottom Left Of The Quad (Left)
-//    glVertex3f(-1.0f,-1.0f, 1.0f);					// Bottom Right Of The Quad (Left)
-//    glColor3f(1.0f,0.0f,1.0f);						// Set The Color To Violet
-//    glVertex3f( 1.0f, 1.0f,-1.0f);					// Top Right Of The Quad (Right)
-//    glVertex3f( 1.0f, 1.0f, 1.0f);					// Top Left Of The Quad (Right)
-//    glVertex3f( 1.0f,-1.0f, 1.0f);					// Bottom Left Of The Quad (Right)
-//    glVertex3f( 1.0f,-1.0f,-1.0f);					// Bottom Right Of The Quad (Right)
-//	glEnd();											// Done Drawing The Quad
-
+	appWindow->updateAndDraw();
 	
 	[[self openGLContext] flushBuffer];
 	
@@ -282,25 +204,16 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 
 -(id) initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context {
-	NSLog(@"GLView::initWithFrame %@", NSStringFromRect(frameRect));
-    [self setGlDidInit:NO];
-	self = [super initWithFrame:frameRect];
-	return self;
-}
-
--(id) initWithFrame:(NSRect)frameRect {
-	self = [self initWithFrame:frameRect shareContext:nil];
-	return self;
-}
-
--(void) rockAndRoll {
-    [self setGlDidInit:YES];
+    ofAppCocoaWindow* appWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
     
-    NSLog(@"Rocking and rolling");
-    isAnimating		= false;
-	useDisplayLink	= true;
+	NSLog(@"GLView::initWithFrame %@", NSStringFromRect(frameRect));
 	
-	if(appWindow()->initSettings().numFSAASamples) {
+	isAnimating		= false;
+	useDisplayLink	= false;
+	
+	pixelFormat = nil;
+	
+	if(appWindow->initSettings().numFSAASamples) {
 		NSOpenGLPixelFormatAttribute attribs[] = {
 			NSOpenGLPFAAccelerated,
 			NSOpenGLPFADoubleBuffer,
@@ -310,13 +223,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 			NSOpenGLPFAColorSize, 32,
 			NSOpenGLPFAMultisample,
 			NSOpenGLPFASampleBuffers, 1,
-			NSOpenGLPFASamples, appWindow()->initSettings().numFSAASamples,
+			NSOpenGLPFASamples, appWindow->initSettings().numFSAASamples,
 			NSOpenGLPFANoRecovery,
 			0};
 		
 		NSLog(@"   trying Multisampling");
-		[self setPixelFormat: [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs]];
-		if([self pixelFormat]) {
+		pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+		if(pixelFormat) {
 			NSLog(@"      Multisampling supported");
 			glEnable(GL_MULTISAMPLE);
 		} else {
@@ -325,7 +238,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	}
 	
 	
-	if([self pixelFormat] == nil) {
+	if(pixelFormat == nil) {
 		NSLog(@"   trying non multisampling");
 		NSOpenGLPixelFormatAttribute attribs[] = {
 			NSOpenGLPFAAccelerated,
@@ -337,25 +250,21 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 			NSOpenGLPFANoRecovery,
 			0};		
 		
-		[self setPixelFormat: [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs]];
+		pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
 		glDisable(GL_MULTISAMPLE);
-		if([self pixelFormat] == nil) {
+		if(pixelFormat == nil) {
 			NSLog(@"      not even that. fail");
 		}
 	} 
 	
-	//openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:context];
-    [self setOpenGLContext: [[NSOpenGLContext alloc] initWithFormat:[NSOpenGLView defaultPixelFormat] shareContext:nil]];
-    [[self openGLContext] setView: self];
-    
-    GLint swapInt = 1;
-    [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
 	
-	if ([self openGLContext] != nil) {
+	openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:context];
+	
+	if ((self = [super initWithFrame:frameRect])) {
 		[[self openGLContext] makeCurrentContext];
 		
 		// set surface opacity
-		GLint i = appWindow()->initSettings().isOpaque;
+		GLint i = appWindow->initSettings().isOpaque;
 		[[self openGLContext] setValues:&i forParameter:NSOpenGLCPSurfaceOpacity]; 
 		
 		// enable vertical sync
@@ -370,25 +279,27 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 													 name:NSViewGlobalFrameDidChangeNotification
 												   object:self];
 	}
-
+	
+	
+	return self;
 }
 
-- (void)prepareOpenGL {
-    NSLog(@"prepareOpenGL");
+-(id) initWithFrame:(NSRect)frameRect {
+	self = [self initWithFrame:frameRect shareContext:nil];
+	return self;
 }
 
 -(void)lockFocus {
 	[super lockFocus];
 	if ([[self openGLContext] view] != self)
-        [[self openGLContext] setView: self];
-
+		[[self openGLContext] setView:self];
 }
 
 -(void)dealloc {
 	[self stopAnimation];
 	
-//	[openGLContext release];
-//	[pixelFormat release];
+	[openGLContext release];
+	[pixelFormat release];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewGlobalFrameDidChangeNotification object:self];
 	[super dealloc];
@@ -400,6 +311,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	NSLog(@"GLView::awakeFromNib, window:%@",[self window]);
 	[[self window] setAcceptsMouseMovedEvents:YES]; 
 }
+
+
+
 
 //-(void)goFullscreenOnRect:(NSRect)rect {
 //	windowMode = OF_FULLSCREEN;
@@ -460,8 +374,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 -(void)toggleFullscreen {
-	if(windowMode == OF_WINDOW) [self goFullscreen:currentScreen()];
-	else [self goWindow];
+    ofAppCocoaWindow* appWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+    
+	if(windowMode == OF_WINDOW)
+        [self goFullscreen:appWindow->currentScreen()];
+	else
+        [self goWindow];
 }
 
 

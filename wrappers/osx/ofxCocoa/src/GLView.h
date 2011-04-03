@@ -34,62 +34,50 @@
  - NONE
  ***************/ 
 
-#pragma once
 
-#include "ofMain.h"
+#import "glew.h"
+#import <Cocoa/Cocoa.h>
+#import <QuartzCore/CVDisplayLink.h>
 
-#import "AppDelegate.h"
-#import "AppWindow.h"
-#import "GLWindow.h"
-#import "GLView.h"
+#import "ofAppCocoaWindow.h"
 
-namespace MSA {
-	namespace ofxCocoa {
-		
-		AppDelegate*		appDelegate();
-		GLWindow*			glWindow();
-		GLView*				glView();
-		AppWindow*			appWindow();
-        
-        extern AppWindow* ofWindowPtr;
-		
-		NSPoint				toNSPoint(ofPoint p);
-		ofPoint				fromNSPoint(NSPoint p);
-		
-		NSSize				toNSSize(ofPoint p);
-		ofPoint				fromNSSize(NSSize s);
-		
-		NSString*			toNSString(string s);
-		string				fromNSString(NSString *s);
 
-		NSScreen			*screen(int screenIndex);
-		NSScreen			*currentScreen();
-		NSScreen			*mainScreen();
-		
-		NSRect				rectForScreen(int screenIndex);
-		NSRect				rectForCurrentScreen();
-		NSRect				rectForMainScreen();
-		NSRect				rectForAllScreens();
-		
-		void				setWindowRect(NSRect rect);
-		NSRect				getWindowRect();
-		
-		void				goWindow();
-		void				goFullscreenOn(int screenIndex);
-		void				goFullscreenOnCurrent();
-		void				goFullscreenOnMain();
-		void				goFullscreenOnAll();
-		void				toggleFullscreen();
-		
-		void				setWindowLevel(int windowLevel = NSNormalWindowLevel);
-		int					getWindowLevel();
-		
-		void				showSystemUI(int mode = kUIModeNormal);
-		
-		void				setTransparent(bool b);
-		bool				getTransparent();
-		
-		void				setSyncToDisplayLink(bool b);
-		bool				getSyncToDisplayLink();
-	}
+@interface GLView : NSOpenGLView {
+	NSRect			savedWindowFrame;
+	int				windowMode;
+	
+	NSOpenGLContext *openGLContext;
+	NSOpenGLPixelFormat *pixelFormat;
+	
+	float			targetFrameRate;
+	BOOL			useDisplayLink;
+	CVDisplayLinkRef displayLink;
+	NSTimer			*timer;
+	BOOL			isAnimating;
 }
+
+@property (readonly) BOOL useDisplayLink;
+@property (readonly) int windowMode;
+@property (readonly) NSOpenGLContext* openGLContext;
+@property (readonly) NSOpenGLPixelFormat* pixelFormat;
+
+
+-(id) initWithFrame:(NSRect)frameRect;
+-(id) initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context;
+
+-(void) setSyncToDisplayLink:(BOOL)b;
+
+-(void) updateAndDraw;
+-(void) startAnimation;
+-(void) stopAnimation;
+-(void) toggleAnimation;
+
+-(void) setFrameRate:(float)rate;
+
+
+-(void)goFullscreen:(NSScreen*)screen;
+-(void)goWindow;
+-(void)toggleFullscreen;
+
+
+@end

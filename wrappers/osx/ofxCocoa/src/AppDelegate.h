@@ -35,50 +35,30 @@
  ***************/ 
 
 
-#import <Cocoa/Cocoa.h>
-#import <QuartzCore/CVDisplayLink.h>
+#pragma once
 
-#import "AppWindow.h"
+#import "GLWindow.h"
+#import "GLView.h"
 
-
-@interface GLView : NSOpenGLView {
-	NSRect			savedWindowFrame;
-	int				windowMode;
-	
-//	NSOpenGLContext *openGLContext;
-//	NSOpenGLPixelFormat *pixelFormat;
-	
-	float			targetFrameRate;
-	BOOL			useDisplayLink;
-	CVDisplayLinkRef displayLink;
-	NSTimer			*timer;
-	BOOL			isAnimating;
-    BOOL			glDidInit;
+@interface AppDelegate : NSObject {
+	IBOutlet GLWindow			*_glWindow;	// points to current window
+	IBOutlet GLView				*_glView;
 }
 
-@property (readonly) BOOL useDisplayLink;
-@property (readonly) int windowMode;
-@property BOOL glDidInit;
-//@property (readonly) NSOpenGLContext* openGLContext;
-//@property (readonly) NSOpenGLPixelFormat* pixelFormat;
 
+@property (readonly) GLWindow	*_glWindow;
+@property (readonly) GLView		*_glView;
 
--(id) initWithFrame:(NSRect)frameRect;
--(id) initWithFrame:(NSRect)frameRect shareContext:(NSOpenGLContext*)context;
+-(IBAction) startAnimation:(id)sender;
+-(IBAction) stopAnimation:(id)sender;
+-(IBAction) toggleAnimation:(id)sender;
 
--(void) setSyncToDisplayLink:(BOOL)b;
-
--(void) updateAndDraw;
--(void) startAnimation;
--(void) stopAnimation;
--(void) toggleAnimation;
-
--(void) setFrameRate:(float)rate;
-
-
--(void)goFullscreen:(NSScreen*)screen;
--(void)goWindow;
--(void)toggleFullscreen;
-
+-(IBAction) goFullscreen:(id)sender;
+-(IBAction) goWindow:(id)sender;
+-(IBAction) toggleFullscreen:(id)sender;
 
 @end
+
+/*************************************************************/
+
+

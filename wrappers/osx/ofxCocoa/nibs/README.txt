@@ -35,72 +35,12 @@
  ***************/ 
 
 
+These are two sample xibs (InterfaceBuilder files) for ofxCocoa.
 
-#pragma once
+use NoWindow.xib if you want to create your window programmatically (e.g. fullscreen, transparent background, no decoration etc.).
+In main.mm, fill in initSettings appropiately.
 
-#include "ofAppBaseWindow.h"
-#include "CocoaInitSettings.h"
+use WithWindow.xib if you want to design your interface in InterfaceBuilder.
+DO NOT modify this file, instead create a copy of it, edit that, and add that to your project. 
 
-@class GLView;
-
-namespace MSA {
-	namespace ofxCocoa {
-		
-		class AppWindow : public ofAppBaseWindow  {
-		public:
-			AppWindow(InitSettings initSettings = InitSettings());
-			
-			void setupOpenGL(int w, int h, int screenMode);
-			void initializeWindow();
-			void runAppViaInfiniteLoop(ofBaseApp * appPtr);
-			
-			void hideCursor();
-			void showCursor();
-			
-			void	setWindowPosition(int x, int y);
-			void	setWindowShape(int w, int h);
-			
-			int		getFrameNum();
-			float	getFrameRate();
-			double  getLastFrameTime();
-			
-			ofPoint	getWindowPosition();
-			ofPoint	getWindowSize();
-			ofPoint	getScreenSize();
-			
-			void	setFrameRate(float targetRate);
-			void	setWindowTitle(string title);
-			
-			int		getWindowMode();
-			
-			void	setFullscreen(bool fullscreen);
-			void	toggleFullscreen();
-			
-			void	enableSetupScreen();
-			void	disableSetupScreen();
-			
-			
-			// extras
-			void		updateAndDraw();
-
-			void		setWindowMode(int newWindowMode);
-            
-            GLView*     getGLView();
-			
-			InitSettings& initSettings();
-			
-		protected:
-			InitSettings _initSettings;
-			
-			ofPoint				screenSize;
-			ofPoint				viewSize;	// this is actually view size, NOT window size
-			ofPoint				windowPos;
-			
-			float				timeNow, timeThen, lastFrameTime, fps;
-			int					nFrameCount;
-			bool				bEnableSetupScreen;
-			float				frameRate;
-		};
-		
-	}
-}
+In the "Info.plist" file, edit "Main nib file base name" and enter the name of the xib you would like to use as the main xib. 
