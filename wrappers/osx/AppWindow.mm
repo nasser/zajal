@@ -175,7 +175,7 @@ namespace MSA {
 			windowPos.y	= screenSize.y = windowPos.y;		// vertically flip position
 
 
-			ofNotifyUpdate();
+			//ofNotifyUpdate();
 			
 			// set viewport, clear the screen
 			glViewport( 0, 0, viewSize.x, viewSize.y );
@@ -187,7 +187,7 @@ namespace MSA {
 				glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			}
 			
-			ofNotifyDraw();
+			//ofNotifyDraw();
 			
 			// -------------- fps calculation:
 			timeNow = ofGetElapsedTimef();

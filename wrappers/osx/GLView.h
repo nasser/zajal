@@ -45,20 +45,22 @@
 	NSRect			savedWindowFrame;
 	int				windowMode;
 	
-	NSOpenGLContext *openGLContext;
-	NSOpenGLPixelFormat *pixelFormat;
+//	NSOpenGLContext *openGLContext;
+//	NSOpenGLPixelFormat *pixelFormat;
 	
 	float			targetFrameRate;
 	BOOL			useDisplayLink;
 	CVDisplayLinkRef displayLink;
 	NSTimer			*timer;
 	BOOL			isAnimating;
+    BOOL			glDidInit;
 }
 
 @property (readonly) BOOL useDisplayLink;
 @property (readonly) int windowMode;
-@property (readonly) NSOpenGLContext* openGLContext;
-@property (readonly) NSOpenGLPixelFormat* pixelFormat;
+@property BOOL glDidInit;
+//@property (readonly) NSOpenGLContext* openGLContext;
+//@property (readonly) NSOpenGLPixelFormat* pixelFormat;
 
 
 -(id) initWithFrame:(NSRect)frameRect;

@@ -37,6 +37,7 @@
 
 
 #import "ofxCocoa.h"
+#import "ofGLRenderer.h"
 
 using namespace MSA;
 using namespace ofxCocoa;
@@ -80,17 +81,17 @@ static AppDelegate* _appDelegate = NULL;
 
 
 
--(void)createGLWindowAndView:(NSRect)windowRect {
-//	NSLog(@"createGLWindowAndView: ");
-	_glWindow	= [[GLWindow alloc] initWithContentRect:windowRect styleMask:appWindow()->initSettings().windowStyle];
-	_glView		= [[GLView alloc] initWithFrame:NSMakeRect(0, 0, windowRect.size.width, windowRect.size.height)];
-	[_glWindow setContentView:_glView];
-	[_glWindow makeKeyAndOrderFront:self];
-	[_glWindow makeFirstResponder:_glView];
-	[_glView release];
-}
-
-
+//-(void)createGLWindowAndView:(NSRect)windowRect {
+////	NSLog(@"createGLWindowAndView: ");
+//	_glWindow	= [[GLWindow alloc] initWithContentRect:windowRect styleMask:appWindow()->initSettings().windowStyle];
+//	_glView		= [[GLView alloc] initWithFrame:NSMakeRect(0, 0, windowRect.size.width, windowRect.size.height)];
+//	[_glWindow setContentView:_glView];
+//	[_glWindow makeKeyAndOrderFront:self];
+//	[_glWindow makeFirstResponder:_glView];
+//	[_glView release];
+//}
+//
+//
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
 	return YES;
 }
@@ -100,19 +101,21 @@ static AppDelegate* _appDelegate = NULL;
 //	NSLog(@"applicationDidFinishLaunching");
 	
 	_appDelegate	= self;
+//	
+//	if(_glWindow == nil) { // if no window in xib, create programmatically
+//		[self createGLWindowAndView:appWindow()->initSettings().initRect];	
+//	} else {
+//	}
 	
-	if(_glWindow == nil) { // if no window in xib, create programmatically
-		[self createGLWindowAndView:appWindow()->initSettings().initRect];	
-	} else {
-	}
-	
-	ofNotifySetup();
+    ofSetDefaultRenderer(new ofGLRenderer(false));
+    
+	//ofNotifySetup();
 	
 	[self startAnimation:self];
 	
 	// clear background
-	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
+//	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 - (BOOL)applicationShouldTerminate:(NSNotification*)n {
