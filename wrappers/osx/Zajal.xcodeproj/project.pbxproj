@@ -235,7 +235,8 @@
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
-				2E898FCF13496D7900DF6FAA /* Copy Ruby Resources */,
+				2E898FCF13496D7900DF6FAA /* Copy Ruby/Zajal Libraries */,
+				2E898FD0134976DD00DF6FAA /* Copy Examples */,
 				2E143AA713489DE000A64DBA /* Resources */,
 			);
 			buildRules = (
@@ -287,19 +288,33 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2E898FCF13496D7900DF6FAA /* Copy Ruby Resources */ = {
+		2E898FCF13496D7900DF6FAA /* Copy Ruby/Zajal Libraries */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Ruby Resources";
+			name = "Copy Ruby/Zajal Libraries";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
 			shellScript = "mkdir -p $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/ruby\nmkdir -p $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/zajal\ncp -rf ../../lib/ruby/stdlib/* $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/ruby\ncp -rf ../../lib/zajal/* $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/zajal";
+		};
+		2E898FD0134976DD00DF6FAA /* Copy Examples */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Examples";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/examples/\ncp -rf ../../examples/* $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/examples/\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

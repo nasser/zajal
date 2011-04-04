@@ -74,6 +74,7 @@
 -(IBAction) toggleConsole:(id)sender;
 
 -(IBAction) reloadScript:(id)sender;
+-(IBAction) launchExample:(id)sender;
 
 -(IBAction) goFullscreen:(id)sender;
 -(IBAction) goWindow:(id)sender;

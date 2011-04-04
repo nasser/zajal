@@ -61,10 +61,44 @@
 }
 
 -(void) populateExamplesMenu {
-    NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle:@"Polygonal Flower" action:@selector(something:) keyEquivalent:@""];
-    [newItem autorelease];
-    [newItem setTarget:self];
-    [examplesMenu addItem:newItem];
+    // collect array of example files from bundle
+    NSArray* examples = [[[NSFileManager alloc] init] subpathsOfDirectoryAtPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"examples"] error:NULL];
+    
+    // iterate through example filenames to build menu
+    for(NSString* example in examples) {
+        if([example hasSuffix:@".rb"] || [example hasSuffix:@".zj"]) {
+            // break each .rb/.zj filename into components
+            NSArray* exampleComponents = [example pathComponents];
+            NSMenu* currentMenu = examplesMenu;
+            
+            // walk through the menu, building items that don't exist
+            for(NSString* component in exampleComponents) {
+                NSString* componentTitle = [[component capitalizedString] stringByReplacingOccurrencesOfString:@"-" withString:@" "];
+                // component with suffix is at the end, give it an action and no submenu
+                if([component hasSuffix:@".rb"] || [component hasSuffix:@".zj"]) {
+                    NSMenuItem* exampleMenuItem = [[NSMenuItem alloc] initWithTitle:[componentTitle substringToIndex:([component length]-3)] action:@selector(launchExample:) keyEquivalent:@""];
+                    [exampleMenuItem setRepresentedObject:[example retain]];
+                    [currentMenu addItem:exampleMenuItem];
+                    
+                } else {
+                    // component without suffix gets is a submenu, create it if it doesn't exist
+                    NSMenuItem* componentMenuItem = [currentMenu itemWithTitle:componentTitle];
+                    if(componentMenuItem == nil) {
+                        componentMenuItem = [[NSMenuItem alloc] initWithTitle:componentTitle action:NULL keyEquivalent:@""];
+                        [componentMenuItem setSubmenu:[[NSMenu alloc] initWithTitle:componentTitle]];
+                        [currentMenu addItem:componentMenuItem];
+                    }
+                    
+                    currentMenu = [componentMenuItem submenu];
+                }
+            }
+        }
+    }
+}
+
+-(IBAction) launchExample:(id)sender {
+    NSString* examplePath = [NSString stringWithFormat:@"%@/%@/%@", [[NSBundle mainBundle] resourcePath], @"examples", (NSString*)[(NSMenuItem*)sender representedObject]];
+    [self openScript:examplePath];
 }
 
 -(void) setupErrorConsole {
@@ -84,10 +118,13 @@
     errorConsoleTextView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
     [errorConsoleTextView setBackgroundColor:[NSColor blackColor]];
     [errorConsoleTextView setAutomaticLinkDetectionEnabled:YES];
-    [errorConsoleTextView insertText:@"Zajal 0.2a Mac OS Frontend\n"];
     for(int i=0; i<50; i++) {
         [errorConsoleTextView insertText:@"Zajal 0.2a Mac OS Frontend\n"];
     }
+    
+    [errorConsoleTextView insertText:@"0         1         2         3         4         5         6         7         8\n"];
+    [errorConsoleTextView insertText:@"012345678901234567890123456789012345678901234567890123456789012345678901234567890\n"];
+
     
     
     [[errorConsoleTextView textStorage] setForegroundColor:[NSColor whiteColor]];
