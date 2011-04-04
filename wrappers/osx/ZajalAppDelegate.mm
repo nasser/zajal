@@ -57,6 +57,7 @@
     [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
     
     zi->loadScript((char*)[path UTF8String]);
+    zi->reloadScript(true);
     [[NSWorkspace sharedWorkspace] openFile:path withApplication:@"TextMate"];
 }
 

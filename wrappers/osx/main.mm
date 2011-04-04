@@ -19,6 +19,7 @@ int main(int argc, char *argv[]){
     ZajalInterpreter* zi = new ZajalInterpreter();
     zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/ruby"] UTF8String]);
     zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/zajal"] UTF8String]);
+    zi->initialize();
     zi->loadScript("/Users/nasser/Workspace/zajal/scratch/brownian.rb");
     
     ofSetAppWindowPtr(new ofAppCocoaWindow(initSettings));

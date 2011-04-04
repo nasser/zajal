@@ -268,7 +268,7 @@ void ZajalInterpreter::windowResized(int w, int h) {
   }
 }
 
-void ZajalInterpreter::loadScript(char* fileName) {
+void ZajalInterpreter::initialize() {
   // try and load ZAJAL_PATH environment variable
   char* env_zajal_path = getenv("ZAJAL_PATH");
   if(env_zajal_path) {
@@ -299,6 +299,18 @@ void ZajalInterpreter::loadScript(char* fileName) {
     ::exit(2);
   }
   
+  // load in all encodings
+  rb_enc_find("encdb");
+  
+  // require/include useful parts of ruby by default
+  rb_include_module(rb_cObject, rb_mMath);
+  rb_require("open-uri");
+  
+  // require ruby-implemented functionality
+  rb_require("zajal");
+}
+
+void ZajalInterpreter::loadScript(char* fileName) {
   scriptName = (char*)calloc(strlen(fileName)+1, sizeof(char));
   strncpy(scriptName, fileName, strlen(fileName)+1);
   
@@ -316,18 +328,6 @@ void ZajalInterpreter::loadScript(char* fileName) {
   INTERNAL_SET(zj_mApp, data_path, script_directory);
   rb_ary_unshift(rb_gv_get("$:"), script_directory);
   rb_funcall(rb_gv_get("$:"), rb_intern("uniq!"), 0);
-  
-  ruby_script(scriptName);
-  
-  // load in all encodings
-  rb_enc_find("encdb");
-  
-  // require/include useful parts of ruby by default
-  rb_include_module(rb_cObject, rb_mMath);
-  rb_require("open-uri");
-  
-  // require ruby-implemented functionality
-  rb_require("zajal");
 }
 
 void ZajalInterpreter::reloadScript(bool forced) {
