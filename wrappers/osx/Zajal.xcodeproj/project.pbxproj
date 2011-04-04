@@ -32,6 +32,12 @@
 		2E2D3B261348D8FD002F4AC1 /* zajal.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B191348D8FD002F4AC1 /* zajal.cc */; };
 		2E2D3B271348D8FD002F4AC1 /* ZajalInterpreter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B1B1348D8FD002F4AC1 /* ZajalInterpreter.cc */; };
 		2E2D3B291348D913002F4AC1 /* libruby.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2D3B281348D913002F4AC1 /* libruby.a */; };
+		2E898B681349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B671349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf */; };
+		2E898B6B1349351300DF6FAA /* ToolbarIconPauseTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B691349351300DF6FAA /* ToolbarIconPauseTemplate.pdf */; };
+		2E898B6C1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B6A1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf */; };
+		2E898B6E1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B6D1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf */; };
+		2E898B7213493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B7113493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf */; };
+		2E898B7413493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */; };
 		BB1360CE124D437A0044C71F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = BB1360CB124D437A0044C71F /* main.mm */; };
 		BBE3A5D9127BA103000B7920 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE3A5D8127BA103000B7920 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -91,11 +97,17 @@
 		2E2D3B1B1348D8FD002F4AC1 /* ZajalInterpreter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZajalInterpreter.cc; path = ../../src/ZajalInterpreter.cc; sourceTree = "<group>"; };
 		2E2D3B1C1348D8FD002F4AC1 /* ZajalInterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZajalInterpreter.h; path = ../../src/ZajalInterpreter.h; sourceTree = "<group>"; };
 		2E2D3B281348D913002F4AC1 /* libruby.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libruby.a; path = ../../lib/ruby/libruby.a; sourceTree = "<group>"; };
+		2E898B671349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconPlayTemplate.pdf; sourceTree = "<group>"; };
+		2E898B691349351300DF6FAA /* ToolbarIconPauseTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconPauseTemplate.pdf; sourceTree = "<group>"; };
+		2E898B6A1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconReloadTemplate.pdf; sourceTree = "<group>"; };
+		2E898B6D1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconFullscreenTemplate.pdf; sourceTree = "<group>"; };
+		2E898B7113493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconConsoleDownTemplate.pdf; sourceTree = "<group>"; };
+		2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconConsoleUpTemplate.pdf; sourceTree = "<group>"; };
 		BB1360CB124D437A0044C71F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; name = main.mm; path = src/main.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BB1360CD124D437A0044C71F /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
 		BB7EB90D1253F74D004B32F7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BBE3A5D8127BA103000B7920 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
-		E4B69B5B0A3A1756003C02F2 /* ofxCocoaDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ofxCocoaDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B69B5B0A3A1756003C02F2 /* ofxCocoaDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ofxCocoaDebug.app; path = /Users/nasser/Workspace/zajal/wrappers/osx/bin/ofxCocoaDebug.app; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,8 +156,6 @@
 		2E143AD41348CBFC00A64DBA /* Misc */ = {
 			isa = PBXGroup;
 			children = (
-				E4B69B5B0A3A1756003C02F2 /* ofxCocoaDebug.app */,
-				BB7EB90D1253F74D004B32F7 /* Info.plist */,
 			);
 			name = Misc;
 			sourceTree = "<group>";
@@ -169,6 +179,19 @@
 				2E2D3B1C1348D8FD002F4AC1 /* ZajalInterpreter.h */,
 			);
 			name = "Zajal Core";
+			sourceTree = "<group>";
+		};
+		2E898B661349337200DF6FAA /* Toolbar Icons */ = {
+			isa = PBXGroup;
+			children = (
+				2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */,
+				2E898B7113493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf */,
+				2E898B6D1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf */,
+				2E898B691349351300DF6FAA /* ToolbarIconPauseTemplate.pdf */,
+				2E898B6A1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf */,
+				2E898B671349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf */,
+			);
+			name = "Toolbar Icons";
 			sourceTree = "<group>";
 		};
 		BB1360CA124D437A0044C71F /* Old Source */ = {
@@ -212,6 +235,8 @@
 				BB1360CB124D437A0044C71F /* main.mm */,
 				2E1D2405134188780014CFBC /* ZajalAppDelegate.h */,
 				2E1D2406134188780014CFBC /* ZajalAppDelegate.mm */,
+				BB7EB90D1253F74D004B32F7 /* Info.plist */,
+				2E898B661349337200DF6FAA /* Toolbar Icons */,
 				2E2D3B0E1348D8D7002F4AC1 /* Zajal Core */,
 				BBE3A605127BA150000B7920 /* Cocoa Windowing */,
 				2E143AD11348CA8D00A64DBA /* Frameworks */,
@@ -224,9 +249,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E4B69B5A0A3A1756003C02F2 /* ofxCocoa */ = {
+		E4B69B5A0A3A1756003C02F2 /* Zajal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "ofxCocoa" */;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "Zajal" */;
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
@@ -238,7 +263,7 @@
 			);
 			dependencies = (
 			);
-			name = ofxCocoa;
+			name = Zajal;
 			productName = myOFApp;
 			productReference = E4B69B5B0A3A1756003C02F2 /* ofxCocoaDebug.app */;
 			productType = "com.apple.product-type.application";
@@ -260,7 +285,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E4B69B5A0A3A1756003C02F2 /* ofxCocoa */,
+				E4B69B5A0A3A1756003C02F2 /* Zajal */,
 			);
 		};
 /* End PBXProject section */
@@ -271,6 +296,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E143ACE1348CA5A00A64DBA /* WithWindow.xib in Resources */,
+				2E898B681349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf in Resources */,
+				2E898B6B1349351300DF6FAA /* ToolbarIconPauseTemplate.pdf in Resources */,
+				2E898B6C1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf in Resources */,
+				2E898B6E1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf in Resources */,
+				2E898B7213493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf in Resources */,
+				2E898B7413493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,7 +629,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "ofxCocoa" */ = {
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "Zajal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B600A3A1757003C02F2 /* Debug */,
