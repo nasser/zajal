@@ -43,6 +43,22 @@
 @interface ZajalAppDelegate : NSObject {
 	IBOutlet GLWindow			*_glWindow;	// points to current window
 	IBOutlet GLView				*_glView;
+    
+    IBOutlet NSMenu				*examplesMenu;
+    IBOutlet NSToolbar          *toolbar;
+    
+    IBOutlet NSToolbarItem      *playPauseItem;
+    IBOutlet NSToolbarItem      *consoleItem;
+    
+    NSImage                     *playIcon;
+    NSImage                     *pauseIcon;
+    NSImage                     *consoleUpIcon;
+    NSImage                     *consoleDownIcon;
+    
+    NSDrawer                    *errorConsoleDrawer;
+    NSTextView                  *errorConsoleTextView;
+    NSScrollView                *errorConsoleScrollView;
+    CGFloat                     errorConsolePadding;
 }
 
 
@@ -52,6 +68,12 @@
 -(IBAction) startAnimation:(id)sender;
 -(IBAction) stopAnimation:(id)sender;
 -(IBAction) toggleAnimation:(id)sender;
+
+-(IBAction) openFileMenuClick:(id)sender;
+
+-(IBAction) toggleConsole:(id)sender;
+
+-(IBAction) reloadScript:(id)sender;
 
 -(IBAction) goFullscreen:(id)sender;
 -(IBAction) goWindow:(id)sender;

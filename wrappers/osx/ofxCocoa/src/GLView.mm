@@ -48,6 +48,7 @@
 @synthesize windowMode;
 @synthesize openGLContext;
 @synthesize pixelFormat;
+@synthesize isAnimating;
 
 //------ DISPLAY LINK STUFF ------
 -(CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime {

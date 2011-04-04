@@ -143,7 +143,7 @@ def capture_state
   end
 end
 
-def live_load new_code
+def live_load new_code, forced
   return eval new_code if not valid? new_code
   
   # stay out of the way, you
@@ -202,8 +202,8 @@ def live_load new_code
       # blocks are used, we're in complete mode
       
       # TODO support global assigns burried under if/while/etc blocks
-      if added.fetch("/method_add_block/method_add_arg/fcall/@ident").include? "setup" or not added.fetch("/assign/var_field/@gvar").empty?
-        # setup/globals modified, restart
+      if forced or (added.fetch("/method_add_block/method_add_arg/fcall/@ident").include? "setup" or not added.fetch("/assign/var_field/@gvar").empty?)
+        # setup/globals modified or forced, restart
         eval new_code
         
         Events::Internals.defaults_proc.call

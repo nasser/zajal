@@ -137,9 +137,9 @@ void ZajalInterpreter::draw() {
       
       // an error exists, draw error screen
       ofSetColor(255, 255, 255, 255);
-      lastErrorImage.draw(0, 0);
+      //lastErrorImage.draw(0, 0);
       // TODO apply filters to lastErrorImage instead of drawing a rect
-      ofEnableAlphaBlending();
+      //ofEnableAlphaBlending();
       ofFill();
       ofSetColor(255, 255, 255, 128);
       ofRect(0, 0, ofGetWidth(), ofGetHeight());
@@ -330,7 +330,7 @@ void ZajalInterpreter::loadScript(char* fileName) {
   rb_require("zajal");
 }
 
-void ZajalInterpreter::reloadScript() {
+void ZajalInterpreter::reloadScript(bool forced) {
   // open file, measure size
   FILE *scriptFile = fopen(scriptName, "r");
   fseek(scriptFile, 0, SEEK_END);
@@ -351,7 +351,7 @@ void ZajalInterpreter::reloadScript() {
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
   
-  zj_safe_funcall(rb_cObject, rb_intern("live_load"), 1, rb_str_new2(scriptFileContent));
+  zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), forced? Qtrue : Qfalse);
   state = ruby_error ? INTERPRETER_ERROR : INTERPRETER_RUNNING;
   
 }

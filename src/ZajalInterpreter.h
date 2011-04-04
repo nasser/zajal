@@ -43,7 +43,7 @@ class ZajalInterpreter : public ofBaseApp {
     void run(ofAppBaseWindow* window);
     void run();
     void loadScript(char* filename);
-    void reloadScript();
+    void reloadScript(bool forced=false);
     void updateCurrentScript();
     
     void appendLoadPath(char* path);

@@ -40,6 +40,8 @@
 #import "ofAppCocoaWindow.h"
 #import "ofGLRenderer.h"
 
+#import "ZajalInterpreter.h"
+
 @implementation ZajalAppDelegate
 
 @synthesize _glWindow;
@@ -47,6 +49,62 @@
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
 	return YES;
+}
+
+-(void) openScript:(NSString*)path {
+    ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    
+    [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
+    
+    zi->loadScript((char*)[path UTF8String]);
+    [[NSWorkspace sharedWorkspace] openFile:path withApplication:@"TextMate"];
+}
+
+-(void) populateExamplesMenu {
+    NSMenuItem* newItem = [[NSMenuItem alloc] initWithTitle:@"Polygonal Flower" action:@selector(something:) keyEquivalent:@""];
+    [newItem autorelease];
+    [newItem setTarget:self];
+    [examplesMenu addItem:newItem];
+}
+
+-(void) setupErrorConsole {
+    errorConsolePadding = 10.0;
+    
+    // init the drawer
+    errorConsoleDrawer = [[NSDrawer alloc] initWithContentSize:NSMakeSize(0, 100) preferredEdge:NSMinYEdge];
+    [errorConsoleDrawer setParentWindow:_glWindow];
+    [errorConsoleDrawer setLeadingOffset:errorConsolePadding];
+    [errorConsoleDrawer setTrailingOffset:errorConsolePadding];
+    [errorConsoleDrawer setMaxContentSize:NSMakeSize(0, 10)];
+    [errorConsoleDrawer setMaxContentSize:NSMakeSize(0, 200)];
+    CGFloat drawerWidth = _glWindow.frame.size.width - errorConsolePadding * 2;
+    
+    
+    // init the text view where the output will be displayed
+    errorConsoleTextView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
+    [errorConsoleTextView setBackgroundColor:[NSColor blackColor]];
+    [errorConsoleTextView setAutomaticLinkDetectionEnabled:YES];
+    [errorConsoleTextView insertText:@"Zajal 0.2a Mac OS Frontend\n"];
+    for(int i=0; i<50; i++) {
+        [errorConsoleTextView insertText:@"Zajal 0.2a Mac OS Frontend\n"];
+    }
+    
+    
+    [[errorConsoleTextView textStorage] setForegroundColor:[NSColor whiteColor]];
+    [[errorConsoleTextView textStorage] setFont:[NSFont fontWithName:@"Monaco" size:10]];
+    
+    // init scroll view to allow browsing through textview
+    errorConsoleScrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
+    [errorConsoleScrollView setDocumentView:errorConsoleTextView];
+    [errorConsoleDrawer setContentView:errorConsoleScrollView];
+}
+
+-(NSImage*) imageTemplateFromName:(NSString*)name {
+    NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"pdf"];
+    NSImage* theImage = [[[NSImage alloc] initWithContentsOfFile:path] retain];
+    [theImage setTemplate:YES];
+    
+    return theImage;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)n {
@@ -69,6 +127,14 @@
 	// clear background
 	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    playIcon = [self imageTemplateFromName:@"ToolbarIconPlayTemplate"];
+    pauseIcon = [self imageTemplateFromName:@"ToolbarIconPauseTemplate"];
+    consoleDownIcon = [self imageTemplateFromName:@"ToolbarIconConsoleDownTemplate"];
+    consoleUpIcon = [self imageTemplateFromName:@"ToolbarIconConsoleUpTemplate"];
+    
+    [self populateExamplesMenu];
+    [self setupErrorConsole];
 }
 
 - (BOOL)applicationShouldTerminate:(NSNotification*)n {
@@ -77,7 +143,6 @@
 	[self stopAnimation:self];
 	return NSTerminateNow;
 }
-
 
 -(void) dealloc {
 	[_glWindow release];
@@ -94,8 +159,28 @@
 	[_glView stopAnimation];
 }
 
+- (IBAction) reloadScript:(id)sender {
+    ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    
+    zi->reloadScript(true);
+}
+
+- (IBAction) toggleConsole:(id)sender {
+    [errorConsoleDrawer toggle:sender];
+    if([errorConsoleDrawer state] == NSDrawerClosedState || [errorConsoleDrawer state] == NSDrawerClosingState) {
+        [consoleItem setImage:consoleDownIcon];
+    } else {
+        [consoleItem setImage:consoleUpIcon];
+    }
+}
+
 - (IBAction) toggleAnimation:(id)sender {
 	[_glView toggleAnimation];
+    if([_glView isAnimating]) {
+        [playPauseItem setImage:pauseIcon];
+    } else {
+        [playPauseItem setImage:playIcon];
+    }
 }
 
 -(IBAction) goFullscreen:(id)sender {
@@ -111,6 +196,20 @@
 -(IBAction) toggleFullscreen:(id)sender {
 	ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
     cocoaWindow->toggleFullscreen();
+}
+
+-(IBAction) openFileMenuClick:(id)sender {
+    // http://www.bitsensei.com/languages/obj-c/7-min-open-file-dlg-cocoa
+    NSOpenPanel *op = [NSOpenPanel openPanel];
+    [op setAllowedFileTypes:[NSArray arrayWithObjects:@"zj", @"rb", nil]];
+    if ([op runModal] == NSOKButton) {
+        [self openScript:[op filename]];
+    }
+}
+
+-(void) application:(NSApplication *)sender openFiles:(NSArray *)paths {
+    // TODO Support multiple files
+    [self openScript:(NSString*)[paths lastObject]];
 }
 
 @end

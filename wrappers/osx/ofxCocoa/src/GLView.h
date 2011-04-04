@@ -60,6 +60,7 @@
 @property (readonly) int windowMode;
 @property (readonly) NSOpenGLContext* openGLContext;
 @property (readonly) NSOpenGLPixelFormat* pixelFormat;
+@property (readonly) BOOL isAnimating;
 
 
 -(id) initWithFrame:(NSRect)frameRect;

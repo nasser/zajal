@@ -3,6 +3,7 @@ BUILD_DIR = build
 BIN_DIR = bin
 BINARY = $(BIN_DIR)/zajal
 LIBRARY = $(BIN_DIR)/libzajal.a
+CLI_FRONTEND_SRC = wrappers/cli
 
 
 ### 
@@ -33,7 +34,7 @@ ZAJAL_GIT_HASH = $(shell $(GIT) log -1 --pretty=format:%H)
 ZAJAL_GIT_SHORT_HASH = $(shell $(GIT) log -1 --pretty=format:%h)
 
 ZAJAL_INCLUDES = -I$(ZAJAL_DIR)
-ZAJAL_SRC = $(shell find -E $(ZAJAL_DIR) -regex ".*\.cc?$$")
+ZAJAL_SRC = $(shell find -E $(ZAJAL_DIR) -regex ".*\.cc?$$") $(shell find -E $(CLI_FRONTEND_SRC) -regex ".*\.cc?$$")
 ZAJAL_OBJ = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(notdir $(ZAJAL_SRC))))
 ZAJAL_LIBRARIES = $(OF_LIB) $(RUBY_LIB)
 
@@ -92,7 +93,7 @@ $(BUILD_DIR)/%.cc.o: $(ZAJAL_DIR)/%.cc
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@echo "OK"
 
-$(BUILD_DIR)/version.cpp.o: $(ZAJAL_DIR)/version.cpp
+$(BUILD_DIR)/version.cc.o: $(ZAJAL_DIR)/version.cc
 	@echo -n "Building in version information..."
 	@mkdir -p $(BIN_DIR)
 	@cp $< $<.bak
