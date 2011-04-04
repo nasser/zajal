@@ -56,11 +56,11 @@
 		2E1D2405134188780014CFBC /* ZajalAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZajalAppDelegate.h; sourceTree = SOURCE_ROOT; };
 		2E1D2406134188780014CFBC /* ZajalAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = ZajalAppDelegate.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2E1D2407134188780014CFBC /* ofAppCocoaWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ofAppCocoaWindow.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		2E1D2408134188780014CFBC /* ofAppCocoaWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lineEnding = 0; path = ofAppCocoaWindow.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		2E1D240A134188780014CFBC /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lineEnding = 0; path = GLView.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		2E1D240B134188780014CFBC /* GLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lineEnding = 0; path = GLView.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		2E1D240C134188780014CFBC /* GLWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; path = GLWindow.h; sourceTree = SOURCE_ROOT; };
-		2E1D240D134188780014CFBC /* GLWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lineEnding = 0; path = GLWindow.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E1D2408134188780014CFBC /* ofAppCocoaWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = ofAppCocoaWindow.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E1D240A134188780014CFBC /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GLView.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E1D240B134188780014CFBC /* GLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = GLView.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E1D240C134188780014CFBC /* GLWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLWindow.h; sourceTree = SOURCE_ROOT; };
+		2E1D240D134188780014CFBC /* GLWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = GLWindow.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		2E2D3B0F1348D8FD002F4AC1 /* app.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = app.cc; path = ../../src/app.cc; sourceTree = "<group>"; };
 		2E2D3B101348D8FD002F4AC1 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = ../../src/config.h; sourceTree = "<group>"; };
 		2E2D3B111348D8FD002F4AC1 /* events.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = events.cc; path = ../../src/events.cc; sourceTree = "<group>"; };
@@ -84,9 +84,9 @@
 		2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconConsoleUpTemplate.pdf; sourceTree = "<group>"; };
 		2E898B75134968C600DF6FAA /* ZajalDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZajalDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB1360CB124D437A0044C71F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = main.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		BB1360CD124D437A0044C71F /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = testApp.h; path = ../testApp.h; sourceTree = "<group>"; };
+		BB1360CD124D437A0044C71F /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = SOURCE_ROOT; };
 		BB7EB90D1253F74D004B32F7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BBE3A5D8127BA103000B7920 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = testApp.mm; path = ../testApp.mm; sourceTree = "<group>"; };
+		BBE3A5D8127BA103000B7920 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
