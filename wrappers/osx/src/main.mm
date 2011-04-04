@@ -17,6 +17,8 @@ int main(int argc, char *argv[]){
 	initSettings.windowMode				= OF_WINDOW;
     
     ZajalInterpreter* zi = new ZajalInterpreter();
+    zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/ruby"] UTF8String]);
+    zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/zajal"] UTF8String]);
     zi->loadScript("/Users/nasser/Workspace/zajal/scratch/brownian.rb");
     
     ofSetAppWindowPtr(new ofAppCocoaWindow(initSettings));

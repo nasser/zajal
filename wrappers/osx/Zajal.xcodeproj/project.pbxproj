@@ -42,27 +42,6 @@
 		BBE3A5D9127BA103000B7920 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE3A5D8127BA103000B7920 /* testApp.mm */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		E4C2427710CC5ABF004149E2 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E4C2444710CC769B004149E2 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 7;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		2E143A971348990800A64DBA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		2E143A991348990E00A64DBA /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
@@ -103,11 +82,11 @@
 		2E898B6D1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconFullscreenTemplate.pdf; sourceTree = "<group>"; };
 		2E898B7113493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconConsoleDownTemplate.pdf; sourceTree = "<group>"; };
 		2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconConsoleUpTemplate.pdf; sourceTree = "<group>"; };
+		2E898B75134968C600DF6FAA /* ZajalDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZajalDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB1360CB124D437A0044C71F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; name = main.mm; path = src/main.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BB1360CD124D437A0044C71F /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = "<group>"; };
 		BB7EB90D1253F74D004B32F7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BBE3A5D8127BA103000B7920 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = "<group>"; };
-		E4B69B5B0A3A1756003C02F2 /* ofxCocoaDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ofxCocoaDebug.app; path = /Users/nasser/Workspace/zajal/wrappers/osx/bin/ofxCocoaDebug.app; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,6 +222,7 @@
 				2E143AD21348CAB400A64DBA /* Libraries */,
 				2E143AD41348CBFC00A64DBA /* Misc */,
 				BB1360CA124D437A0044C71F /* Old Source */,
+				2E898B75134968C600DF6FAA /* ZajalDebug.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -255,8 +235,7 @@
 			buildPhases = (
 				E4B69B580A3A1756003C02F2 /* Sources */,
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
-				E4C2427710CC5ABF004149E2 /* CopyFiles */,
-				E4C2444710CC769B004149E2 /* CopyFiles */,
+				2E898FCF13496D7900DF6FAA /* Copy Ruby Resources */,
 				2E143AA713489DE000A64DBA /* Resources */,
 			);
 			buildRules = (
@@ -265,7 +244,7 @@
 			);
 			name = Zajal;
 			productName = myOFApp;
-			productReference = E4B69B5B0A3A1756003C02F2 /* ofxCocoaDebug.app */;
+			productReference = 2E898B75134968C600DF6FAA /* ZajalDebug.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -306,6 +285,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2E898FCF13496D7900DF6FAA /* Copy Ruby Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Ruby Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "mkdir -p $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/ruby\nmkdir -p $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/zajal\ncp -rf ../../lib/ruby/stdlib/* $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/ruby\ncp -rf ../../lib/zajal/* $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/zajal";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E4B69B580A3A1756003C02F2 /* Sources */ = {
@@ -416,6 +412,7 @@
 					"-DHAVE_STRUCT_TIMEZONE",
 					"-DHAVE_STRUCT_TIMESPEC",
 					"-DHAVE_SIGNBIT",
+					"-DEMPTY_LOADPATH",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)Universal";
@@ -541,6 +538,7 @@
 					"-DHAVE_STRUCT_TIMEZONE",
 					"-DHAVE_STRUCT_TIMESPEC",
 					"-DHAVE_SIGNBIT",
+					"-DEMPTY_LOADPATH",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
@@ -606,6 +604,7 @@
 					"-DHAVE_STRUCT_TIMEZONE",
 					"-DHAVE_STRUCT_TIMESPEC",
 					"-DHAVE_SIGNBIT",
+					"-DEMPTY_LOADPATH",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
