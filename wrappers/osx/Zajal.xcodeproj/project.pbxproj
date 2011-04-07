@@ -71,7 +71,7 @@
 		2E2D3B161348D8FD002F4AC1 /* typography.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = typography.cc; path = ../../src/typography.cc; sourceTree = "<group>"; };
 		2E2D3B171348D8FD002F4AC1 /* version.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = version.cc; path = ../../src/version.cc; sourceTree = "<group>"; };
 		2E2D3B181348D8FD002F4AC1 /* videos.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = videos.cc; path = ../../src/videos.cc; sourceTree = "<group>"; };
-		2E2D3B191348D8FD002F4AC1 /* zajal.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zajal.cc; path = ../../src/zajal.cc; sourceTree = "<group>"; };
+		2E2D3B191348D8FD002F4AC1 /* zajal.cc */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; name = zajal.cc; path = ../../src/zajal.cc; sourceTree = "<group>"; tabWidth = 2; };
 		2E2D3B1A1348D8FD002F4AC1 /* zajal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zajal.h; path = ../../src/zajal.h; sourceTree = "<group>"; };
 		2E2D3B1B1348D8FD002F4AC1 /* ZajalInterpreter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZajalInterpreter.cc; path = ../../src/ZajalInterpreter.cc; sourceTree = "<group>"; };
 		2E2D3B1C1348D8FD002F4AC1 /* ZajalInterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZajalInterpreter.h; path = ../../src/ZajalInterpreter.h; sourceTree = "<group>"; };

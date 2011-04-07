@@ -114,22 +114,21 @@
     [errorConsoleDrawer setMaxContentSize:NSMakeSize(0, 200)];
     CGFloat drawerWidth = _glWindow.frame.size.width - errorConsolePadding * 2;
     
-    
     // init the text view where the output will be displayed
     errorConsoleTextView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
-    [errorConsoleTextView setBackgroundColor:[NSColor blackColor]];
+//    [errorConsoleTextView setBackgroundColor:[NSColor blackColor]];
     [errorConsoleTextView setAutomaticLinkDetectionEnabled:YES];
     for(int i=0; i<50; i++) {
-        [errorConsoleTextView insertText:@"Zajal 0.2a Mac OS Frontend\n"];
+//        [errorConsoleTextView insertText:@"Zajal 0.2a Mac OS Frontend\n"];
     }
     
-    [errorConsoleTextView insertText:@"0         1         2         3         4         5         6         7         8\n"];
-    [errorConsoleTextView insertText:@"012345678901234567890123456789012345678901234567890123456789012345678901234567890\n"];
-
+//    [errorConsoleTextView insertText:@"0         1         2         3         4         5         6         7         8\n"];
+//    [errorConsoleTextView insertText:@"012345678901234567890123456789012345678901234567890123456789012345678901234567890\n"];
+//    [errorConsoleTextView setEditable:NO];
     
     
-    [[errorConsoleTextView textStorage] setForegroundColor:[NSColor whiteColor]];
-    [[errorConsoleTextView textStorage] setFont:[NSFont fontWithName:@"Monaco" size:10]];
+//    [[errorConsoleTextView textStorage] setForegroundColor:[NSColor whiteColor]];
+//    [[errorConsoleTextView textStorage] setFont:[NSFont fontWithName:@"Monaco" size:10]];
     
     // init scroll view to allow browsing through textview
     errorConsoleScrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
@@ -159,20 +158,20 @@
     ofSetDefaultRenderer(new ofGLRenderer(false));
 	
 	ofNotifySetup();
+  
+  playIcon = [self imageTemplateFromName:@"ToolbarIconPlayTemplate"];
+  pauseIcon = [self imageTemplateFromName:@"ToolbarIconPauseTemplate"];
+  consoleDownIcon = [self imageTemplateFromName:@"ToolbarIconConsoleDownTemplate"];
+  consoleUpIcon = [self imageTemplateFromName:@"ToolbarIconConsoleUpTemplate"];
+  
+  [self populateExamplesMenu];
+  [self setupErrorConsole];
 	
 	[self startAnimation:self];
 	
 	// clear background
 	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    playIcon = [self imageTemplateFromName:@"ToolbarIconPlayTemplate"];
-    pauseIcon = [self imageTemplateFromName:@"ToolbarIconPauseTemplate"];
-    consoleDownIcon = [self imageTemplateFromName:@"ToolbarIconConsoleDownTemplate"];
-    consoleUpIcon = [self imageTemplateFromName:@"ToolbarIconConsoleUpTemplate"];
-    
-    [self populateExamplesMenu];
-    [self setupErrorConsole];
 }
 
 - (BOOL)applicationShouldTerminate:(NSNotification*)n {
@@ -191,33 +190,37 @@
 
 - (IBAction) startAnimation:(id)sender {
 	[_glView startAnimation];
+  [playMenuItem setEnabled:NO];
+  [pauseMenuItem setEnabled:YES];
+  [playPauseToolbarItem setImage:pauseIcon];
 }
 
 - (IBAction) stopAnimation:(id)sender {
 	[_glView stopAnimation];
+  [playMenuItem setEnabled:YES];
+  [pauseMenuItem setEnabled:NO];
+  [playPauseToolbarItem setImage:playIcon];
 }
 
 - (IBAction) reloadScript:(id)sender {
     ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
-    
     zi->reloadScript(true);
 }
 
 - (IBAction) toggleConsole:(id)sender {
     [errorConsoleDrawer toggle:sender];
     if([errorConsoleDrawer state] == NSDrawerClosedState || [errorConsoleDrawer state] == NSDrawerClosingState) {
-        [consoleItem setImage:consoleDownIcon];
+        [consoleToolbarItem setImage:consoleDownIcon];
     } else {
-        [consoleItem setImage:consoleUpIcon];
+        [consoleToolbarItem setImage:consoleUpIcon];
     }
 }
 
 - (IBAction) toggleAnimation:(id)sender {
-	[_glView toggleAnimation];
     if([_glView isAnimating]) {
-        [playPauseItem setImage:pauseIcon];
+        [self stopAnimation:sender];
     } else {
-        [playPauseItem setImage:playIcon];
+        [self startAnimation:sender];
     }
 }
 
@@ -238,11 +241,22 @@
 
 -(IBAction) openFileMenuClick:(id)sender {
     // http://www.bitsensei.com/languages/obj-c/7-min-open-file-dlg-cocoa
-    NSOpenPanel *op = [NSOpenPanel openPanel];
+    NSOpenPanel* op = [NSOpenPanel openPanel];
     [op setAllowedFileTypes:[NSArray arrayWithObjects:@"zj", @"rb", nil]];
     if ([op runModal] == NSOKButton) {
         [self openScript:[op filename]];
     }
+}
+
+-(IBAction) exportMenuClick:(id)sender {
+    NSSavePanel* sp = [NSSavePanel savePanel];
+    [sp setDirectory:[NSString stringWithUTF8String:RSTRING_PTR(INTERNAL_GET(zj_mApp, data_path))]];
+    [sp setPrompt:@"Export"];
+    [sp setCanCreateDirectories:YES];
+    [sp setAllowedFileTypes:[NSArray arrayWithObjects:@"pdf", @"svg", @"png", nil]];
+    [sp setAllowsOtherFileTypes:NO];
+    
+    [sp runModal];
 }
 
 -(void) application:(NSApplication *)sender openFiles:(NSArray *)paths {
