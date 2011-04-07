@@ -432,7 +432,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)Universal";
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/";
+				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/ ../../lib/openframeworks/include/cairo/include/cairo/";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
@@ -558,7 +558,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/";
+				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/ ../../lib/openframeworks/include/cairo/include/cairo/";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
@@ -624,7 +624,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/";
+				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/ ../../lib/openframeworks/include/cairo/include/cairo/";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
