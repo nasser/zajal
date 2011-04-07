@@ -1,0 +1,659 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2E143A981348990800A64DBA /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143A971348990800A64DBA /* OpenGL.framework */; };
+		2E143A9A1348990E00A64DBA /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143A991348990E00A64DBA /* GLUT.framework */; };
+		2E143A9C1348991600A64DBA /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143A9B1348991600A64DBA /* QuickTime.framework */; };
+		2E143A9E1348991C00A64DBA /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143A9D1348991C00A64DBA /* CoreAudio.framework */; };
+		2E143AA01348992200A64DBA /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143A9F1348992200A64DBA /* Carbon.framework */; };
+		2E143AA213489D7900A64DBA /* libof.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143AA113489D7900A64DBA /* libof.a */; };
+		2E143AA413489D9E00A64DBA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143AA313489D9E00A64DBA /* Cocoa.framework */; };
+		2E143ACE1348CA5A00A64DBA /* WithWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E1D2402134188670014CFBC /* WithWindow.xib */; };
+		2E143AD01348CA8600A64DBA /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143ACF1348CA8600A64DBA /* CoreVideo.framework */; };
+		2E1D2410134188780014CFBC /* ZajalAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2E1D2406134188780014CFBC /* ZajalAppDelegate.mm */; };
+		2E1D2411134188780014CFBC /* ofAppCocoaWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2E1D2408134188780014CFBC /* ofAppCocoaWindow.mm */; };
+		2E1D2412134188780014CFBC /* GLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2E1D240B134188780014CFBC /* GLView.mm */; };
+		2E1D2413134188780014CFBC /* GLWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2E1D240D134188780014CFBC /* GLWindow.mm */; };
+		2E2D3B1D1348D8FD002F4AC1 /* app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B0F1348D8FD002F4AC1 /* app.cc */; };
+		2E2D3B1E1348D8FD002F4AC1 /* events.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B111348D8FD002F4AC1 /* events.cc */; };
+		2E2D3B1F1348D8FD002F4AC1 /* graphics.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B121348D8FD002F4AC1 /* graphics.cc */; };
+		2E2D3B201348D8FD002F4AC1 /* hardware.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B131348D8FD002F4AC1 /* hardware.cc */; };
+		2E2D3B211348D8FD002F4AC1 /* images.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B141348D8FD002F4AC1 /* images.cc */; };
+		2E2D3B221348D8FD002F4AC1 /* mathematics.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B151348D8FD002F4AC1 /* mathematics.cc */; };
+		2E2D3B231348D8FD002F4AC1 /* typography.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B161348D8FD002F4AC1 /* typography.cc */; };
+		2E2D3B241348D8FD002F4AC1 /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B171348D8FD002F4AC1 /* version.cc */; };
+		2E2D3B251348D8FD002F4AC1 /* videos.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B181348D8FD002F4AC1 /* videos.cc */; };
+		2E2D3B261348D8FD002F4AC1 /* zajal.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B191348D8FD002F4AC1 /* zajal.cc */; };
+		2E2D3B271348D8FD002F4AC1 /* ZajalInterpreter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B1B1348D8FD002F4AC1 /* ZajalInterpreter.cc */; };
+		2E2D3B291348D913002F4AC1 /* libruby.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2D3B281348D913002F4AC1 /* libruby.a */; };
+		2E898B681349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B671349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf */; };
+		2E898B6B1349351300DF6FAA /* ToolbarIconPauseTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B691349351300DF6FAA /* ToolbarIconPauseTemplate.pdf */; };
+		2E898B6C1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B6A1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf */; };
+		2E898B6E1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B6D1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf */; };
+		2E898B7213493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B7113493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf */; };
+		2E898B7413493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */; };
+		BB1360CE124D437A0044C71F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = BB1360CB124D437A0044C71F /* main.mm */; };
+		BBE3A5D9127BA103000B7920 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE3A5D8127BA103000B7920 /* testApp.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2E143A971348990800A64DBA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		2E143A991348990E00A64DBA /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		2E143A9B1348991600A64DBA /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
+		2E143A9D1348991C00A64DBA /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		2E143A9F1348992200A64DBA /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		2E143AA113489D7900A64DBA /* libof.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libof.a; path = ../../lib/openframeworks/libof.a; sourceTree = "<group>"; };
+		2E143AA313489D9E00A64DBA /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		2E143ACF1348CA8600A64DBA /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		2E1D23FF1341885D0014CFBC /* NoWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NoWindow.xib; sourceTree = SOURCE_ROOT; };
+		2E1D2402134188670014CFBC /* WithWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WithWindow.xib; sourceTree = SOURCE_ROOT; };
+		2E1D2405134188780014CFBC /* ZajalAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZajalAppDelegate.h; sourceTree = SOURCE_ROOT; };
+		2E1D2406134188780014CFBC /* ZajalAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = ZajalAppDelegate.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E1D2407134188780014CFBC /* ofAppCocoaWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ofAppCocoaWindow.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E1D2408134188780014CFBC /* ofAppCocoaWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = ofAppCocoaWindow.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E1D240A134188780014CFBC /* GLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GLView.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E1D240B134188780014CFBC /* GLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = GLView.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E1D240C134188780014CFBC /* GLWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLWindow.h; sourceTree = SOURCE_ROOT; };
+		2E1D240D134188780014CFBC /* GLWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = GLWindow.mm; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		2E2D3B0F1348D8FD002F4AC1 /* app.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = app.cc; path = ../../src/app.cc; sourceTree = "<group>"; };
+		2E2D3B101348D8FD002F4AC1 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = ../../src/config.h; sourceTree = "<group>"; };
+		2E2D3B111348D8FD002F4AC1 /* events.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = events.cc; path = ../../src/events.cc; sourceTree = "<group>"; };
+		2E2D3B121348D8FD002F4AC1 /* graphics.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = graphics.cc; path = ../../src/graphics.cc; sourceTree = "<group>"; };
+		2E2D3B131348D8FD002F4AC1 /* hardware.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hardware.cc; path = ../../src/hardware.cc; sourceTree = "<group>"; };
+		2E2D3B141348D8FD002F4AC1 /* images.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = images.cc; path = ../../src/images.cc; sourceTree = "<group>"; };
+		2E2D3B151348D8FD002F4AC1 /* mathematics.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mathematics.cc; path = ../../src/mathematics.cc; sourceTree = "<group>"; };
+		2E2D3B161348D8FD002F4AC1 /* typography.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = typography.cc; path = ../../src/typography.cc; sourceTree = "<group>"; };
+		2E2D3B171348D8FD002F4AC1 /* version.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = version.cc; path = ../../src/version.cc; sourceTree = "<group>"; };
+		2E2D3B181348D8FD002F4AC1 /* videos.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = videos.cc; path = ../../src/videos.cc; sourceTree = "<group>"; };
+		2E2D3B191348D8FD002F4AC1 /* zajal.cc */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; name = zajal.cc; path = ../../src/zajal.cc; sourceTree = "<group>"; tabWidth = 2; };
+		2E2D3B1A1348D8FD002F4AC1 /* zajal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zajal.h; path = ../../src/zajal.h; sourceTree = "<group>"; };
+		2E2D3B1B1348D8FD002F4AC1 /* ZajalInterpreter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZajalInterpreter.cc; path = ../../src/ZajalInterpreter.cc; sourceTree = "<group>"; };
+		2E2D3B1C1348D8FD002F4AC1 /* ZajalInterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZajalInterpreter.h; path = ../../src/ZajalInterpreter.h; sourceTree = "<group>"; };
+		2E2D3B281348D913002F4AC1 /* libruby.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libruby.a; path = ../../lib/ruby/libruby.a; sourceTree = "<group>"; };
+		2E898B671349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconPlayTemplate.pdf; sourceTree = "<group>"; };
+		2E898B691349351300DF6FAA /* ToolbarIconPauseTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconPauseTemplate.pdf; sourceTree = "<group>"; };
+		2E898B6A1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconReloadTemplate.pdf; sourceTree = "<group>"; };
+		2E898B6D1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconFullscreenTemplate.pdf; sourceTree = "<group>"; };
+		2E898B7113493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconConsoleDownTemplate.pdf; sourceTree = "<group>"; };
+		2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconConsoleUpTemplate.pdf; sourceTree = "<group>"; };
+		2E898B75134968C600DF6FAA /* ZajalDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZajalDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB1360CB124D437A0044C71F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = main.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		BB1360CD124D437A0044C71F /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = SOURCE_ROOT; };
+		BB7EB90D1253F74D004B32F7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BBE3A5D8127BA103000B7920 /* testApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = testApp.mm; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E4B69B590A3A1756003C02F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E143AD01348CA8600A64DBA /* CoreVideo.framework in Frameworks */,
+				2E143AA413489D9E00A64DBA /* Cocoa.framework in Frameworks */,
+				2E143AA01348992200A64DBA /* Carbon.framework in Frameworks */,
+				2E143A9E1348991C00A64DBA /* CoreAudio.framework in Frameworks */,
+				2E143A9C1348991600A64DBA /* QuickTime.framework in Frameworks */,
+				2E143A9A1348990E00A64DBA /* GLUT.framework in Frameworks */,
+				2E143A981348990800A64DBA /* OpenGL.framework in Frameworks */,
+				2E143AA213489D7900A64DBA /* libof.a in Frameworks */,
+				2E2D3B291348D913002F4AC1 /* libruby.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2E143AD11348CA8D00A64DBA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2E143ACF1348CA8600A64DBA /* CoreVideo.framework */,
+				2E143AA313489D9E00A64DBA /* Cocoa.framework */,
+				2E143A9F1348992200A64DBA /* Carbon.framework */,
+				2E143A9D1348991C00A64DBA /* CoreAudio.framework */,
+				2E143A9B1348991600A64DBA /* QuickTime.framework */,
+				2E143A991348990E00A64DBA /* GLUT.framework */,
+				2E143A971348990800A64DBA /* OpenGL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2E143AD21348CAB400A64DBA /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				2E2D3B281348D913002F4AC1 /* libruby.a */,
+				2E143AA113489D7900A64DBA /* libof.a */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		2E143AD41348CBFC00A64DBA /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Misc;
+			sourceTree = "<group>";
+		};
+		2E2D3B0E1348D8D7002F4AC1 /* Zajal Core */ = {
+			isa = PBXGroup;
+			children = (
+				2E2D3B0F1348D8FD002F4AC1 /* app.cc */,
+				2E2D3B101348D8FD002F4AC1 /* config.h */,
+				2E2D3B111348D8FD002F4AC1 /* events.cc */,
+				2E2D3B121348D8FD002F4AC1 /* graphics.cc */,
+				2E2D3B131348D8FD002F4AC1 /* hardware.cc */,
+				2E2D3B141348D8FD002F4AC1 /* images.cc */,
+				2E2D3B151348D8FD002F4AC1 /* mathematics.cc */,
+				2E2D3B161348D8FD002F4AC1 /* typography.cc */,
+				2E2D3B171348D8FD002F4AC1 /* version.cc */,
+				2E2D3B181348D8FD002F4AC1 /* videos.cc */,
+				2E2D3B191348D8FD002F4AC1 /* zajal.cc */,
+				2E2D3B1A1348D8FD002F4AC1 /* zajal.h */,
+				2E2D3B1B1348D8FD002F4AC1 /* ZajalInterpreter.cc */,
+				2E2D3B1C1348D8FD002F4AC1 /* ZajalInterpreter.h */,
+			);
+			name = "Zajal Core";
+			sourceTree = "<group>";
+		};
+		2E898B661349337200DF6FAA /* Toolbar Icons */ = {
+			isa = PBXGroup;
+			children = (
+				2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */,
+				2E898B7113493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf */,
+				2E898B6D1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf */,
+				2E898B691349351300DF6FAA /* ToolbarIconPauseTemplate.pdf */,
+				2E898B6A1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf */,
+				2E898B671349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf */,
+			);
+			name = "Toolbar Icons";
+			sourceTree = "<group>";
+		};
+		BB1360CA124D437A0044C71F /* Old Source */ = {
+			isa = PBXGroup;
+			children = (
+				BBE3A5D8127BA103000B7920 /* testApp.mm */,
+				BB1360CD124D437A0044C71F /* testApp.h */,
+			);
+			name = "Old Source";
+			path = src;
+			sourceTree = "<group>";
+		};
+		BBE3A601127BA150000B7920 /* NIBs */ = {
+			isa = PBXGroup;
+			children = (
+				2E1D2402134188670014CFBC /* WithWindow.xib */,
+				2E1D23FF1341885D0014CFBC /* NoWindow.xib */,
+			);
+			name = NIBs;
+			path = ../nibs;
+			sourceTree = "<group>";
+		};
+		BBE3A605127BA150000B7920 /* Cocoa Windowing */ = {
+			isa = PBXGroup;
+			children = (
+				BBE3A601127BA150000B7920 /* NIBs */,
+				2E1D2407134188780014CFBC /* ofAppCocoaWindow.h */,
+				2E1D2408134188780014CFBC /* ofAppCocoaWindow.mm */,
+				2E1D240A134188780014CFBC /* GLView.h */,
+				2E1D240B134188780014CFBC /* GLView.mm */,
+				2E1D240C134188780014CFBC /* GLWindow.h */,
+				2E1D240D134188780014CFBC /* GLWindow.mm */,
+			);
+			name = "Cocoa Windowing";
+			path = ../../../../../msalibs/ofxCocoa/src;
+			sourceTree = "<group>";
+		};
+		E4B69B4A0A3A1720003C02F2 = {
+			isa = PBXGroup;
+			children = (
+				BB1360CB124D437A0044C71F /* main.mm */,
+				2E1D2405134188780014CFBC /* ZajalAppDelegate.h */,
+				2E1D2406134188780014CFBC /* ZajalAppDelegate.mm */,
+				BB7EB90D1253F74D004B32F7 /* Info.plist */,
+				2E898B661349337200DF6FAA /* Toolbar Icons */,
+				2E2D3B0E1348D8D7002F4AC1 /* Zajal Core */,
+				BBE3A605127BA150000B7920 /* Cocoa Windowing */,
+				2E143AD11348CA8D00A64DBA /* Frameworks */,
+				2E143AD21348CAB400A64DBA /* Libraries */,
+				2E143AD41348CBFC00A64DBA /* Misc */,
+				BB1360CA124D437A0044C71F /* Old Source */,
+				2E898B75134968C600DF6FAA /* ZajalDebug.app */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E4B69B5A0A3A1756003C02F2 /* Zajal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "Zajal" */;
+			buildPhases = (
+				E4B69B580A3A1756003C02F2 /* Sources */,
+				E4B69B590A3A1756003C02F2 /* Frameworks */,
+				2E898FCF13496D7900DF6FAA /* Copy Ruby/Zajal Libraries */,
+				2E898FD0134976DD00DF6FAA /* Copy Examples */,
+				2E143AA713489DE000A64DBA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Zajal;
+			productName = myOFApp;
+			productReference = 2E898B75134968C600DF6FAA /* ZajalDebug.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "Zajal" */;
+			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = E4B69B4A0A3A1720003C02F2;
+			productRefGroup = E4B69B4A0A3A1720003C02F2;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E4B69B5A0A3A1756003C02F2 /* Zajal */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2E143AA713489DE000A64DBA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E143ACE1348CA5A00A64DBA /* WithWindow.xib in Resources */,
+				2E898B681349338E00DF6FAA /* ToolbarIconPlayTemplate.pdf in Resources */,
+				2E898B6B1349351300DF6FAA /* ToolbarIconPauseTemplate.pdf in Resources */,
+				2E898B6C1349351300DF6FAA /* ToolbarIconReloadTemplate.pdf in Resources */,
+				2E898B6E1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf in Resources */,
+				2E898B7213493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf in Resources */,
+				2E898B7413493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2E898FCF13496D7900DF6FAA /* Copy Ruby/Zajal Libraries */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Ruby/Zajal Libraries";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "mkdir -p $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/ruby\nmkdir -p $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/zajal\ncp -rf ../../lib/ruby/stdlib/* $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/ruby\ncp -rf ../../lib/zajal/* $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/lib/zajal";
+		};
+		2E898FD0134976DD00DF6FAA /* Copy Examples */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Examples";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/examples/\ncp -rf ../../examples/* $TARGET_BUILD_DIR/$PRODUCT_NAME.app/Contents/Resources/examples/\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E4B69B580A3A1756003C02F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB1360CE124D437A0044C71F /* main.mm in Sources */,
+				BBE3A5D9127BA103000B7920 /* testApp.mm in Sources */,
+				2E1D2410134188780014CFBC /* ZajalAppDelegate.mm in Sources */,
+				2E1D2411134188780014CFBC /* ofAppCocoaWindow.mm in Sources */,
+				2E1D2412134188780014CFBC /* GLView.mm in Sources */,
+				2E1D2413134188780014CFBC /* GLWindow.mm in Sources */,
+				2E2D3B1D1348D8FD002F4AC1 /* app.cc in Sources */,
+				2E2D3B1E1348D8FD002F4AC1 /* events.cc in Sources */,
+				2E2D3B1F1348D8FD002F4AC1 /* graphics.cc in Sources */,
+				2E2D3B201348D8FD002F4AC1 /* hardware.cc in Sources */,
+				2E2D3B211348D8FD002F4AC1 /* images.cc in Sources */,
+				2E2D3B221348D8FD002F4AC1 /* mathematics.cc in Sources */,
+				2E2D3B231348D8FD002F4AC1 /* typography.cc in Sources */,
+				2E2D3B241348D8FD002F4AC1 /* version.cc in Sources */,
+				2E2D3B251348D8FD002F4AC1 /* videos.cc in Sources */,
+				2E2D3B261348D8FD002F4AC1 /* zajal.cc in Sources */,
+				2E2D3B271348D8FD002F4AC1 /* ZajalInterpreter.cc in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		E4B27CA010CBF8A600536013 /* ReleaseUniversal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+				);
+				OTHER_LDFLAGS = "";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+			};
+			name = ReleaseUniversal;
+		};
+		E4B27CA110CBF8A600536013 /* ReleaseUniversal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.framework *.gch (*) CVS .svn .git *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G4;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				GCC_PREPROCESSOR_DEFINITIONS = MSA_HOST_OPENFRAMEWORKS;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/linux\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/linux64\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/vs2008\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_5 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/vs2010\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_6 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/win_cb\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/freeimage/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10 = "\"$(SRCROOT)/../../lib/openframeworks\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11 = "\"$(SRCROOT)/../../lib/ruby\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../libs/fmodex/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../libs/freetype/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../libs/GLee/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/../../../libs/poco/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/../../../libs/rtAudio/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/../../../addons/ofxOpenCv/libs/opencv/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9 = "\"$(SRCROOT)/../../../libs/glew/lib/osx\"";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+					"-DOF_SOUND_PLAYER_QUICKTIME",
+					"-DHAVE_STRUCT_TIMEZONE",
+					"-DHAVE_STRUCT_TIMESPEC",
+					"-DHAVE_SIGNBIT",
+					"-DEMPTY_LOADPATH",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)Universal";
+				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = ReleaseUniversal;
+		};
+		E4B69B4E0A3A1720003C02F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+				);
+				OTHER_LDFLAGS = "";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+			};
+			name = Debug;
+		};
+		E4B69B4F0A3A1720003C02F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = 4.2;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = NO;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+				);
+				OTHER_LDFLAGS = "";
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.6.sdk";
+			};
+			name = Release;
+		};
+		E4B69B600A3A1757003C02F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.framework *.gch (*) CVS .svn .git *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G4;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				GCC_PREPROCESSOR_DEFINITIONS = MSA_HOST_OPENFRAMEWORKS;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/linux\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/linux64\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/vs2008\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_5 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/vs2010\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_6 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/win_cb\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/freeimage/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10 = "\"$(SRCROOT)/../../lib/openframeworks\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11 = "\"$(SRCROOT)/../../lib/ruby\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../libs/fmodex/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../libs/freetype/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../libs/GLee/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/../../../libs/poco/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/../../../libs/rtAudio/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/../../../addons/ofxOpenCv/libs/opencv/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9 = "\"$(SRCROOT)/../../../libs/glew/lib/osx\"";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+					"-DOF_SOUND_PLAYER_QUICKTIME",
+					"-DHAVE_STRUCT_TIMEZONE",
+					"-DHAVE_STRUCT_TIMESPEC",
+					"-DHAVE_SIGNBIT",
+					"-DEMPTY_LOADPATH",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)Debug";
+				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Debug;
+		};
+		E4B69B610A3A1757003C02F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
+				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.framework *.gch (*) CVS .svn .git *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_SSE3_EXTENSIONS = YES;
+				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_MODEL_TUNING = G4;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				GCC_PREPROCESSOR_DEFINITIONS = MSA_HOST_OPENFRAMEWORKS;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_UNROLL_LOOPS = YES;
+				INCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_17)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/freeimage/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/linux64\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/vs2008\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/vs2010\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_14 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/win_cb\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_15 = "\"$(SRCROOT)/../../../libs/glew/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16 = "\"$(SRCROOT)/../../lib/openframeworks\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_17 = "\"$(SRCROOT)/../../lib/ruby\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/../../../libs/fmodex/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../../../libs/freetype/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../../../libs/GLee/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SRCROOT)/../../../libs/poco/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/../../../libs/rtAudio/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/../../../addons/ofxOpenCv/libs/opencv/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_8 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_9 = "\"$(SRCROOT)/../../../addons/ofxOsc/libs/oscpack/lib/linux\"";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-D__MACOSX_CORE__",
+					"-lpthread",
+					"-DOF_SOUND_PLAYER_QUICKTIME",
+					"-DHAVE_STRUCT_TIMEZONE",
+					"-DHAVE_STRUCT_TIMESPEC",
+					"-DHAVE_SIGNBIT",
+					"-DEMPTY_LOADPATH",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "Zajal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4B69B4E0A3A1720003C02F2 /* Debug */,
+				E4B69B4F0A3A1720003C02F2 /* Release */,
+				E4B27CA010CBF8A600536013 /* ReleaseUniversal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E4B69B5F0A3A1757003C02F2 /* Build configuration list for PBXNativeTarget "Zajal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E4B69B600A3A1757003C02F2 /* Debug */,
+				E4B69B610A3A1757003C02F2 /* Release */,
+				E4B27CA110CBF8A600536013 /* ReleaseUniversal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E4B69B4C0A3A1720003C02F2 /* Project object */;
+}

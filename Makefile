@@ -2,6 +2,8 @@ ZAJAL_DIR = src
 BUILD_DIR = build
 BIN_DIR = bin
 BINARY = $(BIN_DIR)/zajal
+LIBRARY = $(BIN_DIR)/libzajal.a
+CLI_FRONTEND_SRC = wrappers/cli
 
 
 ### 
@@ -32,15 +34,18 @@ ZAJAL_GIT_HASH = $(shell $(GIT) log -1 --pretty=format:%H)
 ZAJAL_GIT_SHORT_HASH = $(shell $(GIT) log -1 --pretty=format:%h)
 
 ZAJAL_INCLUDES = -I$(ZAJAL_DIR)
-ZAJAL_SRC = $(shell find -E $(ZAJAL_DIR) -regex ".*\.c(pp)?$$")
+ZAJAL_SRC = $(shell find -E $(ZAJAL_DIR) -regex ".*\.cc?$$") $(shell find -E $(CLI_FRONTEND_SRC) -regex ".*\.cc?$$")
 ZAJAL_OBJ = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(notdir $(ZAJAL_SRC))))
 ZAJAL_LIBRARIES = $(OF_LIB) $(RUBY_LIB)
 
 
-.PHONY: all clean configure docs $(BUILD_DIR)/version.c.o
+.PHONY: all static clean configure docs $(BUILD_DIR)/version.c.o
 
 all: $(BINARY)
-	@echo "Built Zajal $(ZAJAL_GIT_SHORT_HASH) to $(BINARY)"
+	@echo "Built Zajal $(ZAJAL_GIT_SHORT_HASH) binary to $(BINARY)"
+
+static: $(LIBRARY) $(ZAJAL_LIBRARIES)
+	@echo "Built Zajal $(ZAJAL_GIT_SHORT_HASH) static library to $(LIBRARY)"
 
 docs:
 	yardoc -e util/docs/screenshots src
@@ -49,6 +54,12 @@ $(BINARY): $(ZAJAL_OBJ)
 	@echo -n "Making binary..."
 	@mkdir -p $(BIN_DIR)
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) $(OF_FRAMEWORKS) $(ZAJAL_LIBRARIES) $(ZAJAL_OBJ) -o $(BINARY)
+	@echo "OK"
+
+$(LIBRARY): $(ZAJAL_OBJ)
+	@echo -n "Making static library..."
+	@mkdir -p $(BIN_DIR)
+	@libtool -static -o $(LIBRARY) $(ZAJAL_OBJ) $(ZAJAL_LIBRARIES)
 	@echo "OK"
 
 configure: $(ZAJAL_DIR)/config.h
@@ -76,13 +87,13 @@ $(BUILD_DIR)/%.cpp.o: $(ZAJAL_DIR)/%.cpp
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@echo "OK"
 
-$(BUILD_DIR)/%.c.o: $(ZAJAL_DIR)/%.c
+$(BUILD_DIR)/%.cc.o: $(ZAJAL_DIR)/%.cc
 	@echo -n "Building $<..."
 	@mkdir -p $(BUILD_DIR)
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@echo "OK"
 
-$(BUILD_DIR)/version.c.o: $(ZAJAL_DIR)/version.c
+$(BUILD_DIR)/version.cc.o: $(ZAJAL_DIR)/version.cc
 	@echo -n "Building in version information..."
 	@mkdir -p $(BIN_DIR)
 	@cp $< $<.bak

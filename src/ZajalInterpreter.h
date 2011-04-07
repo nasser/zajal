@@ -40,9 +40,11 @@ class ZajalInterpreter : public ofBaseApp {
 		void windowResized(int w, int h);
 		
     void printVersion();
+    void run(ofAppBaseWindow* window);
     void run();
+    void initialize();
     void loadScript(char* filename);
-    void reloadScript();
+    void reloadScript(bool forced=false);
     void updateCurrentScript();
     
     void appendLoadPath(char* path);

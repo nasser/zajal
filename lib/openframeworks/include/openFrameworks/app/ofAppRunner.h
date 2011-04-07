@@ -12,6 +12,8 @@ void 		ofSetupOpenGL(int w, int h, int screenMode);	// sets up the opengl contex
 void 		ofRunApp(ofBaseApp * OFSA = NULL);
 ofBaseApp * ofGetAppPtr();
 void ofSetAppPtr(ofBaseApp *appPtr);
+ofAppBaseWindow * ofGetAppWindowPtr();
+void ofSetAppWindowPtr(ofAppBaseWindow *windowPtr);
 void		ofExit(int status=0);
 
 //-------------------------- time
