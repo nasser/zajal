@@ -50,6 +50,7 @@ int main(int argc, char** argv) {
   
   // parse non-options (script file names) and run
   if(optind < argc) {
+    zi->initialize();
     zi->loadScript(argv[optind]);
     zi->run();
   }
