@@ -3,7 +3,7 @@ BUILD_DIR = build
 BIN_DIR = bin
 BINARY = $(BIN_DIR)/zajal
 LIBRARY = $(BIN_DIR)/libzajal.a
-CLI_FRONTEND_SRC = wrappers/cli
+CLI_FRONTEND_DIR = frontends/cli
 
 
 ### 
@@ -34,12 +34,12 @@ ZAJAL_GIT_HASH = $(shell $(GIT) log -1 --pretty=format:%H)
 ZAJAL_GIT_SHORT_HASH = $(shell $(GIT) log -1 --pretty=format:%h)
 
 ZAJAL_INCLUDES = -I$(ZAJAL_DIR)
-ZAJAL_SRC = $(shell find -E $(ZAJAL_DIR) -regex ".*\.cc?$$") $(shell find -E $(CLI_FRONTEND_SRC) -regex ".*\.cc?$$")
-ZAJAL_OBJ = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(notdir $(ZAJAL_SRC))))
+ZAJAL_SRC = $(shell find -E $(ZAJAL_DIR) -regex ".*\.cc?$$") $(shell find -E $(CLI_FRONTEND_DIR) -regex ".*\.cc?$$")
+ZAJAL_OBJ = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(basename $(notdir $(ZAJAL_SRC)))))
 ZAJAL_LIBRARIES = $(OF_LIB) $(RUBY_LIB)
 
 
-.PHONY: all static clean configure docs $(BUILD_DIR)/version.c.o
+.PHONY: all static clean configure docs $(BUILD_DIR)/version.o
 
 all: $(BINARY)
 	@echo "Built Zajal $(ZAJAL_GIT_SHORT_HASH) binary to $(BINARY)"
@@ -79,21 +79,21 @@ $(ZAJAL_DIR)/config.h:
 	@echo "#endif /* CONFIG_H */" >> $@
 	@echo "OK"
 
-$(BUILD_DIR)/ZajalInterpreter.cpp.o: $(ZAJAL_DIR)/config.h
+$(BUILD_DIR)/ZajalInterpreter.o: $(ZAJAL_DIR)/config.h
 
-$(BUILD_DIR)/%.cpp.o: $(ZAJAL_DIR)/%.cpp
+$(BUILD_DIR)/%.o: $(ZAJAL_DIR)/%.cc
 	@echo -n "Building $<..."
 	@mkdir -p $(BUILD_DIR)
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@echo "OK"
 
-$(BUILD_DIR)/%.cc.o: $(ZAJAL_DIR)/%.cc
+$(BUILD_DIR)/main.o: $(CLI_FRONTEND_DIR)/main.cc
 	@echo -n "Building $<..."
 	@mkdir -p $(BUILD_DIR)
 	@$(CXX) $(CXXFLAGS) $(OF_INCLUDES) $(RUBY_INCLUDES) $(ZAJAL_INCLUDES) -c -o $@ $<
 	@echo "OK"
 
-$(BUILD_DIR)/version.cc.o: $(ZAJAL_DIR)/version.cc
+$(BUILD_DIR)/version.o: $(ZAJAL_DIR)/version.cc
 	@echo -n "Building in version information..."
 	@mkdir -p $(BIN_DIR)
 	@cp $< $<.bak
