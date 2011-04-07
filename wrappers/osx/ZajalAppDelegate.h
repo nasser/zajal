@@ -41,14 +41,17 @@
 #import "GLView.h"
 
 @interface ZajalAppDelegate : NSObject {
-	IBOutlet GLWindow			*_glWindow;	// points to current window
-	IBOutlet GLView				*_glView;
+    IBOutlet GLWindow           *_glWindow;	// points to current window
+    IBOutlet GLView             *_glView;
     
-    IBOutlet NSMenu				*examplesMenu;
+    IBOutlet NSMenu             *examplesMenu;
     IBOutlet NSToolbar          *toolbar;
     
-    IBOutlet NSToolbarItem      *playPauseItem;
-    IBOutlet NSToolbarItem      *consoleItem;
+    IBOutlet NSToolbarItem      *playPauseToolbarItem;
+    IBOutlet NSToolbarItem      *consoleToolbarItem;
+  
+    IBOutlet NSMenuItem         *playMenuItem;
+    IBOutlet NSMenuItem         *pauseMenuItem;
     
     NSImage                     *playIcon;
     NSImage                     *pauseIcon;
@@ -70,6 +73,7 @@
 -(IBAction) toggleAnimation:(id)sender;
 
 -(IBAction) openFileMenuClick:(id)sender;
+-(IBAction) exportMenuClick:(id)sender;
 
 -(IBAction) toggleConsole:(id)sender;
 
