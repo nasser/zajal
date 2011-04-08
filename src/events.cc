@@ -104,14 +104,14 @@ VALUE zj_audio_requested(VALUE self) {
  * @return [Float] The current x position of the mouse
  */
 VALUE zj_mouse_x(VALUE self) {
-  return INT2FIX(ofAppPtr->mouseX);
+  return INT2FIX(ofGetAppPtr()->mouseX);
 }
 
 /* 
  * @return [Float] The current y position of the mouse
  */
 VALUE zj_mouse_y(VALUE self) {
-  return INT2FIX(ofAppPtr->mouseY);
+  return INT2FIX(ofGetAppPtr()->mouseY);
 }
 
 void Init_Events() {
