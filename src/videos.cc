@@ -11,22 +11,6 @@ void zj_video_dealloc(void* video) {
 }
 
 /* 
- * Create a new video object
- * 
- * @param [String] filename File name of the video to load
- */
-VALUE zj_video_new(int argc, VALUE* argv, VALUE klass) {
-  ofVideoPlayer* video_ptr = new ofVideoPlayer();
-  
-  VALUE video = Data_Wrap_Struct(klass, 0, zj_video_dealloc, video_ptr);
-  rb_obj_call_init(video, argc, argv);
-  
-  rb_ary_push(INTERNAL_GET(zj_mVideos, video_ary), rb_obj_id(video));
-  
-  return video;
-}
-
-/* 
  * Load a video from the computer to play.
  * 
  * @param [String] filename File name of the video to load
@@ -325,6 +309,23 @@ VALUE zj_video_position(int argc, VALUE* argv, VALUE self) {
   }
   
   return Qnil;
+}
+
+/* 
+ * Create a new video object
+ * 
+ * @param [String] filename File name of the video to load
+ */
+VALUE zj_video_new(int argc, VALUE* argv, VALUE klass) {
+  ofVideoPlayer* video_ptr = new ofVideoPlayer();
+  
+  VALUE video = Data_Wrap_Struct(klass, 0, zj_video_dealloc, video_ptr);
+  rb_obj_call_init(video, argc, argv);
+  
+  zj_video_play(video);
+  rb_ary_push(INTERNAL_GET(zj_mVideos, video_ary), rb_obj_id(video));
+  
+  return video;
 }
 
 void Init_Videos() {
