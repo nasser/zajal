@@ -186,7 +186,7 @@ void Init_Hardware() {
   INTERNAL_SET(zj_mHardware, arduino_ary, rb_ary_new());
   
   VALUE hardware_update_hook = rb_proc_new(RUBY_METHOD_FUNC(zj_hardware_update_hook), zj_mHardware);
-  rb_ary_push(INTERNAL_GET(zj_mEvents, update_hooks), hardware_update_hook);
+  rb_ary_push(INTERNAL_GET(zj_mEvents, update_prehooks), hardware_update_hook);
   
   zj_cArduino = rb_define_class_under(zj_mHardware, "Arduino", rb_cObject);
   rb_define_singleton_method(zj_cArduino, "new", RUBY_METHOD_FUNC(zj_arduino_new), -1);

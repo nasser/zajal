@@ -19,7 +19,28 @@ module Videos
       end
     }
     
-    Events::Internals.update_hooks.push cleanup_video_ary_hook
-    Events::Internals.update_hooks.push update_videos_hook
+    Events::Internals.update_prehooks.push cleanup_video_ary_hook
+    Events::Internals.update_prehooks.push update_videos_hook
+    
+    
+    # stop playing videos that weren't drawn
+    autostop_videos_prehook = proc {
+      video_hash.values.each do |vid|
+        vid.was_drawn = false
+      end
+    }
+    
+    # stop playing videos that weren't drawn
+    autostop_videos_posthook = proc {
+      video_hash.values.each do |vid|
+        unless vid.was_drawn
+          vid.pause
+        end
+      end
+    }
+    
+    Events::Internals.draw_prehooks.push autostop_videos_prehook
+    Events::Internals.draw_posthooks.push autostop_videos_posthook
+    
   end
 end

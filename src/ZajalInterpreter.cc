@@ -101,16 +101,26 @@ void ZajalInterpreter::setup() {
 void ZajalInterpreter::update() {
   if(state == INTERPRETER_RUNNING) {
     
-    VALUE hooks_ary = INTERNAL_GET(zj_mEvents, update_hooks);
-    VALUE* hooks_ptr = RARRAY_PTR(hooks_ary);
-    int hooks_len = RARRAY_LEN(hooks_ary);
+    VALUE prehooks_ary = INTERNAL_GET(zj_mEvents, update_prehooks);
+    VALUE* prehooks_ptr = RARRAY_PTR(prehooks_ary);
+    int prehooks_len = RARRAY_LEN(prehooks_ary);
     
-    for(int i = 0; i < hooks_len; i++)
-      zj_safe_proc_call(hooks_ptr[i], 0);
+    for(int i = 0; i < prehooks_len; i++) {
+      zj_safe_proc_call(prehooks_ptr[i], 0);
+    }
     
     // if no error exists, run user update method, catch runtime errors
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, update_proc), 0);
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) {state = INTERPRETER_ERROR; return; }
+    
+    VALUE posthooks_ary = INTERNAL_GET(zj_mEvents, update_posthooks);
+    VALUE* posthooks_ptr = RARRAY_PTR(posthooks_ary);
+    int posthooks_len = RARRAY_LEN(posthooks_ary);
+    
+    for(int i = 0; i < posthooks_len; i++){
+      zj_safe_proc_call(posthooks_ptr[i], 0);
+    }
+    
   }
 }
 
@@ -164,10 +174,26 @@ void ZajalInterpreter::draw() {
       break;
       
     case INTERPRETER_RUNNING:
+      VALUE prehooks_ary = INTERNAL_GET(zj_mEvents, draw_prehooks);
+      VALUE* prehooks_ptr = RARRAY_PTR(prehooks_ary);
+      int prehooks_len = RARRAY_LEN(prehooks_ary);
+    
+      for(int i = 0; i < prehooks_len; i++) {
+        zj_safe_proc_call(prehooks_ptr[i], 0);
+      }
+    
       // no error exists, draw next frame of user code, catch runtime errors
       zj_graphics_reset_frame();
       zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
       if(ruby_error) state = INTERPRETER_ERROR;
+      
+      VALUE posthooks_ary = INTERNAL_GET(zj_mEvents, draw_posthooks);
+      VALUE* posthooks_ptr = RARRAY_PTR(posthooks_ary);
+      int posthooks_len = RARRAY_LEN(posthooks_ary);
+    
+      for(int i = 0; i < posthooks_len; i++){
+        zj_safe_proc_call(posthooks_ptr[i], 0);
+      }
       break;
       
   }

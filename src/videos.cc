@@ -185,6 +185,8 @@ VALUE zj_video_draw(int argc, VALUE* argv, VALUE self) {
     case 4: zj_video_draw3(self, NUM2DBL(x), NUM2DBL(y), NUM2DBL(w), NUM2DBL(h)); break;
   }
   
+  rb_iv_set(self, "@was_drawn", Qtrue);
+  
   return Qnil;
 }
 
