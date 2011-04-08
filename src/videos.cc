@@ -20,6 +20,9 @@ VALUE zj_video_new(int argc, VALUE* argv, VALUE klass) {
   
   VALUE video = Data_Wrap_Struct(klass, 0, zj_video_dealloc, video_ptr);
   rb_obj_call_init(video, argc, argv);
+  
+  rb_ary_push(INTERNAL_GET(zj_mVideos, video_ary), rb_obj_id(video));
+  
   return video;
 }
 
@@ -250,7 +253,6 @@ VALUE zj_video_frame(int argc, VALUE* argv, VALUE self) {
       
     /* called with one argument, jump to given frame */
     case 1: zj_video_set_frame(self, NUM2INT(new_frame)); break;
-      
   }
   
   return Qnil;
@@ -323,28 +325,12 @@ VALUE zj_video_position(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
-VALUE zj_video_update_hook(VALUE self, VALUE id) {
-  VALUE video_ary = INTERNAL_GET(zj_mVideos, video_ary);
-  VALUE* video_ary_ptr = RARRAY_PTR(video_ary);
-  int video_ary_len = RARRAY_LEN(video_ary);
-  
-  for(int i = 0; i < video_ary_len; i++) {
-    zj_video_update(video_ary_ptr[i]);
-  }
-  
-  return Qnil;
-}
-
 void Init_Videos() {
   zj_mVideos = rb_define_module_under(zj_mZajal, "Videos");
   rb_define_module_under(zj_mVideos, "Internals");
-  
   INTERNAL_SET(zj_mVideos, video_ary, rb_ary_new());
-  
-  VALUE video_update_hook = rb_proc_new(RUBY_METHOD_FUNC(zj_video_update_hook), zj_mVideos);
-  // rb_ary_push(INTERNAL_GET(zj_mEvents, update_hooks), video_update_hook);
-  
   INTERNAL_SET(zj_mVideos, video_hash, rb_hash_new());
+  
   rb_define_private_method(zj_mVideos, "video", RUBY_METHOD_FUNC(zj_video_video), -1);
   
   /* the Image class */
