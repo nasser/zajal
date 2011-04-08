@@ -12,6 +12,9 @@
 
 #define HASH_EXTRACT(hash, var) {if( !NIL_P(rb_hash_aref(hash, SYM(#var))) ) var = rb_hash_aref(hash, SYM(#var));}
 
+#define INIT_DATA_PTR(klass, ptr) klass* ptr;Data_Get_Struct(self, klass, ptr);
+#define INIT_DATA_PTR2(klass, ptr, obj) klass* ptr;Data_Get_Struct(obj, klass, ptr);
+
 /* app */
 extern VALUE zj_mApp;
 
