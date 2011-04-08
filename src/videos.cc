@@ -121,6 +121,17 @@ VALUE zj_video_done_p(VALUE self) {
 VALUE zj_video_stop(VALUE self) {
   INIT_DATA_PTR(ofVideoPlayer, video_ptr);
   
+  video_ptr->stop();
+  
+  return Qnil;
+}
+
+/* 
+ * Pause the the video.
+ */
+VALUE zj_pause_stop(VALUE self) {
+  INIT_DATA_PTR(ofVideoPlayer, video_ptr);
+  
   video_ptr->setPaused(true);
   
   return Qnil;
@@ -345,8 +356,11 @@ void Init_Videos() {
   rb_define_method(zj_cVideo, "close", RUBY_METHOD_FUNC(zj_video_close), 0);
   rb_define_method(zj_cVideo, "update", RUBY_METHOD_FUNC(zj_video_update), 0);
   rb_define_method(zj_cVideo, "play", RUBY_METHOD_FUNC(zj_video_play), 0);
-  rb_define_method(zj_cVideo, "stop", RUBY_METHOD_FUNC(zj_video_stop), 0);
   rb_define_method(zj_cVideo, "duration", RUBY_METHOD_FUNC(zj_video_duration), 0);
+  
+  // whats the difference here?
+  rb_define_method(zj_cVideo, "stop", RUBY_METHOD_FUNC(zj_video_stop), 0);
+  rb_define_method(zj_cVideo, "pause", RUBY_METHOD_FUNC(zj_pause_stop), 0);
   
   rb_define_method(zj_cVideo, "frame", RUBY_METHOD_FUNC(zj_video_frame), -1);
   rb_define_method(zj_cVideo, "speed", RUBY_METHOD_FUNC(zj_video_speed), -1);
