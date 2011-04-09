@@ -311,6 +311,48 @@ VALUE zj_video_position(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+VALUE zj_video_get_looping(VALUE self) {
+  INIT_DATA_PTR(ofVideoPlayer, video_ptr);
+  
+  switch(video_ptr->getLoopState()) {
+    case OF_LOOP_NONE: return SYM("none");
+    case OF_LOOP_PALINDROME: return SYM("palindrome");
+    case OF_LOOP_NORMAL: return SYM("normal");
+    default: return Qnil;
+  }
+}
+
+void zj_video_set_looping(VALUE self, ID looping) {
+  INIT_DATA_PTR(ofVideoPlayer, video_ptr);
+  
+  if(looping == rb_intern("none"))
+    video_ptr->setLoopState(OF_LOOP_NONE);
+  else if(looping == rb_intern("palindrome"))
+    video_ptr->setLoopState(OF_LOOP_PALINDROME);
+  else if(looping == rb_intern("normal"))
+    video_ptr->setLoopState(OF_LOOP_NORMAL);
+  else
+    rb_raise(rb_eArgError, "Invalid loop mode!");
+}
+
+/* 
+ * Get or set the current looping mode of the video
+ */
+VALUE zj_video_looping(int argc, VALUE* argv, VALUE self) {
+  VALUE new_looping;
+  rb_scan_args(argc, argv, "01", &new_looping);
+  
+  switch(argc) {
+    /* called with no arguments, return current looping state */
+    case 0: return zj_video_get_looping(self);
+    
+    /* called with one argument, set new looping state */
+    case 1: zj_video_set_looping(self, SYM2ID(new_looping));
+  }
+  
+  return Qnil;
+}
+
 /* 
  * Create a new video object
  * 
@@ -346,6 +388,8 @@ void Init_Videos() {
   rb_define_method(zj_cVideo, "update", RUBY_METHOD_FUNC(zj_video_update), 0);
   rb_define_method(zj_cVideo, "play", RUBY_METHOD_FUNC(zj_video_play), 0);
   rb_define_method(zj_cVideo, "duration", RUBY_METHOD_FUNC(zj_video_duration), 0);
+  
+  rb_define_method(zj_cVideo, "looping", RUBY_METHOD_FUNC(zj_video_looping), -1);
   
   // whats the difference here?
   rb_define_method(zj_cVideo, "stop", RUBY_METHOD_FUNC(zj_video_stop), 0);
