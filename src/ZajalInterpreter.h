@@ -49,6 +49,9 @@ class ZajalInterpreter : public ofBaseApp {
     
     void appendLoadPath(char* path);
     
+    char* readConsoleText(char* consoleName, char* prefix="", bool clear=true);
+    void writeConsoleText(char* consoleName, char* text);
+    
   private:
     // the state the interpreter is in
     InterpreterState state;

@@ -1,4 +1,5 @@
 require "fixnum2ref"
+require "console"
 require "attraway"
 require "error"
 require "defaults"

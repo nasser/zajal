@@ -397,3 +397,16 @@ void ZajalInterpreter::reloadScript(bool forced) {
   state = ruby_error ? INTERPRETER_ERROR : INTERPRETER_RUNNING;
   
 }
+
+char* ZajalInterpreter::readConsoleText(char* consoleName, char* prefix, bool clear) {
+  VALUE buffer = rb_gv_get(consoleName);
+  rb_funcall(buffer, rb_intern("prefix_lines"), 1, rb_str_new2(prefix));
+  
+  VALUE buffer_str = rb_funcall(buffer, rb_intern(clear ? "get_buffer!" : "get_buffer"), 0);
+  return buffer_str == Qnil ? NULL : RSTRING_PTR(buffer_str);
+}
+
+void ZajalInterpreter::writeConsoleText(char* consoleName, char* text) {
+  VALUE buffer = rb_gv_get(consoleName);
+  rb_funcall(buffer, rb_intern("write"), 1, rb_str_new2(text));
+}
