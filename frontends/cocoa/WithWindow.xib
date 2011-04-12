@@ -12,16 +12,18 @@
 		</object>
 		<object class="NSArray" key="IBDocument.IntegratedClassDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<string>NSView</string>
-			<string>NSMenu</string>
-			<string>NSWindowTemplate</string>
-			<string>NSMenuItem</string>
-			<string>NSToolbarItem</string>
-			<string>NSToolbarSpaceItem</string>
-			<string>NSCustomView</string>
 			<string>NSToolbar</string>
 			<string>NSToolbarFlexibleSpaceItem</string>
+			<string>NSMenuItem</string>
+			<string>NSMenu</string>
+			<string>NSImageView</string>
+			<string>NSToolbarSpaceItem</string>
+			<string>NSImageCell</string>
+			<string>NSCustomView</string>
 			<string>NSCustomObject</string>
+			<string>NSView</string>
+			<string>NSWindowTemplate</string>
+			<string>NSToolbarItem</string>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -446,12 +448,12 @@
 				<string key="NSName">_NSMainMenu</string>
 			</object>
 			<object class="NSWindowTemplate" id="215704897">
-				<int key="NSWindowStyleMask">263</int>
+				<int key="NSWindowStyleMask">7</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{35, 497}, {466, 641}}</string>
+				<string key="NSWindowRect">{{35, 497}, {466, 351}}</string>
 				<int key="NSWTFlags">603979776</int>
-				<string key="NSWindowTitle"/>
-				<string key="NSWindowClass">GLWindow</string>
+				<string key="NSWindowTitle">Zajal</string>
+				<string key="NSWindowClass">NSWindow</string>
 				<object class="NSToolbar" key="NSViewClass" id="29963790">
 					<object class="NSMutableString" key="NSToolbarIdentifier">
 						<characters key="NS.bytes">EAB39C91-4A3D-4217-A18A-E015FD25E530</characters>
@@ -483,7 +485,7 @@
 								<string key="NSToolbarItemPaletteLabel">Reload</string>
 								<string key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
-								<object class="NSCustomResource" key="NSToolbarItemImage">
+								<object class="NSCustomResource" key="NSToolbarItemImage" id="635307770">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">ToolbarIconReloadTemplate</string>
 								</object>
@@ -621,10 +623,40 @@
 					<int key="NSvFlags">274</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSImageView" id="439733193">
+							<reference key="NSNextResponder" ref="85501261"/>
+							<int key="NSvFlags">268</int>
+							<object class="NSMutableSet" key="NSDragTypes">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSArray" key="set.sortedObjects">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>Apple PDF pasteboard type</string>
+									<string>Apple PICT pasteboard type</string>
+									<string>Apple PNG pasteboard type</string>
+									<string>NSFilenamesPboardType</string>
+									<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+									<string>NeXT TIFF v4.0 pasteboard type</string>
+								</object>
+							</object>
+							<string key="NSFrame">{{106, 48}, {254, 254}}</string>
+							<reference key="NSSuperview" ref="85501261"/>
+							<reference key="NSWindow"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSImageCell" key="NSCell" id="799444913">
+								<int key="NSCellFlags">130560</int>
+								<int key="NSCellFlags2">33554432</int>
+								<reference key="NSContents" ref="635307770"/>
+								<int key="NSAlign">0</int>
+								<int key="NSScale">3</int>
+								<int key="NSStyle">0</int>
+								<bool key="NSAnimates">NO</bool>
+							</object>
+							<bool key="NSEditable">YES</bool>
+						</object>
 						<object class="NSCustomView" id="100656886">
 							<reference key="NSNextResponder" ref="85501261"/>
-							<int key="NSvFlags">274</int>
-							<string key="NSFrameSize">{466, 641}</string>
+							<int key="NSvFlags">-2147483374</int>
+							<string key="NSFrameSize">{466, 351}</string>
 							<reference key="NSSuperview" ref="85501261"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView"/>
@@ -632,7 +664,7 @@
 							<string key="NSExtension">NSOpenGLView</string>
 						</object>
 					</object>
-					<string key="NSFrame">{{7, 11}, {466, 641}}</string>
+					<string key="NSFrame">{{7, 11}, {466, 351}}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="100656886"/>
@@ -954,6 +986,7 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="100656886"/>
+							<reference ref="439733193"/>
 						</object>
 						<reference key="parent" ref="215704897"/>
 					</object>
@@ -964,6 +997,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 						</object>
 						<reference key="parent" ref="85501261"/>
+						<string key="objectName">GLView</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">8</int>
@@ -1327,6 +1361,20 @@
 						<reference key="object" ref="1007861611"/>
 						<reference key="parent" ref="988304650"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">442</int>
+						<reference key="object" ref="439733193"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="799444913"/>
+						</object>
+						<reference key="parent" ref="85501261"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">443</int>
+						<reference key="object" ref="799444913"/>
+						<reference key="parent" ref="439733193"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1399,6 +1447,8 @@
 					<string>433.IBPluginDependency</string>
 					<string>434.IBPluginDependency</string>
 					<string>435.IBPluginDependency</string>
+					<string>442.IBPluginDependency</string>
+					<string>443.IBPluginDependency</string>
 					<string>5.IBEditorWindowLastContentRect</string>
 					<string>5.IBPluginDependency</string>
 					<string>5.IBWindowTemplateEditedContentRect</string>
@@ -1479,6 +1529,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{623, 500}, {1254, 650}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{623, 500}, {1254, 650}}</string>
@@ -1504,7 +1556,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">436</int>
+			<int key="maxID">443</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1515,14 +1567,6 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/GLView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">GLWindow</string>
-					<string key="superclassName">NSWindow</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/GLWindow.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -1639,7 +1683,7 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>GLView</string>
-							<string>GLWindow</string>
+							<string>NSWindow</string>
 							<string>NSToolbarItem</string>
 							<string>NSMenu</string>
 							<string>NSMenuItem</string>
@@ -1669,7 +1713,7 @@
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">_glWindow</string>
-								<string key="candidateClassName">GLWindow</string>
+								<string key="candidateClassName">NSWindow</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">consoleToolbarItem</string>
