@@ -35,15 +35,6 @@
 }
 
 
-//
-// 'idle()' - Update the display using the current rotation rates...
-//
-- (void)idle:(NSTimer *)timer
-{
-    // Redraw the window...
-    [self drawRect:[self bounds]];
-}
-
 
 //
 // 'mouseDown()' - Handle left mouse button presses...
@@ -242,23 +233,20 @@
     return (self);
 }
 
-
-//
-// 'awakeFromNib()' - Do stuff once the UI is loaded from the NIB file...
-//
-- (void)awakeFromNib
-{
-    // Set initial values...
+- (void)awakeFromNib {
     initialized = false;
+}
+
+- (void)tick:(NSTimer *)timer {
+    // Redraw the window...
+    [self drawRect:[self bounds]];
 }
 
 -(void) startAnimating {
     initialized = true;
-    //start cube rotating
-    [self drawRect:[self bounds]];
+    
     // Start the timer running...
-    timer = [NSTimer timerWithTimeInterval:(0.03f) target:self
-                                  selector:@selector(idle:) userInfo:nil repeats:YES];
+    timer = [NSTimer timerWithTimeInterval:(0.03f) target:self selector:@selector(tick:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSDefaultRunLoopMode];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSModalPanelRunLoopMode];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSEventTrackingRunLoopMode];
