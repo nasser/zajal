@@ -100,6 +100,8 @@
     frameCount++;		// increase the overall frame count
 
     [[self openGLContext]flushBuffer];
+    
+    [appDelegate frameDidFinish];
 }
 
 - (BOOL)acceptsFirstResponder {

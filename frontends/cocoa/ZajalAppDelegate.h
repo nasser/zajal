@@ -37,7 +37,6 @@
 
 #pragma once
 
-//#import "GLWindow.h"
 #import "GLView.h"
 
 @interface ZajalAppDelegate : NSObject {
@@ -62,6 +61,9 @@
     NSTextView                  *errorConsoleTextView;
     NSScrollView                *errorConsoleScrollView;
     CGFloat                     errorConsolePadding;
+    
+    NSDictionary                *stdoutAttributes;
+    NSDictionary                *stderrAttributes;
 }
 
 
@@ -83,6 +85,8 @@
 -(IBAction) goFullscreen:(id)sender;
 -(IBAction) goWindow:(id)sender;
 -(IBAction) toggleFullscreen:(id)sender;
+
+-(void) frameDidFinish;
 
 @end
 

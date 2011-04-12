@@ -61,6 +61,7 @@
     zi->reloadScript(true);
     
     [[NSWorkspace sharedWorkspace] openFile:path withApplication:@"TextMate"];
+    [errorConsoleTextView setString:@""];
 }
 
 -(void) populateExamplesMenu {
@@ -119,19 +120,9 @@
     
     // init the text view where the output will be displayed
     errorConsoleTextView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
-//    [errorConsoleTextView setBackgroundColor:[NSColor blackColor]];
+    [errorConsoleTextView setBackgroundColor:[NSColor blackColor]];
     [errorConsoleTextView setAutomaticLinkDetectionEnabled:YES];
-    for(int i=0; i<50; i++) {
-//        [errorConsoleTextView insertText:@"Zajal 0.2a Mac OS Frontend\n"];
-    }
-    
-//    [errorConsoleTextView insertText:@"0         1         2         3         4         5         6         7         8\n"];
-//    [errorConsoleTextView insertText:@"012345678901234567890123456789012345678901234567890123456789012345678901234567890\n"];
-//    [errorConsoleTextView setEditable:NO];
-    
-    
-//    [[errorConsoleTextView textStorage] setForegroundColor:[NSColor whiteColor]];
-//    [[errorConsoleTextView textStorage] setFont:[NSFont fontWithName:@"Monaco" size:10]];
+    [errorConsoleTextView setEditable:NO];
     
     // init scroll view to allow browsing through textview
     errorConsoleScrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
@@ -164,17 +155,45 @@
     
 	ofNotifySetup();
   
-  playIcon = [self imageTemplateFromName:@"ToolbarIconPlayTemplate"];
-  pauseIcon = [self imageTemplateFromName:@"ToolbarIconPauseTemplate"];
-  consoleDownIcon = [self imageTemplateFromName:@"ToolbarIconConsoleDownTemplate"];
-  consoleUpIcon = [self imageTemplateFromName:@"ToolbarIconConsoleUpTemplate"];
-  
-  [self populateExamplesMenu];
-  [self setupErrorConsole];
+    playIcon = [self imageTemplateFromName:@"ToolbarIconPlayTemplate"];
+    pauseIcon = [self imageTemplateFromName:@"ToolbarIconPauseTemplate"];
+    consoleDownIcon = [self imageTemplateFromName:@"ToolbarIconConsoleDownTemplate"];
+    consoleUpIcon = [self imageTemplateFromName:@"ToolbarIconConsoleUpTemplate"];
+    
+    stdoutAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+                        [NSColor whiteColor], NSForegroundColorAttributeName,
+                        [NSFont fontWithName:@"Monaco" size:10], NSFontAttributeName,
+                        nil];
+    
+    stderrAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+                        [NSColor redColor], NSForegroundColorAttributeName,
+                        [NSFont fontWithName:@"Monaco" size:10], NSFontAttributeName,
+                        nil];
+    
+    [self populateExamplesMenu];
+    [self setupErrorConsole];
 	
 	// clear background
 	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+- (void) frameDidFinish {
+    ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    
+    char* stdoutCStr = zi->readConsoleText("$stdout");
+    if(stdoutCStr) {
+        NSString* stdoutStr = [NSString stringWithUTF8String:stdoutCStr];
+        [[errorConsoleTextView textStorage] appendAttributedString:[[[NSAttributedString alloc] initWithString:stdoutStr attributes:stdoutAttributes] autorelease]];
+        [errorConsoleDrawer open];
+    }
+    
+    char* stderrCStr = zi->readConsoleText("$stderr");
+    if(stderrCStr) {
+        NSString* stderrStr = [NSString stringWithUTF8String:stderrCStr];
+        [[errorConsoleTextView textStorage] appendAttributedString:[[[NSAttributedString alloc] initWithString:stderrStr attributes:stderrAttributes] autorelease]];
+        [errorConsoleDrawer open];
+    }
 }
 
 - (BOOL)applicationShouldTerminate:(NSNotification*)n {
@@ -192,21 +211,23 @@
 
 - (IBAction) startAnimation:(id)sender {
 	[_glView startAnimation];
-  [playMenuItem setEnabled:NO];
-  [pauseMenuItem setEnabled:YES];
-  [playPauseToolbarItem setImage:pauseIcon];
+    [playMenuItem setEnabled:NO];
+    [pauseMenuItem setEnabled:YES];
+    [playPauseToolbarItem setImage:pauseIcon];
 }
 
 - (IBAction) stopAnimation:(id)sender {
 	[_glView stopAnimation];
-  [playMenuItem setEnabled:YES];
-  [pauseMenuItem setEnabled:NO];
-  [playPauseToolbarItem setImage:playIcon];
+    [playMenuItem setEnabled:YES];
+    [pauseMenuItem setEnabled:NO];
+    [playPauseToolbarItem setImage:playIcon];
 }
 
 - (IBAction) reloadScript:(id)sender {
     ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
     zi->reloadScript(true);
+    
+    [errorConsoleTextView setString:@""];
 }
 
 - (IBAction) toggleConsole:(id)sender {
