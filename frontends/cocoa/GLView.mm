@@ -24,82 +24,12 @@
         NSOpenGLPFANoRecovery,
         (NSOpenGLPixelFormatAttribute)nil
     };
-    return ([[[NSOpenGLPixelFormat alloc] initWithAttributes:attributes]autorelease]);
+    
+    return ([[[NSOpenGLPixelFormat alloc] initWithAttributes:attributes] autorelease]);
 }
 
-
-//
-// 'resizeGL()' - Resize the window.
-//
-- (void) resizeGL
-{
-}
-
-
-
-//
-// 'mouseDown()' - Handle left mouse button presses...
-//
-- (void)mouseDown:(NSEvent *)theEvent
-{
-    NSPoint       point;                  // Mouse position
-    // Get and save the mouse position
-    point   = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-}
-
-
-//
-// 'rightMouseDown()' - Handle right mouse button presses...
-//
-- (void)rightMouseDown:(NSEvent *)theEvent
-{
-    NSPoint       point;                  // Mouse position
-    // Get and save the mouse position
-    point   = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-}
-
-
-//
-// 'otherMouseDown()' - Handle middle mouse button presses...
-//
-- (void)otherMouseDown:(NSEvent *)theEvent
-{
-    NSPoint       point;                  // Mouse position
-    // Get and save the mouse position
-    point   = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-}
-
-
-//
-// 'mouseDragged()' - Handle drags using the left mouse button.
-//
-- (void)mouseDragged:(NSEvent *)theEvent
-{
-    NSPoint       point;                  // Mouse position
-    // Get the mouse position and update the rotation rates...
-    point   = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-}
-
-
-//
-// 'rightMouseDragged()' - Handle drags using the right mouse button.
-//
-- (void)rightMouseDragged:(NSEvent *)theEvent
-{
-    NSPoint       point;                  // Mouse position
-    // Get the mouse position and update the rotation rates...
-    point   = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-}
-
-
-//
-// 'otherMouseDragged()' - Handle drags using the middle mouse button.
-//
-- (void)otherMouseDragged:(NSEvent *)theEvent
-{
-    NSPoint       point;                  // Mouse position
-    // Get the mouse position and update the rotation rates...
-    point   = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+- (void) resizeGL {
+    
 }
 
 - (void) prepareOpenGL {
@@ -248,6 +178,75 @@
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSDefaultRunLoopMode];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSModalPanelRunLoopMode];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSEventTrackingRunLoopMode];
+}
+
+#pragma mark Events
+
+-(void)keyDown:(NSEvent *)theEvent {
+    //	NSLog(@"%@", theEvent);
+	NSString *characters = [theEvent characters];
+	if ([characters length]) {
+		unichar key = [characters characterAtIndex:0];
+		switch(key) {
+			case OF_KEY_ESC:
+				OF_EXIT_APP(0);
+				break;
+				
+			case 63232:
+				key = OF_KEY_UP;
+				break;
+                
+			case 63235:
+				key = OF_KEY_RIGHT;
+				break;
+                
+			case 63233:
+				key = OF_KEY_DOWN;
+				break;
+                
+			case 63234:
+				key = OF_KEY_LEFT;
+				break;
+		}
+		ofNotifyKeyPressed(key);
+	}
+}
+
+-(void)keyUp:(NSEvent *)theEvent {
+	NSString *characters = [theEvent characters];
+	if ([characters length]) {
+		unichar key = [characters characterAtIndex:0];
+		ofNotifyKeyReleased(key);
+	}
+}
+
+- (void)mouseDown:(NSEvent *)theEvent {
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+}
+
+- (void)rightMouseDown:(NSEvent *)theEvent {
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+}
+
+- (void)otherMouseDown:(NSEvent *)theEvent {
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent {
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+}
+
+- (void)rightMouseDragged:(NSEvent *)theEvent {
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+}
+
+- (void)otherMouseDragged:(NSEvent *)theEvent {
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
 }
 
 @end
