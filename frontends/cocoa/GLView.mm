@@ -80,6 +80,8 @@
         //	glColor3f(ofRandomuf(), ofRandomuf(), ofRandomuf());
         //	ofCircle(ofRandom(0, ofGetWidth()), ofRandom(0, ofGetHeight()), ofRandom(10, 100));
         
+        ofBackground(0, 0, 0);
+        ofSetColor(255, 255, 255);
         for(int i=0; i<20; i++ ) {
             ofRect((_debugX + i * ofGetWidth()/20) % ofGetWidth(), 0, 10, ofGetWidth());
         }

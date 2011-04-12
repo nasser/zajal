@@ -108,6 +108,25 @@
 									<reference key="NSOnImage" ref="749875520"/>
 									<reference key="NSMixedImage" ref="909026863"/>
 								</object>
+								<object class="NSMenuItem" id="857249453">
+									<reference key="NSMenu" ref="985245654"/>
+									<string key="NSTitle">Debug Mode</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="749875520"/>
+									<reference key="NSMixedImage" ref="909026863"/>
+								</object>
+								<object class="NSMenuItem" id="598952777">
+									<reference key="NSMenu" ref="985245654"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="749875520"/>
+									<reference key="NSMixedImage" ref="909026863"/>
+								</object>
 								<object class="NSMenuItem" id="610620839">
 									<reference key="NSMenu" ref="985245654"/>
 									<string key="NSTitle">Quit</string>
@@ -641,6 +660,7 @@
 							<string key="NSFrame">{{106, 48}, {254, 254}}</string>
 							<reference key="NSSuperview" ref="85501261"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSImageCell" key="NSCell" id="76399505">
 								<int key="NSCellFlags">130560</int>
@@ -935,6 +955,14 @@
 					</object>
 					<int key="connectionID">452</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleDebugMode:</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="857249453"/>
+					</object>
+					<int key="connectionID">456</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1026,6 +1054,8 @@
 							<reference ref="224745782"/>
 							<reference ref="938993644"/>
 							<reference ref="987418114"/>
+							<reference ref="598952777"/>
+							<reference ref="857249453"/>
 						</object>
 						<reference key="parent" ref="378902437"/>
 					</object>
@@ -1383,6 +1413,16 @@
 						<reference key="object" ref="76399505"/>
 						<reference key="parent" ref="228137582"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">454</int>
+						<reference key="object" ref="598952777"/>
+						<reference key="parent" ref="985245654"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">455</int>
+						<reference key="object" ref="857249453"/>
+						<reference key="parent" ref="985245654"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1457,6 +1497,9 @@
 					<string>435.IBPluginDependency</string>
 					<string>442.IBPluginDependency</string>
 					<string>443.IBPluginDependency</string>
+					<string>454.IBPluginDependency</string>
+					<string>454.ImportedFromIB2</string>
+					<string>455.IBPluginDependency</string>
 					<string>5.IBEditorWindowLastContentRect</string>
 					<string>5.IBPluginDependency</string>
 					<string>5.IBWindowTemplateEditedContentRect</string>
@@ -1539,6 +1582,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{623, 500}, {1254, 650}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{623, 500}, {1254, 650}}</string>
@@ -1564,7 +1610,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">452</int>
+			<int key="maxID">456</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1605,10 +1651,12 @@
 							<string>stopAnimation:</string>
 							<string>toggleAnimation:</string>
 							<string>toggleConsole:</string>
+							<string>toggleDebugMode:</string>
 							<string>toggleFullscreen:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1636,6 +1684,7 @@
 							<string>stopAnimation:</string>
 							<string>toggleAnimation:</string>
 							<string>toggleConsole:</string>
+							<string>toggleDebugMode:</string>
 							<string>toggleFullscreen:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1678,6 +1727,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">toggleConsole:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">toggleDebugMode:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

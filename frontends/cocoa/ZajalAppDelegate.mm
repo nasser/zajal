@@ -291,6 +291,21 @@
     [sp runModal];
 }
 
+-(IBAction) toggleDebugMode:(id)sender {
+    NSMenuItem* debugModeMenuItem = (NSMenuItem*)sender;
+    
+    if([debugModeMenuItem state] == NSOffState) {
+        [debugModeMenuItem setState:NSOnState];
+        [_glView setHidden:NO];
+        [_glView setDebugMode:YES];
+        
+    } else {
+        [debugModeMenuItem setState:NSOffState];
+        [_glView setDebugMode:NO];
+        
+    }
+}
+
 -(void) application:(NSApplication *)sender openFiles:(NSArray *)paths {
     // TODO Support multiple files
     [self openScript:(NSString*)[paths lastObject]];

@@ -86,6 +86,8 @@
 -(IBAction) goWindow:(id)sender;
 -(IBAction) toggleFullscreen:(id)sender;
 
+-(IBAction) toggleDebugMode:(id)sender;
+
 -(void) frameDidFinish;
 
 @end
