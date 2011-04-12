@@ -145,64 +145,58 @@
 }
 
 
-- (void)drawRect:(NSRect)rect
-{
+- (void)drawRect:(NSRect)rect {
     if(!initialized) return;
     
     [[self openGLContext] makeCurrentContext];
     
-    float width  = rect.size.width;
+    NSSize screenSize = [[self window] screen].frame.size;
+    NSSize viewSize = self.frame.size;
+    NSPoint windowPos = [self window].frame.origin;
+    windowPos.y	= screenSize.height = windowPos.y;		// vertically flip position
     
-    float height = rect.size.height;
-    
-    //    // Use the current bounding rectangle for the cube window...
-    //    float         aspectRatio, windowWidth, windowHeight;
-    //    int width  = rect.size.width;
-    //    int height = rect.size.height;
-    
-    // Clear the window...
-    glViewport(0, 0, width, height);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    //    static int x = 0;
-    //    x++;
-    //    
-    //    for (int i=0; i<5; i++) {
-    //        glPushMatrix();
-    //        glTranslated(width/2 + sin(i + x * 0.02) * 150, height/2, 0);
-    //        glScaled(120, 120, 1);
-    //        
-    //        glColor3f(1.0f, 1.0f, 1.0f);
-    //        glBegin(GL_LINES);
-    //        glVertex3f(0.0f, 0.0f, -1.5f);
-    //        glVertex3f(0.0f, 0.0f, 1.5f);
-    //        glVertex3f(-1.5f, 0.0f, 0.0f);
-    //        glVertex3f(1.5f, 0.0f, 0.0f);
-    //        glVertex3f(0.0f, 2.5f, 0.0f);
-    //        glVertex3f(0.0f, -2.5f, 0.0f);
-    //        glEnd();
-    //        glPopMatrix();
-    //        
-    //    }
-    
-    
-//    static int x = 0;
-//	
-//    //	glColor3f(ofRandomuf(), ofRandomuf(), ofRandomuf());
-//    //	ofCircle(ofRandom(0, ofGetWidth()), ofRandom(0, ofGetHeight()), ofRandom(10, 100));
-//    
-//	for(int i=0; i<20; i++ ) {
-//        //        [self rectangleWithX:(x + i * (int)[self bounds].size.width/20) % (int)[self bounds].size.width andY:0 andW:10 andH:[self bounds].size.height];
-//        		ofRect((x + i * (int)[self bounds].size.width/20) % (int)[self bounds].size.width, 0, 10, (int)[self bounds].size.width);
-//	}
-//	x = (x + 10) % (int)[self bounds].size.width;
-    
-    //    
+    if(!debugMode) {
         ofNotifyUpdate();
-        ofNotifyDraw();
+    }
     
-        [[self openGLContext]flushBuffer];
+    // set viewport, clear the screen
+    glViewport( 0, 0, viewSize.width, viewSize.height );
+//    if(bEnableSetupScreen) ofSetupScreen();
+    
+    if(ofbClearBg()){
+        float * bgPtr = ofBgColorPtr();
+        glClearColor(bgPtr[0],bgPtr[1],bgPtr[2], bgPtr[3]);
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+    
+    if(!debugMode) {
+        ofNotifyDraw();
+    } else {
+        static int _debugX = 0;
+        
+        //	glColor3f(ofRandomuf(), ofRandomuf(), ofRandomuf());
+        //	ofCircle(ofRandom(0, ofGetWidth()), ofRandom(0, ofGetHeight()), ofRandom(10, 100));
+        
+        for(int i=0; i<20; i++ ) {
+            ofRect((_debugX + i * ofGetWidth()/20) % ofGetWidth(), 0, 10, ofGetWidth());
+        }
+        
+        _debugX = (_debugX + 10) % ofGetWidth();
+    }
+    
+    // -------------- fps calculation:
+    timeNow = ofGetElapsedTimef();
+    double diff = timeNow-timeThen;
+    if( diff  > 0.00001 ){
+        frameRate	*= 0.9f;
+        frameRate	+= 0.1f*(1.0 / diff);
+    }
+    timeThen		= timeNow;
+    // --------------
+    
+    frameCount++;		// increase the overall frame count
+
+    [[self openGLContext]flushBuffer];
 }
 
 //
