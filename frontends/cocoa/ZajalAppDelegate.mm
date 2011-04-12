@@ -126,6 +126,9 @@
     
     // init scroll view to allow browsing through textview
     errorConsoleScrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
+    [errorConsoleScrollView setBorderType:NSNoBorder];
+    [errorConsoleScrollView setHasHorizontalScroller:NO];
+    [errorConsoleScrollView setHasVerticalScroller:YES];
     [errorConsoleScrollView setDocumentView:errorConsoleTextView];
     [errorConsoleDrawer setContentView:errorConsoleScrollView];
 }
@@ -178,6 +181,12 @@
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+- (void) updateErrorConsole {
+    [errorConsoleDrawer open];
+    [[errorConsoleScrollView contentView] scrollToPoint:NSMakePoint(0, NSMaxY([[errorConsoleScrollView documentView] frame]))];
+    [errorConsoleScrollView reflectScrolledClipView: [errorConsoleScrollView contentView]];
+}
+
 - (void) frameDidFinish {
     ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
     
@@ -185,14 +194,14 @@
     if(stdoutCStr) {
         NSString* stdoutStr = [NSString stringWithUTF8String:stdoutCStr];
         [[errorConsoleTextView textStorage] appendAttributedString:[[[NSAttributedString alloc] initWithString:stdoutStr attributes:stdoutAttributes] autorelease]];
-        [errorConsoleDrawer open];
+        [self updateErrorConsole];
     }
     
     char* stderrCStr = zi->readConsoleText("$stderr");
     if(stderrCStr) {
         NSString* stderrStr = [NSString stringWithUTF8String:stderrCStr];
         [[errorConsoleTextView textStorage] appendAttributedString:[[[NSAttributedString alloc] initWithString:stderrStr attributes:stderrAttributes] autorelease]];
-        [errorConsoleDrawer open];
+        [self updateErrorConsole];
     }
 }
 
