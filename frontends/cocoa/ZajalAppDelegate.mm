@@ -155,12 +155,8 @@
     ofAppCocoaWindow* cocoaWindow = new ofAppCocoaWindow();
     cocoaWindow->setGLView(_glView);
     
-    ofSetupOpenGL(cocoaWindow, 800, 600, OF_WINDOW);
-    
     ofSetAppPtr(zi);
     ofSetAppWindowPtr(cocoaWindow);
-    ofSetupScreen();
-    ofSetVerticalSync(true);
     
     [_glView startAnimating];
 	
