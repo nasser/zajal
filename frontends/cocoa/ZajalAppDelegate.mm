@@ -56,6 +56,7 @@
     
     [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
     
+    [_glView setHidden:NO];
     zi->loadScript((char*)[path UTF8String]);
     zi->reloadScript(true);
     
