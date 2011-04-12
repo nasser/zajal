@@ -37,11 +37,11 @@
 
 #pragma once
 
-#import "GLWindow.h"
+//#import "GLWindow.h"
 #import "GLView.h"
 
 @interface ZajalAppDelegate : NSObject {
-    IBOutlet GLWindow           *_glWindow;	// points to current window
+    IBOutlet NSWindow           *_glWindow;	// points to current window
     IBOutlet GLView             *_glView;
     
     IBOutlet NSMenu             *examplesMenu;
@@ -65,7 +65,7 @@
 }
 
 
-@property (readonly) GLWindow	*_glWindow;
+@property (readonly) NSWindow	*_glWindow;
 @property (readonly) GLView		*_glView;
 
 -(IBAction) startAnimation:(id)sender;

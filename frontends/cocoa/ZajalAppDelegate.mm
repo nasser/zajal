@@ -58,6 +58,7 @@
     
     zi->loadScript((char*)[path UTF8String]);
     zi->reloadScript(true);
+    
     [[NSWorkspace sharedWorkspace] openFile:path withApplication:@"TextMate"];
 }
 
@@ -99,6 +100,7 @@
 
 -(IBAction) launchExample:(id)sender {
     NSString* examplePath = [NSString stringWithFormat:@"%@/%@/%@", [[NSBundle mainBundle] resourcePath], @"examples", (NSString*)[(NSMenuItem*)sender representedObject]];
+    
     [self openScript:examplePath];
 }
 
@@ -145,18 +147,29 @@
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)n {
-    ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
+    ZajalInterpreter* zi = new ZajalInterpreter();
+    zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/ruby"] UTF8String]);
+    zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/zajal"] UTF8String]);
+    zi->initialize();
+    zi->loadScript("/Users/nasser/Workspace/zajal/scratch/brownian.rb");
+    
+
+    ofAppCocoaWindow* cocoaWindow = new ofAppCocoaWindow();
+    cocoaWindow->setGLView(_glView);
+    
+    ofSetupOpenGL(cocoaWindow, 800, 600, OF_WINDOW);
+    
+    ofSetAppPtr(zi);
+    ofSetAppWindowPtr(cocoaWindow);
+    ofSetupScreen();
+    ofSetVerticalSync(true);
+    
+    [_glView startAnimating];
 	
 	if(_glWindow == nil) { // if no window in xib
         NSLog(@"Can't find window in nib!");
 	}
     
-    cocoaWindow->setGLView(_glView);
-    cocoaWindow->setGLWindow(_glWindow);
-    
-    // TODO is this the best place for this? -nasser
-    ofSetDefaultRenderer(new ofGLRenderer(false));
-	
 	ofNotifySetup();
   
   playIcon = [self imageTemplateFromName:@"ToolbarIconPlayTemplate"];
@@ -166,8 +179,6 @@
   
   [self populateExamplesMenu];
   [self setupErrorConsole];
-	
-	[self startAnimation:self];
 	
 	// clear background
 	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
@@ -182,7 +193,6 @@
 }
 
 -(void) dealloc {
-	[_glWindow release];
     [super dealloc];
 }
 
@@ -226,12 +236,12 @@
 
 -(IBAction) goFullscreen:(id)sender {
     ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
-    cocoaWindow->goFullscreenOnCurrent();
+//    cocoaWindow->goFullscreenOnCurrent();
 }
 
 -(IBAction) goWindow:(id)sender {
 	ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
-    cocoaWindow->goWindow();
+//    cocoaWindow->goWindow();
 }
 
 -(IBAction) toggleFullscreen:(id)sender {

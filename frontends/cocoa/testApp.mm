@@ -11,12 +11,12 @@ void testApp::setup() {
 	doDisplayLink	= true;
 	
 	ofSetVerticalSync(doVSync);	
-	cocoaWindow->setSyncToDisplayLink(doDisplayLink);
+//	cocoaWindow->setSyncToDisplayLink(doDisplayLink);
 	ofSetFrameRate(30);			// run as fast as you can
 	
-	cocoaWindow->showSystemUI(kUIModeNormal);
-	cocoaWindow->setTransparent(false);
-	
+//	cocoaWindow->showSystemUI(kUIModeNormal);
+//	cocoaWindow->setTransparent(false);
+//	
 	
 	lineWidth = 10;
 }
@@ -59,13 +59,13 @@ void testApp::keyPressed(int key){
 			break;
 			
 		case 't':
-			cocoaWindow->setTransparent(!cocoaWindow->getTransparent());
+//			cocoaWindow->setTransparent(!cocoaWindow->getTransparent());
 			break;
 			
 			
 		case 'd':
 			doDisplayLink ^= true;
-			cocoaWindow->setSyncToDisplayLink(doDisplayLink);
+//			cocoaWindow->setSyncToDisplayLink(doDisplayLink);
 			break;
 			
 		case 'v':
