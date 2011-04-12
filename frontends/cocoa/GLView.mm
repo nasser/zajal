@@ -6,6 +6,7 @@
 @implementation GLView
 
 @synthesize initialized;
+@synthesize debugMode;
 
 //
 // 'basicPixelFormat()' - Set the pixel format for the window.
@@ -235,6 +236,9 @@
 
 - (void)awakeFromNib {
     initialized = false;
+    debugMode = false;
+    frameCount = 0;
+    timeNow = timeThen = frameRate = 0.0;
 }
 
 - (void)tick:(NSTimer *)timer {
