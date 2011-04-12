@@ -112,82 +112,10 @@
 
 - (void) prepareOpenGL {
     NSLog(@"preparing opengl");
-    // ***** START ofSetupOpenGL()
-    //    GLenum err = glewInit();
-    //	if (GLEW_OK != err)
-    //	{
-    //		/* Problem: glewInit failed, something is seriously wrong. */
-    //		ofLog(OF_LOG_ERROR, "Error: %s\n", glewGetErrorString(err));
-    //	}
     
-    // ***** START ofSetDefaultRenderer(new ofGLRenderer(false));
-    //    glEnableClientState(GL_VERTEX_ARRAY);
-    //	glDisableClientState(GL_NORMAL_ARRAY);
-    //	glDisableClientState(GL_COLOR_ARRAY);
-    //	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    // ***** STOP ofSetDefaultRenderer(new ofGLRenderer(false));
-    
-    // ***** STOP ofSetupOpenGL()
-    
-    
-    
-    
-    // ***** START ofSetupScreen()
-    float width = [self bounds].size.width;
-    float height = [self bounds].size.height;
-    float fov = 60;
-    float nearDist = 0;
-    float farDist = 0;
-    bool vFlip = true;
-    
-	float w = width;
-	float h = height;
-    
-	float eyeX = w / 2;
-	float eyeY = h / 2;
-	float halfFov = PI * fov / 360;
-	float theTan = tanf(halfFov);
-	float dist = eyeY / theTan;
-	float aspect = (float) w / h;
-    
-	if(nearDist == 0) nearDist = dist / 10.0f;
-	if(farDist == 0) farDist = dist * 10.0f;
-    
-    //	glMatrixMode(GL_PROJECTION);
-    //	glLoadIdentity();
-    //	gluPerspective(fov, aspect, nearDist, farDist);
-    //    
-    //	glMatrixMode(GL_MODELVIEW);
-    //	glLoadIdentity();
-    //	gluLookAt(eyeX, eyeY, dist, eyeX, eyeY, 0, 0, 1, 0);
-    
-    // Set the viewport...
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0, width, 0, height, -2, 2);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    //    glOrtho(-2.0f, 2.0f,
-    //            -2.0f * height / width, 2.0f * height / width,
-    //            -2.0f, 2.0f);
-    
-    
-    
-    //    if(vFlip){
-    //        glScalef(1, -1, 1);
-    //        glTranslatef(0, -height, 0);
-    //    }
-    // ***** STOP ofSetupScreen()
-    
-    
-    
-    
-    // ***** START ofSetVerticalSync(true)
-    GLint sync = 1;
-    CGLSetParameter (CGLGetCurrentContext(), kCGLCPSwapInterval, &sync);
-    // ***** STOP ofSetVerticalSync(true)
+    ofSetupOpenGL(ofGetAppWindowPtr(), 800, 600, OF_WINDOW);
+    ofSetupScreen();
+    ofSetVerticalSync(true);
 }
 
 - (void) rectangleWithX:(float)x andY:(float)y andW:(float)w andH:(float)h {
