@@ -151,8 +151,6 @@
     zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/ruby"] UTF8String]);
     zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/zajal"] UTF8String]);
     zi->initialize();
-    zi->loadScript("/Users/nasser/Workspace/zajal/scratch/brownian.rb");
-    
 
     ofAppCocoaWindow* cocoaWindow = new ofAppCocoaWindow();
     cocoaWindow->setGLView(_glView);

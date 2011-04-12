@@ -36,6 +36,7 @@ ZajalInterpreter::ZajalInterpreter() {
   state = INTERPRETER_LOADING;
   scriptModifiedTime = 0;
   
+  scriptName = NULL;
   nextUpdate = SCRIPT_UPDATE_FREQUENCY;
   
   INTERNAL_SET(zj_mApp, current_code, rb_str_new2(""));
@@ -203,21 +204,23 @@ void ZajalInterpreter::draw() {
 }
 
 void ZajalInterpreter::updateCurrentScript() {
-  struct stat attrib;
-  if(stat(scriptName, &attrib)) {
-    fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", scriptName);
-    fprintf(stderr, "  The file is either missing or otherwise inaccessible. Check the file name\n");
-    fprintf(stderr, "  or the file's permissions.\n");
-    ::exit(1);
-    
-  } else {
-    if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
-      ZJ_LOG("Updating %s in place...\n", scriptName);
-      scriptModifiedTime = attrib.st_mtimespec.tv_sec;
-      reloadScript();
+  if(scriptName) {
+    struct stat attrib;
+    if(stat(scriptName, &attrib)) {
+      fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", scriptName);
+      fprintf(stderr, "  The file is either missing or otherwise inaccessible. Check the file name\n");
+      fprintf(stderr, "  or the file's permissions.\n");
+      ::exit(1);
+      
+    } else {
+      if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
+        ZJ_LOG("Updating %s in place...\n", scriptName);
+        scriptModifiedTime = attrib.st_mtimespec.tv_sec;
+        reloadScript();
+        
+      }
       
     }
-    
   }
   
   nextUpdate = SCRIPT_UPDATE_FREQUENCY;
