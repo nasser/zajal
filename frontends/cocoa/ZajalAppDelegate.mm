@@ -152,12 +152,9 @@
     zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/ruby"] UTF8String]);
     zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/zajal"] UTF8String]);
     zi->initialize();
-
-    ofAppCocoaWindow* cocoaWindow = new ofAppCocoaWindow();
-    cocoaWindow->setGLView(_glView);
-    
     ofSetAppPtr(zi);
-    ofSetAppWindowPtr(cocoaWindow);
+    
+    ofSetAppWindowPtr(new ofAppCocoaWindow(_glView));
     
     [_glView startAnimating];
 	

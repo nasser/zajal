@@ -13,7 +13,7 @@
 
 class ofAppCocoaWindow : public ofAppBaseWindow {
 public:
-    ofAppCocoaWindow();
+    ofAppCocoaWindow(GLView* glView);
     
     int     getWidth();
 	int		getHeight();

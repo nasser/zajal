@@ -8,8 +8,8 @@
 
 #include "ofAppCocoaWindow.h"
 
-ofAppCocoaWindow::ofAppCocoaWindow() {
-    glView = NULL;
+ofAppCocoaWindow::ofAppCocoaWindow(GLView* glView) {
+    this->glView = glView;
 }
 
 void ofAppCocoaWindow::setWindowShape(int w, int h) {
