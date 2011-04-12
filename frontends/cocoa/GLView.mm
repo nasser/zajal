@@ -157,8 +157,6 @@
 {
     if(!initialized) return;
     
-    NSLog(@"context: %@", [self openGLContext]);
-    
     [[self openGLContext] makeCurrentContext];
     
     float width  = rect.size.width;
@@ -259,7 +257,7 @@
     //start cube rotating
     [self drawRect:[self bounds]];
     // Start the timer running...
-    timer = [NSTimer timerWithTimeInterval:(0.005f) target:self
+    timer = [NSTimer timerWithTimeInterval:(0.03f) target:self
                                   selector:@selector(idle:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSDefaultRunLoopMode];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSModalPanelRunLoopMode];
