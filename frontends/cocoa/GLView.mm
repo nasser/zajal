@@ -14,9 +14,13 @@
 {
     static NSOpenGLPixelFormatAttribute   attributes[] =  // OpenGL attributes
     {
-        NSOpenGLPFAWindow,
+        NSOpenGLPFAAccelerated,
         NSOpenGLPFADoubleBuffer,
-        NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)16,
+        NSOpenGLPFAMultiScreen,
+        NSOpenGLPFADepthSize, 24,
+        NSOpenGLPFAAlphaSize, 8,
+        NSOpenGLPFAColorSize, 32,
+        NSOpenGLPFANoRecovery,
         (NSOpenGLPixelFormatAttribute)nil
     };
     return ([[[NSOpenGLPixelFormat alloc] initWithAttributes:attributes]autorelease]);
