@@ -459,7 +459,7 @@
 						<characters key="NS.bytes">EAB39C91-4A3D-4217-A18A-E015FD25E530</characters>
 					</object>
 					<nil key="NSToolbarDelegate"/>
-					<bool key="NSToolbarPrefersToBeShown">NO</bool>
+					<bool key="NSToolbarPrefersToBeShown">YES</bool>
 					<bool key="NSToolbarShowsBaselineSeparator">YES</bool>
 					<bool key="NSToolbarAllowsUserCustomization">NO</bool>
 					<bool key="NSToolbarAutosavesConfiguration">NO</bool>
@@ -485,7 +485,7 @@
 								<string key="NSToolbarItemPaletteLabel">Reload</string>
 								<string key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
-								<object class="NSCustomResource" key="NSToolbarItemImage" id="635307770">
+								<object class="NSCustomResource" key="NSToolbarItemImage" id="33049546">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">ToolbarIconReloadTemplate</string>
 								</object>
@@ -623,7 +623,7 @@
 					<int key="NSvFlags">274</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSImageView" id="439733193">
+						<object class="NSImageView" id="228137582">
 							<reference key="NSNextResponder" ref="85501261"/>
 							<int key="NSvFlags">268</int>
 							<object class="NSMutableSet" key="NSDragTypes">
@@ -641,11 +641,12 @@
 							<string key="NSFrame">{{106, 48}, {254, 254}}</string>
 							<reference key="NSSuperview" ref="85501261"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSImageCell" key="NSCell" id="799444913">
+							<object class="NSImageCell" key="NSCell" id="76399505">
 								<int key="NSCellFlags">130560</int>
 								<int key="NSCellFlags2">33554432</int>
-								<reference key="NSContents" ref="635307770"/>
+								<reference key="NSContents" ref="33049546"/>
 								<int key="NSAlign">0</int>
 								<int key="NSScale">3</int>
 								<int key="NSStyle">0</int>
@@ -659,7 +660,7 @@
 							<string key="NSFrameSize">{466, 351}</string>
 							<reference key="NSSuperview" ref="85501261"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
+							<reference key="NSNextKeyView" ref="228137582"/>
 							<string key="NSClassName">GLView</string>
 							<string key="NSExtension">NSOpenGLView</string>
 						</object>
@@ -986,7 +987,7 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="100656886"/>
-							<reference ref="439733193"/>
+							<reference ref="228137582"/>
 						</object>
 						<reference key="parent" ref="215704897"/>
 					</object>
@@ -1363,17 +1364,17 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">442</int>
-						<reference key="object" ref="439733193"/>
+						<reference key="object" ref="228137582"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="799444913"/>
+							<reference ref="76399505"/>
 						</object>
 						<reference key="parent" ref="85501261"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">443</int>
-						<reference key="object" ref="799444913"/>
-						<reference key="parent" ref="439733193"/>
+						<reference key="object" ref="76399505"/>
+						<reference key="parent" ref="228137582"/>
 					</object>
 				</object>
 			</object>
@@ -1556,7 +1557,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">443</int>
+			<int key="maxID">451</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
