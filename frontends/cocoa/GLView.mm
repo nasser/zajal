@@ -8,13 +8,8 @@
 @synthesize initialized;
 @synthesize debugMode;
 
-//
-// 'basicPixelFormat()' - Set the pixel format for the window.
-//
-+ (NSOpenGLPixelFormat*) basicPixelFormat
-{
-    static NSOpenGLPixelFormatAttribute   attributes[] =  // OpenGL attributes
-    {
++ (NSOpenGLPixelFormat*) basicPixelFormat {
+    static NSOpenGLPixelFormatAttribute   attributes[] = {
         NSOpenGLPFAAccelerated,
         NSOpenGLPFADoubleBuffer,
         NSOpenGLPFAMultiScreen,
@@ -38,28 +33,6 @@
     ofSetupOpenGL(ofGetAppWindowPtr(), 800, 600, OF_WINDOW);
     ofSetupScreen();
     ofSetVerticalSync(true);
-}
-
-- (void) rectangleWithX:(float)x andY:(float)y andW:(float)w andH:(float)h {
-    float z = 0;
-    ofRectMode rectMode = OF_RECTMODE_CORNER;
-    ofVec3f rectPoints[4];
-    
-    if (rectMode == OF_RECTMODE_CORNER){
-		rectPoints[0].set(x,y,z);
-		rectPoints[1].set(x+w, y, z);
-		rectPoints[2].set(x+w, y+h, z);
-		rectPoints[3].set(x, y+h, z);
-	}else{
-		rectPoints[0].set(x-w/2.0f, y-h/2.0f, z);
-		rectPoints[1].set(x+w/2.0f, y-h/2.0f, z);
-		rectPoints[2].set(x+w/2.0f, y+h/2.0f, z);
-		rectPoints[3].set(x-w/2.0f, y+h/2.0f, z);
-	}
-    
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, sizeof(ofVec3f), &rectPoints[0].x);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 - (void) update {
@@ -129,33 +102,20 @@
     [[self openGLContext]flushBuffer];
 }
 
-//
-// 'acceptsFirstResponder()' ...
-//
-- (BOOL)acceptsFirstResponder
-{
-    return (YES);
+- (BOOL)acceptsFirstResponder {
+    return YES;
 }
-- (BOOL) becomeFirstResponder
-{
-    return (YES);
+- (BOOL) becomeFirstResponder {
+    return YES;
 }
-- (BOOL) resignFirstResponder
-{
-    return (YES);
+- (BOOL) resignFirstResponder {
+    return YES;
 }
 
-
-//
-// 'initWithFrame()' - Initialize the cube.
-//
-- (id)initWithFrame:(NSRect)frameRect
-{
-    NSOpenGLPixelFormat   *pf;
-    // Get the pixel format and return a new cube window from it...
-    pf   = [GLView basicPixelFormat];
-    self = [super initWithFrame: frameRect pixelFormat: pf];
-    return (self);
+- (id)initWithFrame:(NSRect)frameRect {
+    self = [super initWithFrame: frameRect pixelFormat: [GLView basicPixelFormat]];
+    
+    return self;
 }
 
 - (void)awakeFromNib {
