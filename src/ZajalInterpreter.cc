@@ -148,15 +148,15 @@ void ZajalInterpreter::draw() {
         last_error = rb_gv_get("$!");
         error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
         error_message_ptr = RSTRING_PTR(rb_obj_as_string(last_error));
-        ZJ_LOG("class   = %s\n", error_class); 
-        ZJ_LOG("message = %s\n", error_message_ptr); 
+        logConsoleText("$stderr", "class   = %s\n", error_class); 
+        logConsoleText("$stderr", "message = %s\n", error_message_ptr); 
         
-        ZJ_LOG("backtrace = \n");
+        logConsoleText("$stderr", "backtrace = \n");
         backtrace = rb_attr_get(last_error, rb_intern("bt"));
         backtrace_length = RARRAY_LEN(backtrace);
         backtrace_ptr = RARRAY_PTR(backtrace);
         for(int i=0; i<backtrace_length; i++)
-          ZJ_LOG("\tfrom %s\n", RSTRING_PTR(backtrace_ptr[i]));
+          logConsoleText("$stderr", "\tfrom %s\n", RSTRING_PTR(backtrace_ptr[i]));
       }
       
       // an error exists, draw error screen
@@ -214,7 +214,7 @@ void ZajalInterpreter::updateCurrentScript() {
       
     } else {
       if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
-        ZJ_LOG("Updating %s in place...\n", scriptName);
+        logConsoleText("$stdout", "Updating %s in place...\n", scriptName);
         scriptModifiedTime = attrib.st_mtimespec.tv_sec;
         reloadScript();
         
@@ -314,17 +314,17 @@ void ZajalInterpreter::initialize() {
   // try and load ZAJAL_PATH environment variable
   char* env_zajal_path = getenv("ZAJAL_PATH");
   if(env_zajal_path) {
-    ZJ_LOG("ZAJAL_PATH from environment: [");
+    logConsoleText("$stdout", "ZAJAL_PATH from environment: [");
     VALUE zajal_path_ary = rb_str_split(rb_str_new2(env_zajal_path), ":");
     long zajal_path_ary_len = RARRAY_LEN(zajal_path_ary);
     VALUE* zajal_path_ary_ptr = RARRAY_PTR(zajal_path_ary);
     
     for(int i = 0; i < zajal_path_ary_len; i++) {
       rb_ary_push(rb_gv_get("$:"), zajal_path_ary_ptr[i]);
-      ZJ_LOG("'%s', ", StringValuePtr(zajal_path_ary_ptr[i]));
+      logConsoleText("$stdout", "'%s', ", StringValuePtr(zajal_path_ary_ptr[i]));
     }
     
-    ZJ_LOG("]\n");
+    logConsoleText("$stdout", "]\n");
   }
   
   #ifndef EMPTY_LOADPATH
@@ -385,7 +385,7 @@ void ZajalInterpreter::reloadScript(bool forced) {
   if(state == INTERPRETER_RUNNING)
     lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
   
-  ZJ_LOG("Reading %s (%db)\n", scriptName, (int)scriptFileSize);
+  logConsoleText("$stdout", "Reading %s (%db)\n", scriptName, (int)scriptFileSize);
   
   // load file into memory
   char* scriptFileContent = (char*)malloc(scriptFileSize * sizeof(char) + 1);
@@ -400,7 +400,8 @@ void ZajalInterpreter::reloadScript(bool forced) {
 
 char* ZajalInterpreter::readConsoleText(char* consoleName, char* prefix, bool clear) {
   VALUE buffer = rb_gv_get(consoleName);
-  rb_funcall(buffer, rb_intern("prefix_lines"), 1, rb_str_new2(prefix));
+  // TODO prefixing is buggy (creates empty lines in output)
+  // rb_funcall(buffer, rb_intern("prefix_lines"), 1, rb_str_new2(prefix));
   
   VALUE buffer_str = rb_funcall(buffer, rb_intern(clear ? "get_buffer!" : "get_buffer"), 0);
   return buffer_str == Qnil ? NULL : RSTRING_PTR(buffer_str);
@@ -409,4 +410,16 @@ char* ZajalInterpreter::readConsoleText(char* consoleName, char* prefix, bool cl
 void ZajalInterpreter::writeConsoleText(char* consoleName, char* text) {
   VALUE buffer = rb_gv_get(consoleName);
   rb_funcall(buffer, rb_intern("write"), 1, rb_str_new2(text));
+}
+
+void ZajalInterpreter::logConsoleText(char* consoleName, char* format, ...) {
+  // TODO sort out how verbosity works
+  // if(INTERNAL_GET(zj_mApp, verbose) == Qfalse) return;
+  
+  char buffer[1024];
+  va_list args;
+  va_start(args, format);
+  vsnprintf(buffer, 1024, format, args);
+  
+  writeConsoleText(consoleName, buffer);
 }

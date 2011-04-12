@@ -12,9 +12,6 @@
 #define SCRIPT_UPDATE_FREQUENCY   1
 #define MAX_LOCAL_VAR_NAME_LENGTH 255
 
-/* logging */
-#define ZJ_LOG(format, args...)  {if(INTERNAL_GET(zj_mApp, verbose)) printf(format,##args);}
-
 enum InterpreterState {
   INTERPRETER_LOADING,
   INTERPRETER_RUNNING,
@@ -51,6 +48,7 @@ class ZajalInterpreter : public ofBaseApp {
     
     char* readConsoleText(char* consoleName, char* prefix="", bool clear=true);
     void writeConsoleText(char* consoleName, char* text);
+    void logConsoleText(char* consoleName, char* format, ...);
     
   private:
     // the state the interpreter is in
