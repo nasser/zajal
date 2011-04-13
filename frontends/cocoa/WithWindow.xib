@@ -108,7 +108,7 @@
 									<reference key="NSOnImage" ref="749875520"/>
 									<reference key="NSMixedImage" ref="909026863"/>
 								</object>
-								<object class="NSMenuItem" id="857249453">
+								<object class="NSMenuItem" id="846784358">
 									<reference key="NSMenu" ref="985245654"/>
 									<string key="NSTitle">Debug Mode</string>
 									<string key="NSKeyEquiv"/>
@@ -116,7 +116,7 @@
 									<reference key="NSOnImage" ref="749875520"/>
 									<reference key="NSMixedImage" ref="909026863"/>
 								</object>
-								<object class="NSMenuItem" id="598952777">
+								<object class="NSMenuItem" id="946604024">
 									<reference key="NSMenu" ref="985245654"/>
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
@@ -765,14 +765,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">newDocument:</string>
-						<reference key="source" ref="1003"/>
-						<reference key="destination" ref="568676235"/>
-					</object>
-					<int key="connectionID">355</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">clearRecentDocuments:</string>
 						<reference key="source" ref="1003"/>
 						<reference key="destination" ref="36802260"/>
@@ -959,9 +951,17 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">toggleDebugMode:</string>
 						<reference key="source" ref="50347787"/>
-						<reference key="destination" ref="857249453"/>
+						<reference key="destination" ref="846784358"/>
 					</object>
 					<int key="connectionID">456</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">newFileMenuClick:</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="568676235"/>
+					</object>
+					<int key="connectionID">457</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1054,8 +1054,8 @@
 							<reference ref="224745782"/>
 							<reference ref="938993644"/>
 							<reference ref="987418114"/>
-							<reference ref="598952777"/>
-							<reference ref="857249453"/>
+							<reference ref="946604024"/>
+							<reference ref="846784358"/>
 						</object>
 						<reference key="parent" ref="378902437"/>
 					</object>
@@ -1415,12 +1415,12 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">454</int>
-						<reference key="object" ref="598952777"/>
+						<reference key="object" ref="946604024"/>
 						<reference key="parent" ref="985245654"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">455</int>
-						<reference key="object" ref="857249453"/>
+						<reference key="object" ref="846784358"/>
 						<reference key="parent" ref="985245654"/>
 					</object>
 				</object>
@@ -1610,7 +1610,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">456</int>
+			<int key="maxID">457</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1645,6 +1645,7 @@
 							<string>goFullscreen:</string>
 							<string>goWindow:</string>
 							<string>launchExample:</string>
+							<string>newFileMenuClick:</string>
 							<string>openFileMenuClick:</string>
 							<string>reloadScript:</string>
 							<string>startAnimation:</string>
@@ -1668,6 +1669,7 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="actionInfosByName">
@@ -1678,6 +1680,7 @@
 							<string>goFullscreen:</string>
 							<string>goWindow:</string>
 							<string>launchExample:</string>
+							<string>newFileMenuClick:</string>
 							<string>openFileMenuClick:</string>
 							<string>reloadScript:</string>
 							<string>startAnimation:</string>
@@ -1703,6 +1706,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">launchExample:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">newFileMenuClick:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

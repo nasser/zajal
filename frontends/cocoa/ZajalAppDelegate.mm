@@ -41,6 +41,7 @@
 #import "ofGLRenderer.h"
 
 #import "ZajalInterpreter.h"
+#import "NSString+UniquePaths.h"
 
 @implementation ZajalAppDelegate
 
@@ -101,9 +102,11 @@
 }
 
 -(IBAction) launchExample:(id)sender {
-    NSString* examplePath = [NSString stringWithFormat:@"%@/%@/%@", [[NSBundle mainBundle] resourcePath], @"examples", (NSString*)[(NSMenuItem*)sender representedObject]];
+    NSString* exampleSourcePath = [NSString stringWithFormat:@"%@/%@/%@", [[NSBundle mainBundle] resourcePath], @"examples", (NSString*)[(NSMenuItem*)sender representedObject]];
+    NSString* exampleDestinationPath = [NSString uniquePathFromPath:[NSString stringWithFormat:@"%@/%@", sketchbookDirectory, [exampleSourcePath lastPathComponent]]];
     
-    [self openScript:examplePath];
+    [[NSFileManager defaultManager] copyItemAtPath:exampleSourcePath toPath:exampleDestinationPath error:NULL];
+    [self openScript:exampleDestinationPath];
 }
 
 -(void) setupErrorConsole {
@@ -175,6 +178,11 @@
     
     [self populateExamplesMenu];
     [self setupErrorConsole];
+    
+    newSketchTemplateString = [[NSString alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"new_sketch_template" ofType:@"rb"] encoding:NSUTF8StringEncoding error:NULL];
+    sketchbookDirectory = [[NSString alloc] initWithFormat:@"%@/Documents/Zajal Sketches/", NSHomeDirectory()];
+    
+    [[NSFileManager defaultManager] createDirectoryAtPath:sketchbookDirectory withIntermediateDirectories:YES attributes:nil error:NULL];
 	
 	// clear background
 	glClearColor(ofBgColorPtr()[0], ofBgColorPtr()[1], ofBgColorPtr()[2], ofBgColorPtr()[3]);
@@ -185,6 +193,7 @@
     [errorConsoleDrawer open];
     [[errorConsoleScrollView contentView] scrollToPoint:NSMakePoint(0, NSMaxY([[errorConsoleScrollView documentView] frame]))];
     [errorConsoleScrollView reflectScrolledClipView: [errorConsoleScrollView contentView]];
+    [errorConsoleTextView toggleAutomaticLinkDetection:nil];
 }
 
 - (void) frameDidFinish {
@@ -213,6 +222,9 @@
 }
 
 -(void) dealloc {
+    [newSketchTemplateString release];
+    [sketchbookDirectory release];
+    
     [super dealloc];
 }
 
@@ -278,6 +290,16 @@
     if ([op runModal] == NSOKButton) {
         [self openScript:[op filename]];
     }
+}
+
+-(IBAction) newFileMenuClick:(id)sender {
+    NSString* newSketchPath = [NSString uniquePathFromPath:[NSString stringWithFormat:@"%@/%@", sketchbookDirectory, @"sketch.rb"]];
+    
+    //TODO template string replacements for username, date etc
+    NSString* sketchTemplate = newSketchTemplateString;
+    
+    [[NSFileManager defaultManager] createFileAtPath:newSketchPath contents:[sketchTemplate dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
+    [self openScript:newSketchPath];
 }
 
 -(IBAction) exportMenuClick:(id)sender {

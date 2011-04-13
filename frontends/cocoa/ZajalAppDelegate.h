@@ -64,6 +64,9 @@
     
     NSDictionary                *stdoutAttributes;
     NSDictionary                *stderrAttributes;
+    
+    NSString                    *newSketchTemplateString;
+    NSString                    *sketchbookDirectory;
 }
 
 
@@ -75,6 +78,7 @@
 -(IBAction) toggleAnimation:(id)sender;
 
 -(IBAction) openFileMenuClick:(id)sender;
+-(IBAction) newFileMenuClick:(id)sender;
 -(IBAction) exportMenuClick:(id)sender;
 
 -(IBAction) toggleConsole:(id)sender;
