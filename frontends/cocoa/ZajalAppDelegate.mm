@@ -159,7 +159,7 @@
         NSLog(@"Can't find window in nib!");
 	}
     
-	ofNotifySetup();
+	ofNotifySetup(); // TODO there is no script loaded yet, but removing this breaks things
   
     playIcon = [self imageTemplateFromName:@"ToolbarIconPlayTemplate"];
     pauseIcon = [self imageTemplateFromName:@"ToolbarIconPauseTemplate"];
@@ -231,14 +231,14 @@
 // the following is app-specific, should be moved somewhere -nasser
 
 - (IBAction) startAnimation:(id)sender {
-	[_glView startAnimation];
+	[_glView startAnimating];
     [playMenuItem setEnabled:NO];
     [pauseMenuItem setEnabled:YES];
     [playPauseToolbarItem setImage:pauseIcon];
 }
 
 - (IBAction) stopAnimation:(id)sender {
-	[_glView stopAnimation];
+	[_glView stopAnimating];
     [playMenuItem setEnabled:YES];
     [pauseMenuItem setEnabled:NO];
     [playPauseToolbarItem setImage:playIcon];
@@ -246,6 +246,7 @@
 
 - (IBAction) reloadScript:(id)sender {
     ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    [self startAnimation:sender];
     zi->reloadScript(true);
     
     [errorConsoleTextView setString:@""];
@@ -281,6 +282,7 @@
 -(IBAction) toggleFullscreen:(id)sender {
 	ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
     cocoaWindow->toggleFullscreen();
+    
 }
 
 -(IBAction) openFileMenuClick:(id)sender {

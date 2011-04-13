@@ -2,7 +2,7 @@ module Events
   module Internals
     @defaults_proc = Proc.new do
       # size 500
-      title ""
+      title "Zajal"
       fullscreen false
       cursor true
       framerate 30

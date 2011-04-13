@@ -5,8 +5,12 @@
 
 @implementation GLView
 
-@synthesize initialized;
+@synthesize isAnimating;
 @synthesize debugMode;
+
+@synthesize frameCount;
+@synthesize frameRate;
+@synthesize lastFrameTime;
 
 + (NSOpenGLPixelFormat*) basicPixelFormat {
     static NSOpenGLPixelFormatAttribute   attributes[] = {
@@ -35,21 +39,13 @@
     ofSetVerticalSync(true);
 }
 
-- (void) update {
-    NSLog(@"Updating");
-    
-    [[self openGLContext] update];
-}
-
 - (void) reshape {
-    NSLog(@"Reshaping");
-    
-    [self update];
+    [[self openGLContext] update];
 }
 
 
 - (void)drawRect:(NSRect)rect {
-    if(!initialized) return;
+    if(!isAnimating) return;
     
     [[self openGLContext] makeCurrentContext];
     
@@ -96,6 +92,7 @@
         frameRate	*= 0.9f;
         frameRate	+= 0.1f*(1.0 / diff);
     }
+    lastFrameTime = diff;
     timeThen		= timeNow;
     // --------------
     
@@ -123,10 +120,10 @@
 }
 
 - (void)awakeFromNib {
-    initialized = false;
+    isAnimating = false;
     debugMode = false;
     frameCount = 0;
-    timeNow = timeThen = frameRate = 0.0;
+    timeNow = timeThen = frameRate = lastFrameTime = 0.0;
 }
 
 - (void)tick:(NSTimer *)timer {
@@ -135,13 +132,61 @@
 }
 
 -(void) startAnimating {
-    initialized = true;
+    isAnimating = true;
     
-    // Start the timer running...
-    timer = [NSTimer timerWithTimeInterval:(0.03f) target:self selector:@selector(tick:) userInfo:nil repeats:YES];
+    float dur = targetFrameRate > 0 ? 1.0f / targetFrameRate : 0.001f;
+    
+    timer = [NSTimer timerWithTimeInterval:dur target:self selector:@selector(tick:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSDefaultRunLoopMode];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSModalPanelRunLoopMode];
     [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSEventTrackingRunLoopMode];
+}
+
+-(void) stopAnimating {
+    isAnimating = false;
+    
+    [timer invalidate];
+	timer = 0;
+}
+
+-(void) toggleAnimating {
+    if(isAnimating)
+        [self stopAnimating];
+    else
+        [self startAnimating];
+}
+
+-(void) setFrameRate:(float)rate {
+	[self stopAnimating];
+	targetFrameRate = rate;
+	[self startAnimating];
+}
+
+-(void) goFullscreen:(NSScreen*)screen {
+   [self stopAnimating];
+   
+   if(![self isInFullScreenMode])
+      [self enterFullScreenMode:screen withOptions:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                 [NSNumber numberWithBool: NO], NSFullScreenModeAllScreens,
+                                                 nil]];
+   
+   [self startAnimating];
+}
+
+-(void) goWindow {
+   [self stopAnimating];
+   
+   if([self isInFullScreenMode])
+      [self exitFullScreenModeWithOptions:nil];
+   
+   [self startAnimating];
+}
+
+-(void) toggleFullscreen {
+   if([self isInFullScreenMode])
+      [self goWindow];
+   else
+      [self goFullscreen:[[self window] screen]];
 }
 
 #pragma mark Events

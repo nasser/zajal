@@ -414,7 +414,7 @@ void ZajalInterpreter::writeConsoleText(char* consoleName, char* text) {
 
 void ZajalInterpreter::logConsoleText(char* consoleName, char* format, ...) {
   // TODO sort out how verbosity works
-  // if(INTERNAL_GET(zj_mApp, verbose) == Qfalse) return;
+  if(INTERNAL_GET(zj_mApp, verbose) == Qfalse) return;
   
   char buffer[1024];
   va_list args;

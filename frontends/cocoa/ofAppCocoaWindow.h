@@ -11,18 +11,46 @@
 #include "ofAppBaseWindow.h"
 #import <Cocoa/Cocoa.h>
 
-@class GLView;
+#import "GLView.h"
 
 class ofAppCocoaWindow : public ofAppBaseWindow {
 public:
     ofAppCocoaWindow(GLView* glView);
     
-    int     getWidth();
-	int		getHeight();
-    void	setWindowShape(int w, int h);
-    
     void setGLView(GLView* glView);
     GLView* getGLView();
+
+    int     getWidth();
+	int		getHeight();
+    
+//    void    setupOpenGL(int w, int h, int screenMode);
+//    void    initializeWindow();
+//    void    runAppViaInfiniteLoop(ofBaseApp * appPtr);
+    
+    void    hideCursor();
+    void    showCursor();
+    
+    void	setWindowPosition(int x, int y);
+    void	setWindowShape(int w, int h);
+    
+    int		getFrameNum();
+    float	getFrameRate();
+    double  getLastFrameTime();
+    
+//    ofPoint	getWindowPosition();
+//    ofPoint	getWindowSize();
+//    ofPoint	getScreenSize();
+    
+    void	setFrameRate(float targetRate);
+    void	setWindowTitle(string title);
+    
+//    int		getWindowMode();
+    
+    void	setFullscreen(bool fullscreen);
+    void	toggleFullscreen();
+    
+//    void	enableSetupScreen();
+//    void	disableSetupScreen();
     
 protected:
     GLView*     glView;
