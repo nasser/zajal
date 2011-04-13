@@ -64,7 +64,7 @@
     
     // set viewport, clear the screen
     glViewport( 0, 0, viewSize.width, viewSize.height );
-//    if(bEnableSetupScreen) ofSetupScreen();
+    ofSetupScreen();
     
     if(ofbClearBg()){
         float * bgPtr = ofBgColorPtr();

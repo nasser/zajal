@@ -22,8 +22,9 @@ void ofAppCocoaWindow::setWindowShape(int w, int h) {
     windowFrame.origin.y -= h - viewFrame.size.height;
     windowFrame.size = NSMakeSize(w + windowFrame.size.width - viewFrame.size.width, h + windowFrame.size.height - viewFrame.size.height);
     
-    [sketchWindow setFrame:windowFrame display:YES];
-//    [sketchWindow windowDidResize:NULL];
+    [sketchWindow setFrame:windowFrame display:YES animate:YES];
+    ofNotifyWindowResized(sketchWindow.frame.size.width, sketchWindow.frame.size.height);
+    [sketchWindow.contentView setNeedsDisplay:YES];
 }
 
 

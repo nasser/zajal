@@ -6,6 +6,8 @@
 //  Copyright 2011 Parsons The New School for Design. All rights reserved.
 //
 
+#include "ofMain.h"
+
 #include "ofAppBaseWindow.h"
 #import <Cocoa/Cocoa.h>
 
