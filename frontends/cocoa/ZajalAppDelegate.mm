@@ -122,18 +122,20 @@
     CGFloat drawerWidth = _glWindow.frame.size.width - errorConsolePadding * 2;
     
     // init the text view where the output will be displayed
-    errorConsoleTextView = [[NSTextView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
-    [errorConsoleTextView setBackgroundColor:[NSColor blackColor]];
-    [errorConsoleTextView setAutomaticLinkDetectionEnabled:YES];
-    [errorConsoleTextView setEditable:NO];
+//    [errorConsoleTextView setBackgroundColor:[NSColor blackColor]];
+//    [errorConsoleTextView setAutomaticLinkDetectionEnabled:YES];
+//    [errorConsoleTextView setEditable:NO];
     
     // init scroll view to allow browsing through textview
-    errorConsoleScrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, drawerWidth, 200)];
-    [errorConsoleScrollView setBorderType:NSNoBorder];
-    [errorConsoleScrollView setHasHorizontalScroller:NO];
-    [errorConsoleScrollView setHasVerticalScroller:YES];
-    [errorConsoleScrollView setDocumentView:errorConsoleTextView];
+//    [errorConsoleScrollView setBorderType:NSNoBorder];
+//    [errorConsoleScrollView setHasHorizontalScroller:NO];
+//    [errorConsoleScrollView setHasVerticalScroller:YES];
+//    [errorConsoleScrollView setAutohidesScrollers:YES];
+//    [errorConsoleScrollView setDocumentView:errorConsoleTextView];
     [errorConsoleDrawer setContentView:errorConsoleScrollView];
+    
+    [[errorConsoleScrollView contentView] scrollPoint:NSMakePoint(0, NSMaxY([[errorConsoleScrollView documentView] frame]))];
+    [errorConsoleScrollView reflectScrolledClipView: [errorConsoleScrollView contentView]];
 }
 
 -(NSImage*) imageTemplateFromName:(NSString*)name {
@@ -193,7 +195,6 @@
     [errorConsoleDrawer open];
     [[errorConsoleScrollView contentView] scrollToPoint:NSMakePoint(0, NSMaxY([[errorConsoleScrollView documentView] frame]))];
     [errorConsoleScrollView reflectScrolledClipView: [errorConsoleScrollView contentView]];
-    [errorConsoleTextView toggleAutomaticLinkDetection:nil];
 }
 
 - (void) frameDidFinish {

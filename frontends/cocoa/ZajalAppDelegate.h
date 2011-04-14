@@ -54,14 +54,15 @@
     
     IBOutlet NSMenuItem         *consoleMenuItem;
     
+    IBOutlet NSTextView         *errorConsoleTextView;
+    IBOutlet NSScrollView       *errorConsoleScrollView;
+
     NSImage                     *playIcon;
     NSImage                     *pauseIcon;
     NSImage                     *consoleUpIcon;
     NSImage                     *consoleDownIcon;
     
     NSDrawer                    *errorConsoleDrawer;
-    NSTextView                  *errorConsoleTextView;
-    NSScrollView                *errorConsoleScrollView;
     CGFloat                     errorConsolePadding;
     
     NSDictionary                *stdoutAttributes;
