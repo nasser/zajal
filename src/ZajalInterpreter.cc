@@ -226,6 +226,10 @@ void ZajalInterpreter::updateCurrentScript() {
   nextUpdate = SCRIPT_UPDATE_FREQUENCY;
 }
 
+char* ZajalInterpreter::getCurrentScriptPath() {
+  return scriptName;
+}
+
 //--------------------------------------------------------------
 void ZajalInterpreter::exit() {
   if(state == INTERPRETER_RUNNING) {

@@ -43,6 +43,7 @@ class ZajalInterpreter : public ofBaseApp {
     void loadScript(char* filename);
     void reloadScript(bool forced=false);
     void updateCurrentScript();
+    char* getCurrentScriptPath();
     
     void appendLoadPath(char* path);
     
@@ -67,7 +68,7 @@ class ZajalInterpreter : public ofBaseApp {
     int nextUpdate;
     
     // screenshot of the sketch state before the last error was encountered
-		ofImage lastErrorImage;
+    ofImage lastErrorImage;
 };
 
 #endif /* ZAJAL_INTERPRETER_H */

@@ -40,6 +40,8 @@
 #import "GLView.h"
 
 @interface ZajalAppDelegate : NSObject {
+    NSUserDefaults          *defaults;
+    
     IBOutlet NSWindow           *_glWindow;	// points to current window
     IBOutlet GLView             *_glView;
     
@@ -80,6 +82,7 @@
 -(IBAction) stopAnimation:(id)sender;
 -(IBAction) toggleAnimation:(id)sender;
 
+-(IBAction) editCurrentScript:(id)sender;
 -(IBAction) openFileMenuClick:(id)sender;
 -(IBAction) newFileMenuClick:(id)sender;
 -(IBAction) exportMenuClick:(id)sender;

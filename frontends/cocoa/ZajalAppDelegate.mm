@@ -61,7 +61,7 @@
     zi->loadScript((char*)[path UTF8String]);
     zi->reloadScript(true);
     
-    [[NSWorkspace sharedWorkspace] openFile:path withApplication:@"TextMate"];
+    [self editCurrentScript:nil];
     [errorConsoleTextView setString:@""];
 }
 
@@ -147,6 +147,8 @@
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)n {
+    defaults = [NSUserDefaults standardUserDefaults];
+    
     ZajalInterpreter* zi = new ZajalInterpreter();
     zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/ruby"] UTF8String]);
     zi->appendLoadPath((char*)[[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"lib/zajal"] UTF8String]);
@@ -286,6 +288,13 @@
 	ofAppCocoaWindow* cocoaWindow = (ofAppCocoaWindow*) ofGetAppWindowPtr();
     cocoaWindow->toggleFullscreen();
     
+}
+
+-(IBAction) editCurrentScript:(id)sender {
+    ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    NSString* path = [NSString stringWithUTF8String:zi->getCurrentScriptPath()];
+    
+    [[NSWorkspace sharedWorkspace] openFile:path withApplication:[defaults stringForKey:@"editor"]];
 }
 
 -(IBAction) openFileMenuClick:(id)sender {
