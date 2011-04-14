@@ -21,6 +21,8 @@
 		2E1D2412134188780014CFBC /* GLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2E1D240B134188780014CFBC /* GLView.mm */; };
 		2E2B66531354D9F700C93C12 /* new_sketch_template.rb in Resources */ = {isa = PBXBuildFile; fileRef = 2E2B66521354D9F700C93C12 /* new_sketch_template.rb */; };
 		2E2B665613560B1F00C93C12 /* NSString+UniquePaths.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2B665513560B1F00C93C12 /* NSString+UniquePaths.m */; };
+		2E2B666F13568ED400C93C12 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2B666E13568ED300C93C12 /* Sparkle.framework */; };
+		2E2B667213568F2600C93C12 /* Sparkle.framework in Copy Sparkle */ = {isa = PBXBuildFile; fileRef = 2E2B666E13568ED300C93C12 /* Sparkle.framework */; };
 		2E2D3B1D1348D8FD002F4AC1 /* app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B0F1348D8FD002F4AC1 /* app.cc */; };
 		2E2D3B1E1348D8FD002F4AC1 /* events.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B111348D8FD002F4AC1 /* events.cc */; };
 		2E2D3B1F1348D8FD002F4AC1 /* graphics.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B121348D8FD002F4AC1 /* graphics.cc */; };
@@ -43,6 +45,20 @@
 		BBE3A5D9127BA103000B7920 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE3A5D8127BA103000B7920 /* testApp.mm */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		2E2B667113568F2000C93C12 /* Copy Sparkle */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2E2B667213568F2600C93C12 /* Sparkle.framework in Copy Sparkle */,
+			);
+			name = "Copy Sparkle";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		2E143A971348990800A64DBA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		2E143A991348990E00A64DBA /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
@@ -63,6 +79,7 @@
 		2E2B66521354D9F700C93C12 /* new_sketch_template.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = new_sketch_template.rb; sourceTree = "<group>"; };
 		2E2B665413560B1F00C93C12 /* NSString+UniquePaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UniquePaths.h"; sourceTree = "<group>"; };
 		2E2B665513560B1F00C93C12 /* NSString+UniquePaths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UniquePaths.m"; sourceTree = "<group>"; };
+		2E2B666E13568ED300C93C12 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		2E2D3B0F1348D8FD002F4AC1 /* app.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = app.cc; path = ../../src/app.cc; sourceTree = "<group>"; };
 		2E2D3B101348D8FD002F4AC1 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = ../../src/config.h; sourceTree = "<group>"; };
 		2E2D3B111348D8FD002F4AC1 /* events.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = events.cc; path = ../../src/events.cc; sourceTree = "<group>"; };
@@ -105,6 +122,7 @@
 				2E143A981348990800A64DBA /* OpenGL.framework in Frameworks */,
 				2E143AA213489D7900A64DBA /* libof.a in Frameworks */,
 				2E2D3B291348D913002F4AC1 /* libruby.a in Frameworks */,
+				2E2B666F13568ED400C93C12 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +132,7 @@
 		2E143AD11348CA8D00A64DBA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2E2B666E13568ED300C93C12 /* Sparkle.framework */,
 				2E143ACF1348CA8600A64DBA /* CoreVideo.framework */,
 				2E143AA313489D9E00A64DBA /* Cocoa.framework */,
 				2E143A9F1348992200A64DBA /* Carbon.framework */,
@@ -240,6 +259,7 @@
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
 				2E898FCF13496D7900DF6FAA /* Copy Ruby/Zajal Libraries */,
 				2E898FD0134976DD00DF6FAA /* Copy Examples */,
+				2E2B667113568F2000C93C12 /* Copy Sparkle */,
 				2E143AA713489DE000A64DBA /* Resources */,
 			);
 			buildRules = (
@@ -391,7 +411,12 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.framework *.gch (*) CVS .svn .git *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G4;
@@ -514,7 +539,12 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.framework *.gch (*) CVS .svn .git *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_FAST_MATH = YES;
@@ -576,7 +606,12 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES = "*.nib *.lproj *.framework *.gch (*) CVS .svn .git *.xcodeproj *.xcode *.pbproj *.pbxproj";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../libs/glut/lib/osx\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)\"";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;

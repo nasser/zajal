@@ -55,5 +55,7 @@
 	<array/>
 	<key>UTImportedTypeDeclarations</key>
 	<array/>
+	<key>SUFeedURL</key>
+	<string>https://update.zajal.cc/cocoa.xml</string>
 </dict>
 </plist>
