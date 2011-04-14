@@ -52,6 +52,8 @@
     IBOutlet NSMenuItem         *playMenuItem;
     IBOutlet NSMenuItem         *pauseMenuItem;
     
+    IBOutlet NSMenuItem         *consoleMenuItem;
+    
     NSImage                     *playIcon;
     NSImage                     *pauseIcon;
     NSImage                     *consoleUpIcon;

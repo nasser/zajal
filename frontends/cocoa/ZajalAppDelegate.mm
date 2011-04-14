@@ -256,8 +256,10 @@
     [errorConsoleDrawer toggle:sender];
     if([errorConsoleDrawer state] == NSDrawerClosedState || [errorConsoleDrawer state] == NSDrawerClosingState) {
         [consoleToolbarItem setImage:consoleDownIcon];
+        [consoleMenuItem setTitle:@"Show Console"];
     } else {
         [consoleToolbarItem setImage:consoleUpIcon];
+        [consoleMenuItem setTitle:@"Hide Console"];
     }
 }
 

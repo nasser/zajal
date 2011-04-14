@@ -108,7 +108,7 @@
 									<reference key="NSOnImage" ref="749875520"/>
 									<reference key="NSMixedImage" ref="909026863"/>
 								</object>
-								<object class="NSMenuItem" id="846784358">
+								<object class="NSMenuItem" id="471259389">
 									<reference key="NSMenu" ref="985245654"/>
 									<string key="NSTitle">Debug Mode</string>
 									<string key="NSKeyEquiv"/>
@@ -116,7 +116,7 @@
 									<reference key="NSOnImage" ref="749875520"/>
 									<reference key="NSMixedImage" ref="909026863"/>
 								</object>
-								<object class="NSMenuItem" id="946604024">
+								<object class="NSMenuItem" id="758809275">
 									<reference key="NSMenu" ref="985245654"/>
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
@@ -392,6 +392,25 @@
 									<reference key="NSMixedImage" ref="909026863"/>
 								</object>
 								<object class="NSMenuItem" id="83376480">
+									<reference key="NSMenu" ref="742475206"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="749875520"/>
+									<reference key="NSMixedImage" ref="909026863"/>
+								</object>
+								<object class="NSMenuItem" id="439880939">
+									<reference key="NSMenu" ref="742475206"/>
+									<string key="NSTitle">Show Console</string>
+									<string key="NSKeyEquiv">t</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="749875520"/>
+									<reference key="NSMixedImage" ref="909026863"/>
+								</object>
+								<object class="NSMenuItem" id="688213372">
 									<reference key="NSMenu" ref="742475206"/>
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
@@ -951,7 +970,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">toggleDebugMode:</string>
 						<reference key="source" ref="50347787"/>
-						<reference key="destination" ref="846784358"/>
+						<reference key="destination" ref="471259389"/>
 					</object>
 					<int key="connectionID">456</int>
 				</object>
@@ -962,6 +981,22 @@
 						<reference key="destination" ref="568676235"/>
 					</object>
 					<int key="connectionID">457</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">consoleMenuItem</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="439880939"/>
+					</object>
+					<int key="connectionID">460</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleConsole:</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="439880939"/>
+					</object>
+					<int key="connectionID">461</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1054,8 +1089,8 @@
 							<reference ref="224745782"/>
 							<reference ref="938993644"/>
 							<reference ref="987418114"/>
-							<reference ref="946604024"/>
-							<reference ref="846784358"/>
+							<reference ref="758809275"/>
+							<reference ref="471259389"/>
 						</object>
 						<reference key="parent" ref="378902437"/>
 					</object>
@@ -1288,6 +1323,8 @@
 							<reference ref="909113746"/>
 							<reference ref="83376480"/>
 							<reference ref="957225073"/>
+							<reference ref="688213372"/>
+							<reference ref="439880939"/>
 						</object>
 						<reference key="parent" ref="1003469758"/>
 					</object>
@@ -1415,13 +1452,23 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">454</int>
-						<reference key="object" ref="946604024"/>
+						<reference key="object" ref="758809275"/>
 						<reference key="parent" ref="985245654"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">455</int>
-						<reference key="object" ref="846784358"/>
+						<reference key="object" ref="471259389"/>
 						<reference key="parent" ref="985245654"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">458</int>
+						<reference key="object" ref="688213372"/>
+						<reference key="parent" ref="742475206"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">459</int>
+						<reference key="object" ref="439880939"/>
+						<reference key="parent" ref="742475206"/>
 					</object>
 				</object>
 			</object>
@@ -1500,6 +1547,8 @@
 					<string>454.IBPluginDependency</string>
 					<string>454.ImportedFromIB2</string>
 					<string>455.IBPluginDependency</string>
+					<string>458.IBPluginDependency</string>
+					<string>459.IBPluginDependency</string>
 					<string>5.IBEditorWindowLastContentRect</string>
 					<string>5.IBPluginDependency</string>
 					<string>5.IBWindowTemplateEditedContentRect</string>
@@ -1585,6 +1634,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{623, 500}, {1254, 650}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{623, 500}, {1254, 650}}</string>
@@ -1610,7 +1661,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">457</int>
+			<int key="maxID">461</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1752,6 +1803,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_glView</string>
 							<string>_glWindow</string>
+							<string>consoleMenuItem</string>
 							<string>consoleToolbarItem</string>
 							<string>examplesMenu</string>
 							<string>pauseMenuItem</string>
@@ -1763,6 +1815,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>GLView</string>
 							<string>NSWindow</string>
+							<string>NSMenuItem</string>
 							<string>NSToolbarItem</string>
 							<string>NSMenu</string>
 							<string>NSMenuItem</string>
@@ -1777,6 +1830,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_glView</string>
 							<string>_glWindow</string>
+							<string>consoleMenuItem</string>
 							<string>consoleToolbarItem</string>
 							<string>examplesMenu</string>
 							<string>pauseMenuItem</string>
@@ -1793,6 +1847,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">_glWindow</string>
 								<string key="candidateClassName">NSWindow</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">consoleMenuItem</string>
+								<string key="candidateClassName">NSMenuItem</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">consoleToolbarItem</string>
