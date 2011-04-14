@@ -95,6 +95,8 @@
 
 -(IBAction) toggleDebugMode:(id)sender;
 
+-(IBAction) openPreferencesWindow:(id)sender;
+
 -(void) frameDidFinish;
 
 @end

@@ -23,6 +23,8 @@
 		2E2B665613560B1F00C93C12 /* NSString+UniquePaths.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2B665513560B1F00C93C12 /* NSString+UniquePaths.m */; };
 		2E2B666F13568ED400C93C12 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E2B666E13568ED300C93C12 /* Sparkle.framework */; };
 		2E2B667213568F2600C93C12 /* Sparkle.framework in Copy Sparkle */ = {isa = PBXBuildFile; fileRef = 2E2B666E13568ED300C93C12 /* Sparkle.framework */; };
+		2E2B66D91356D3D700C93C12 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E2B66D81356D3D700C93C12 /* PreferencesWindow.xib */; };
+		2E2B66DC1356D81100C93C12 /* PreferencesWindowDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2B66DB1356D81100C93C12 /* PreferencesWindowDelegate.m */; };
 		2E2D3B1D1348D8FD002F4AC1 /* app.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B0F1348D8FD002F4AC1 /* app.cc */; };
 		2E2D3B1E1348D8FD002F4AC1 /* events.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B111348D8FD002F4AC1 /* events.cc */; };
 		2E2D3B1F1348D8FD002F4AC1 /* graphics.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2E2D3B121348D8FD002F4AC1 /* graphics.cc */; };
@@ -80,6 +82,9 @@
 		2E2B665413560B1F00C93C12 /* NSString+UniquePaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UniquePaths.h"; sourceTree = "<group>"; };
 		2E2B665513560B1F00C93C12 /* NSString+UniquePaths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UniquePaths.m"; sourceTree = "<group>"; };
 		2E2B666E13568ED300C93C12 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
+		2E2B66D81356D3D700C93C12 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
+		2E2B66DA1356D81100C93C12 /* PreferencesWindowDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesWindowDelegate.h; sourceTree = "<group>"; };
+		2E2B66DB1356D81100C93C12 /* PreferencesWindowDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesWindowDelegate.m; sourceTree = "<group>"; };
 		2E2D3B0F1348D8FD002F4AC1 /* app.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = app.cc; path = ../../src/app.cc; sourceTree = "<group>"; };
 		2E2D3B101348D8FD002F4AC1 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = ../../src/config.h; sourceTree = "<group>"; };
 		2E2D3B111348D8FD002F4AC1 /* events.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = events.cc; path = ../../src/events.cc; sourceTree = "<group>"; };
@@ -234,6 +239,9 @@
 				BB1360CB124D437A0044C71F /* main.mm */,
 				2E1D2405134188780014CFBC /* ZajalAppDelegate.h */,
 				2E1D2406134188780014CFBC /* ZajalAppDelegate.mm */,
+				2E2B66D81356D3D700C93C12 /* PreferencesWindow.xib */,
+				2E2B66DA1356D81100C93C12 /* PreferencesWindowDelegate.h */,
+				2E2B66DB1356D81100C93C12 /* PreferencesWindowDelegate.m */,
 				2E2B66521354D9F700C93C12 /* new_sketch_template.rb */,
 				2E2B665413560B1F00C93C12 /* NSString+UniquePaths.h */,
 				2E2B665513560B1F00C93C12 /* NSString+UniquePaths.m */,
@@ -306,6 +314,7 @@
 				2E898B7213493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf in Resources */,
 				2E898B7413493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf in Resources */,
 				2E2B66531354D9F700C93C12 /* new_sketch_template.rb in Resources */,
+				2E2B66D91356D3D700C93C12 /* PreferencesWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,6 +373,7 @@
 				2E2D3B261348D8FD002F4AC1 /* zajal.cc in Sources */,
 				2E2D3B271348D8FD002F4AC1 /* ZajalInterpreter.cc in Sources */,
 				2E2B665613560B1F00C93C12 /* NSString+UniquePaths.m in Sources */,
+				2E2B66DC1356D81100C93C12 /* PreferencesWindowDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -333,6 +333,10 @@
     }
 }
 
+-(IBAction) openPreferencesWindow:(id)sender {
+    [[[NSWindowController alloc] initWithWindowNibName:@"PreferencesWindow"] showWindow:sender];
+}
+
 -(void) application:(NSApplication *)sender openFiles:(NSArray *)paths {
     // TODO Support multiple files
     [self openScript:(NSString*)[paths lastObject]];

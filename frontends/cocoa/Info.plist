@@ -57,5 +57,19 @@
 	<array/>
 	<key>SUFeedURL</key>
 	<string>https://update.zajal.cc/cocoa.xml</string>
+	<key>ZJTextEditors</key>
+	<array>
+		<string>TextMate</string>
+		<string>MacVim</string>
+		<string>TextWrangler</string>
+		<string>BBEdit</string>
+		<string>SubEthaEdit</string>
+		<string>Kod</string>
+		<string>Redcar</string>
+		<string>Smultron</string>
+		<string>Fraise</string>
+		<string>Espresso</string>
+		<string>TextEdit</string>
+	</array>
 </dict>
 </plist>
