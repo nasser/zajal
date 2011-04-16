@@ -33,7 +33,9 @@ module Videos
     # stop playing videos that weren't drawn
     autostop_videos_posthook = proc {
       video_hash.values.each do |vid|
-        unless vid.was_drawn
+        if vid.was_drawn
+          vid.play
+        else
           vid.pause
         end
       end
