@@ -42,7 +42,7 @@
 	<key>CFBundleURLTypes</key>
 	<array/>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>0.3.0</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
 	<key>NSMainNibFile</key>
@@ -51,12 +51,12 @@
 	<string>NSApplication</string>
 	<key>NSServices</key>
 	<array/>
+	<key>SUFeedURL</key>
+	<string>https://www.zajal.cc/release/cocoa/appcast.xml</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array/>
 	<key>UTImportedTypeDeclarations</key>
 	<array/>
-	<key>SUFeedURL</key>
-	<string>https://update.zajal.cc/cocoa.xml</string>
 	<key>ZJTextEditors</key>
 	<array>
 		<string>TextMate</string>

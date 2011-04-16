@@ -6,7 +6,24 @@
 	objectVersion = 42;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		2E46DE7B1359EBE90094C564 /* Upload */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2E46DE7C1359EBE90094C564 /* Build configuration list for PBXAggregateTarget "Upload" */;
+			buildPhases = (
+				2E46DE801359EC300094C564 /* Upload to zajal.cc */,
+			);
+			dependencies = (
+				2E46DE841359ECD50094C564 /* PBXTargetDependency */,
+			);
+			name = Upload;
+			productName = Upload;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
+		2E02B97B1359557000547794 /* appcast.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2E02B9791359557000547794 /* appcast.xml */; };
+		2E02B97C1359557000547794 /* notes.html in Resources */ = {isa = PBXBuildFile; fileRef = 2E02B97A1359557000547794 /* notes.html */; };
 		2E143A981348990800A64DBA /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143A971348990800A64DBA /* OpenGL.framework */; };
 		2E143A9A1348990E00A64DBA /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143A991348990E00A64DBA /* GLUT.framework */; };
 		2E143A9C1348991600A64DBA /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E143A9B1348991600A64DBA /* QuickTime.framework */; };
@@ -47,6 +64,16 @@
 		BBE3A5D9127BA103000B7920 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE3A5D8127BA103000B7920 /* testApp.mm */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2E46DE831359ECD50094C564 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E4B69B4C0A3A1720003C02F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E4B69B5A0A3A1756003C02F2;
+			remoteInfo = Zajal;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		2E2B667113568F2000C93C12 /* Copy Sparkle */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -62,6 +89,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2E02B9791359557000547794 /* appcast.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = appcast.xml; sourceTree = "<group>"; };
+		2E02B97A1359557000547794 /* notes.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = notes.html; sourceTree = "<group>"; };
 		2E143A971348990800A64DBA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		2E143A991348990E00A64DBA /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		2E143A9B1348991600A64DBA /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
@@ -134,6 +163,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E02B978135954F400547794 /* Release */ = {
+			isa = PBXGroup;
+			children = (
+				2E02B9791359557000547794 /* appcast.xml */,
+				2E02B97A1359557000547794 /* notes.html */,
+			);
+			name = Release;
+			sourceTree = "<group>";
+		};
 		2E143AD11348CA8D00A64DBA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -246,6 +284,7 @@
 				2E2B665413560B1F00C93C12 /* NSString+UniquePaths.h */,
 				2E2B665513560B1F00C93C12 /* NSString+UniquePaths.m */,
 				BB7EB90D1253F74D004B32F7 /* Info.plist */,
+				2E02B978135954F400547794 /* Release */,
 				2E898B661349337200DF6FAA /* Toolbar Icons */,
 				2E2D3B0E1348D8D7002F4AC1 /* Zajal Core */,
 				BBE3A605127BA150000B7920 /* Cocoa Windowing */,
@@ -297,6 +336,7 @@
 			projectRoot = "";
 			targets = (
 				E4B69B5A0A3A1756003C02F2 /* Zajal */,
+				2E46DE7B1359EBE90094C564 /* Upload */,
 			);
 		};
 /* End PBXProject section */
@@ -315,12 +355,28 @@
 				2E898B7413493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf in Resources */,
 				2E2B66531354D9F700C93C12 /* new_sketch_template.rb in Resources */,
 				2E2B66D91356D3D700C93C12 /* PreferencesWindow.xib in Resources */,
+				2E02B97B1359557000547794 /* appcast.xml in Resources */,
+				2E02B97C1359557000547794 /* notes.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2E46DE801359EC300094C564 /* Upload to zajal.cc */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Upload to zajal.cc";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "# http://www.entropy.ch/blog/Developer/2008/09/22/Sparkle-Appcast-Automation-in-Xcode.html\nset -o errexit\n\n# collect data\nVERSION=$(defaults read \"$BUILT_PRODUCTS_DIR/$PROJECT_NAME.app/Contents/Info\" CFBundleVersion)\nDOWNLOAD_BASE_URL=\"http://www.zajal.cc/release/cocoa\"\nRELEASENOTES_URL=\"http://www.zajal.cc/release/cocoa/notes.html\"\n\necho \"Uploading $PROJECT_NAME $VERSION...\"\n\nARCHIVE_FILENAME=\"$PROJECT_NAME-$VERSION.zip\"\nARCHIVE_APPCAST_UPDATE=\"$PROJECT_NAME-$VERSION.xml\"\nDOWNLOAD_URL=\"$DOWNLOAD_BASE_URL/$ARCHIVE_FILENAME\"\n\n# zip up the app\nWD=$PWD\ncd \"$BUILT_PRODUCTS_DIR\"\nrm -f \"$PROJECT_NAME\"*.zip\nditto -ck --keepParent \"$PROJECT_NAME.app\" \"$ARCHIVE_FILENAME\"\n\n# collect size/date for appcast\nSIZE=$(stat -f %z \"$ARCHIVE_FILENAME\")\nPUBDATE=$(LC_TIME=en_US date +\"%a, %d %b %G %T %z\")\n\n# update appcast\nAPPCAST_ITEM=\"\n        <item>\n            <title>Zajal $VERSION</title>\n            <sparkle:releaseNotesLink>$RELEASENOTES_URL</sparkle:releaseNotesLink>\n            <pubDate>$PUBDATE</pubDate>\n            <enclosure\n                url=\\\"$DOWNLOAD_URL\\\"\n                sparkle:version=\\\"$VERSION\\\"\n                type=\\\"application/octet-stream\\\"\n                length=\\\"$SIZE\\\"\n            />\n        </item>\"\nruby -pi -e \"\\$_.gsub!('<language>en</language>', '<language>en</language>$APPCAST_ITEM')\" \"$WD/appcast.xml\"\n\n# upload to zajal.cc\n~/bin/release_zajal \"$BUILT_PRODUCTS_DIR/$ARCHIVE_FILENAME\"\n~/bin/release_zajal \"$WD/appcast.xml\"\n~/bin/release_zajal \"$WD/notes.html\"";
+		};
 		2E898FCF13496D7900DF6FAA /* Copy Ruby/Zajal Libraries */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -379,12 +435,41 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2E46DE841359ECD50094C564 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E4B69B5A0A3A1756003C02F2 /* Zajal */;
+			targetProxy = 2E46DE831359ECD50094C564 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		2E46DE7D1359EBE90094C564 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2E46DE7E1359EBE90094C564 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2E46DE7F1359EBE90094C564 /* ReleaseUniversal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = ReleaseUniversal;
+		};
 		E4B27CA010CBF8A600536013 /* ReleaseUniversal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -480,8 +565,8 @@
 		E4B69B4E0A3A1720003C02F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
@@ -511,8 +596,8 @@
 		E4B69B4F0A3A1720003C02F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/bin/";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -682,6 +767,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2E46DE7C1359EBE90094C564 /* Build configuration list for PBXAggregateTarget "Upload" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2E46DE7D1359EBE90094C564 /* Debug */,
+				2E46DE7E1359EBE90094C564 /* Release */,
+				2E46DE7F1359EBE90094C564 /* ReleaseUniversal */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "Zajal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

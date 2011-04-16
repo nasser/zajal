@@ -738,7 +738,6 @@
 							<string key="NSFrame">{{123, 123}, {254, 254}}</string>
 							<reference key="NSSuperview" ref="85501261"/>
 							<reference key="NSWindow"/>
-							<reference key="NSNextKeyView"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSImageCell" key="NSCell" id="76399505">
 								<int key="NSCellFlags">130560</int>
@@ -792,7 +791,7 @@
 								<string key="NSFrameSize">{238, 128}</string>
 								<reference key="NSSuperview" ref="1063387343"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="78519826"/>
+								<reference key="NSNextKeyView" ref="321204969"/>
 								<object class="NSTextContainer" key="NSTextContainer" id="951014367">
 									<object class="NSLayoutManager" key="NSLayoutManager">
 										<object class="NSTextStorage" key="NSTextStorage">
@@ -897,7 +896,6 @@
 						<string key="NSFrame">{{224, 1}, {15, 134}}</string>
 						<reference key="NSSuperview" ref="801606019"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<reference key="NSTarget" ref="801606019"/>
 						<string key="NSAction">_doScroller:</string>
 						<double key="NSCurValue">1</double>
@@ -920,7 +918,7 @@
 				<string key="NSFrameSize">{240, 136}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="321204969"/>
+				<reference key="NSNextKeyView" ref="1063387343"/>
 				<int key="NSsFlags">530</int>
 				<reference key="NSVScroller" ref="78519826"/>
 				<reference key="NSHScroller" ref="321204969"/>
@@ -1249,6 +1247,14 @@
 						<reference key="destination" ref="539416927"/>
 					</object>
 					<int key="connectionID">481</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openAboutWindow:</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="617446195"/>
+					</object>
+					<int key="connectionID">482</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2012,7 +2018,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">481</int>
+			<int key="maxID">482</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2079,6 +2085,7 @@
 							<string>goWindow:</string>
 							<string>launchExample:</string>
 							<string>newFileMenuClick:</string>
+							<string>openAboutWindow:</string>
 							<string>openFileMenuClick:</string>
 							<string>openPreferencesWindow:</string>
 							<string>reloadScript:</string>
@@ -2106,6 +2113,7 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="actionInfosByName">
@@ -2118,6 +2126,7 @@
 							<string>goWindow:</string>
 							<string>launchExample:</string>
 							<string>newFileMenuClick:</string>
+							<string>openAboutWindow:</string>
 							<string>openFileMenuClick:</string>
 							<string>openPreferencesWindow:</string>
 							<string>reloadScript:</string>
@@ -2152,6 +2161,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">newFileMenuClick:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">openAboutWindow:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

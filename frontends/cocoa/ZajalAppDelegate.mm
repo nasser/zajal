@@ -346,6 +346,10 @@
     [[[NSWindowController alloc] initWithWindowNibName:@"PreferencesWindow"] showWindow:sender];
 }
 
+-(IBAction) openAboutWindow:(id)sender {
+    [[[NSWindowController alloc] initWithWindowNibName:@"AboutWindow"] showWindow:sender];
+}
+
 -(void) application:(NSApplication *)sender openFiles:(NSArray *)paths {
     // TODO Support multiple files
     [self openScript:(NSString*)[paths lastObject]];
