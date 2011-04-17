@@ -60,6 +60,7 @@
 		2E898B6E1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B6D1349381300DF6FAA /* ToolbarIconFullscreenTemplate.pdf */; };
 		2E898B7213493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B7113493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf */; };
 		2E898B7413493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */; };
+		2ED2A0A8135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2ED2A0A7135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf */; };
 		BB1360CE124D437A0044C71F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = BB1360CB124D437A0044C71F /* main.mm */; };
 		BBE3A5D9127BA103000B7920 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE3A5D8127BA103000B7920 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -136,6 +137,7 @@
 		2E898B7113493CE700DF6FAA /* ToolbarIconConsoleDownTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconConsoleDownTemplate.pdf; sourceTree = "<group>"; };
 		2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarIconConsoleUpTemplate.pdf; sourceTree = "<group>"; };
 		2E898B75134968C600DF6FAA /* ZajalDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZajalDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2ED2A0A7135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = NoSketchLoadedLabelTemplate.pdf; sourceTree = "<group>"; };
 		BB1360CB124D437A0044C71F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = main.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BB1360CD124D437A0044C71F /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = SOURCE_ROOT; };
 		BB7EB90D1253F74D004B32F7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 				2E2B665413560B1F00C93C12 /* NSString+UniquePaths.h */,
 				2E2B665513560B1F00C93C12 /* NSString+UniquePaths.m */,
 				BB7EB90D1253F74D004B32F7 /* Info.plist */,
+				2ED2A0A7135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf */,
 				2E02B978135954F400547794 /* Release */,
 				2E898B661349337200DF6FAA /* Toolbar Icons */,
 				2E2D3B0E1348D8D7002F4AC1 /* Zajal Core */,
@@ -357,6 +360,7 @@
 				2E2B66D91356D3D700C93C12 /* PreferencesWindow.xib in Resources */,
 				2E02B97B1359557000547794 /* appcast.xml in Resources */,
 				2E02B97C1359557000547794 /* notes.html in Resources */,
+				2ED2A0A8135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +561,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)Universal";
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/ ../../lib/openframeworks/include/cairo/include/cairo/";
+				VALID_ARCHS = i386;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
@@ -688,6 +693,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)Debug";
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/ ../../lib/openframeworks/include/cairo/include/cairo/";
+				VALID_ARCHS = i386;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
@@ -759,6 +765,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
 				USER_HEADER_SEARCH_PATHS = "../../lib/openframeworks/include/FreeImage/include/ ../../lib/openframeworks/include/assimp/include/ ../../lib/openframeworks/include/cairo/include/ ../../lib/openframeworks/include/glew/include/ ../../lib/openframeworks/include/freetype/include/ ../../lib/openframeworks/include/glu/include/ ../../lib/openframeworks/include/glut/include/ ../../lib/openframeworks/include/openFrameworks/** ../../lib/openframeworks/include/poco/include/ ../../lib/openframeworks/include/rtAudio/include/ ../../lib/openframeworks/include/videoInput/include/ ../../lib/openframeworks/include/ ../../lib/openframeworks/include/glew/include/GL/ ../../lib/ruby/include/ ../../lib/openframeworks/include/freetype/include/freetype2/ ../../lib/openframeworks/include/cairo/include/cairo/";
+				VALID_ARCHS = i386;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
@@ -775,6 +782,7 @@
 				2E46DE7F1359EBE90094C564 /* ReleaseUniversal */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "Zajal" */ = {
 			isa = XCConfigurationList;
