@@ -33,7 +33,7 @@ ZajalInterpreter::ZajalInterpreter() {
   
   keyIsPressed = false;
   
-  state = INTERPRETER_LOADING;
+  state = INTERPRETER_NO_SKETCH;
   scriptModifiedTime = 0;
   
   scriptName = NULL;
@@ -41,6 +41,10 @@ ZajalInterpreter::ZajalInterpreter() {
   
   INTERNAL_SET(zj_mApp, current_code, rb_str_new2(""));
   INTERNAL_SET(zj_mApp, verbose, Qfalse);
+}
+
+InterpreterState ZajalInterpreter::getState() {
+  return state;
 }
 
 void ZajalInterpreter::printVersion() {

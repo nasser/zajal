@@ -13,7 +13,7 @@
 #define MAX_LOCAL_VAR_NAME_LENGTH 255
 
 enum InterpreterState {
-  INTERPRETER_LOADING,
+  INTERPRETER_NO_SKETCH,
   INTERPRETER_RUNNING,
   INTERPRETER_ERROR
 };
@@ -44,6 +44,8 @@ class ZajalInterpreter : public ofBaseApp {
     void reloadScript(bool forced=false);
     void updateCurrentScript();
     char* getCurrentScriptPath();
+    
+    InterpreterState getState();
     
     void appendLoadPath(char* path);
     

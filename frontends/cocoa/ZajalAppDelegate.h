@@ -49,6 +49,7 @@
     IBOutlet NSToolbar          *toolbar;
     
     IBOutlet NSToolbarItem      *playPauseToolbarItem;
+    IBOutlet NSToolbarItem      *reloadToolbarItem;
     IBOutlet NSToolbarItem      *consoleToolbarItem;
   
     IBOutlet NSMenuItem         *playMenuItem;

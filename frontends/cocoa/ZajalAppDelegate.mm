@@ -63,6 +63,9 @@
     
     [self editCurrentScript:nil];
     [errorConsoleTextView setString:@""];
+    
+    [playPauseToolbarItem setEnabled:YES];
+    [reloadToolbarItem setEnabled:YES];
 }
 
 -(void) populateExamplesMenu {
@@ -170,6 +173,9 @@
     consoleDownIcon = [self imageTemplateFromName:@"ToolbarIconConsoleDownTemplate"];
     consoleUpIcon = [self imageTemplateFromName:@"ToolbarIconConsoleUpTemplate"];
     
+    [playPauseToolbarItem setEnabled:NO];
+    [reloadToolbarItem setEnabled:NO];
+    
     stdoutAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
                         [NSColor whiteColor], NSForegroundColorAttributeName,
                         [NSFont fontWithName:@"Monaco" size:10], NSFontAttributeName,
@@ -234,6 +240,9 @@
 // the following is app-specific, should be moved somewhere -nasser
 
 - (IBAction) startAnimation:(id)sender {
+    ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    if(zi->getState() == INTERPRETER_NO_SKETCH) return;
+
 	[_glView startAnimating];
     [playMenuItem setEnabled:NO];
     [pauseMenuItem setEnabled:YES];
@@ -241,6 +250,9 @@
 }
 
 - (IBAction) stopAnimation:(id)sender {
+    ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    if(zi->getState() == INTERPRETER_NO_SKETCH) return;
+
 	[_glView stopAnimating];
     [playMenuItem setEnabled:YES];
     [pauseMenuItem setEnabled:NO];
@@ -249,10 +261,23 @@
 
 - (IBAction) reloadScript:(id)sender {
     ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    if(zi->getState() == INTERPRETER_NO_SKETCH) return;
+
     [self startAnimation:sender];
     zi->reloadScript(true);
     
     [errorConsoleTextView setString:@""];
+}
+
+- (IBAction) toggleAnimation:(id)sender {
+    ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    if(zi->getState() == INTERPRETER_NO_SKETCH) return;
+    
+    if([_glView isAnimating]) {
+        [self stopAnimation:sender];
+    } else {
+        [self startAnimation:sender];
+    }
 }
 
 - (IBAction) toggleConsole:(id)sender {
@@ -263,14 +288,6 @@
     } else {
         [consoleToolbarItem setImage:consoleUpIcon];
         [consoleMenuItem setTitle:@"Hide Console"];
-    }
-}
-
-- (IBAction) toggleAnimation:(id)sender {
-    if([_glView isAnimating]) {
-        [self stopAnimation:sender];
-    } else {
-        [self startAnimation:sender];
     }
 }
 
@@ -292,6 +309,8 @@
 
 -(IBAction) editCurrentScript:(id)sender {
     ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
+    if(zi->getState() == INTERPRETER_NO_SKETCH) return;
+    
     NSString* path = [NSString stringWithUTF8String:zi->getCurrentScriptPath()];
     
     [[NSWorkspace sharedWorkspace] openFile:path withApplication:[defaults stringForKey:@"editor"]];
