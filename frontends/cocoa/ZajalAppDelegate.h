@@ -42,8 +42,8 @@
 @interface ZajalAppDelegate : NSObject {
     NSUserDefaults          *defaults;
     
-    IBOutlet NSWindow           *_glWindow;	// points to current window
-    IBOutlet GLView             *_glView;
+    IBOutlet NSWindow           *window;	// points to current window
+    IBOutlet GLView             *glView;
     
     IBOutlet NSMenu             *examplesMenu;
     IBOutlet NSToolbar          *toolbar;
@@ -56,6 +56,8 @@
     IBOutlet NSMenuItem         *pauseMenuItem;
     
     IBOutlet NSMenuItem         *consoleMenuItem;
+    
+    IBOutlet NSMenu             *sketchMenu;
     
     IBOutlet NSTextView         *errorConsoleTextView;
     IBOutlet NSScrollView       *errorConsoleScrollView;
@@ -76,8 +78,8 @@
 }
 
 
-@property (readonly) NSWindow	*_glWindow;
-@property (readonly) GLView		*_glView;
+@property (readonly) NSWindow	*window;
+@property (readonly) GLView		*glView;
 
 -(IBAction) startAnimation:(id)sender;
 -(IBAction) stopAnimation:(id)sender;

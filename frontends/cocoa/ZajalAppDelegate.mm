@@ -45,8 +45,8 @@
 
 @implementation ZajalAppDelegate
 
-@synthesize _glWindow;
-@synthesize _glView;
+@synthesize window;
+@synthesize glView;
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
 	return YES;
@@ -57,13 +57,16 @@
     
     [[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:path]];
     
-    [_glView setHidden:NO];
+    [glView setHidden:NO];
     zi->loadScript((char*)[path UTF8String]);
     zi->reloadScript(true);
     
     [self editCurrentScript:nil];
     [errorConsoleTextView setString:@""];
     
+    for (NSMenuItem* sketchMenuItem in [sketchMenu itemArray])
+        if(![[sketchMenuItem title] isEqualToString:@"Play"])
+            [sketchMenuItem setEnabled:YES];
     [playPauseToolbarItem setEnabled:YES];
     [reloadToolbarItem setEnabled:YES];
 }
@@ -117,12 +120,12 @@
     
     // init the drawer
     errorConsoleDrawer = [[NSDrawer alloc] initWithContentSize:NSMakeSize(0, 100) preferredEdge:NSMinYEdge];
-    [errorConsoleDrawer setParentWindow:_glWindow];
+    [errorConsoleDrawer setParentWindow:window];
     [errorConsoleDrawer setLeadingOffset:errorConsolePadding];
     [errorConsoleDrawer setTrailingOffset:errorConsolePadding];
     [errorConsoleDrawer setMaxContentSize:NSMakeSize(0, 10)];
     [errorConsoleDrawer setMaxContentSize:NSMakeSize(0, 200)];
-    CGFloat drawerWidth = _glWindow.frame.size.width - errorConsolePadding * 2;
+    CGFloat drawerWidth = window.frame.size.width - errorConsolePadding * 2;
     
     // init the text view where the output will be displayed
 //    [errorConsoleTextView setBackgroundColor:[NSColor blackColor]];
@@ -158,11 +161,11 @@
     zi->initialize();
     ofSetAppPtr(zi);
     
-    ofSetAppWindowPtr(new ofAppCocoaWindow(_glView));
+    ofSetAppWindowPtr(new ofAppCocoaWindow(glView));
     
-    [_glView startAnimating];
+    [glView startAnimating];
 	
-	if(_glWindow == nil) { // if no window in xib
+	if(window == nil) { // if no window in xib
         NSLog(@"Can't find window in nib!");
 	}
     
@@ -246,7 +249,7 @@
     ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
     if(zi->getState() == INTERPRETER_NO_SKETCH) return;
 
-	[_glView startAnimating];
+	[glView startAnimating];
     [playMenuItem setEnabled:NO];
     [pauseMenuItem setEnabled:YES];
     [playPauseToolbarItem setImage:pauseIcon];
@@ -256,7 +259,7 @@
     ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
     if(zi->getState() == INTERPRETER_NO_SKETCH) return;
 
-	[_glView stopAnimating];
+	[glView stopAnimating];
     [playMenuItem setEnabled:YES];
     [pauseMenuItem setEnabled:NO];
     [playPauseToolbarItem setImage:playIcon];
@@ -276,7 +279,7 @@
     ZajalInterpreter* zi = (ZajalInterpreter*)ofGetAppPtr();
     if(zi->getState() == INTERPRETER_NO_SKETCH) return;
     
-    if([_glView isAnimating]) {
+    if([glView isAnimating]) {
         [self stopAnimation:sender];
     } else {
         [self startAnimation:sender];
@@ -354,12 +357,12 @@
     
     if([debugModeMenuItem state] == NSOffState) {
         [debugModeMenuItem setState:NSOnState];
-        [_glView setHidden:NO];
-        [_glView setDebugMode:YES];
+        [glView setHidden:NO];
+        [glView setDebugMode:YES];
         
     } else {
         [debugModeMenuItem setState:NSOffState];
-        [_glView setDebugMode:NO];
+        [glView setDebugMode:NO];
         
     }
 }
