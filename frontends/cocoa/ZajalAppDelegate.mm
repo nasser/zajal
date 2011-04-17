@@ -279,11 +279,12 @@
 }
 
 - (IBAction) toggleConsole:(id)sender {
-    [errorConsoleDrawer toggle:sender];
     if([errorConsoleDrawer state] == NSDrawerClosedState || [errorConsoleDrawer state] == NSDrawerClosingState) {
+        [errorConsoleDrawer openOnEdge:NSMinYEdge];
         [consoleToolbarItem setImage:consoleDownIcon];
         [consoleMenuItem setTitle:@"Show Console"];
     } else {
+        [errorConsoleDrawer close];
         [consoleToolbarItem setImage:consoleUpIcon];
         [consoleMenuItem setTitle:@"Hide Console"];
     }
