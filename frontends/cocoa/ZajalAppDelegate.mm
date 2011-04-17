@@ -145,8 +145,7 @@
 }
 
 -(NSImage*) imageTemplateFromName:(NSString*)name {
-    NSString* path = [[NSBundle mainBundle] pathForResource:name ofType:@"pdf"];
-    NSImage* theImage = [[[NSImage alloc] initWithContentsOfFile:path] retain];
+    NSImage* theImage = [NSImage imageNamed:name];
     [theImage setTemplate:YES];
     
     return theImage;
