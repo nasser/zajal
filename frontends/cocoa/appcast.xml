@@ -5,5 +5,27 @@
         <link>https://www.zajal.cc/release/cocoa/appcast.xml</link>
         <description>Most recent changes with links to updates.</description>
         <language>en</language>
+        <item>
+            <title>Zajal 0.3.1</title>
+            <sparkle:releaseNotesLink>https://www.zajal.cc/release/cocoa/notes.html</sparkle:releaseNotesLink>
+            <pubDate>Sat, 16 Apr 2011 14:04:06 -0400</pubDate>
+            <enclosure
+                url="https://www.zajal.cc/release/cocoa/Zajal-0.3.1.zip"
+                sparkle:version="0.3.1"
+                type="application/octet-stream"
+                length="8452132"
+            />
+        </item>
+        <item>
+            <title>Zajal 0.3.0</title>
+            <sparkle:releaseNotesLink>https://www.zajal.cc/release/cocoa/notes.html</sparkle:releaseNotesLink>
+            <pubDate>Sat, 16 Apr 2011 13:58:49 -0400</pubDate>
+            <enclosure
+                url="https://www.zajal.cc/release/cocoa/Zajal-0.3.0.zip"
+                sparkle:version="0.3.0"
+                type="application/octet-stream"
+                length="8451973"
+            />
+        </item>
     </channel>
 </rss>
