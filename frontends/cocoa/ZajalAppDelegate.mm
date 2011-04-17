@@ -176,6 +176,8 @@
     [playPauseToolbarItem setEnabled:NO];
     [reloadToolbarItem setEnabled:NO];
     
+    [toolbar setVisible:[defaults boolForKey:@"window.toolbar-visible"]];
+    
     stdoutAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
                         [NSColor whiteColor], NSForegroundColorAttributeName,
                         [NSFont fontWithName:@"Monaco" size:10], NSFontAttributeName,
@@ -227,6 +229,7 @@
 	ofNotifyExit();
 	
 	[self stopAnimation:self];
+    [defaults setObject:[NSNumber numberWithBool:[toolbar isVisible]] forKey:@"window.toolbar-visible"];
 	return NSTerminateNow;
 }
 
