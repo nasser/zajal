@@ -87,6 +87,7 @@
 -(IBAction) openFileMenuClick:(id)sender;
 -(IBAction) newFileMenuClick:(id)sender;
 -(IBAction) exportMenuClick:(id)sender;
+-(IBAction) onlineHelpMenuClick:(id)sender;
 
 -(IBAction) toggleConsole:(id)sender;
 

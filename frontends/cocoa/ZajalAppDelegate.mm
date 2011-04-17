@@ -369,6 +369,21 @@
     [[[NSWindowController alloc] initWithWindowNibName:@"AboutWindow"] showWindow:sender];
 }
 
+-(IBAction) onlineHelpMenuClick:(id)sender {
+    switch ([(NSMenuItem*)sender tag]) {
+        case 0:
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://docs.zajal.cc/"]];
+            break;
+            
+        case 1:
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://forum.zajal.cc/"]];
+            break;
+            
+        default:
+            break;
+    }
+}
+
 -(void) application:(NSApplication *)sender openFiles:(NSArray *)paths {
     // TODO Support multiple files
     [self openScript:(NSString*)[paths lastObject]];

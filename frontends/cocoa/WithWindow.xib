@@ -503,14 +503,22 @@
 							<string key="NSTitle">Help</string>
 							<object class="NSMutableArray" key="NSMenuItems">
 								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSMenuItem" id="869758408">
+								<object class="NSMenuItem" id="531234332">
 									<reference key="NSMenu" ref="410130209"/>
-									<string key="NSTitle">Application Help</string>
-									<string key="NSKeyEquiv">?</string>
-									<int key="NSKeyEquivModMask">1048576</int>
+									<string key="NSTitle">Documentation</string>
+									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="749875520"/>
 									<reference key="NSMixedImage" ref="909026863"/>
+								</object>
+								<object class="NSMenuItem" id="991430066">
+									<reference key="NSMenu" ref="410130209"/>
+									<string key="NSTitle">Zajal Community</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="749875520"/>
+									<reference key="NSMixedImage" ref="909026863"/>
+									<int key="NSTag">1</int>
 								</object>
 								<object class="NSMenuItem" id="965584023">
 									<reference key="NSMenu" ref="410130209"/>
@@ -1263,6 +1271,22 @@
 						<reference key="destination" ref="32824019"/>
 					</object>
 					<int key="connectionID">483</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">onlineHelpMenuClick:</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="991430066"/>
+					</object>
+					<int key="connectionID">486</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">onlineHelpMenuClick:</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="531234332"/>
+					</object>
+					<int key="connectionID">487</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
