@@ -1,3 +1,6 @@
+# Wormsign
+# Ramsey Nasser - Nov 2010
+
 t = 0
 
 setup do

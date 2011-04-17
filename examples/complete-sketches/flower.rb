@@ -1,3 +1,6 @@
+# Polygonal Flower
+# Ramsey Nasser - Dec 2010
+
 class Particle
   attr_accessor :x, :y
   

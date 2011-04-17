@@ -1,3 +1,6 @@
+# Wormhole
+# Ramsey Nasser - Feb 2011
+
 x, y = 250, 250
 
 setup do
