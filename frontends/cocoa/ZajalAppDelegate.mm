@@ -144,13 +144,6 @@
     [errorConsoleScrollView reflectScrolledClipView: [errorConsoleScrollView contentView]];
 }
 
--(NSImage*) imageTemplateFromName:(NSString*)name {
-    NSImage* theImage = [NSImage imageNamed:name];
-    [theImage setTemplate:YES];
-    
-    return theImage;
-}
-
 - (void)applicationDidFinishLaunching:(NSNotification*)n {
     defaults = [NSUserDefaults standardUserDefaults];
     
@@ -170,10 +163,10 @@
     
 	ofNotifySetup(); // TODO there is no script loaded yet, but removing this breaks things
   
-    playIcon = [self imageTemplateFromName:@"ToolbarIconPlayTemplate"];
-    pauseIcon = [self imageTemplateFromName:@"ToolbarIconPauseTemplate"];
-    consoleDownIcon = [self imageTemplateFromName:@"ToolbarIconConsoleDownTemplate"];
-    consoleUpIcon = [self imageTemplateFromName:@"ToolbarIconConsoleUpTemplate"];
+    playIcon = [NSImage imageNamed:@"ToolbarIconPlayTemplate"];
+    pauseIcon = [NSImage imageNamed:@"ToolbarIconPauseTemplate"];
+    consoleDownIcon = [NSImage imageNamed:@"ToolbarIconConsoleDownTemplate"];
+    consoleUpIcon = [NSImage imageNamed:@"ToolbarIconConsoleUpTemplate"];
     
     [playPauseToolbarItem setEnabled:NO];
     [reloadToolbarItem setEnabled:NO];
