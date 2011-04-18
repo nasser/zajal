@@ -12,6 +12,7 @@
 		</object>
 		<object class="NSArray" key="IBDocument.IntegratedClassDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<string>NSUserDefaultsController</string>
 			<string>NSToolbar</string>
 			<string>NSToolbarFlexibleSpaceItem</string>
 			<string>NSScroller</string>
@@ -809,7 +810,7 @@
 								<string key="NSFrameSize">{238, 128}</string>
 								<reference key="NSSuperview" ref="1063387343"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
+								<reference key="NSNextKeyView" ref="78519826"/>
 								<object class="NSTextContainer" key="NSTextContainer" id="951014367">
 									<object class="NSLayoutManager" key="NSLayoutManager">
 										<object class="NSTextStorage" key="NSTextStorage">
@@ -914,7 +915,7 @@
 						<string key="NSFrame">{{224, 1}, {15, 134}}</string>
 						<reference key="NSSuperview" ref="801606019"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="321204969"/>
+						<reference key="NSNextKeyView"/>
 						<reference key="NSTarget" ref="801606019"/>
 						<string key="NSAction">_doScroller:</string>
 						<double key="NSCurValue">1</double>
@@ -937,11 +938,14 @@
 				<string key="NSFrameSize">{240, 136}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="78519826"/>
+				<reference key="NSNextKeyView" ref="321204969"/>
 				<int key="NSsFlags">530</int>
 				<reference key="NSVScroller" ref="78519826"/>
 				<reference key="NSHScroller" ref="321204969"/>
 				<reference key="NSContentView" ref="1063387343"/>
+			</object>
+			<object class="NSUserDefaultsController" id="207721804">
+				<bool key="NSSharedInstance">YES</bool>
 			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
@@ -1847,6 +1851,11 @@
 						<reference key="object" ref="269806953"/>
 						<reference key="parent" ref="528982500"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">510</int>
+						<reference key="object" ref="207721804"/>
+						<reference key="parent" ref="0"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -2072,7 +2081,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">502</int>
+			<int key="maxID">527</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
