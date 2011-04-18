@@ -76,14 +76,20 @@ VALUE zj_mouse_dragged(VALUE self) {
   return Qnil;
 }
 
+VALUE zj_mouse_down(VALUE self) {
+  if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_down_proc, rb_block_proc());
+  
+  return Qnil;
+}
+
 VALUE zj_mouse_pressed(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_pressed_proc, rb_block_proc());
   
   return Qnil;
 }
 
-VALUE zj_mouse_released(VALUE self) {
-  if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_released_proc, rb_block_proc());
+VALUE zj_mouse_up(VALUE self) {
+  if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_up_proc, rb_block_proc());
   
   return Qnil;
 }
@@ -123,13 +129,17 @@ void Init_Events() {
   rb_define_private_method(zj_mEvents, "draw", RUBY_METHOD_FUNC(zj_draw), 0);
   rb_define_private_method(zj_mEvents, "exit", RUBY_METHOD_FUNC(zj_exit), 0);
   rb_define_private_method(zj_mEvents, "window_resized", RUBY_METHOD_FUNC(zj_window_resized), 0);
+    
   rb_define_private_method(zj_mEvents, "key_down", RUBY_METHOD_FUNC(zj_key_down), 0);
   rb_define_private_method(zj_mEvents, "key_pressed", RUBY_METHOD_FUNC(zj_key_pressed), 0);
   rb_define_private_method(zj_mEvents, "key_up", RUBY_METHOD_FUNC(zj_key_up), 0);
+    
   rb_define_private_method(zj_mEvents, "mouse_moved", RUBY_METHOD_FUNC(zj_mouse_moved), 0);
   rb_define_private_method(zj_mEvents, "mouse_dragged", RUBY_METHOD_FUNC(zj_mouse_dragged), 0);
+  rb_define_private_method(zj_mEvents, "mouse_down", RUBY_METHOD_FUNC(zj_mouse_down), 0);
   rb_define_private_method(zj_mEvents, "mouse_pressed", RUBY_METHOD_FUNC(zj_mouse_pressed), 0);
-  rb_define_private_method(zj_mEvents, "mouse_released", RUBY_METHOD_FUNC(zj_mouse_released), 0);
+  rb_define_private_method(zj_mEvents, "mouse_up", RUBY_METHOD_FUNC(zj_mouse_up), 0);
+    
   rb_define_private_method(zj_mEvents, "audio_requested", RUBY_METHOD_FUNC(zj_audio_requested), 0);
   rb_define_private_method(zj_mEvents, "audio_received", RUBY_METHOD_FUNC(zj_audio_received), 0);
   
@@ -149,13 +159,17 @@ void Init_Events() {
   INTERNAL_SET(zj_mEvents, draw_proc, Qnil);
   INTERNAL_SET(zj_mEvents, exit_proc, Qnil);
   INTERNAL_SET(zj_mEvents, window_resized_proc, Qnil);
+  
   INTERNAL_SET(zj_mEvents, key_down_proc, Qnil);
   INTERNAL_SET(zj_mEvents, key_pressed_proc, Qnil);
   INTERNAL_SET(zj_mEvents, key_released_proc, Qnil);
+  
   INTERNAL_SET(zj_mEvents, mouse_moved_proc, Qnil);
   INTERNAL_SET(zj_mEvents, mouse_dragged_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, mouse_down_proc, Qnil);
   INTERNAL_SET(zj_mEvents, mouse_pressed_proc, Qnil);
-  INTERNAL_SET(zj_mEvents, mouse_released_proc, Qnil);
+  INTERNAL_SET(zj_mEvents, mouse_up_proc, Qnil);
+  
   INTERNAL_SET(zj_mEvents, audio_requested_proc, Qnil);
   INTERNAL_SET(zj_mEvents, audio_received_proc, Qnil);
 }

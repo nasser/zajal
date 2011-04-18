@@ -32,6 +32,7 @@ ZajalInterpreter::ZajalInterpreter() {
   zajal_init();
   
   keyIsPressed = false;
+  mouseIsPressed = false;
   
   state = INTERPRETER_NO_SKETCH;
   scriptModifiedTime = 0;
@@ -190,7 +191,6 @@ void ZajalInterpreter::draw() {
       // no error exists, draw next frame of user code, catch runtime errors
       zj_graphics_reset_frame();
       zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
-      if(ruby_error) state = INTERPRETER_ERROR;
       
       VALUE posthooks_ary = INTERNAL_GET(zj_mEvents, draw_posthooks);
       VALUE* posthooks_ptr = RARRAY_PTR(posthooks_ary);
@@ -199,6 +199,12 @@ void ZajalInterpreter::draw() {
       for(int i = 0; i < posthooks_len; i++){
         zj_safe_proc_call(posthooks_ptr[i], 0);
       }
+      
+      // fake continious mouse press
+      if(mouseIsPressed)
+        zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, lastMouseX, lastMouseY, lastMouseButton);
+      if(ruby_error) state = INTERPRETER_ERROR;
+
       break;
       
   }
@@ -288,7 +294,11 @@ void ZajalInterpreter::mouseMoved(int x, int y) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
   if(state == INTERPRETER_RUNNING) {
-    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_dragged_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
+    lastMouseX = INT2FIX(x);
+    lastMouseY = INT2FIX(y);
+    lastMouseButton = zj_button_to_symbol(button);
+
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_dragged_proc), 3, lastMouseX, lastMouseY, lastMouseButton);
     if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
@@ -296,7 +306,12 @@ void ZajalInterpreter::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
   if(state == INTERPRETER_RUNNING) {
-    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
+    lastMouseX = INT2FIX(x);
+    lastMouseY = INT2FIX(y);
+    lastMouseButton = zj_button_to_symbol(button);
+    
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_down_proc), 3, lastMouseX, lastMouseY, lastMouseButton);
+    mouseIsPressed = true;
     if(ruby_error) state = INTERPRETER_ERROR;
   }
 }
@@ -305,8 +320,9 @@ void ZajalInterpreter::mousePressed(int x, int y, int button) {
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
   if(state == INTERPRETER_RUNNING) {
-    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_released_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_up_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
     if(ruby_error) state = INTERPRETER_ERROR;
+    mouseIsPressed = false;
   }
 }
 

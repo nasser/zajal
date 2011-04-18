@@ -57,8 +57,11 @@ class ZajalInterpreter : public ofBaseApp {
     // the state the interpreter is in
     InterpreterState state;
     
-    // is a key being held? used to implement key_up vs key_down
-    bool keyIsPressed;
+    // is a mouse button or key being held? used to implement key_up/mouse_down vs key_down/mouse_down
+    bool keyIsPressed, mouseIsPressed;
+    
+    // store informaton on last mouse position to emulate continious mouse press
+    VALUE lastMouseX, lastMouseY, lastMouseButton;
     
     // name of the currently executing script
     char* scriptName;
