@@ -94,10 +94,9 @@ void ZajalInterpreter::appendLoadPath(char* path) {
 //--------------------------------------------------------------
 void ZajalInterpreter::setup() {
   ofSetDefaultRenderer(&renderer);
-  zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
   
   if(state == INTERPRETER_RUNNING) {
-    // if no error exists, run user setup method, catch runtime errors
+    INTERNAL_SET(zj_mEvents, current_event, SYM("setup"));
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, setup_proc), 0);
     if(ruby_error) state = INTERPRETER_ERROR;
   }
@@ -106,6 +105,8 @@ void ZajalInterpreter::setup() {
 //--------------------------------------------------------------
 void ZajalInterpreter::update() {
   if(state == INTERPRETER_RUNNING) {
+    INTERNAL_SET(zj_mEvents, current_event, SYM("update"));
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
     
     VALUE prehooks_ary = INTERNAL_GET(zj_mEvents, update_prehooks);
     VALUE* prehooks_ptr = RARRAY_PTR(prehooks_ary);
@@ -139,6 +140,7 @@ void ZajalInterpreter::draw() {
   
   switch(state) {
     case INTERPRETER_ERROR:
+      INTERNAL_SET(zj_mEvents, current_event, SYM("draw"));
       // TODO stop all playing videos
       
       error_message = zj_safe_funcall(rb_cObject, rb_intern("process_error"), 0);
@@ -180,6 +182,7 @@ void ZajalInterpreter::draw() {
       break;
       
     case INTERPRETER_RUNNING:
+      INTERNAL_SET(zj_mEvents, current_event, SYM("draw"));
       VALUE prehooks_ary = INTERNAL_GET(zj_mEvents, draw_prehooks);
       VALUE* prehooks_ptr = RARRAY_PTR(prehooks_ary);
       int prehooks_len = RARRAY_LEN(prehooks_ary);

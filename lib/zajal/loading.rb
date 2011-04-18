@@ -194,8 +194,10 @@ def live_load new_code, forced
   begin
     if new_sexp.fetch("/method_add_block/method_add_arg/fcall/@ident").empty?
       # no blocks are used, we're in reduced mode
+      Events::Internals.reset_defaults
       Events::Internals.defaults_proc.call
       Events::Internals.draw_proc = proc new_code
+      Events::Internals.current_event = :draw
       Events::Internals.draw_proc.call
       
     else
@@ -204,10 +206,13 @@ def live_load new_code, forced
       # TODO support global assigns burried under if/while/etc blocks
       if forced or (added.fetch("/method_add_block/method_add_arg/fcall/@ident").include? "setup" or not added.fetch("/assign/var_field/@gvar").empty?)
         # setup/globals modified or forced, restart
+        Events::Internals.reset_defaults
         eval new_code
         
-        Events::Internals.defaults_proc.call
-        Events::Internals.setup_proc.call unless Events::Internals.setup_proc.nil?
+        unless Events::Internals.setup_proc.nil?
+          Events::Internals.current_event = :setup
+          Events::Internals.setup_proc.call
+        end
       else
         # otherwise, sculpt, recreate global state
         

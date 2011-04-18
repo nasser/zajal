@@ -127,36 +127,42 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   ID center_id = rb_intern("center");
   ID corner_id = rb_intern("corner");
   
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current rect mode */
-      rect_mode = ofGetRectMode();
+  if(IS_IN_SETUP && argc > 0) {
+    SET_DEFAULT(rectangle_mode, rb_ary_new3(1, new_rectmode) );
     
-      if(rect_mode == OF_RECTMODE_CENTER) {
-        return ID2SYM(center_id);
+  } else {
+    switch(argca) {
+      case 0:
+        /*  called without argument, return current rect mode */
+        rect_mode = ofGetRectMode();
+    
+        if(rect_mode == OF_RECTMODE_CENTER) {
+          return ID2SYM(center_id);
         
-      } else if(rect_mode == OF_RECTMODE_CORNER) {
-        return ID2SYM(corner_id);
+        } else if(rect_mode == OF_RECTMODE_CORNER) {
+          return ID2SYM(corner_id);
         
-      }
-      break;
+        }
+        break;
     
-    case 1:
-      /*  called with argument, set new rectmode */
-      new_rectmode_id = SYM2ID(new_rectmode);
+      case 1:
+        /*  called with argument, set new rectmode */
+        new_rectmode_id = SYM2ID(new_rectmode);
     
-      if(new_rectmode_id == center_id) {
-        ofSetRectMode(OF_RECTMODE_CENTER);
+        if(new_rectmode_id == center_id) {
+          ofSetRectMode(OF_RECTMODE_CENTER);
       
-      } else if(new_rectmode_id == corner_id) {
-        ofSetRectMode(OF_RECTMODE_CORNER);
+        } else if(new_rectmode_id == corner_id) {
+          ofSetRectMode(OF_RECTMODE_CORNER);
       
-      } else {
-        rb_raise(rb_eArgError, "Invalid rectangle mode!");
+        } else {
+          rb_raise(rb_eArgError, "Invalid rectangle mode!");
       
-      }
-      break;
+        }
+        break;
       
+    }
+    
   }
   
   return Qnil;
@@ -741,16 +747,22 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
   VALUE new_resolution;
   int argca = rb_scan_args(argc, argv, "01", &new_resolution);
   
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current circle resolution */
-      return _zj_circle_resolution;
+  if(IS_IN_SETUP && argc > 0) {
+    SET_DEFAULT(circle_resolution, rb_ary_new3(1, new_resolution) );
+  
+  } else {
+    switch(argca) {
+      case 0:
+        /*  called without argument, return current circle resolution */
+        return _zj_circle_resolution;
       
-    case 1:
-      /*  called with argument, set circle resolution */
-      _zj_circle_resolution = new_resolution;
-      ofSetCircleResolution(NUM2INT(_zj_circle_resolution));
-      break;
+      case 1:
+        /*  called with argument, set circle resolution */
+        _zj_circle_resolution = new_resolution;
+        ofSetCircleResolution(NUM2INT(_zj_circle_resolution));
+        break;
+    }
+    
   }
   
   return Qnil;
@@ -780,30 +792,36 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
 VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
   VALUE new_smoothing;
   int argca = rb_scan_args(argc, argv, "01", &new_smoothing);
-
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current smoothing */
-      return _zj_smoothing;
-
-    case 1:
-      if(new_smoothing == Qtrue) {
-        /*  called with true, enable smoothing */
-        _zj_smoothing = new_smoothing;
-        ofEnableSmoothing();
-        
-      } else if(new_smoothing == Qfalse) {
-        /*  called with false, disable smoothing */
-        _zj_smoothing = new_smoothing;
-        ofDisableSmoothing();
-        
-      } else {
-        rb_raise(rb_eArgError, "Expected true or false!");
-        
-      }
-      break;
-  }
   
+  if(IS_IN_SETUP && argc > 0) {
+    SET_DEFAULT(smoothing, rb_ary_new3(1, new_smoothing) );
+    
+  } else {
+    switch(argca) {
+      case 0:
+        /*  called without argument, return current smoothing */
+        return _zj_smoothing;
+
+      case 1:
+        if(new_smoothing == Qtrue) {
+          /*  called with true, enable smoothing */
+          _zj_smoothing = new_smoothing;
+          ofEnableSmoothing();
+        
+        } else if(new_smoothing == Qfalse) {
+          /*  called with false, disable smoothing */
+          _zj_smoothing = new_smoothing;
+          ofDisableSmoothing();
+        
+        } else {
+          rb_raise(rb_eArgError, "Expected true or false!");
+        
+        }
+        break;
+    }
+    
+  }
+
   return Qnil;
 }
 
@@ -826,30 +844,36 @@ VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
 VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
   VALUE new_alpha_blending;
   int argca = rb_scan_args(argc, argv, "01", &new_alpha_blending);
-
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current alpha blending */
-      return _zj_alpha_blending;
-
-    case 1:
-      if(new_alpha_blending == Qtrue) {
-        /*  called with true, enable alpha blending */
-        _zj_alpha_blending = new_alpha_blending;
-        ofEnableAlphaBlending();
-        
-      } else if(new_alpha_blending == Qfalse) {
-        /*  called with false, disable alpha blending */
-        _zj_alpha_blending = new_alpha_blending;
-        ofDisableAlphaBlending();
-        
-      } else {
-        rb_raise(rb_eArgError, "Expected true or false!");
-        
-      }
-      break;
-  }
   
+  if(IS_IN_SETUP && argc > 0) {
+    SET_DEFAULT(alpha_blending, rb_ary_new3(1, new_alpha_blending) );
+    
+  } else {
+    switch(argca) {
+      case 0:
+        /*  called without argument, return current alpha blending */
+        return _zj_alpha_blending;
+
+      case 1:
+        if(new_alpha_blending == Qtrue) {
+          /*  called with true, enable alpha blending */
+          _zj_alpha_blending = new_alpha_blending;
+          ofEnableAlphaBlending();
+        
+        } else if(new_alpha_blending == Qfalse) {
+          /*  called with false, disable alpha blending */
+          _zj_alpha_blending = new_alpha_blending;
+          ofDisableAlphaBlending();
+        
+        } else {
+          rb_raise(rb_eArgError, "Expected true or false!");
+        
+        }
+        break;
+    }
+    
+  }
+
   return Qnil;
 }
 
@@ -952,17 +976,24 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
 VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
   VALUE new_line_width;
   int argca = rb_scan_args(argc, argv, "01", &new_line_width);
+  
+  if(IS_IN_SETUP && argc > 0) {
+    SET_DEFAULT(line_width, rb_ary_new3(1, new_line_width) );
+    
+  } else {
+    switch(argca) {
+      case 0:
+        /*  called without argument, return current line width */
+        return _zj_line_width;
 
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current line width */
-      return _zj_line_width;
-
-    case 1:
-      /*  called with argument, set line width */
-      ofSetLineWidth(NUM2DBL(new_line_width));
-      break;
+      case 1:
+        /*  called with argument, set line width */
+        ofSetLineWidth(NUM2DBL(new_line_width));
+        break;
+    }
+    
   }
+
   
   return Qnil;
 }
@@ -987,8 +1018,14 @@ VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
 VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
   int r, g, b, a;
   if(zj_graphics_make_color(argc, argv, &r, &g, &b, &a)) {
-    /*  called with arguments, change the background */
-    ofBackground(r, g, b);
+    if(IS_IN_SETUP && argc > 0) {
+      SET_DEFAULT(background, rb_ary_new3(4, INT2FIX(r), INT2FIX(g), INT2FIX(b), INT2FIX(a)) );
+      
+    } else {
+      /*  called with arguments, change the background */
+      ofBackground(r, g, b);
+      
+    }
     
   } else {
     /*  called without arguments, return current background */
@@ -1010,28 +1047,34 @@ VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
 VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
   VALUE new_background_auto;
   int argca = rb_scan_args(argc, argv, "01", &new_background_auto);
+  
+  if(IS_IN_SETUP && argc > 0) {
+    SET_DEFAULT(background_auto, rb_ary_new3(1, new_background_auto) );
+  
+  } else {
+    switch(argca) {
+      case 0:
+        /*  called without argument, return current background auto setting */
+        return _zj_background_auto;
 
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current background auto setting */
-      return _zj_background_auto;
-
-    case 1:
-      if(new_background_auto == Qtrue){
-        /*  called with true, enable auto background */
-        _zj_background_auto = new_background_auto;
-        ofSetBackgroundAuto(true);
+      case 1:
+        if(new_background_auto == Qtrue){
+          /*  called with true, enable auto background */
+          _zj_background_auto = new_background_auto;
+          ofSetBackgroundAuto(true);
         
-      } else if(new_background_auto == Qfalse) {
-        /*  called with false, disable auto background */
-        _zj_background_auto = new_background_auto;
-        ofSetBackgroundAuto(false);
+        } else if(new_background_auto == Qfalse) {
+          /*  called with false, disable auto background */
+          _zj_background_auto = new_background_auto;
+          ofSetBackgroundAuto(false);
         
-      } else {
-        rb_raise(rb_eArgError, "Expected true or false!");
+        } else {
+          rb_raise(rb_eArgError, "Expected true or false!");
         
-      }
-      break;
+        }
+        break;
+    }
+    
   }
   
   return Qnil;
@@ -1060,30 +1103,34 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
 VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
   VALUE new_fill;
   int argca = rb_scan_args(argc, argv, "01", &new_fill);
-
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current fill setting */
-      return _zj_fill;
-
-    case 1:
-      if(new_fill == Qtrue) {
-        /*  called with true, enable fill */
-        _zj_fill = new_fill;
-        ofFill();
-        
-      } else if(new_fill == Qfalse) {
-        /*  called with false, disable fill */
-        _zj_fill = new_fill;
-        ofNoFill();
-        
-      } else {
-        rb_raise(rb_eArgError, "Expected true or false!");
-        
-      }
-      break;
-  }
   
+  if(IS_IN_SETUP && argc > 0) {
+    SET_DEFAULT(fill, rb_ary_new3(1, new_fill) );
+    
+  } else {
+    switch(argca) {
+      case 0:
+        /*  called without argument, return current fill setting */
+        return _zj_fill;
+
+      case 1:
+        if(new_fill == Qtrue) {
+          /*  called with true, enable fill */
+          _zj_fill = new_fill;
+          ofFill();
+        
+        } else if(new_fill == Qfalse) {
+          /*  called with false, disable fill */
+          _zj_fill = new_fill;
+          ofNoFill();
+        
+        } else {
+          rb_raise(rb_eArgError, "Expected true or false!");
+        
+        }
+        break;
+    }
+  }
   return Qnil;
 }
 
@@ -1154,7 +1201,14 @@ VALUE zj_color(int argc, VALUE* argv, VALUE klass) {
   int r, g, b, a;
   zj_graphics_make_color(argc, argv, &r, &g, &b, &a);
   
-  ofSetColor(r, g, b, a);
+  if(IS_IN_SETUP && argc > 0) {
+    SET_DEFAULT(color, rb_ary_new3(4, INT2NUM(r), INT2NUM(g), INT2NUM(b), INT2NUM(a)));
+    
+  } else {
+    ofSetColor(r, g, b, a);
+    
+  }
+  
   return Qnil;
 }
 
