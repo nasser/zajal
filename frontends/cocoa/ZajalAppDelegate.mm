@@ -198,8 +198,9 @@
 
 - (void) updateErrorConsole {
     [errorConsoleDrawer open];
-    [[errorConsoleScrollView contentView] scrollToPoint:NSMakePoint(0, NSMaxY([[errorConsoleScrollView documentView] frame]))];
+    [errorConsoleTextView scrollRangeToVisible:NSMakeRange([[errorConsoleTextView textStorage] length], 0)];
     [errorConsoleScrollView reflectScrolledClipView: [errorConsoleScrollView contentView]];
+    [errorConsoleTextView setNeedsDisplay:YES];
 }
 
 - (void) frameDidFinish {

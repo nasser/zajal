@@ -809,7 +809,7 @@
 								<string key="NSFrameSize">{238, 128}</string>
 								<reference key="NSSuperview" ref="1063387343"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="78519826"/>
+								<reference key="NSNextKeyView"/>
 								<object class="NSTextContainer" key="NSTextContainer" id="951014367">
 									<object class="NSLayoutManager" key="NSLayoutManager">
 										<object class="NSTextStorage" key="NSTextStorage">
@@ -914,7 +914,7 @@
 						<string key="NSFrame">{{224, 1}, {15, 134}}</string>
 						<reference key="NSSuperview" ref="801606019"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="321204969"/>
 						<reference key="NSTarget" ref="801606019"/>
 						<string key="NSAction">_doScroller:</string>
 						<double key="NSCurValue">1</double>
@@ -937,7 +937,7 @@
 				<string key="NSFrameSize">{240, 136}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="321204969"/>
+				<reference key="NSNextKeyView" ref="78519826"/>
 				<int key="NSsFlags">530</int>
 				<reference key="NSVScroller" ref="78519826"/>
 				<reference key="NSHScroller" ref="321204969"/>
@@ -1212,22 +1212,6 @@
 					<int key="connectionID">468</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">errorConsoleScrollView</string>
-						<reference key="source" ref="50347787"/>
-						<reference key="destination" ref="801606019"/>
-					</object>
-					<int key="connectionID">477</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">errorConsoleTextView</string>
-						<reference key="source" ref="50347787"/>
-						<reference key="destination" ref="292318594"/>
-					</object>
-					<int key="connectionID">478</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">openPreferencesWindow:</string>
 						<reference key="source" ref="50347787"/>
@@ -1298,6 +1282,22 @@
 						<reference key="destination" ref="215704897"/>
 					</object>
 					<int key="connectionID">492</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">errorConsoleScrollView</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="801606019"/>
+					</object>
+					<int key="connectionID">501</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">errorConsoleTextView</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="292318594"/>
+					</object>
+					<int key="connectionID">502</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2072,7 +2072,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">494</int>
+			<int key="maxID">502</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
