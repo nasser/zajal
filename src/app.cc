@@ -49,26 +49,29 @@ VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
   VALUE w, h;
   rb_scan_args(argc, argv, "02", &w, &h);
   
-  if(IS_IN_SETUP && argc > 0) {
-    SET_DEFAULT(size, rb_ary_new3(2, w, h) );
-    
-  } else {
-    if(NIL_P(w) && NIL_P(h)) {
-      /*  called without argument, return current size */
-      VALUE size_ary = rb_ary_new();
-      rb_ary_push(size_ary, INT2NUM(ofGetWidth()));
-      rb_ary_push(size_ary, INT2NUM(ofGetHeight()));
-      return size_ary;
-    
-    } else if(NIL_P(h)) {
-      /*  called with one argument, set window size to square */
-      ofSetWindowShape(NUM2INT(w), NUM2INT(w));
-    
+  if(NIL_P(w) && NIL_P(h)) {
+    /*  called without argument, return current size */
+    VALUE size_ary = rb_ary_new();
+    rb_ary_push(size_ary, INT2NUM(ofGetWidth()));
+    rb_ary_push(size_ary, INT2NUM(ofGetHeight()));
+    return size_ary;
+  
+  } else if(NIL_P(h)) {
+    /*  called with one argument, set window size to square */
+    if(IS_IN_SETUP) {
+      SET_DEFAULT(size, rb_ary_new3(2, w, w));
     } else {
-      /*  called with two arguments, set window size to rectangle */
-      ofSetWindowShape(NUM2INT(w), NUM2INT(h));
-    
+      ofSetWindowShape(NUM2INT(w), NUM2INT(w));
     }
+  
+  } else {
+    /*  called with two arguments, set window size to rectangle */
+    if(IS_IN_SETUP) {
+      SET_DEFAULT(size, rb_ary_new3(2, w, h));
+    } else {
+      ofSetWindowShape(NUM2INT(w), NUM2INT(h));
+    }
+  
   }
   
   return Qnil;

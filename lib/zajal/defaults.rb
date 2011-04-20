@@ -6,7 +6,7 @@ module Zajal
       
       def self.reset_defaults
         @defaults = {
-          size: [500],
+          size: [500, 500],
           title: ["Zajal"],
           fullscreen: [false],
           cursor: [true],
@@ -27,11 +27,14 @@ module Zajal
       reset_defaults
       
       @defaults_proc = Proc.new do
-        %w(size title fullscreen cursor framerate vertical_sync smoothing
-           alpha_blending color background background_auto circle_resolution
+        # FIXME size and background are problematic, removed!
+        %w(background title fullscreen cursor framerate vertical_sync smoothing
+           alpha_blending color background_auto circle_resolution
            rectangle_mode line_width fill).each do |meth|
              eval "#{meth}(*@defaults[:#{meth}])"
            end
+           
+           # size *@defaults[:size] if size != @defaults[:size]
       end
       
     end

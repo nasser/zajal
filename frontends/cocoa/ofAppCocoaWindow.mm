@@ -10,6 +10,7 @@
 
 ofAppCocoaWindow::ofAppCocoaWindow(GLView* glView) {
     this->glView = glView;
+    lastResize = ofGetElapsedTimef();
 }
 
 int ofAppCocoaWindow::getWidth() {
@@ -48,6 +49,8 @@ void ofAppCocoaWindow::setWindowPosition(int x, int y) {
 }
 
 void ofAppCocoaWindow::setWindowShape(int w, int h) {
+    if(ofGetElapsedTimef() < lastResize) return;
+    
     NSWindow* sketchWindow = [glView window];
     
     NSRect windowFrame  = [sketchWindow frame];
@@ -60,6 +63,8 @@ void ofAppCocoaWindow::setWindowShape(int w, int h) {
     [sketchWindow setFrame:windowFrame display:YES animate:YES];
     ofNotifyWindowResized(sketchWindow.frame.size.width, sketchWindow.frame.size.height);
     [sketchWindow.contentView setNeedsDisplay:YES];
+    
+    lastResize = ofGetElapsedTimef() + [sketchWindow animationResizeTime:windowFrame];
 }
 
 int ofAppCocoaWindow::getFrameNum() {
