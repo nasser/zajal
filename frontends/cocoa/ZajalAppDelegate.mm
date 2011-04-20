@@ -75,7 +75,7 @@
 
 -(void) populateExamplesMenu {
     // collect array of example files from bundle
-    NSArray* examples = [[[NSFileManager alloc] init] subpathsOfDirectoryAtPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"examples"] error:NULL];
+    NSArray* examples = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath], @"examples"] error:NULL];
     
     // iterate through example filenames to build menu
     for(NSString* example in examples) {

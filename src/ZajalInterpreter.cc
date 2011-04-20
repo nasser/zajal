@@ -83,12 +83,14 @@ void ZajalInterpreter::run(ofAppBaseWindow* window) {
 void ZajalInterpreter::appendLoadPath(char* path) {
   char* resolved_path = realpath(path, NULL);
   if(resolved_path) {
-    rb_ary_push(rb_gv_get("$:"), rb_str_new2(realpath(path, NULL)));
+    rb_ary_push(rb_gv_get("$:"), rb_str_new2(resolved_path));
     
   } else {
     fprintf(stderr, "WARNING: `%s' not a valid path. Not adding to load path.\n", path);
     
   }
+  
+  free(resolved_path);
 }
 
 //--------------------------------------------------------------
@@ -380,6 +382,7 @@ void ZajalInterpreter::initialize() {
 }
 
 void ZajalInterpreter::loadScript(char* fileName) {
+  if(scriptName != NULL) free(scriptName);
   scriptName = (char*)calloc(strlen(fileName)+1, sizeof(char));
   strncpy(scriptName, fileName, strlen(fileName)+1);
   
@@ -393,10 +396,13 @@ void ZajalInterpreter::loadScript(char* fileName) {
   }
   
   // establish the data path and add it to ruby's load path
-  VALUE script_directory = rb_str_new2(dirname(realpath(scriptName, NULL)));
+  char* scriptNameResolved = realpath(scriptName, NULL);
+  VALUE script_directory = rb_str_new2(dirname(scriptNameResolved));
   INTERNAL_SET(zj_mApp, data_path, script_directory);
   rb_ary_unshift(rb_gv_get("$:"), script_directory);
   rb_funcall(rb_gv_get("$:"), rb_intern("uniq!"), 0);
+  
+  free(scriptNameResolved);
 }
 
 void ZajalInterpreter::reloadScript(bool forced) {
@@ -423,6 +429,7 @@ void ZajalInterpreter::reloadScript(bool forced) {
   zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), forced? Qtrue : Qfalse);
   state = ruby_error ? INTERPRETER_ERROR : INTERPRETER_RUNNING;
   
+  free(scriptFileContent);
 }
 
 char* ZajalInterpreter::readConsoleText(char* consoleName, char* prefix, bool clear) {
