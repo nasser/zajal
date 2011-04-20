@@ -54,10 +54,6 @@
     NSPoint windowPos = [self window].frame.origin;
     windowPos.y	= screenSize.height = windowPos.y;		// vertically flip position
     
-    if(!debugMode) {
-        ofNotifyUpdate();
-    }
-    
     // set viewport, clear the screen
     glViewport( 0, 0, viewSize.width, viewSize.height );
     ofSetupScreen();
@@ -69,6 +65,7 @@
     }
     
     if(!debugMode) {
+        ofNotifyUpdate();
         ofNotifyDraw();
     } else {
         static int _debugX = 0;
