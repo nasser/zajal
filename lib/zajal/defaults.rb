@@ -29,12 +29,11 @@ module Zajal
       @defaults_proc = Proc.new do
         # FIXME size and background are problematic, removed!
         %w(background title fullscreen cursor framerate vertical_sync smoothing
-           alpha_blending color background_auto circle_resolution
+           size alpha_blending color background_auto circle_resolution
            rectangle_mode line_width fill).each do |meth|
              eval "#{meth}(*@defaults[:#{meth}])"
            end
            
-           # size *@defaults[:size] if size != @defaults[:size]
       end
       
     end

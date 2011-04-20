@@ -54,5 +54,5 @@ public:
     
 protected:
     GLView*     glView;
-    double lastResize;
+    int targetW, targetH;
 };
