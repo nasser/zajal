@@ -152,8 +152,8 @@ module Graphics
     @named_colors[:dark] = [32, 32, 32]
   end
   
-  def named_color c, val=nil
-    if val.nil?
+  def named_color c, *val
+    if val.size == 0
       Internals.named_colors[c]
     else
       Internals.named_colors[c] = val
