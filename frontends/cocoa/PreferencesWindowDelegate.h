@@ -14,6 +14,7 @@
     NSUserDefaults          *defaults;
     
     IBOutlet NSWindow       *window;
+    IBOutlet NSToolbar      *toolbar;
     
     IBOutlet NSView         *generalView;
     IBOutlet NSPopUpButton  *editorsPopUp;

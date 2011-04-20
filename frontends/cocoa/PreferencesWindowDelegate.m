@@ -136,6 +136,9 @@
     [self populateEditorsPopUp];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateEditor)
                                                  name:NSMenuDidChangeItemNotification object:[editorsPopUp menu]];
+    
+    [self changeView:generalView];
+    [toolbar setSelectedItemIdentifier:@"General"];
 }
 
 - (void) updateEditor {
