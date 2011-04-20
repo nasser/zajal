@@ -332,7 +332,7 @@ VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
       x = NUM2DBL(x_x1);
       y = NUM2DBL(y_y1);
       r = NUM2DBL(r_x2);
-      a = PI - NUM2DBL(a_y2);
+      a = PI - ofDegToRad(NUM2DBL(a_y2));
       h = (r+r/2) / sin(a/2); /* sine law, bitches */
     
       x1 = x + cos(PI/2) * r;
