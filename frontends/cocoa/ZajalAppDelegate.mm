@@ -325,6 +325,11 @@
     }
 }
 
+-(IBAction) openMostRecentFileMenuClick:(id)sender {
+    NSArray* recentDocuments = [[NSDocumentController sharedDocumentController] recentDocumentURLs];
+    [self openScript:[[recentDocuments objectAtIndex:0] path]];
+}
+
 -(IBAction) newFileMenuClick:(id)sender {
     NSString* newSketchPath = [NSString uniquePathFromPath:[NSString stringWithFormat:@"%@/%@", sketchbookDirectory, @"sketch.rb"]];
     

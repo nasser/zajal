@@ -52,6 +52,7 @@
     IBOutlet NSToolbarItem      *reloadToolbarItem;
     IBOutlet NSToolbarItem      *consoleToolbarItem;
   
+    IBOutlet NSMenu             *openRecentMenu;
     IBOutlet NSMenuItem         *playMenuItem;
     IBOutlet NSMenuItem         *pauseMenuItem;
     
@@ -87,6 +88,7 @@
 
 -(IBAction) editCurrentScript:(id)sender;
 -(IBAction) openFileMenuClick:(id)sender;
+-(IBAction) openMostRecentFileMenuClick:(id)sender;
 -(IBAction) newFileMenuClick:(id)sender;
 -(IBAction) exportMenuClick:(id)sender;
 -(IBAction) onlineHelpMenuClick:(id)sender;

@@ -246,6 +246,15 @@
 										<string key="NSName">_NSRecentDocumentsMenu</string>
 									</object>
 								</object>
+								<object class="NSMenuItem" id="902839695">
+									<reference key="NSMenu" ref="850992181"/>
+									<string key="NSTitle">Open Most Recent</string>
+									<string key="NSKeyEquiv">o</string>
+									<int key="NSKeyEquivModMask">1572864</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="749875520"/>
+									<reference key="NSMixedImage" ref="909026863"/>
+								</object>
 								<object class="NSMenuItem" id="1030029620">
 									<reference key="NSMenu" ref="850992181"/>
 									<bool key="NSIsDisabled">YES</bool>
@@ -1232,14 +1241,6 @@
 					<int key="connectionID">481</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">openAboutWindow:</string>
-						<reference key="source" ref="50347787"/>
-						<reference key="destination" ref="617446195"/>
-					</object>
-					<int key="connectionID">482</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">reloadToolbarItem</string>
 						<reference key="source" ref="50347787"/>
@@ -1302,6 +1303,30 @@
 						<reference key="destination" ref="292318594"/>
 					</object>
 					<int key="connectionID">502</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">orderFrontStandardAboutPanel:</string>
+						<reference key="source" ref="1004"/>
+						<reference key="destination" ref="617446195"/>
+					</object>
+					<int key="connectionID">528</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openMostRecentFileMenuClick:</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="902839695"/>
+					</object>
+					<int key="connectionID">530</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">openRecentMenu</string>
+						<reference key="source" ref="50347787"/>
+						<reference key="destination" ref="227112228"/>
+					</object>
+					<int key="connectionID">531</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1479,6 +1504,7 @@
 							<reference ref="568676235"/>
 							<reference ref="1030029620"/>
 							<reference ref="173969613"/>
+							<reference ref="902839695"/>
 						</object>
 						<reference key="parent" ref="996701172"/>
 					</object>
@@ -1856,6 +1882,11 @@
 						<reference key="object" ref="207721804"/>
 						<reference key="parent" ref="0"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">529</int>
+						<reference key="object" ref="902839695"/>
+						<reference key="parent" ref="850992181"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1956,6 +1987,8 @@
 					<string>5.IBWindowTemplateEditedContentRect</string>
 					<string>5.ImportedFromIB2</string>
 					<string>5.NSWindowTemplate.visibleAtLaunch</string>
+					<string>510.IBPluginDependency</string>
+					<string>529.IBPluginDependency</string>
 					<string>6.CustomClassName</string>
 					<string>6.IBPluginDependency</string>
 					<string>6.ImportedFromIB2</string>
@@ -2060,6 +2093,8 @@
 					<string>{{623, 500}, {1254, 650}}</string>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>DragTargetView</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
@@ -2081,7 +2116,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">527</int>
+			<int key="maxID">531</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2149,8 +2184,8 @@
 							<string>launchExample:</string>
 							<string>newFileMenuClick:</string>
 							<string>onlineHelpMenuClick:</string>
-							<string>openAboutWindow:</string>
 							<string>openFileMenuClick:</string>
+							<string>openMostRecentFileMenuClick:</string>
 							<string>openPreferencesWindow:</string>
 							<string>reloadScript:</string>
 							<string>startAnimation:</string>
@@ -2192,8 +2227,8 @@
 							<string>launchExample:</string>
 							<string>newFileMenuClick:</string>
 							<string>onlineHelpMenuClick:</string>
-							<string>openAboutWindow:</string>
 							<string>openFileMenuClick:</string>
+							<string>openMostRecentFileMenuClick:</string>
 							<string>openPreferencesWindow:</string>
 							<string>reloadScript:</string>
 							<string>startAnimation:</string>
@@ -2234,11 +2269,11 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">openAboutWindow:</string>
+								<string key="name">openFileMenuClick:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">openFileMenuClick:</string>
+								<string key="name">openMostRecentFileMenuClick:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -2285,6 +2320,7 @@
 							<string>errorConsoleTextView</string>
 							<string>examplesMenu</string>
 							<string>glView</string>
+							<string>openRecentMenu</string>
 							<string>pauseMenuItem</string>
 							<string>playMenuItem</string>
 							<string>playPauseToolbarItem</string>
@@ -2301,6 +2337,7 @@
 							<string>NSTextView</string>
 							<string>NSMenu</string>
 							<string>GLView</string>
+							<string>NSMenu</string>
 							<string>NSMenuItem</string>
 							<string>NSMenuItem</string>
 							<string>NSToolbarItem</string>
@@ -2320,6 +2357,7 @@
 							<string>errorConsoleTextView</string>
 							<string>examplesMenu</string>
 							<string>glView</string>
+							<string>openRecentMenu</string>
 							<string>pauseMenuItem</string>
 							<string>playMenuItem</string>
 							<string>playPauseToolbarItem</string>
@@ -2353,6 +2391,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">glView</string>
 								<string key="candidateClassName">GLView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">openRecentMenu</string>
+								<string key="candidateClassName">NSMenu</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">pauseMenuItem</string>
