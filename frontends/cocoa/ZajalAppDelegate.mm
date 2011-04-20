@@ -43,8 +43,6 @@
 #import "ZajalInterpreter.h"
 #import "NSString+UniquePaths.h"
 
-#import "AboutWindowController.h"
-
 @implementation ZajalAppDelegate
 
 @synthesize window;
@@ -365,10 +363,6 @@
 
 -(IBAction) openPreferencesWindow:(id)sender {
     [[[NSWindowController alloc] initWithWindowNibName:@"PreferencesWindow"] showWindow:sender];
-}
-
--(IBAction) openAboutWindow:(id)sender {
-    [[[[AboutWindowController alloc] initWithWindowNibName:@"AboutWindow"] window] makeKeyAndOrderFront:sender];
 }
 
 -(IBAction) onlineHelpMenuClick:(id)sender {

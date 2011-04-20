@@ -43,6 +43,10 @@
 	<array/>
 	<key>CFBundleVersion</key>
 	<string>0.3.1</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2010, 2011 Ramsey Nasser</string>
+	<key>CFBundleName</key>
+	<string>Zajal</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
 	<key>NSMainNibFile</key>

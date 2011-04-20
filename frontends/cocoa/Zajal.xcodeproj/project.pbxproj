@@ -62,8 +62,6 @@
 		2E898B7413493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */; };
 		2ED2A0A8135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2ED2A0A7135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf */; };
 		2ED2A0C4135BF7030027D759 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 2ED2A0C3135BF7030027D759 /* LICENSE */; };
-		2ED2A0C6135BFB690027D759 /* AboutWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2ED2A0C5135BFB690027D759 /* AboutWindow.xib */; };
-		2ED2A0C9135BFC190027D759 /* AboutWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2ED2A0C8135BFC190027D759 /* AboutWindowController.m */; };
 		BB1360CE124D437A0044C71F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = BB1360CB124D437A0044C71F /* main.mm */; };
 		BBE3A5D9127BA103000B7920 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE3A5D8127BA103000B7920 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -142,9 +140,6 @@
 		2E898B75134968C600DF6FAA /* ZajalDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZajalDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ED2A0A7135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = NoSketchLoadedLabelTemplate.pdf; sourceTree = "<group>"; };
 		2ED2A0C3135BF7030027D759 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../../LICENSE; sourceTree = "<group>"; };
-		2ED2A0C5135BFB690027D759 /* AboutWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AboutWindow.xib; path = Zajal.xcodeproj/AboutWindow.xib; sourceTree = SOURCE_ROOT; };
-		2ED2A0C7135BFC190027D759 /* AboutWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutWindowController.h; sourceTree = "<group>"; };
-		2ED2A0C8135BFC190027D759 /* AboutWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutWindowController.m; sourceTree = "<group>"; };
 		BB1360CB124D437A0044C71F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = main.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BB1360CD124D437A0044C71F /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = SOURCE_ROOT; };
 		BB7EB90D1253F74D004B32F7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -261,7 +256,6 @@
 			isa = PBXGroup;
 			children = (
 				2E1D2402134188670014CFBC /* WithWindow.xib */,
-				2ED2A0C5135BFB690027D759 /* AboutWindow.xib */,
 				2E1D23FF1341885D0014CFBC /* NoWindow.xib */,
 			);
 			name = NIBs;
@@ -289,8 +283,6 @@
 				2E1D2406134188780014CFBC /* ZajalAppDelegate.mm */,
 				2E2B66D81356D3D700C93C12 /* PreferencesWindow.xib */,
 				2E2B66DA1356D81100C93C12 /* PreferencesWindowDelegate.h */,
-				2ED2A0C7135BFC190027D759 /* AboutWindowController.h */,
-				2ED2A0C8135BFC190027D759 /* AboutWindowController.m */,
 				2E2B66DB1356D81100C93C12 /* PreferencesWindowDelegate.m */,
 				2E2B66521354D9F700C93C12 /* new_sketch_template.rb */,
 				2E2B665413560B1F00C93C12 /* NSString+UniquePaths.h */,
@@ -373,7 +365,6 @@
 				2E02B97C1359557000547794 /* notes.html in Resources */,
 				2ED2A0A8135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf in Resources */,
 				2ED2A0C4135BF7030027D759 /* LICENSE in Resources */,
-				2ED2A0C6135BFB690027D759 /* AboutWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,7 +438,6 @@
 				2E2D3B271348D8FD002F4AC1 /* ZajalInterpreter.cc in Sources */,
 				2E2B665613560B1F00C93C12 /* NSString+UniquePaths.m in Sources */,
 				2E2B66DC1356D81100C93C12 /* PreferencesWindowDelegate.m in Sources */,
-				2ED2A0C9135BFC190027D759 /* AboutWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
