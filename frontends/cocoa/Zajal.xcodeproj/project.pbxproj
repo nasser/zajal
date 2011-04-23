@@ -62,6 +62,7 @@
 		2E898B7413493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2E898B7313493E0D00DF6FAA /* ToolbarIconConsoleUpTemplate.pdf */; };
 		2ED2A0A8135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 2ED2A0A7135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf */; };
 		2ED2A0C4135BF7030027D759 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 2ED2A0C3135BF7030027D759 /* LICENSE */; };
+		2EE3407D13635B00003FD9E6 /* ZajalIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2EE3407C13635B00003FD9E6 /* ZajalIcon.icns */; };
 		BB1360CE124D437A0044C71F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = BB1360CB124D437A0044C71F /* main.mm */; };
 		BBE3A5D9127BA103000B7920 /* testApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = BBE3A5D8127BA103000B7920 /* testApp.mm */; };
 /* End PBXBuildFile section */
@@ -140,6 +141,7 @@
 		2E898B75134968C600DF6FAA /* ZajalDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZajalDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ED2A0A7135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = NoSketchLoadedLabelTemplate.pdf; sourceTree = "<group>"; };
 		2ED2A0C3135BF7030027D759 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../../LICENSE; sourceTree = "<group>"; };
+		2EE3407C13635B00003FD9E6 /* ZajalIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ZajalIcon.icns; sourceTree = "<group>"; };
 		BB1360CB124D437A0044C71F /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = main.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		BB1360CD124D437A0044C71F /* testApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testApp.h; sourceTree = SOURCE_ROOT; };
 		BB7EB90D1253F74D004B32F7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				2EE3407C13635B00003FD9E6 /* ZajalIcon.icns */,
 				BB1360CB124D437A0044C71F /* main.mm */,
 				2E1D2405134188780014CFBC /* ZajalAppDelegate.h */,
 				2E1D2406134188780014CFBC /* ZajalAppDelegate.mm */,
@@ -365,6 +368,7 @@
 				2E02B97C1359557000547794 /* notes.html in Resources */,
 				2ED2A0A8135B40620027D759 /* NoSketchLoadedLabelTemplate.pdf in Resources */,
 				2ED2A0C4135BF7030027D759 /* LICENSE in Resources */,
+				2EE3407D13635B00003FD9E6 /* ZajalIcon.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

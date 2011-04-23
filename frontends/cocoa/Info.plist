@@ -30,11 +30,13 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>MyHead.icns</string>
+	<string>ZajalIcon.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>cc.zajal.Zajal</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Zajal</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
@@ -43,12 +45,10 @@
 	<array/>
 	<key>CFBundleVersion</key>
 	<string>0.3.1</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>© 2010, 2011 Ramsey Nasser</string>
-	<key>CFBundleName</key>
-	<string>Zajal</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2010, 2011 Ramsey Nasser</string>
 	<key>NSMainNibFile</key>
 	<string>WithWindow</string>
 	<key>NSPrincipalClass</key>
