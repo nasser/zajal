@@ -165,6 +165,120 @@ VALUE zj_arduino_setup(VALUE self) {
   }
 }
 
+void zj_serial_dealloc(void* serial) {
+  ((ofSerial*)serial)->close();
+  delete (ofArduino*)serial;
+}
+
+VALUE zj_serial_new(int argc, VALUE* argv, VALUE klass) {
+  ofSerial* serial_ptr = new ofSerial();
+  
+  VALUE serial = Data_Wrap_Struct(klass, 0, zj_serial_dealloc, serial_ptr);
+  rb_obj_call_init(serial, argc, argv);
+  
+  /* TODO arduino objects are never inaccessible! */
+  // rb_ary_push(INTERNAL_GET(zj_mHardware, arduino_ary), rb_obj_id(arduino));
+  
+  return serial;
+}
+
+VALUE zj_serial_initialize(int argc, VALUE* argv, VALUE self) {
+  VALUE device = Qnil, baud = Qnil;
+  VALUE connect = Qtrue;
+  bool hash_given = (argc > 0 && TYPE(argv[argc-1]) == T_HASH);
+  
+  /* scan for normal args, ignore hash if given */
+  rb_scan_args(hash_given ? argc-1 : argc, argv, "02", &device, &baud);
+  
+  /* if last arg is options hash, extract local variables */
+  if(hash_given) {
+    HASH_EXTRACT(argv[argc-1], device);
+    HASH_EXTRACT(argv[argc-1], baud);
+    HASH_EXTRACT(argv[argc-1], connect);
+  }
+  
+  // TODO Support device ids
+  if(NIL_P(baud)) baud = INT2FIX(9600);
+  
+  rb_iv_set(self, "@device", device);
+  rb_iv_set(self, "@baud", baud);
+  
+  /* connect right away unless user set connect: false hash key */
+  if(RTEST(connect)) rb_funcall(self, rb_intern("connect"), 0);
+  
+  return self;
+}
+
+/* 
+ * Connect to the serial port
+ * 
+ * Uses the baud and device information provided to the constructor
+ */
+VALUE zj_serial_connect(VALUE self) {
+  INIT_DATA_PTR(ofSerial, serial_ptr);
+  
+  VALUE device = rb_iv_get(self, "@device");
+  VALUE baud = rb_iv_get(self, "@baud");
+  
+  if( !serial_ptr->setup(NIL_P(device) ? 0 : RSTRING_PTR(device), FIX2INT(baud)) ) {
+    rb_raise(rb_eRuntimeError, "Could not connect to serial port %s", RSTRING_PTR(device));
+  }
+  
+  return Qnil;
+}
+
+/* 
+ * Disconnect from the serial port
+ * 
+ * You generally do not need to call this method, as Zajal manages port
+ * connectivity automatically
+ */
+VALUE zj_serial_disconnect(VALUE self) {
+  INIT_DATA_PTR(ofSerial, serial_ptr);
+  
+  serial_ptr->close();
+  
+  return Qnil;
+}
+
+/* 
+ * Read data from the serial port
+ * 
+ * @param [Fixnum] length The number of bytes to read from the serial port
+ * @return [String] The data that was read
+ */
+VALUE zj_serial_read(VALUE self, VALUE length) {
+  INIT_DATA_PTR(ofSerial, serial_ptr);
+  
+  int clength = FIX2INT(length);
+  
+  unsigned char* buffer = (unsigned char*)calloc(sizeof(unsigned char), clength);
+  serial_ptr->readBytes(buffer, clength);
+  
+  VALUE bytes_read = rb_str_new((const char*)buffer, clength);
+  free(buffer);
+  
+  return bytes_read;
+}
+
+/* 
+ * Write data to the serial port
+ * 
+ * @param [#to_s] data The data to write to the serial port
+ * @return [Fixnum] The number of bytes written
+ */
+VALUE zj_serial_write(VALUE self, VALUE data) {
+  INIT_DATA_PTR(ofSerial, serial_ptr);
+  
+  VALUE data_str = rb_funcall(data, rb_intern("to_s"), 0);
+  char* data_ptr = RSTRING_PTR(data_str);
+  int length = RSTRING_LEN(data_str);
+  
+  int bytes_written = serial_ptr->writeBytes((unsigned char*)data_ptr, length);
+  
+  return INT2FIX(bytes_written);
+}
+
 VALUE zj_hardware_update_hook(VALUE self, VALUE id) {
   VALUE arduino_ary = INTERNAL_GET(zj_mHardware, arduino_ary);
   VALUE* arduino_ary_ptr = RARRAY_PTR(arduino_ary);
@@ -204,5 +318,13 @@ void Init_Hardware() {
   rb_define_method(zj_cArduino, "digital", RUBY_METHOD_FUNC(zj_arduino_digital), 2);
   
   zj_cSerial = rb_define_class_under(zj_mHardware, "Serial", rb_cObject);
+  // rb_define_singleton_method(zj_cSerial, "devices", RUBY_METHOD_FUNC(zj_serial_devices), 0);
+  rb_define_singleton_method(zj_cSerial, "new", RUBY_METHOD_FUNC(zj_serial_new), -1);
+  rb_define_method(zj_cSerial, "initialize", RUBY_METHOD_FUNC(zj_serial_initialize), -1);
+  rb_define_method(zj_cSerial, "connect", RUBY_METHOD_FUNC(zj_serial_connect), 0);
+  rb_define_method(zj_cSerial, "disconnect", RUBY_METHOD_FUNC(zj_serial_disconnect), 0);
   
+  rb_define_method(zj_cSerial, "read", RUBY_METHOD_FUNC(zj_serial_read), 1);
+  rb_define_method(zj_cSerial, "write", RUBY_METHOD_FUNC(zj_serial_write), 1);
+  // rb_define_method(zj_cSerial, "flush", RUBY_METHOD_FUNC(zj_serial_flush), 0);
 }
