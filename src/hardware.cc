@@ -291,7 +291,7 @@ VALUE zj_serial_read(int argc, VALUE* argv, VALUE self) {
   unsigned char* buffer = (unsigned char*)calloc(sizeof(unsigned char), clength);
   serial_ptr->readBytes(buffer, clength);
   
-  VALUE bytes_read = rb_str_new((const char*)buffer, clength);
+  VALUE bytes_read = rb_str_new((const char*)buffer, strlen((const char*)buffer));
   free(buffer);
   
   return bytes_read;
