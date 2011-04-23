@@ -91,13 +91,18 @@ VALUE zj_arduino_connect(VALUE self) {
   VALUE device = rb_iv_get(self, "@device");
   VALUE baud = rb_iv_get(self, "@baud");
   
-  arduino_ptr->connect(RSTRING_PTR(device), FIX2INT(baud));
+  if( arduino_ptr->connect(RSTRING_PTR(device), FIX2INT(baud)) ) {
+    /* FIXME this is an infinite loop when no arduino is connected!!!!
+     while(!arduino_ptr->isArduinoReady()) /* loop */;
+    for (int i = 0; i < 13; i++)
+      
+      arduino_ptr->sendDigitalPinMode(i, ARD_OUTPUT);
+
+  } else {
+    rb_raise(rb_eRuntimeError, "Could not connect to Arduino on port %s", RSTRING_PTR(device));
+    
+  }
   
-  /* FIXME this is an infinite loop when no arduino is connected!!!!
-  while(!arduino_ptr->isArduinoReady()) /* loop */;
-  for (int i = 0; i < 13; i++)
-  
-    arduino_ptr->sendDigitalPinMode(i, ARD_OUTPUT);
   
   return Qnil;
 }
