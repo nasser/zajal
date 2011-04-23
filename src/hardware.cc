@@ -167,7 +167,7 @@ VALUE zj_arduino_setup(VALUE self) {
 
 void zj_serial_dealloc(void* serial) {
   ((ofSerial*)serial)->close();
-  delete (ofArduino*)serial;
+  delete (ofSerial*)serial;
 }
 
 VALUE zj_serial_new(int argc, VALUE* argv, VALUE klass) {
