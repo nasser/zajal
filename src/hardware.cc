@@ -8,6 +8,31 @@ VALUE zj_mHardware;
 VALUE zj_cArduino;
 VALUE zj_cSerial;
 
+VALUE zj_enumerate_serial_devices(bool arduino_only=false) {
+  ofSerial* ser = new ofSerial();
+  vector<ofSerialDeviceInfo> devices = ser->getDeviceList();
+  
+  VALUE devices_ary = rb_ary_new();
+  for(vector<ofSerialDeviceInfo>::iterator dev = devices.begin(); dev != devices.end(); ++dev) {
+    if(arduino_only && ((strstr(dev->getDeviceName().c_str(), "usbserial") == NULL) && (strstr(dev->getDeviceName().c_str(), "usbmodem") == NULL)) )
+      continue;
+    
+    VALUE dev_hash = rb_hash_new();
+    rb_hash_aset(dev_hash, SYM("path"), rb_str_new2(dev->getDevicePath().c_str()));
+    rb_hash_aset(dev_hash, SYM("name"), rb_str_new2(dev->getDeviceName().c_str()));
+    rb_hash_aset(dev_hash, SYM("id"), INT2FIX(dev->getDeviceID()));
+    
+    rb_ary_push(devices_ary, dev_hash);
+  }
+  
+  delete ser;
+  return devices_ary;
+}
+
+VALUE zj_arduino_devices(VALUE klass) {
+  return zj_enumerate_serial_devices(true);
+}
+
 void zj_arduino_dealloc(void* arduino) {
   ((ofArduino*)arduino)->disconnect();
   delete (ofArduino*)arduino;
@@ -163,6 +188,10 @@ VALUE zj_arduino_setup(VALUE self) {
   	arduino_ptr->sendAnalogPinReporting(0, ARD_ANALOG);
   	arduino_ptr->sendDigitalPinMode(11, ARD_PWM);
   }
+}
+
+VALUE zj_serial_devices(VALUE klass) {
+  return zj_enumerate_serial_devices();
 }
 
 void zj_serial_dealloc(void* serial) {
@@ -340,6 +369,7 @@ void Init_Hardware() {
   
   zj_cArduino = rb_define_class_under(zj_mHardware, "Arduino", rb_cObject);
   rb_define_singleton_method(zj_cArduino, "new", RUBY_METHOD_FUNC(zj_arduino_new), -1);
+  rb_define_singleton_method(zj_cArduino, "devices", RUBY_METHOD_FUNC(zj_arduino_devices), 0);
   rb_define_method(zj_cArduino, "initialize", RUBY_METHOD_FUNC(zj_arduino_initialize), -1);
   rb_define_method(zj_cArduino, "connect", RUBY_METHOD_FUNC(zj_arduino_connect), 0);
   rb_define_method(zj_cArduino, "disconnect", RUBY_METHOD_FUNC(zj_arduino_disconnect), 0);
@@ -354,7 +384,7 @@ void Init_Hardware() {
   rb_define_method(zj_cArduino, "digital", RUBY_METHOD_FUNC(zj_arduino_digital), 2);
   
   zj_cSerial = rb_define_class_under(zj_mHardware, "Serial", rb_cObject);
-  // rb_define_singleton_method(zj_cSerial, "devices", RUBY_METHOD_FUNC(zj_serial_devices), 0);
+  rb_define_singleton_method(zj_cSerial, "devices", RUBY_METHOD_FUNC(zj_serial_devices), 0);
   rb_define_singleton_method(zj_cSerial, "new", RUBY_METHOD_FUNC(zj_serial_new), -1);
   rb_define_method(zj_cSerial, "initialize", RUBY_METHOD_FUNC(zj_serial_initialize), -1);
   rb_define_method(zj_cSerial, "connect", RUBY_METHOD_FUNC(zj_serial_connect), 0);
