@@ -242,6 +242,27 @@ VALUE zj_serial_disconnect(VALUE self) {
 }
 
 /* 
+ * Get the number of bytes available from the serial port
+ * 
+ * @return [Fixnum] The number of bytes available from the serial port
+ */
+VALUE zj_serial_available(VALUE self) {
+  INIT_DATA_PTR(ofSerial, serial_ptr);
+  
+  return INT2FIX(serial_ptr->available());
+}
+
+/* 
+ * @return [true] There are bytes to read on the serial port
+ * @return [false] There are no bytes to read on the serial port
+ */
+VALUE zj_serial_available_p(VALUE self) {
+  INIT_DATA_PTR(ofSerial, serial_ptr);
+  
+  return serial_ptr->available() > 0 ? Qtrue : Qfalse;
+}
+
+/* 
  * Read data from the serial port
  * 
  * @param [Fixnum] length The number of bytes to read from the serial port
@@ -323,6 +344,9 @@ void Init_Hardware() {
   rb_define_method(zj_cSerial, "initialize", RUBY_METHOD_FUNC(zj_serial_initialize), -1);
   rb_define_method(zj_cSerial, "connect", RUBY_METHOD_FUNC(zj_serial_connect), 0);
   rb_define_method(zj_cSerial, "disconnect", RUBY_METHOD_FUNC(zj_serial_disconnect), 0);
+  
+  rb_define_method(zj_cSerial, "available?", RUBY_METHOD_FUNC(zj_serial_available_p), 0);
+  rb_define_method(zj_cSerial, "available", RUBY_METHOD_FUNC(zj_serial_available), 0);
   
   rb_define_method(zj_cSerial, "read", RUBY_METHOD_FUNC(zj_serial_read), 1);
   rb_define_method(zj_cSerial, "write", RUBY_METHOD_FUNC(zj_serial_write), 1);
