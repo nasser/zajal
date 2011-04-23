@@ -219,9 +219,16 @@ VALUE zj_serial_connect(VALUE self) {
   
   VALUE device = rb_iv_get(self, "@device");
   VALUE baud = rb_iv_get(self, "@baud");
+  bool connected;
   
-  if( !serial_ptr->setup(NIL_P(device) ? 0 : RSTRING_PTR(device), FIX2INT(baud)) ) {
-    rb_raise(rb_eRuntimeError, "Could not connect to serial port %s", RSTRING_PTR(device));
+  if(NIL_P(device)) {
+    connected = serial_ptr->setup();
+  } else {
+    connected = serial_ptr->setup(RSTRING_PTR(device), FIX2INT(baud));
+  }
+  
+  if(!connected) {
+    rb_raise(rb_eRuntimeError, "Could not connect to serial port %s@%d", RSTRING_PTR(device), FIX2INT(baud));
   }
   
   return Qnil;
