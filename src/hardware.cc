@@ -226,11 +226,33 @@ VALUE zj_serial_initialize(int argc, VALUE* argv, VALUE self) {
     HASH_EXTRACT(argv[argc-1], connect);
   }
   
-  // TODO Support device ids
-  if(NIL_P(baud)) baud = INT2FIX(9600);
+  if(NIL_P(baud)) {
+    baud = INT2FIX(9600);
+  }
   
-  rb_iv_set(self, "@device", device);
+  if(NIL_P(device)) {
+    // no device specified, try and get first arduino
+    VALUE arduinos_ary = zj_enumerate_serial_devices(true);
+    if(RARRAY_LEN(arduinos_ary) > 0) {
+      device = rb_hash_aref(RARRAY_PTR(arduinos_ary)[0], SYM("path"));
+      
+    } else {
+      // no arduino, just get first serial device
+      VALUE serial_ary = zj_enumerate_serial_devices(false);
+      if(RARRAY_LEN(serial_ary) > 0) {
+        device = rb_hash_aref(RARRAY_PTR(serial_ary)[0], SYM("path"));
+        
+      } else {
+        // no serial device found at all, error out
+        rb_raise(rb_eRuntimeError, "No serial devices found on this computer!");
+        
+      }
+    }
+    
+  }
+  
   rb_iv_set(self, "@baud", baud);
+  rb_iv_set(self, "@device", device);
   
   /* connect right away unless user set connect: false hash key */
   if(RTEST(connect)) rb_funcall(self, rb_intern("connect"), 0);
