@@ -268,10 +268,12 @@ VALUE zj_serial_available_p(VALUE self) {
  * @param [Fixnum] length The number of bytes to read from the serial port
  * @return [String] The data that was read
  */
-VALUE zj_serial_read(VALUE self, VALUE length) {
+VALUE zj_serial_read(int argc, VALUE* argv, VALUE self) {
   INIT_DATA_PTR(ofSerial, serial_ptr);
   
-  int clength = FIX2INT(length);
+  VALUE length;
+  rb_scan_args(argc, argv, "01", &length);
+  int clength = NIL_P(length) ? serial_ptr->available() : FIX2INT(length);
   
   unsigned char* buffer = (unsigned char*)calloc(sizeof(unsigned char), clength);
   serial_ptr->readBytes(buffer, clength);
@@ -348,7 +350,7 @@ void Init_Hardware() {
   rb_define_method(zj_cSerial, "available?", RUBY_METHOD_FUNC(zj_serial_available_p), 0);
   rb_define_method(zj_cSerial, "available", RUBY_METHOD_FUNC(zj_serial_available), 0);
   
-  rb_define_method(zj_cSerial, "read", RUBY_METHOD_FUNC(zj_serial_read), 1);
+  rb_define_method(zj_cSerial, "read", RUBY_METHOD_FUNC(zj_serial_read), -1);
   rb_define_method(zj_cSerial, "write", RUBY_METHOD_FUNC(zj_serial_write), 1);
   // rb_define_method(zj_cSerial, "flush", RUBY_METHOD_FUNC(zj_serial_flush), 0);
 }
