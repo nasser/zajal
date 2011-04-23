@@ -272,8 +272,14 @@ VALUE zj_serial_available_p(VALUE self) {
 /* 
  * Read data from the serial port
  * 
- * @param [Fixnum] length The number of bytes to read from the serial port
- * @return [String] The data that was read
+ * @overload read
+ *   Reads all the data available
+ *   @return [String] The data that was read
+ * 
+ * @overload read length
+ *   Reads at most +length+ bytes of the available data
+ *   @param [Fixnum] length The number of bytes to read from the serial port
+ *   @return [String] The data that was read
  */
 VALUE zj_serial_read(int argc, VALUE* argv, VALUE self) {
   INIT_DATA_PTR(ofSerial, serial_ptr);
