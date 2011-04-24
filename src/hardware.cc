@@ -17,12 +17,7 @@ VALUE zj_enumerate_serial_devices(bool arduino_only=false) {
     if(arduino_only && ((strstr(dev->getDeviceName().c_str(), "usbserial") == NULL) && (strstr(dev->getDeviceName().c_str(), "usbmodem") == NULL)) )
       continue;
     
-    VALUE dev_hash = rb_hash_new();
-    rb_hash_aset(dev_hash, SYM("path"), rb_str_new2(dev->getDevicePath().c_str()));
-    rb_hash_aset(dev_hash, SYM("name"), rb_str_new2(dev->getDeviceName().c_str()));
-    rb_hash_aset(dev_hash, SYM("id"), INT2FIX(dev->getDeviceID()));
-    
-    rb_ary_push(devices_ary, dev_hash);
+    rb_ary_push(devices_ary, rb_str_new2(dev->getDevicePath().c_str()));
   }
   
   delete ser;
@@ -65,9 +60,20 @@ VALUE zj_arduino_initialize(int argc, VALUE* argv, VALUE self) {
     HASH_EXTRACT(argv[argc-1], connect);
   }
   
-  /* TODO support no device */
-  // if(NIL_P(device)) device = firstAvailableArduino();
   if(NIL_P(baud)) baud = INT2FIX(9600);
+  if(NIL_P(device)) {
+    // no device specified, try and get first arduino
+    VALUE arduinos_ary = zj_enumerate_serial_devices(true);
+    if(RARRAY_LEN(arduinos_ary) > 0) {
+      device = RARRAY_PTR(arduinos_ary)[0];
+      
+    } else {
+      // no arduino, raise an error
+      rb_raise(rb_eRuntimeError, "No Arduinos found on this computer!");
+      
+    }
+  }
+  
   
   rb_iv_set(self, "@device", device);
   rb_iv_set(self, "@baud", baud);
@@ -239,13 +245,13 @@ VALUE zj_serial_initialize(int argc, VALUE* argv, VALUE self) {
     // no device specified, try and get first arduino
     VALUE arduinos_ary = zj_enumerate_serial_devices(true);
     if(RARRAY_LEN(arduinos_ary) > 0) {
-      device = rb_hash_aref(RARRAY_PTR(arduinos_ary)[0], SYM("path"));
+      device = RARRAY_PTR(arduinos_ary)[0];
       
     } else {
       // no arduino, just get first serial device
       VALUE serial_ary = zj_enumerate_serial_devices(false);
       if(RARRAY_LEN(serial_ary) > 0) {
-        device = rb_hash_aref(RARRAY_PTR(serial_ary)[0], SYM("path"));
+        device = RARRAY_PTR(serial_ary)[0];
         
       } else {
         // no serial device found at all, error out
