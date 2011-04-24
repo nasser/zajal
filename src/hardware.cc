@@ -72,7 +72,8 @@ VALUE zj_arduino_initialize(int argc, VALUE* argv, VALUE self) {
     HASH_EXTRACT(argv[argc-1], connect);
   }
   
-  if(NIL_P(baud)) baud = INT2FIX(9600);
+  if(NIL_P(baud)) baud = INT2FIX(57600);
+  
   if(NIL_P(device)) {
     // no device specified, try and get first arduino
     VALUE arduinos_ary = zj_enumerate_serial_devices(true);
