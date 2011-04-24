@@ -51,7 +51,19 @@ VALUE zj_arduino_initialize(int argc, VALUE* argv, VALUE self) {
   bool hash_given = (argc > 0 && TYPE(argv[argc-1]) == T_HASH);
   
   /* scan for normal args, ignore hash if given */
-  rb_scan_args(hash_given ? argc-1 : argc, argv, "02", &device, &baud);
+  VALUE device_baud;
+  rb_scan_args(hash_given ? argc-1 : argc, argv, "02", &device_baud, &baud);
+  
+  if(!NIL_P(device_baud)) {
+    if(TYPE(device_baud) == T_STRING) {
+      device = device_baud;
+      
+    } else {
+      baud = device_baud;
+      
+    }
+  }
+  
   
   /* if last arg is options hash, extract local variables */
   if(hash_given) {
@@ -228,7 +240,18 @@ VALUE zj_serial_initialize(int argc, VALUE* argv, VALUE self) {
   bool hash_given = (argc > 0 && TYPE(argv[argc-1]) == T_HASH);
   
   /* scan for normal args, ignore hash if given */
-  rb_scan_args(hash_given ? argc-1 : argc, argv, "02", &device, &baud);
+  VALUE device_baud;
+  rb_scan_args(hash_given ? argc-1 : argc, argv, "02", &device_baud, &baud);
+  
+  if(!NIL_P(device_baud)) {
+    if(TYPE(device_baud) == T_STRING) {
+      device = device_baud;
+      
+    } else {
+      baud = device_baud;
+      
+    }
+  }
   
   /* if last arg is options hash, extract local variables */
   if(hash_given) {
