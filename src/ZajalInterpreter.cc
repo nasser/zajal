@@ -42,6 +42,9 @@ ZajalInterpreter::ZajalInterpreter() {
   
   INTERNAL_SET(zj_mApp, current_code, rb_str_new2(""));
   INTERNAL_SET(zj_mApp, verbose, Qfalse);
+  
+  initialWidth = DEFAULT_INITIAL_WIDTH;
+  initialHeight = DEFAULT_INITIAL_HEIGHT;
 }
 
 InterpreterState ZajalInterpreter::getState() {
@@ -66,17 +69,13 @@ void ZajalInterpreter::printVersion() {
 
 void ZajalInterpreter::run() {
   state = INTERPRETER_RUNNING;
-  // FIXME set to 100x100 as a workaround to get documentation screenshots working
-  // this should be handled by a more robust presetup system. see issue 17.
-  ofSetupOpenGL(500, 500, OF_WINDOW);
+  ofSetupOpenGL(initialWidth, initialHeight, OF_WINDOW);
   ofRunApp(this);
 }
 
 void ZajalInterpreter::run(ofAppBaseWindow* window) {
   state = INTERPRETER_RUNNING;
-  // FIXME set to 100x100 as a workaround to get documentation screenshots working
-  // this should be handled by a more robust presetup system. see issue 17.
-  ofSetupOpenGL(window, 100, 100, OF_WINDOW);
+  ofSetupOpenGL(window, initialWidth, initialHeight, OF_WINDOW);
   ofRunApp(this);
 }
 
@@ -91,6 +90,16 @@ void ZajalInterpreter::appendLoadPath(char* path) {
   }
   
   free(resolved_path);
+}
+
+void ZajalInterpreter::setInitialWidth(int w) {
+  rb_ary_store(rb_hash_aref(INTERNAL_GET(zj_mEvents, initial_defaults), SYM("size")), 0, INT2FIX(w));
+  initialWidth = w;
+}
+
+void ZajalInterpreter::setInitialHeight(int h) {
+  rb_ary_store(rb_hash_aref(INTERNAL_GET(zj_mEvents, initial_defaults), SYM("size")), 1, INT2FIX(h));
+  initialHeight = h;
 }
 
 //--------------------------------------------------------------

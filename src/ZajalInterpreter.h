@@ -12,6 +12,9 @@
 #define SCRIPT_UPDATE_FREQUENCY   1
 #define MAX_LOCAL_VAR_NAME_LENGTH 255
 
+#define DEFAULT_INITIAL_WIDTH     500
+#define DEFAULT_INITIAL_HEIGHT    500
+
 enum InterpreterState {
   INTERPRETER_NO_SKETCH,
   INTERPRETER_RUNNING,
@@ -48,6 +51,8 @@ class ZajalInterpreter : public ofBaseApp {
     InterpreterState getState();
     
     void appendLoadPath(char* path);
+    void setInitialWidth(int w);
+    void setInitialHeight(int h);
     
     char* readConsoleText(char* consoleName, char* prefix="", bool clear=true);
     void writeConsoleText(char* consoleName, char* text);
@@ -74,6 +79,9 @@ class ZajalInterpreter : public ofBaseApp {
     
     // screenshot of the sketch state before the last error was encountered
     ofImage lastErrorImage;
+    
+    // the initial width and height of the sketch window
+    int initialWidth, initialHeight;
 };
 
 #endif /* ZAJAL_INTERPRETER_H */

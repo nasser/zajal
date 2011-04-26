@@ -4,12 +4,16 @@
 
 #include "ZajalInterpreter.h"
 
+#define CLI_WIDTH_OPTION    1
+#define CLI_HEIGHT_OPTION   2
+
 int print_help(int exit_code);
 
 int main(int argc, char** argv) {
   if(argc == 1) return print_help(0);
   
   ZajalInterpreter* zi = new ZajalInterpreter();
+  zi->initialize();
   
   int option_index = 0, c;
 
@@ -17,6 +21,8 @@ int main(int argc, char** argv) {
     {"version", 0, 0, 'v'},
     {"verbose", 0, 0, 'V'},
     {"help", 0, 0, 'h'},
+    {"width", 1, 0, CLI_WIDTH_OPTION},
+    {"height", 1, 0, CLI_HEIGHT_OPTION},
     {0, 0, 0, 0}
   };
   
@@ -39,6 +45,14 @@ int main(int argc, char** argv) {
         zi->appendLoadPath(optarg);
         break;
 
+      case CLI_WIDTH_OPTION:
+        zi->setInitialWidth(atoi(optarg));
+        break;
+
+      case CLI_HEIGHT_OPTION:
+        zi->setInitialHeight(atoi(optarg));
+        break;
+
       case '?':
         return print_help(1);
         break;
@@ -50,7 +64,6 @@ int main(int argc, char** argv) {
   
   // parse non-options (script file names) and run
   if(optind < argc) {
-    zi->initialize();
     zi->loadScript(argv[optind]);
     zi->run();
   }
