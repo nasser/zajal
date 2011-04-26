@@ -205,6 +205,7 @@ void ZajalInterpreter::draw() {
       // no error exists, draw next frame of user code, catch runtime errors
       zj_graphics_reset_frame();
       zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
+      if(ruby_error) state = INTERPRETER_ERROR;
       
       VALUE posthooks_ary = INTERNAL_GET(zj_mEvents, draw_posthooks);
       VALUE* posthooks_ptr = RARRAY_PTR(posthooks_ary);
@@ -212,13 +213,14 @@ void ZajalInterpreter::draw() {
     
       for(int i = 0; i < posthooks_len; i++){
         zj_safe_proc_call(posthooks_ptr[i], 0);
-      }
+        if(ruby_error) state = INTERPRETER_ERROR;
+      } 
       
       // fake continious mouse press
       if(mouseIsPressed)
         zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, lastMouseX, lastMouseY, lastMouseButton);
       if(ruby_error) state = INTERPRETER_ERROR;
-
+      
       break;
       
   }
