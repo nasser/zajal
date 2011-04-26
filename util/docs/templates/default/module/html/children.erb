@@ -24,7 +24,7 @@
       <% grandchildren[:method].sort {|a,b| a.name.to_s <=> b.name.to_s }.each do |meth| %>
       <li class="<%= meth.visibility %> <%= meth.has_tag?(:deprecated) ? 'deprecated' : '' %>">
         <span class="summary_signature">
-          <%= signature(meth, true, false, false).gsub(/(\+|-)\s\([^\)]+\)\s*/, "").gsub(/<\/?strong>/, "") %>
+          <%= signature(meth, :own_page, false, false, false) %>
         </span>
       </li>
       <% end %>

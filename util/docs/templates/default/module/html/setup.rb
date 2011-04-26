@@ -1,5 +1,5 @@
 def init
-  sections :header, :box_info, :pre_docstring, T('docstring'),
+  sections :header, :pre_docstring, T('docstring'),
     :children, [:item_summary],
     :constant_summary, [T('docstring')], :inherited_constants, 
     :attribute_summary, [:item_summary], 

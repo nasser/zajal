@@ -1,10 +1,17 @@
-<% if object.has_tag?(:example) %>
+<% if object.has_tag?(:example) or object.has_tag?(:screenshot) %>
   <div class="examples">
     <h3>Examples:</h3>
+    <% object.tags(:screenshot).each do |tag| %>
+      <h4><%= htmlify_line(tag.title) %></h4>
+      <img class="screenshot" src="data:image/png;base64,
+      <%= tag.code_base64 %>"
+      alt="<%= tag.title %> screenshot"
+      title="<%= tag.title %> screenshot" />
+      <pre class="example code screenshot"><%= html_syntax_highlight(tag.code) %></pre>
+    <% end %>
+    
     <% object.tags(:example).each do |tag| %>
       <h4><%= htmlify_line(tag.name) %></h4>
-      <img class="screenshot" src="data:image/png;base64,
-      <%= screenshot tag.text %>" alt="<%= tag.name %> screenshot" />
       <pre class="example code"><%= html_syntax_highlight(tag.text) %></pre>
     <% end %>
   </div>

@@ -1,0 +1,17 @@
+<% if method_listing.size > 0 %>
+  <% groups(method_listing) do |list, name| %>
+    <h2>
+      <%= name %>
+    </h2>
+
+    <ul class="summary compact">
+      <% list.each do |meth| %>
+      <li class="<%= meth.visibility %> <%= meth.has_tag?(:deprecated) ? 'deprecated' : '' %>">
+        <span class="summary_signature">
+          <%= signature(meth, :same_page, false, false, false) %>
+        </span>
+      </li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

@@ -1,0 +1,12 @@
+<% if constant_listing.size > 0 || object.constants.size > 0 %>
+  <h2>Constant Summary</h2>
+  <% if constant_listing.size > 0 %>
+    <dl class="constants">
+      <% constant_listing.each do |cnst| %>
+        <dt id="<%= anchor_for(cnst) %>" class="<%= cnst.has_tag?(:deprecated) ? 'deprecated' : '' %>"><%= cnst.name %> =
+          <%= yieldall :object => cnst %>
+        </dt>
+      <% end %>
+    </dl>
+  <% end %>
+<% end %>
