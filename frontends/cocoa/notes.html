@@ -33,6 +33,41 @@
                 </style>
             </head>
     <body>
+        <h1>Zajal 0.3.2</h1>
+        <section>
+            <h2>Language Changes</h2>
+            <ul>
+                <li>Serial support is in</li>
+                <li>Arduino support is in but still buggy</li>
+                <li>Mouse events renamed to mouse_down, mouse_pressed, mouse_up</li>
+                <li>triangle method takes degrees instead of radians</li>
+                <li>Mouse events that return the button pressed now call the middle button :middle instead of :center</li>
+                <li>Added Mathematics#osc and Numeric#remap</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Bug Fixes</h2>
+            <ul>
+                <li>Fixed crash when reloading an empty sketch</li>
+                <li>Fixed drawer coming out of top of window sometimes</li>
+                <li>Fixed Graphics::named_color bug</li>
+                <li>Fixed memory leaks</li>
+                <li>Fixed Preferences page not showing up bug</li>
+                <li>Fixed mouse y inversion in cocoa frontend</li>
+                <li>Live coding fixes</li>
+            </ul>
+        </section>
+        <section>
+            <h2>App Changes</h2>
+            <ul>
+                <li>First round of examples added</li>
+                <li>Added links to forums and documentation in Help menu</li>
+                <li>Touched up UI</li>
+                <li>Added About window</li>
+                <li>Added File > Open Most Recent menu item</li>
+            </ul>
+        </section>
+        
         <h1>Zajal 0.3.1</h1>
         <section>
             <h2>App Changes</h2>
@@ -42,13 +77,6 @@
         </section>
         
         <h1>Zajal 0.3.0</h1>
-        <section>
-            <h2>App Changes</h2>
-            <ul>
-                <li>First release of native Mac OS app</li>
-            </ul>
-        </section>
-        
         <section>
             <h2>Language Changes</h2>
             <ul>
@@ -63,6 +91,12 @@
                 <li>Added range interpolation e.g. <code>(5..15) * 0.5 == 10.0</code></li>
                 <li>Added <code>Array#every</code> method</li>
                 <li>Added <code>App#cursor</code>, <code>App#fullscreen</code>, <code>App#screen_width</code>, <code>App#screen_height</code>, <code>App#window_x</code>, <code>App#window_y</code>, <code>App# </code> methods</li>
+            </ul>
+        </section>
+        <section>
+            <h2>App Changes</h2>
+            <ul>
+                <li>First release of native Mac OS app</li>
             </ul>
         </section>
     </body>
