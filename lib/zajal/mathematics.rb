@@ -1,6 +1,12 @@
 # point drawing and class
 require "matrix"
 
+class Numeric
+  def remap in_min, in_max, out_min, out_max
+    ((self.to_f - in_min) / (in_max.to_f - in_min) * (out_max.to_f - out_min) + out_min.to_f)
+  end
+end
+
 module Mathematics
   module Internals
     # TODO should this just be a constant, EPSILON like PI?
@@ -13,6 +19,10 @@ module Mathematics
       args.all? { |v| v.is_a? Vector } ? args : args.each_slice(dim).map { |coords| Vector.new coords }
     end
     
+  end
+  
+  def osc t
+    sin(t) / 2 + 0.5
   end
   
   class Vector < ::Vector
