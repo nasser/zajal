@@ -11,6 +11,17 @@ VALUE _zj_value_vertical_sync = Qtrue;
 VALUE _zj_value_cursor_visible = Qtrue;
 VALUE _zj_value_fullscreen_mode = Qfalse;
 
+/* 
+ * Gets or sets the width of the sketch window
+ * 
+ * @overload width w
+ *   Set the window width
+ *   @param [Numeric] w The new width of the window
+ * 
+ * @overload width
+ *   Get the current window width
+ *   @return [Numeric] The current width of the window
+ */
 VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
   VALUE w;
   rb_scan_args(argc, argv, "01", &w);
@@ -28,6 +39,17 @@ VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * Gets or sets the height of the sketch window
+ * 
+ * @overload height h
+ *   Set the window height
+ *   @param [Numeric] h The new height of the window
+ * 
+ * @overload height
+ *   Get the current window height
+ *   @return [Numeric] The current height of the window
+ */
 VALUE zj_height(int argc, VALUE* argv, VALUE klass) {
   VALUE h;
   rb_scan_args(argc, argv, "01", &h);
@@ -45,6 +67,22 @@ VALUE zj_height(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * Gets or sets the size of the sketch window
+ * 
+ * @overload size s
+ *   Set window size to a square
+ *   @param [Numeric] s The new length of each side of the window
+ * 
+ * @overload size w, h
+ *   Set window size to a rectangle
+ *   @param [Numeric] w The width of the window
+ *   @param [Numeric] h The height of the window
+ * 
+ * @overload size
+ *   Return the current window size
+ *   @return [Array] The current size, e.g. +[500, 500]+
+ */
 VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
   VALUE w, h;
   rb_scan_args(argc, argv, "02", &w, &h);
@@ -77,6 +115,19 @@ VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
+/* 
+ * Gets or sets the whether or not vertical sync is enabled. Vertical sync
+ * helps eliminate the tearing effect seen in some sketches.
+ * 
+ * @overload vertical_sync state
+ *   Enable or disable vertical sync
+ *   @param [Boolean] state +true+ or +false+ to enable or disable respectively
+ * 
+ * @overload vertical_sync
+ *   Return the current vertical sync state
+ *   @return [Boolean] +true+ or +false+ indicating vertical sync is on or off
+ *   respectively
+ */
 VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE klass) {
   VALUE new_vertical_sync;
   rb_scan_args(argc, argv, "01", &new_vertical_sync);
@@ -117,8 +168,16 @@ VALUE zj_frame(VALUE self) {
 }
 
 /* 
- * @overload framerate
+ * Gets or sets the current framerate
+ * 
  * @overload framerate new_framerate
+ *   Set a new framerate
+ *   @param [Numeric] new_framerate The new framerate measured in frames per
+ *   second
+ * 
+ * @overload framerate
+ *   Get the current framerate
+ *   @return [Numeric] the current framerate
  */
 VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
   VALUE new_framerate;
@@ -145,8 +204,15 @@ VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @overload title
+ * Gets or sets the title of the sketch window
+ * 
  * @overload title new_title
+ *   Set a new tite for the window
+ *   @param [String] new_title The new window title
+ * 
+ * @overload title
+ *   Get the current title of the window
+ *   @return [String] The current window title
  */
 VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
   VALUE new_title;
@@ -173,8 +239,16 @@ VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @overload cursor
+ * Gets or sets the visibility of the cursor
+ * 
  * @overload cursor state
+ *   Show or hide the cursor
+ *   @param [Boolean] state +true+ to show the cursor, +false+ to hide it
+ * 
+ * @overload cursor
+ *   Get the current visibility of the cursor
+ *   @return [Boolean] +true+ or +false+ indicating that the cursor is visible
+ *   or hidden respectively
  */
 VALUE zj_cursor(int argc, VALUE* argv, VALUE self) {
   VALUE cursor_visible;
@@ -202,8 +276,16 @@ VALUE zj_cursor(int argc, VALUE* argv, VALUE self) {
 }
 
 /* 
- * @overload fullscreen
+ * Get or set whether or not the sketch is in fullscreen mode
+ * 
  * @overload fullscreen state
+ *   Enter or exit fullscreen mode
+ *   @param [Boolean] state +true+ to enter fullscreen mode, +false+ to exit
+ * 
+ * @overload fullscreen
+ *   Return the current fullscreen state
+ *   @return [Boolean] +true+ if the sketch is in fullscreen mode, +false+
+ *   otherwise
  */
 VALUE zj_fullscreen(int argc, VALUE* argv, VALUE self) {
   VALUE fullscreen_mode;
@@ -244,8 +326,19 @@ VALUE zj_screen_height(VALUE self) {
 }
 
 /* 
+ * Controls the x position of the window. Use this to move the sketch window
+ * around on the screen. The window's position is measured from the top left
+ * corner.
+ * 
  * @overload window_x
+ *   Called without an argument, returns the current x position of the window
+ *   @return [Fixnum] The x position of the window
+ * 
  * @overload window_x new_x
+ *   Called with an argument, sets the current x position of the window.
+ *   
+ *   @param [Numeric] new_x The new x position of the window
+ *   @return [nil] Nothing
  */
 VALUE zj_window_x(int argc, VALUE* argv, VALUE self) {
   VALUE new_x;
@@ -270,14 +363,12 @@ VALUE zj_window_x(int argc, VALUE* argv, VALUE self) {
  * 
  * @overload window_y
  *   Called without an argument, returns the current y position of the window
- *   
  *   @return [Fixnum] The y position of the window
  * 
  * @overload window_y new_y
  *   Called with an argument, sets the current y position of the window.
  *   
  *   @param [Numeric] new_y The new y position of the window
- *   
  *   @return [nil] Nothing
  */
 VALUE zj_window_y(int argc, VALUE* argv, VALUE self) {

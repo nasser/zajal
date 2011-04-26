@@ -179,14 +179,14 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  * @param [Numeric] w The width of the rectangle
  * @param [Numeric] h The height of the rectangle
  * 
- * @example Single rectangle
+ * @screenshot Single rectangle
  *   rectangle 10, 10, 80, 20
  * 
- * @example Single centered rectangle
+ * @screenshot Single centered rectangle
  *   rectangle_mode :center
  *   rectangle 50, 50, 80, 20
  * 
- * @example Corner mode rectangles
+ * @screenshot Corner mode rectangles
  *   rectangle 10, 10, 80, 10
  *   rectangle 10, 20, 70, 10
  *   rectangle 10, 30, 60, 10
@@ -196,7 +196,7 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  *   rectangle 10, 70, 20, 10
  *   rectangle 10, 80, 10, 10
  * 
- * @example Center mode rectangles
+ * @screenshot Center mode rectangles
  *   rectangle_mode :center
  *   rectangle 50, 10, 80, 10
  *   rectangle 50, 20, 70, 10
@@ -207,7 +207,7 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  *   rectangle 50, 70, 20, 10
  *   rectangle 50, 80, 10, 10
  * 
- * @example Center/corner mode comparison
+ * @screenshot Center/corner mode comparison
  *   fill false
  *   
  *   color :red
@@ -242,7 +242,7 @@ VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
  * @param [Numeric] y The y coordinate
  * @param [Numeric] s The side of the square's sides
  * 
- * @example Small square
+ * @screenshot Small square
  *   square 10, 10, 5 
  *   square 15, 15, 10
  *   square 25, 25, 15
@@ -271,7 +271,7 @@ VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
  *   @param [Numeric] y y coordinate of the triangle's center               
  *   @param [Numeric] s The "size" of the triangle. More specifically, the
  *                      radius of the circle the triangle is inscribed in.  
- *   @example Nested equilaterals
+ *   @screenshot Nested equilaterals
  *     fill false
  *     triangle width/2, height/2, 50
  *     triangle width/2, height/2, 40
@@ -285,7 +285,7 @@ VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
  *   @param [Numeric] s The "size" of the triangle. More specifically, the
  *                      distance from the center point to the top.
  *   @param [Numeric] a The size of the isosceles angle in radians
- *   @example Nested isosceles
+ *   @screenshot Nested isosceles
  *     fill false
  *     triangle width/2, height/2, 50, 60.to_rad
  *     triangle width/2, height/2, 50, 50.to_rad
@@ -301,7 +301,7 @@ VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
  *   @param [Numeric] y2 y coordinate of the triangle's second point
  *   @param [Numeric] x3 x coordinate of the triangle's third point
  *   @param [Numeric] y3 y coordinate of the triangle's third point
- *   @example Aribitrary triangle
+ *   @screenshot Aribitrary triangle
  *     triangle 40, 5, 85, 40, 12, 90
  *   
  */
@@ -375,10 +375,10 @@ VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
  * 
  * @overload circle x, y, r
  * 
- * @example One circle
+ * @screenshot One circle
  *   circle 50, 50, 20
  * 
- * @example Five circles
+ * @screenshot Five circles
  *   circle 50, 50, 30
  *   
  *   circle 20, 20, 10
@@ -408,10 +408,10 @@ VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
  * Draws an ellipse.
  * 
  * @overload ellipse x, y, w, h
- *   @example One ellipse
+ *   @screenshot One ellipse
  *     ellipse width/2, height/2, 90, 50
  * 
- *   @example Different sizes
+ *   @screenshot Different sizes
  *     ellipse 50, 15, 50, 10
  *     ellipse 50, 37, 10, 25
  *     ellipse 50, 75, 50, 40
@@ -446,16 +446,16 @@ VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
  * @param [Numeric] x2 the x coordinate of the second point
  * @param [Numeric] y2 the y coordinate of the second point
  * 
- * @example Single line
+ * @screenshot Single line
  *   line 25, 25, 75, 75
  * 
- * @example More lines
+ * @screenshot More lines
  *   line 25, 25, 75, 75
  *   line 75, 25, 25, 75
  *   line 50, 25, 50, 75
  *   line 75, 50, 25, 50
  * 
- * @example Complex lines
+ * @screenshot Complex lines
  *   line 0, 10, 10, 100
  *   line 0, 20, 20, 100
  *   line 0, 30, 30, 100
@@ -703,7 +703,7 @@ VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @example Reslution series
+ * @screenshot Reslution series
  *   circle_resolution 3
  *   circle 20, 20, 10
  *   
@@ -731,15 +731,15 @@ VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
  *   circle_resolution 11
  *   circle 80, 80, 10
  * 
- * @example Closeup @ 64
+ * @screenshot Closeup @ 64
  *   circle_resolution 64
  *   circle 185, 185, 200
  * 
- * @example Closeup @ 32
+ * @screenshot Closeup @ 32
  *   circle_resolution 32
  *   circle 185, 185, 200
  * 
- * @example Closeup @ 16
+ * @screenshot Closeup @ 16
  *   circle_resolution 16
  *   circle 185, 185, 200
  */
@@ -778,7 +778,7 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  * 
  * @overload smoothing state
  *   @param [Boolean] state +true+ to enable smoothing or +false+ to disable it
- *   @example
+ *   @screenshot
  *     smoothing false
  *     circle 25, 15, 10
  *     square 15, 30, 20
@@ -913,8 +913,9 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
 
 /* 
  * @overload line_width
- * @overload line_width wid
- *   @example Blinds
+ * @overload line_width w
+ *   @param [Numeric] w The new line width
+ *   @screenshot Blinds
  *     line_width 1
  *     line 0, 10, width, 10
  *     
@@ -945,7 +946,7 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
  *     line_width 10
  *     line 0, 100, width, 100
  * 
- *   @example Cone
+ *   @screenshot Cone
  *     line_width 1
  *     line 0, height/2, width, height/2
  *     
@@ -1000,19 +1001,21 @@ VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
 
 /* 
  * @overload background name
- *   @example Default
+ *   @screenshot Default
  *     background :dark
- *   @example Orange
+ * 
+ *   @screenshot Orange
  *     background :orange
  * 
  * @overload background grey
- *   @example Light
+ *   @screenshot Light
  *     background 200
- *   @example Dark
+ * 
+ *   @screenshot Dark
  *     background 50
  * 
  * @overload background r, g, b
- *   @example Blueish
+ *   @screenshot Blueish
  *     background 64, 99, 128
  */
 VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
@@ -1089,7 +1092,7 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
  * 
  * @param [Boolean] state +true+ or +false+, enabling or disabling filling respectively
  * 
- * @example
+ * @screenshot
  *   fill true
  *   circle 25, 15, 10
  *   square 15, 30, 20
@@ -1144,7 +1147,7 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
  * @overload color name, a
  *   @param [Symbol] name The name of the color
  *   @param [Fixnum] a Amount of alpha
- *   @example The Sun
+ *   @screenshot The Sun
  *     alpha_blending true
  *     
  *     color :orange, 8
@@ -1177,7 +1180,7 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
  *   @param [Fixnum] g Amount of green
  *   @param [Fixnum] b Amount of blue
  * 
- *   @example Drawing the french flag
+ *   @screenshot Drawing the french flag
  *     color 0, 0, 200
  *     rectangle 5, 5, 30, 90
  *   

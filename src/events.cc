@@ -12,24 +12,44 @@ VALUE zj_mEvents;
   }
 #endif
 
+/* 
+ * Define code to run once at the beginning of a sketch
+ * 
+ * @yield The code to run once at the beginning of a sketch
+ */
 VALUE zj_setup(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, setup_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to run once every frame during a sketch
+ * 
+ * @yield The code to run once every frame during a sketch
+ */
 VALUE zj_update(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, update_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to draw each frame of a sketch
+ * 
+ * @yield The code to draw each frame of a sketch
+ */
 VALUE zj_draw(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, draw_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to run right before the sketch exits
+ * 
+ * @overload exit { ... }
+ */
 VALUE zj_exit(VALUE self) {
   if(rb_block_given_p()) {
     INTERNAL_SET(zj_mEvents, exit_proc, rb_block_proc());
@@ -40,53 +60,119 @@ VALUE zj_exit(VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Define code to run when the sketch window is resized
+ * 
+ * @overload window_resized
+ *   @yieldparam [Numeric] w The new width of the window
+ *   @yieldparam [Numeric] h The new height of the window
+ */
 VALUE zj_window_resized(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, window_resized_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to run on the first frame when a key is pressed
+ * 
+ * @overload key_down
+ *   @yieldparam [KeyEvent] key The key that was just pressed
+ */
 VALUE zj_key_down(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_down_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to run every frame while a key is pressed
+ * 
+ * @overload key_pressed
+ *   @yieldparam [KeyEvent] key The key that is being held down
+ */
 VALUE zj_key_pressed(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_pressed_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to run on the first frame when a key is released
+ * 
+ * @overload key_up
+ *   @yieldparam [KeyEvent] key The key that was just released
+ */
 VALUE zj_key_up(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_up_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to run when the mouse moves over the sketch window
+ * 
+ * @overload mouse_moved
+ *   @yieldparam [Numeric] x The x coordinate of the mouse
+ *   @yieldparam [Numeric] y The y coordinate of the mouse
+ */
 VALUE zj_mouse_moved(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_moved_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to run when the mouse moves over the sketch window while a
+ * button is pressed.
+ * 
+ * @overload mouse_dragged
+ *   @yieldparam [Numeric] x The x coordinate of the mouse
+ *   @yieldparam [Numeric] y The y coordinate of the mouse
+ *   @yieldparam [Symbol] button Either +:left+, +:middle+ or +:right+
+ */
 VALUE zj_mouse_dragged(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_dragged_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to run on the first frame when the mouse is pressed
+ * 
+ * @overload mouse_down
+ *   @yieldparam [Numeric] x The x coordinate of the mouse
+ *   @yieldparam [Numeric] y The y coordinate of the mouse
+ *   @yieldparam [Symbol] button Either +:left+, +:middle+ or +:right+
+ */
 VALUE zj_mouse_down(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_down_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * Define code to run every frame while the mouse is pressed
+ * 
+ * @overload mouse_down
+ *   @yieldparam [Numeric] x The x coordinate of the mouse
+ *   @yieldparam [Numeric] y The y coordinate of the mouse
+ *   @yieldparam [Symbol] button Either +:left+, +:middle+ or +:right+
+ */
 VALUE zj_mouse_pressed(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_pressed_proc, rb_block_proc());
   
   return Qnil;
 }
+
+/* 
+ * Define code to run on the first frame when the mouse is released
+ * 
+ * @overload mouse_up
+ *   @yieldparam [Numeric] x The x coordinate of the mouse
+ *   @yieldparam [Numeric] y The y coordinate of the mouse
+ *   @yieldparam [Symbol] button Either +:left+, +:middle+ or +:right+
+ */
 
 VALUE zj_mouse_up(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_up_proc, rb_block_proc());
@@ -94,12 +180,18 @@ VALUE zj_mouse_up(VALUE self) {
   return Qnil;
 }
 
+/* 
+ * @note This is not implemented
+ */
 VALUE zj_audio_received(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, audio_received_proc, rb_block_proc());
   
   return Qnil;
 }
 
+/* 
+ * @note This is not implemented
+ */
 VALUE zj_audio_requested(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, audio_requested_proc, rb_block_proc());
   

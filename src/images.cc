@@ -22,6 +22,14 @@ VALUE image_new() {
   return zj_image_new(0, 0, zj_cImage);
 }
 
+/* 
+ * Load an image from disk
+ * 
+ * This will replace the contents of the receiving image
+ * 
+ * @overload load filename
+ *   @param [String] filename The name of the file to load
+ */
 VALUE zj_image_load(VALUE self, VALUE filename) {
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
@@ -54,6 +62,20 @@ ofImageType zj_sym_to_image_type(VALUE sym) {
   return OF_IMAGE_UNDEFINED;
 }
 
+/* 
+ * Create a new Image object. If a filename is provided, the new image is
+ * loaded from that file. Otherwise, a blank image is created.
+ * 
+ * @overload initialize opts
+ *   @param [Hash] opts Image options
+ *   @option opts [String] :file The name of the file to load
+ *   @option opts [Numeric] :width The width to load the image as
+ *   @option opts [Numeric] :height The height to load the image as
+ *   @option opts [Numeric] :scale The amount to scale the image by
+ *   @option opts [Symbol] :type Either +:rgb+, +:rgba+ or +:grayscale+
+ *   @option opts [Boolean] :use_texture +true+ to use a texture (make the
+ *     image drawable), +false+ to just load it into memory.
+ */
 VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
   VALUE file = Qnil, width = Qnil, height = Qnil, scale = Qnil;
   VALUE type = SYM("rgb");
@@ -107,6 +129,30 @@ VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
   return self;
 }
 
+/* 
+ * Draw the image
+ * 
+ * Image drawing is affected by +rectangle_mode+ the same way squares and
+ * rectangles are.
+ * 
+ * @see Graphics#rectangle_mode
+ * 
+ * @overload draw x, y
+ *   @param [Numeric] x The x coordinate to draw at
+ *   @param [Numeric] y The y coordinate to draw at
+ * 
+ * @overload draw x, y, s
+ *   @param [Numeric] x The x coordinate to draw at
+ *   @param [Numeric] y The y coordinate to draw at
+ *   @param [Numeric] s The amount to scale proportionally, +1.0+ being
+ *     normal size
+ * 
+ * @overload draw x, y, w, h
+ *   @param [Numeric] x The x coordinate to draw at
+ *   @param [Numeric] y The y coordinate to draw at
+ *   @param [Numeric] w The width to draw at
+ *   @param [Numeric] h The height to draw at
+ */
 VALUE zj_image_draw(int argc, VALUE* argv, VALUE self) {
   /* TODO should drawing an uninitialized image throw an exception? */
   VALUE x, y, w, h;
@@ -120,7 +166,7 @@ VALUE zj_image_draw(int argc, VALUE* argv, VALUE self) {
     image_ptr->draw(NUM2DBL(x), NUM2DBL(y));
     
   } else if(!NIL_P(w) && NIL_P(h)) {
-    /* called with size, scale proportionately */
+    /* called with size, scale proportionally */
     float s = NUM2DBL(w);
     image_ptr->draw(NUM2DBL(x), NUM2DBL(y), image_ptr->width*s, image_ptr->height*s);
     
@@ -133,6 +179,11 @@ VALUE zj_image_draw(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Clears the image
+ * 
+ * @overload clear
+ */
 VALUE zj_image_clear(VALUE self) {
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
@@ -141,6 +192,13 @@ VALUE zj_image_clear(VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Saves the image to disk
+ * 
+ * @overload save filename
+ *   @param [String] filename The name of the file to save to disk. Must end 
+ *     in +.png+, +.jpg+ or +.jpeg+
+ */
 VALUE zj_image_save(VALUE self, VALUE filename) {
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
@@ -153,6 +211,16 @@ VALUE zj_image_save(VALUE self, VALUE filename) {
   return Qnil;
 }
 
+/* 
+ * Resize the image
+ * 
+ * @overload resize s
+ *   @param [Numeric] s The amount to scale proportionally
+ * 
+ * @overload resize w, h
+ *   @param [Numeric] w The new width to scale the image to
+ *   @param [Numeric] h The new height to scale the image to
+ */
 VALUE zj_image_resize(int argc, VALUE* argv, VALUE self) {
   VALUE w, h;
   rb_scan_args(argc, argv, "11", &w, &h);
@@ -161,7 +229,7 @@ VALUE zj_image_resize(int argc, VALUE* argv, VALUE self) {
   Data_Get_Struct(self, ofImage, image_ptr);
   
   if(!NIL_P(w) && NIL_P(h)) {
-    /* called with one argument, scale proportionately */
+    /* called with one argument, scale proportionally */
     float s = NUM2DBL(w);
     image_ptr->resize(image_ptr->width*s, image_ptr->height*s);
   
@@ -177,6 +245,21 @@ VALUE zj_image_resize(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Set the contents of the image to the current contents of the sketch window
+ * 
+ * @overload grab_screen
+ *   Set contents of image to whole window
+ * 
+ * @overload grab_screen x, y, w, h
+ *   Set contents to portion of window
+ *   @param [Numeric] x The x coordinate of the top left corner to start
+ *     grabbing from
+ *   @param [Numeric] y The y coordinate of the top left corner to start
+ *     grabbing from
+ *   @param [Numeric] w The width of the portion
+ *   @param [Numeric] h The height of the portion
+ */
 VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
   VALUE x, y, w, h;
   rb_scan_args(argc, argv, "04", &x, &y, &w, &h);
@@ -200,6 +283,15 @@ VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
   return self;
 }
 
+/* 
+ * Get the color of a pixel in the image
+ * 
+ * @overload get_pixel x, y
+ *   @param [Numeric] x The x coordinate of the pixel
+ *   @param [Numeric] y The y coordinate of the pixel
+ *   @return [Array] An array of Fixnums representing the color at +x+,+y+.
+ *     The size of the array depends on the +bpp+ of the image.
+ */
 VALUE zj_image_get_pixel(VALUE self, VALUE x, VALUE y) {
   int _x = NUM2INT(x);
   int _y = NUM2INT(y);
@@ -224,6 +316,44 @@ VALUE zj_image_get_pixel(VALUE self, VALUE x, VALUE y) {
     return Qnil;
 }
 
+/* 
+ * Iterate through each pixel in the image
+ * 
+ * @todo This method is slow. Optimize it.
+ * 
+ * @overload each_pixel
+ *   If the image is in grayscale, colors are passed as gray levels
+ *   @yield [x, y, gray]
+ *   @yieldparam [Numeric] x The x coordinate of the pixel
+ *   @yieldparam [Numeric] y The y coordinate of the pixel
+ *   @yieldparam [0..255] gray The amount of gray in the pixel
+ *   @yieldreturn [Array] Optional, an array with one Numeric, representing a
+ *     new color for the pixel
+ * 
+ * @overload each_pixel
+ *   If the image is in rgb, colors are passed as red, green and blue levels
+ *   @yield [x, y, r, g, b]
+ *   @yieldparam [Numeric] x The x coordinate of the pixel
+ *   @yieldparam [Numeric] y The y coordinate of the pixel
+ *   @yieldparam [0..255] r The amount of red in the pixel
+ *   @yieldparam [0..255] g The amount of green in the pixel
+ *   @yieldparam [0..255] b The amount of blue in the pixel
+ *   @yieldreturn [Array] Optional, an array with three Numerics, representing
+ *     a new color for the pixel
+ * 
+ * @overload each_pixel
+ *   If the image is in rgba, colors are passed as red, green, blue and alpha
+ *   levels
+ *   @yield [x, y, r, g, b, a]
+ *   @yieldparam [Numeric] x The x coordinate of the pixel
+ *   @yieldparam [Numeric] y The y coordinate of the pixel
+ *   @yieldparam [0..255] r The amount of red in the pixel
+ *   @yieldparam [0..255] g The amount of green in the pixel
+ *   @yieldparam [0..255] b The amount of blue in the pixel
+ *   @yieldparam [0..255] a The alpha level of the pixel
+ *   @yieldreturn [Array] Optional, an array with four Numerics, representing
+ *     a new color for the pixel
+ */
 VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
   // VALUE x, y, w, h;
   // rb_scan_args(argc, argv, "04", &x, &y, &w, &h);
@@ -294,6 +424,15 @@ VALUE zj_image_image(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Gets or sets the width of the image
+ * 
+ * @overload width
+ *   @return [Numeric] The width of the image
+ * 
+ * @overload width w
+ *   @param [Numeric] w The new width of the image
+ */
 VALUE zj_image_width(int argc, VALUE* argv, VALUE self) {
   VALUE new_width;
   rb_scan_args(argc, argv, "01", &new_width);
@@ -314,6 +453,15 @@ VALUE zj_image_width(int argc, VALUE* argv, VALUE self) {
   
 }
 
+/* 
+ * Gets or sets the height of the image
+ * 
+ * @overload height
+ *   @return [Numeric] The height of the image
+ * 
+ * @overload height h
+ *   @param [Numeric] h The new height of the image
+ */
 VALUE zj_image_height(int argc, VALUE* argv, VALUE self) {
   VALUE new_height;
   rb_scan_args(argc, argv, "01", &new_height);
@@ -334,6 +482,20 @@ VALUE zj_image_height(int argc, VALUE* argv, VALUE self) {
   
 }
 
+/* 
+ * Gets or sets the color type of the image
+ * 
+ * Options are +:grayscale+ meaning only shades of gray, +:rgb+ meaning full
+ * color and +:rgba+ meaning full color with an alpha channel (for
+ * transparency)
+ * 
+ * @overload type
+ *   @return [Symbol] Either +:grayscale+, +:rgb+ or +:rgba+, the current
+ *     color type of the image.
+ * @overload type t
+ *   @param [Symbol] t Either +:grayscale+, +:rgb+ or +:rgba+, the new color
+ *     type to set the image to
+ */
 VALUE zj_image_type(int argc, VALUE* argv, VALUE self) {
   VALUE new_type;
   rb_scan_args(argc, argv, "01", &new_type);
@@ -383,6 +545,12 @@ VALUE zj_image_type(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+/* 
+ * Get the number of bits per pixel in the image
+ * 
+ * @return [Numeric] Either +8+, +24+ or +32+, the number of bits per pixel
+ *   in the image
+ */
 VALUE zj_image_bpp(VALUE self) {
   ofImage* image_ptr;
   Data_Get_Struct(self, ofImage, image_ptr);
@@ -390,6 +558,11 @@ VALUE zj_image_bpp(VALUE self) {
   return DBL2NUM(image_ptr->bpp);
 }
 
+/* 
+ * Capture the current frame of the sketch as an Image
+ * 
+ * @return [Image] An Image containing the contents of the current frame
+ */
 VALUE zj_grab_screen(int argc, VALUE* argv, VALUE klass) {
   VALUE new_image = image_new();
   rb_funcall2(new_image, rb_intern("grab_screen"), argc, argv);
