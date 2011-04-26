@@ -389,12 +389,12 @@ VALUE zj_window_y(int argc, VALUE* argv, VALUE self) {
 
 /* 
  * Triggers a nasty segmentation fault. Used for debugging, don't use this.
+ * Seriously.
  * 
  * @api private
  */
 VALUE zj_segfault(VALUE self) {
-  int* iWillCrash;
-  int a = iWillCrash[92089];
+  free(0x0);
 }
 
 
