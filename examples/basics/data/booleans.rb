@@ -1,3 +1,6 @@
+# Ramsey Nasser - Apr 2011
+# Play around with the code to see how it changes
+
 # booleans are true and false values, often used in conditionals.
 a = true
 b = false
