@@ -153,6 +153,25 @@ void zj_video_draw3(VALUE self, float x, float y, float w, float h) {
 
 /* 
  * Render the video to the screen
+ * 
+ * @overload draw x, y
+ *   Render the video at its natural size
+ *   @param [Numeric] x The x coordinate to draw the video at
+ *   @param [Numeric] y The y coordinate to draw the video at
+ * 
+ * @overload draw x, y, s
+ *   Render the video at a particular size
+ *   @param [Numeric] x The x coordinate to draw the video at
+ *   @param [Numeric] y The y coordinate to draw the video at
+ *   @param [Numeric] s The amount to scale the video, e.g. +1.0+ is normal
+ *     size, +2.0+ is double and +0.5+ is half
+ * 
+ * @overload draw x, y, w, h
+ *   Render the video at a particular size
+ *   @param [Numeric] x The x coordinate to draw the video at
+ *   @param [Numeric] y The y coordinate to draw the video at
+ *   @param [Numeric] w The width to draw the video at
+ *   @param [Numeric] h The height to draw the video at
  */
 VALUE zj_video_draw(int argc, VALUE* argv, VALUE self) {
   VALUE x, y, w, h;
