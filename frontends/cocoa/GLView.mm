@@ -231,61 +231,61 @@
 - (void)mouseDown:(NSEvent *)theEvent {
    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
    
-   ofNotifyMousePressed(point.x, point.y, 0);
+   ofNotifyMousePressed(point.x, [self frame].size.height - point.y, 0);
 }
 
 - (void)rightMouseDown:(NSEvent *)theEvent {
    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
    
-   ofNotifyMousePressed(point.x, point.y, 2);
+   ofNotifyMousePressed(point.x, [self frame].size.height - point.y, 2);
 }
 
 - (void)otherMouseDown:(NSEvent *)theEvent {
    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
    
-   ofNotifyMousePressed(point.x, point.y, 1);
+   ofNotifyMousePressed(point.x, [self frame].size.height - point.y, 1);
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent {
     NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
-   ofNotifyMouseDragged(point.x, point.y, 0);
+   ofNotifyMouseDragged(point.x, [self frame].size.height - point.y, 0);
 }
 
 - (void)rightMouseDragged:(NSEvent *)theEvent {
     NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
-    ofNotifyMouseDragged(point.x, point.y, 2);
+    ofNotifyMouseDragged(point.x, [self frame].size.height - point.y, 2);
 }
 
 - (void)otherMouseDragged:(NSEvent *)theEvent {
     NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     
-    ofNotifyMouseDragged(point.x, point.y, 1);
+    ofNotifyMouseDragged(point.x, [self frame].size.height - point.y, 1);
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {
    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
    
-   ofNotifyMouseReleased(point.x, point.y, 0);
+   ofNotifyMouseReleased(point.x, [self frame].size.height - point.y, 0);
 }
 
 - (void)rightMouseUp:(NSEvent *)theEvent {
    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
    
-   ofNotifyMouseReleased(point.x, point.y, 2);
+   ofNotifyMouseReleased(point.x, [self frame].size.height - point.y, 2);
 }
 
 - (void)otherMouseUp:(NSEvent *)theEvent {
    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
    
-   ofNotifyMouseReleased(point.x, point.y, 1);
+   ofNotifyMouseReleased(point.x, [self frame].size.height - point.y, 1);
 }
 
 - (void) mouseMoved:(NSEvent *)theEvent {
    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
    
-   ofNotifyMouseMoved(point.x, point.y);
+   ofNotifyMouseMoved(point.x, [self frame].size.height - point.y);
 }
 
 
