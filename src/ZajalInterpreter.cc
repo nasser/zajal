@@ -19,7 +19,7 @@ VALUE zj_button_to_symbol(int button) {
   if(button == 0)
     return SYM("left");
   else if(button == 1)
-    return SYM("center");
+    return SYM("middle");
   else if(button == 2)
     return SYM("right");
   else
