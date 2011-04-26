@@ -10,6 +10,7 @@ require "keyevent"
 require "loading"
 require "graphics"
 require "videos"
+require "hardware"
 require "experimental"
 
 module Zajal
