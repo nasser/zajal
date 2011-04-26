@@ -117,11 +117,11 @@
 		2E2B66D81356D3D700C93C12 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
 		2E2B66DA1356D81100C93C12 /* PreferencesWindowDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesWindowDelegate.h; sourceTree = "<group>"; };
 		2E2B66DB1356D81100C93C12 /* PreferencesWindowDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesWindowDelegate.m; sourceTree = "<group>"; };
-		2E2D3B0F1348D8FD002F4AC1 /* app.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = app.cc; path = ../../src/app.cc; sourceTree = "<group>"; };
+		2E2D3B0F1348D8FD002F4AC1 /* app.cc */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; name = app.cc; path = ../../src/app.cc; sourceTree = "<group>"; tabWidth = 2; };
 		2E2D3B101348D8FD002F4AC1 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = ../../src/config.h; sourceTree = "<group>"; };
 		2E2D3B111348D8FD002F4AC1 /* events.cc */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; name = events.cc; path = ../../src/events.cc; sourceTree = "<group>"; tabWidth = 2; };
 		2E2D3B121348D8FD002F4AC1 /* graphics.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = graphics.cc; path = ../../src/graphics.cc; sourceTree = "<group>"; };
-		2E2D3B131348D8FD002F4AC1 /* hardware.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hardware.cc; path = ../../src/hardware.cc; sourceTree = "<group>"; };
+		2E2D3B131348D8FD002F4AC1 /* hardware.cc */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; name = hardware.cc; path = ../../src/hardware.cc; sourceTree = "<group>"; tabWidth = 2; };
 		2E2D3B141348D8FD002F4AC1 /* images.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = images.cc; path = ../../src/images.cc; sourceTree = "<group>"; };
 		2E2D3B151348D8FD002F4AC1 /* mathematics.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mathematics.cc; path = ../../src/mathematics.cc; sourceTree = "<group>"; };
 		2E2D3B161348D8FD002F4AC1 /* typography.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = typography.cc; path = ../../src/typography.cc; sourceTree = "<group>"; };
