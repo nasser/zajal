@@ -1,3 +1,6 @@
+# Ramsey Nasser - Apr 2011
+# Play around with the code to see how it changes
+
 # zajal supports colors with descriptive names
 color :orange
 square 10, 10, 100

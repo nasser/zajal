@@ -1,3 +1,6 @@
+# Ramsey Nasser - Apr 2011
+# Play around with the code to see how it changes
+
 # for total controll over the current color, you can call the color method
 # with three nubers between 0 and 255
 color 255, 128, 100

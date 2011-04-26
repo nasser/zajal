@@ -1,3 +1,6 @@
+# Ramsey Nasser - Apr 2011
+# Play around with the code to see how it changes
+
 # gradients can be drawn by drawing differently colored lines
 for i in 0..height
   # as i increases from 0 to 100, i/100 increases from 0.0 to 1.0 and

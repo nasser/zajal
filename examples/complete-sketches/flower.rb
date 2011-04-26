@@ -1,5 +1,6 @@
 # Polygonal Flower
 # Ramsey Nasser - Dec 2010
+# Play around with the code to see how it changes
 
 class Particle
   attr_accessor :x, :y

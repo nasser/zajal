@@ -1,3 +1,6 @@
+# Ramsey Nasser - Apr 2011
+# Play around with the code to see how it changes
+
 # in zajal, there is always a "current color" that everything is drawn in.
 # by default, the current color is set to almost-white, so when you draw a
 # square draw a square, that's the color its drawn in

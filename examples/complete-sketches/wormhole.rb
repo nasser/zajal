@@ -1,5 +1,6 @@
 # Wormhole
 # Ramsey Nasser - Feb 2011
+# Play around with the code to see how it changes
 
 x, y = 250, 250
 

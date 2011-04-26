@@ -1,5 +1,6 @@
 # Wormsign
 # Ramsey Nasser - Nov 2010
+# Play around with the code to see how it changes
 
 t = 0
 
