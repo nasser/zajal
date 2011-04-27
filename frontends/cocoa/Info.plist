@@ -75,5 +75,7 @@
 		<string>Espresso</string>
 		<string>TextEdit</string>
 	</array>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
 </dict>
 </plist>
