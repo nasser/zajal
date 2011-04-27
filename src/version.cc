@@ -5,7 +5,7 @@
 VALUE zj_mVersion;
 
 /* global version strings, filled in by Makefile/git */
-const char zajal_version[] = "0.3.2";
+const char zajal_version[] = "0.3.3";
 const char zajal_hash[] = "";
 const char zajal_short_hash[] = "";
 const char zajal_branch[] = "";
