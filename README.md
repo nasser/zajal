@@ -1,7 +1,7 @@
 Zajal
 =====
 
-A blend of [ruby][ruby], [openFrameworks][of] and a clean consistent syntax, 
+A blend of [Ruby][ruby], [openFrameworks][of] and a clean consistent syntax, 
 Zajal is a staggeringly awesome creative coding tool.
 
 How do I use it?
@@ -10,7 +10,8 @@ The easiest way to get started is to head over to [the main site][main] and
 hit the giant download button (Only Mac OS 10.6 or later is supported at the 
 moment). This will download the latest build of the interpreter. From there, 
 check out the [documentation][docs] and the built in examples in Help>Examples 
-to learn how to use the language. The [sketch book][sketch] is also a great resource.
+to learn how to use the language. The [sketch book][sketch] is also a great 
+resource.
 
 If anything looks a little spotty, that's because Zajal is still brand new and
 under active development! Report anything amiss on the [forums][forum].
@@ -27,10 +28,11 @@ build that baby out!
 
 How do I contribute?
 --------------------
-Just using Zajal and providing feedback on the [forums][forums] is plenty. If
+Just using Zajal and providing feedback on the [forums][forum] is plenty. If
 you happen to be awesome and want to do more, [bug reports][bugs],
 [improved documentation][docs], [better examples][examples], 
-[sketch book submissions][sketch] and [code submissions][fork] are all welcome.
+[sketch book submissions][sketch] and [code submissions][fork] are all 
+welcome.
 
 ![usage](http://zajal.cc/zajal.png)
 
