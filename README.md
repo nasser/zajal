@@ -1,21 +1,50 @@
 Zajal
 =====
 
-A blend of [ruby](http://ruby-lang.org), [openFrameworks](http://openframeworks.cc/) and a clean consistent syntax, Zajal is a staggeringly awesome creative coding tool.
+A blend of [ruby][ruby], [openFrameworks][of] and a clean consistent syntax, 
+Zajal is a staggeringly awesome creative coding tool.
 
-![usage](http://zajal.cc/zajal.png)
+How do I use it?
+----------------
+The easiest way to get started is to head over to [the main site][main] and 
+hit the giant download button (Only Mac OS 10.6 or later is supported at the 
+moment). This will download the latest build of the interpreter. From there, 
+check out the [documentation][docs] and the built in examples in Help>Examples 
+to learn how to use the language. The [sketch book][sketch] is also a great resource.
 
-Can I use it?
--------------
-Yes and no. The primary concern at this point is getting the interpreter stable and working, and as such Zajal is not packaged for regular use. If you want to give it a shot, though, feel free.
+If anything looks a little spotty, that's because Zajal is still brand new and
+under active development! Report anything amiss on the [forums][forum].
+
+To get the bleeding edge, try this
 
     $ git clone http://github.com/nasser/zajal.git
     $ cd zajal
     $ make
-    $ ./bin/zajal examples/ballerina.rb
-    
-Once more of the interpreter gets nailed down, expect easy to use one click installs.
+    $ ./bin/zajal examples/complete-sketches/ballerina.rb
+
+To build the Cocoa app, open `frontends/cocoa/Zajal.xcodeproj` in XCode 4 and
+build that baby out!
+
+How do I contribute?
+--------------------
+Just using Zajal and providing feedback on the [forums][forums] is plenty. If
+you happen to be awesome and want to do more, [bug reports][bugs],
+[improved documentation][docs], [better examples][examples], 
+[sketch book submissions][sketch] and [code submissions][fork] are all welcome.
+
+![usage](http://zajal.cc/zajal.png)
 
 Legal
 -----
-Provided under the MIT License. Check [LICENSE](http://github.com/nasser/zajal/blob/master/LICENSE) for more on that.
+Provided under the MIT License. Check [LICENSE][license] for more on that.
+
+[ruby]: http://ruby-lang.org
+[of]: http://openframeworks.cc/
+[main]: http://zajal.cc/
+[docs]: http://docs.zajal.cc/
+[sketch]: http://sketch.zajal.cc/
+[forum]: http://forum.zajal.cc
+[bugs]: https://github.com/nasser/zajal/issues
+[examples]: https://github.com/nasser/zajal/tree/master/examples
+[fork]: https://github.com/nasser/zajal/fork
+[license]: http://github.com/nasser/zajal/blob/master/LICENSE
