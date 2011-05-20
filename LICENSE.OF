@@ -1,6 +1,10 @@
-Zajal is released under the MIT License.
+openFrameworks is released under the MIT License.
 
-Copyright (c) 2010, 2011 Ramsey Nasser
+----------------------------------------------------------
+
+The MIT License
+
+Copyright (c) 2009 openFrameworks
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +24,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-Zajal includes code from Ruby. Ruby is licensed under the terms provided in
-LICENSE.RUBY. The original distribution of Ruby can be found at
-http://www.ruby-lang.org/.
+----------------------------------------------------------
 
-Zajal includes code from openFrameworks. openFrameworks is licensed under the
-terms provided in LICENSE.OF. Zajal does not use FMod, and as such is not
-subject to its license.
+The openFrameworks core includes the following libraries which may have different licenses. 
+
+Fmod ( http://fmod.org )
+FreeImage ( http://freeimage.sourceforge.net/ )
+FreeType ( http://www.freetype.org/ )
+Glee ( http://elf-stone.com/glee.php )
+Glut ( http://www.opengl.org/resources/libraries/glut/ )
+OpenGL ( http://www.opengl.org/ )
+GStreamer ( http://gstreamer.freedesktop.org/ ) 
+Poco ( http://pocoproject.org/ )
+rtAudio ( http://www.music.mcgill.ca/~gary/rtaudio/ )
+Unicap ( http://unicap-imaging.org/ )
+videoInput ( http://muonics.net/school/spring05/videoInput/ )
