@@ -71,3 +71,5 @@ def vertical x, y1=nil, y2=nil
     line x, 0, x, height
   end
 end
+
+alias :println :puts
