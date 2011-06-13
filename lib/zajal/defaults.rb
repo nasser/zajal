@@ -13,7 +13,7 @@ module Zajal
         framerate: [30],
         vertical_sync: [true],
         smoothing: [false],
-        alpha_blending: [false],
+        alpha_blending: [true],
         color: [240],
         background: [32],
         background_auto: [true],
