@@ -116,7 +116,10 @@ VALUE zj_font_draw(int argc, VALUE* argv, VALUE self) {
   ZajalTrueTypeFont* font_ptr;
   Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
-  font_ptr->drawString(StringValuePtr(draw_string), NUM2DBL(x), NUM2DBL(y));
+  if(font_ptr->getContours())
+    font_ptr->drawStringAsShapes(StringValuePtr(draw_string), NUM2DBL(x), NUM2DBL(y));
+  else
+    font_ptr->drawString(StringValuePtr(draw_string), NUM2DBL(x), NUM2DBL(y));
   
   return Qnil;
 }
