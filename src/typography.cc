@@ -121,6 +121,13 @@ VALUE zj_font_draw(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
+VALUE zj_font_size(VALUE self) {
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
+  
+  return INT2FIX(font_ptr->getFontSize());
+}
+
 VALUE zj_font_line_height(int argc, VALUE* argv, VALUE self) {
   VALUE new_lineheight;
   rb_scan_args(argc, argv, "01", &new_lineheight);
@@ -256,6 +263,7 @@ void Init_Typography() {
   rb_define_method(zj_cFont, "initialize", RUBY_METHOD_FUNC(zj_font_initialize), -1);
   rb_define_method(zj_cFont, "load", RUBY_METHOD_FUNC(zj_font_load), 2);
   rb_define_method(zj_cFont, "draw", RUBY_METHOD_FUNC(zj_font_draw), -1);
+  rb_define_method(zj_cFont, "size", RUBY_METHOD_FUNC(zj_font_size), 0);
   rb_define_method(zj_cFont, "line_height", RUBY_METHOD_FUNC(zj_font_line_height), -1);
   rb_define_method(zj_cFont, "width_of", RUBY_METHOD_FUNC(zj_font_width_of), 1);
   rb_define_method(zj_cFont, "height_of", RUBY_METHOD_FUNC(zj_font_height_of), 1);
