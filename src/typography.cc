@@ -99,12 +99,17 @@ VALUE zj_font_initialize(int argc, VALUE* argv, VALUE self) {
   ZajalTrueTypeFont* font_ptr;
   Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
-  char* data_filename = zj_to_data_path(StringValuePtr(file));
-  font_ptr->loadFont(data_filename, NUM2INT(size), RTEST(anti_aliased), RTEST(full_character_set), RTEST(contours));
-  free(data_filename);
-  if(!NIL_P(line_height)) font_ptr->setLineHeight(NUM2DBL(line_height));
+  VALUE font_file = rb_funcall(rb_const_get(zj_mTypography, rb_intern("Internals")), rb_intern("get_font_file"), 1, file);
+  if(NIL_P(font_file)) {
+    rb_raise(rb_eArgError, "Font not found!");
+    return Qnil;
+    
+  } else {
+    font_ptr->loadFont(StringValuePtr(font_file), NUM2INT(size), RTEST(anti_aliased), RTEST(full_character_set), RTEST(contours));
+    if(!NIL_P(line_height)) font_ptr->setLineHeight(NUM2DBL(line_height));
+    return self;
+  }
   
-  return self;
 }
 
 VALUE zj_font_draw(int argc, VALUE* argv, VALUE self) {
