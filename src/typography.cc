@@ -6,6 +6,22 @@
 #include "freetype/freetype.h"
 #include "freetype/ftmac.h"
 
+/* intermediate class to expose internals of ofTrueTypeFont */
+/* TODO should this just be a patch to OF? */
+class ZajalTrueTypeFont : public ofTrueTypeFont {
+public:
+  int getFontSize();
+  bool getContours();
+};
+
+int ZajalTrueTypeFont::getFontSize() {
+  return this->fontSize;
+}
+
+bool ZajalTrueTypeFont::getContours() {
+  return this->bMakeContours;
+}
+
 /* global typography module and font class */
 VALUE zj_mTypography;
 VALUE zj_cFont;
@@ -16,11 +32,11 @@ void zj_typography_reset_stacked_text() {
 }
 
 void zj_font_dealloc(void* font) {
-  delete (ofTrueTypeFont*)font;
+  delete (ZajalTrueTypeFont*)font;
 }
 
 VALUE zj_font_new(int argc, VALUE* argv, VALUE klass) {
-  ofTrueTypeFont* font_ptr = new ofTrueTypeFont();
+  ZajalTrueTypeFont* font_ptr = new ZajalTrueTypeFont();
   
   VALUE font = Data_Wrap_Struct(klass, 0, zj_font_dealloc, font_ptr);
   rb_obj_call_init(font, argc, argv);
@@ -28,8 +44,8 @@ VALUE zj_font_new(int argc, VALUE* argv, VALUE klass) {
 }
 
 VALUE zj_font_load(VALUE self, VALUE filename, VALUE size) {
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   /*
   This is how loading system fonts will probably work on mac, but the function
@@ -80,8 +96,8 @@ VALUE zj_font_initialize(int argc, VALUE* argv, VALUE self) {
     return Qnil;
   }
   
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   char* data_filename = zj_to_data_path(StringValuePtr(file));
   font_ptr->loadFont(data_filename, NUM2INT(size), RTEST(anti_aliased), RTEST(full_character_set), RTEST(contours));
@@ -97,8 +113,8 @@ VALUE zj_font_draw(int argc, VALUE* argv, VALUE self) {
   
   VALUE draw_string = rb_funcall(s, rb_intern("to_s"), 0);
   
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   font_ptr->drawString(StringValuePtr(draw_string), NUM2DBL(x), NUM2DBL(y));
   
@@ -109,8 +125,8 @@ VALUE zj_font_line_height(int argc, VALUE* argv, VALUE self) {
   VALUE new_lineheight;
   rb_scan_args(argc, argv, "01", &new_lineheight);
   
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   if(!NIL_P(new_lineheight)) {
     /* called with a new line height, set it */
@@ -125,43 +141,43 @@ VALUE zj_font_line_height(int argc, VALUE* argv, VALUE self) {
 }
 
 VALUE zj_font_width_of(VALUE self, VALUE string) {
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   return DBL2NUM(font_ptr->stringWidth(StringValuePtr(string)));
 }
 
 VALUE zj_font_height_of(VALUE self, VALUE string) {
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   return DBL2NUM(font_ptr->stringHeight(StringValuePtr(string)));
 }
 
 VALUE zj_font_loaded_p(VALUE self) {
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   return font_ptr->bLoadedOk ? Qtrue : Qfalse;
 }
 
 VALUE zj_font_anti_aliased_p(VALUE self) {
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   return font_ptr->bAntiAlised ? Qtrue : Qfalse;
 }
 
 VALUE zj_font_full_character_set_p(VALUE self) {
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   return font_ptr->bFullCharacterSet ? Qtrue : Qfalse;
 }
 
 VALUE zj_font_character_count(VALUE self) {
-  ofTrueTypeFont* font_ptr;
-  Data_Get_Struct(self, ofTrueTypeFont, font_ptr);
+  ZajalTrueTypeFont* font_ptr;
+  Data_Get_Struct(self, ZajalTrueTypeFont, font_ptr);
   
   return INT2FIX(font_ptr->nCharacters);
 }
