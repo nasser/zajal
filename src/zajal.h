@@ -46,6 +46,9 @@ void zj_typography_reset_stacked_text();
 /* hardware */
 extern VALUE zj_mHardware;
 
+/* audio */
+extern VALUE zj_mAudio;
+
 /* version */
 extern VALUE zj_mVersion;
 
