@@ -30,12 +30,12 @@ void zj_graphics_reset_frame() {
   zj_typography_reset_stacked_text();
 }
 
-/* TODO support named colors, move this to a helper source file */
+/* TODO move this to a helper source file */
 int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a) {
   VALUE arg1, arg2, arg3, arg4;
-  int argca = rb_scan_args(argc, argv, "04", &arg1, &arg2, &arg3, &arg4);
+  rb_scan_args(argc, argv, "04", &arg1, &arg2, &arg3, &arg4);
   
-  switch(argca) {
+  switch(argc) {
     case 1:
       if(TYPE(arg1) == T_SYMBOL) {
         /* one symbol argument, treat as named color at full alpha */
@@ -104,7 +104,26 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
     
   }
   
-  return argca;
+  return argc;
+}
+
+VALUE zj_get_rectangle_mode() {
+  switch(ofGetRectMode()) {
+    case OF_RECTMODE_CENTER: return SYM("center");
+    case OF_RECTMODE_CORNER: return SYM("corner");
+    default: return Qnil;
+  }
+}
+
+VALUE zj_set_rectangle_mode(ID mode) {
+  if(mode == rb_intern("center"))
+    ofSetRectMode(OF_RECTMODE_CENTER);
+  else if(mode == rb_intern("corner"))
+    ofSetRectMode(OF_RECTMODE_CORNER);
+  else
+    rb_raise(rb_eArgError, "Invalid rectangle mode!");
+    
+  return Qnil;
 }
 
 /* 
@@ -120,52 +139,20 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
  */
 VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   VALUE new_rectmode;
-  int argca = rb_scan_args(argc, argv, "01", &new_rectmode);
-  int rect_mode;
-  ID new_rectmode_id;
-  
-  ID center_id = rb_intern("center");
-  ID corner_id = rb_intern("corner");
+  rb_scan_args(argc, argv, "01", &new_rectmode);
   
   if(IS_IN_SETUP && argc > 0) {
     SET_DEFAULT(rectangle_mode, rb_ary_new3(1, new_rectmode) );
     
   } else {
-    switch(argca) {
-      case 0:
-        /*  called without argument, return current rect mode */
-        rect_mode = ofGetRectMode();
-    
-        if(rect_mode == OF_RECTMODE_CENTER) {
-          return ID2SYM(center_id);
-        
-        } else if(rect_mode == OF_RECTMODE_CORNER) {
-          return ID2SYM(corner_id);
-        
-        }
-        break;
-    
-      case 1:
-        /*  called with argument, set new rectmode */
-        new_rectmode_id = SYM2ID(new_rectmode);
-    
-        if(new_rectmode_id == center_id) {
-          ofSetRectMode(OF_RECTMODE_CENTER);
+    switch(argc) {
+      /* called without argument, return current rect mode */
+      case 0: return zj_get_rectangle_mode();
       
-        } else if(new_rectmode_id == corner_id) {
-          ofSetRectMode(OF_RECTMODE_CORNER);
-      
-        } else {
-          rb_raise(rb_eArgError, "Invalid rectangle mode!");
-      
-        }
-        break;
-      
+      /*  called with argument, set new rectmode */
+      case 1: return zj_set_rectangle_mode(SYM2ID(new_rectmode));
     }
-    
   }
-  
-  return Qnil;
 }
 
 /*
@@ -523,6 +510,18 @@ VALUE zj_matrix(VALUE self) {
   return returnValue;
 }
 
+VALUE zj_translate1(float x, float y) {
+  ofTranslate(x, y, 0);
+  
+  return Qnil;
+}
+
+VALUE zj_translate2(float x, float y, float z) {
+  ofTranslate(x, y, z);
+  
+  return Qnil;
+}
+
 /* 
  * Apply a translation transformation to the current matrix. Accepts 2D and
  * 3D coordinates.
@@ -535,19 +534,31 @@ VALUE zj_matrix(VALUE self) {
  */
 VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
-  int argca = rb_scan_args(argc, argv, "21", &x, &y, &z);
+  rb_scan_args(argc, argv, "21", &x, &y, &z);
   
-  switch(argca) {
-    case 2:
-      /*  called with two arguments, z is 0 */
-      ofTranslate(NUM2DBL(x), NUM2DBL(y), 0);
-      break;
-      
-    case 3:
-      /*  called with three arguments, use all of them */
-      ofTranslate(NUM2DBL(x), NUM2DBL(y), NUM2DBL(z));
-      break;
+  switch(argc) {
+    /* called with two arguments, z is 0 */
+    case 2: return zj_translate1(NUM2DBL(x), NUM2DBL(y));
+    
+    /* called with three arguments, use all of them */
+    case 3: return zj_translate2(NUM2DBL(x), NUM2DBL(y), NUM2DBL(z));
   }
+}
+
+VALUE zj_scale1(float s) {
+  ofScale(s, s, s);
+  
+  return Qnil;
+}
+
+VALUE zj_scale2(float x, float y) {
+  ofScale(x, y, 0);
+  
+  return Qnil;
+}
+
+VALUE zj_scale3(float x, float y, float z) {
+  ofScale(x, y, z);
   
   return Qnil;
 }
@@ -567,26 +578,18 @@ VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
  */
 VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
-  int argca = rb_scan_args(argc, argv, "12", &x, &y, &z);
+  rb_scan_args(argc, argv, "12", &x, &y, &z);
   
-  switch(argca) {
-    case 1:
-      /*  called with one argument, x for everything */
-      ofScale(NUM2DBL(x), NUM2DBL(x), NUM2DBL(x));
-      break;
+  switch(argc) {
+    /* called with one argument, x for everything */
+    case 1: return zj_scale1(NUM2DBL(x));
     
-    case 2:
-      /*  called with two arguments, z is 0 */
-      ofScale(NUM2DBL(x), NUM2DBL(y), 0);
-      break;
+    /* called with two arguments, z is 0 */
+    case 2: return zj_scale2(NUM2DBL(x), NUM2DBL(y));
     
-    case 3:
-      /*  called with three arguments, use all of them */
-      ofScale(NUM2DBL(x), NUM2DBL(y), NUM2DBL(z));
-      break;
+    /* called with three arguments, use all of them */
+    case 3: return zj_scale3(NUM2DBL(x), NUM2DBL(y), NUM2DBL(z));
   }
-  
-  return Qnil;
 }
 
 /* 
@@ -611,71 +614,41 @@ VALUE zj_begin_shape(VALUE self) {
   return Qnil;
 }
 
-VALUE zj_end_shape(int argc, VALUE* argv, VALUE klass) {
-  VALUE rbClosed = Qnil;
-  bool cClosed = false;
-  int argca = rb_scan_args(argc, argv, "01", &rbClosed);
+VALUE zj_end_shape(int argc, VALUE* argv, VALUE self) {
+  VALUE closed;
+  rb_scan_args(argc, argv, "01", &closed);
   
-  switch(argca) {
-    case 0:
-      cClosed = false;
-      break;
-      
-    case 1:
-      if(SYM2ID(rbClosed) == rb_intern("closed")) {
-        cClosed = true;
-      
-      } else {
-        rb_raise(rb_eArgError, "Expected symbol :closed or nil!");
-      
-      }
-      break;
-  }
+  ofEndShape(argc > 1 && SYM2ID(argv[0]) == rb_intern("closed"));
   
-  ofEndShape(cClosed);
   return Qnil;
 }
 
-VALUE zj_shape(int argc, VALUE* argv, VALUE klass) {
-  VALUE rbClosed = Qnil;
-  bool cClosed = false;
-  int argca = rb_scan_args(argc, argv, "01", &rbClosed);
-  
-  switch(argca) {
-    case 0:
-      cClosed = false;
-      break;
-      
-    case 1:
-      if(SYM2ID(rbClosed) == rb_intern("closed")) {
-        cClosed = true;
-      
-      } else {
-        rb_raise(rb_eArgError, "Expected symbol :closed or nil!");
-      
-      }
-      break;
-  }
+VALUE zj_shape(int argc, VALUE* argv, VALUE self) {
+  VALUE closed;
+  rb_scan_args(argc, argv, "01", &closed);
   
   ofBeginShape();
   VALUE returnValue = rb_yield(Qnil);
-  ofEndShape(cClosed);
+  ofEndShape(argc > 1 && SYM2ID(argv[0]) == rb_intern("closed"));
   
   return returnValue;
 }
 
 VALUE zj_vertex(VALUE self, VALUE x, VALUE y) {
   ofVertex(NUM2DBL(x), NUM2DBL(y));
+  
   return Qnil;
 }
 
 VALUE zj_curve_vertex(VALUE self, VALUE x, VALUE y) {
   ofCurveVertex(NUM2DBL(x), NUM2DBL(y));
+  
   return Qnil;
 }
 
 VALUE zj_bezier_vertex(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
   ofBezierVertex(NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
+  
   return Qnil;
 }
 

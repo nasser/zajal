@@ -133,22 +133,28 @@ VALUE zj_video_duration(VALUE self) {
   return DBL2NUM(video_ptr->getDuration());
 }
 
-void zj_video_draw1(VALUE self, float x, float y) {
+VALUE zj_video_draw1(VALUE self, float x, float y) {
   INIT_DATA_PTR(ofVideoPlayer, video_ptr);
   
   video_ptr->draw(x, y);
+  
+  return Qnil;
 }
 
-void zj_video_draw2(VALUE self, float x, float y, float s) {
+VALUE zj_video_draw2(VALUE self, float x, float y, float s) {
   INIT_DATA_PTR(ofVideoPlayer, video_ptr);
   
   video_ptr->draw(x, y, video_ptr->width*s, video_ptr->height*s);
+  
+  return Qnil;
 }
 
-void zj_video_draw3(VALUE self, float x, float y, float w, float h) {
+VALUE zj_video_draw3(VALUE self, float x, float y, float w, float h) {
   INIT_DATA_PTR(ofVideoPlayer, video_ptr);
   
   video_ptr->draw(x, y, w, h);
+  
+  return Qnil;
 }
 
 /* 
@@ -177,20 +183,18 @@ VALUE zj_video_draw(int argc, VALUE* argv, VALUE self) {
   VALUE x, y, w, h;
   rb_scan_args(argc, argv, "22", &x, &y, &w, &h);
   
-  switch(argc) {
-    /* called without width and height, just use coords */
-    case 2: zj_video_draw1(self, NUM2DBL(x), NUM2DBL(y)); break;
-    
-    /* called with size, scale proportionately */
-    case 3: zj_video_draw2(self, NUM2DBL(x), NUM2DBL(y), NUM2DBL(w)); break;
-    
-    /* called with width and height, use coords and dimentions */
-    case 4: zj_video_draw3(self, NUM2DBL(x), NUM2DBL(y), NUM2DBL(w), NUM2DBL(h)); break;
-  }
-  
   rb_iv_set(self, "@was_drawn", Qtrue);
   
-  return Qnil;
+  switch(argc) {
+    /* called without width and height, just use coords */
+    case 2: return zj_video_draw1(self, NUM2DBL(x), NUM2DBL(y));
+    
+    /* called with size, scale proportionately */
+    case 3: return zj_video_draw2(self, NUM2DBL(x), NUM2DBL(y), NUM2DBL(w));
+    
+    /* called with width and height, use coords and dimentions */
+    case 4: return zj_video_draw3(self, NUM2DBL(x), NUM2DBL(y), NUM2DBL(w), NUM2DBL(h));
+  }
 }
 
 /* 
@@ -243,6 +247,8 @@ VALUE zj_video_set_frame(VALUE self, int frame) {
   INIT_DATA_PTR(ofVideoPlayer, video_ptr);
   
   video_ptr->setFrame(frame);
+  
+  return Qnil;
 }
 
 /*
@@ -254,13 +260,11 @@ VALUE zj_video_frame(int argc, VALUE* argv, VALUE self) {
   
   switch(argc) {
     /* called with no arguments, return current frame */
-    case 0: return zj_video_get_frame(self); break;
+    case 0: return zj_video_get_frame(self);
       
     /* called with one argument, jump to given frame */
-    case 1: zj_video_set_frame(self, NUM2INT(new_frame)); break;
+    case 1: return zj_video_set_frame(self, NUM2INT(new_frame));
   }
-  
-  return Qnil;
 }
 
 VALUE zj_video_get_speed(VALUE self) {
@@ -269,10 +273,12 @@ VALUE zj_video_get_speed(VALUE self) {
   return DBL2NUM(video_ptr->getSpeed());
 }
 
-void zj_video_set_speed(VALUE self, float speed) {
+VALUE zj_video_set_speed(VALUE self, float speed) {
   INIT_DATA_PTR(ofVideoPlayer, video_ptr);
   
   video_ptr->setSpeed(speed);
+  
+  return Qnil;
 }
 
 /*
@@ -288,13 +294,11 @@ VALUE zj_video_speed(int argc, VALUE* argv, VALUE self) {
   
   switch(argc) {
     /* called with no arguments, return current speed */
-    case 0: return zj_video_get_speed(self); break;
+    case 0: return zj_video_get_speed(self);
     
     /* called with one argument, set new speed */
-    case 1: zj_video_set_speed(self, NUM2DBL(new_speed)); break;
+    case 1: return zj_video_set_speed(self, NUM2DBL(new_speed));
   }
-  
-  return Qnil;
 }
 
 VALUE zj_video_get_position(VALUE self) {
@@ -303,10 +307,12 @@ VALUE zj_video_get_position(VALUE self) {
   return DBL2NUM(video_ptr->getPosition());
 }
 
-void zj_video_set_position(VALUE self, float pos) {
+VALUE zj_video_set_position(VALUE self, float pos) {
   INIT_DATA_PTR(ofVideoPlayer, video_ptr);
   
   video_ptr->setPosition(pos);
+  
+  return Qnil;
 }
 
 /*
@@ -321,13 +327,11 @@ VALUE zj_video_position(int argc, VALUE* argv, VALUE self) {
   
   switch(argc) {
     /* called with no arguments, return current position */
-    case 0: return zj_video_get_position(self); break;
+    case 0: return zj_video_get_position(self);
     
     /* called with one argument, set new position */
-    case 1: zj_video_set_position(self, NUM2DBL(new_position)); break;
+    case 1: return zj_video_set_position(self, NUM2DBL(new_position));
   }
-  
-  return Qnil;
 }
 
 VALUE zj_video_get_loop_mode(VALUE self) {
@@ -341,7 +345,7 @@ VALUE zj_video_get_loop_mode(VALUE self) {
   }
 }
 
-void zj_video_set_loop_mode(VALUE self, ID loop_mode) {
+VALUE zj_video_set_loop_mode(VALUE self, ID loop_mode) {
   INIT_DATA_PTR(ofVideoPlayer, video_ptr);
   
   if(loop_mode == rb_intern("none"))
@@ -352,6 +356,8 @@ void zj_video_set_loop_mode(VALUE self, ID loop_mode) {
     video_ptr->setLoopState(OF_LOOP_NORMAL);
   else
     rb_raise(rb_eArgError, "Invalid loop mode!");
+    
+  return Qnil;
 }
 
 /* 
@@ -366,10 +372,8 @@ VALUE zj_video_loop_mode(int argc, VALUE* argv, VALUE self) {
     case 0: return zj_video_get_loop_mode(self);
     
     /* called with one argument, set new looping state */
-    case 1: zj_video_set_loop_mode(self, SYM2ID(new_loop_mode));
+    case 1: return zj_video_set_loop_mode(self, SYM2ID(new_loop_mode));
   }
-  
-  return Qnil;
 }
 
 /* 
