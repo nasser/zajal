@@ -4,6 +4,8 @@ Zajal
 A blend of [Ruby][ruby], [openFrameworks][of] and a clean consistent syntax, 
 Zajal is a staggeringly awesome creative coding tool.
 
+![what it looks like](http://zajal.cc/zajal.png)
+
 How do I use it?
 ----------------
 The easiest way to get started is to head over to [the main site][main] and 
@@ -33,8 +35,6 @@ you happen to be awesome and want to do more, [bug reports][bugs],
 [improved documentation][docs], [better examples][examples], 
 [sketch book submissions][sketch] and [code submissions][fork] are all 
 welcome.
-
-![usage](http://zajal.cc/zajal.png)
 
 Legal
 -----
