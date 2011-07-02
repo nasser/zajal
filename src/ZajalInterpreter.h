@@ -15,12 +15,6 @@
 #define DEFAULT_INITIAL_WIDTH     500
 #define DEFAULT_INITIAL_HEIGHT    500
 
-enum InterpreterState {
-  INTERPRETER_NO_SKETCH,
-  INTERPRETER_RUNNING,
-  INTERPRETER_ERROR
-};
-
 class ZajalInterpreter : public ofBaseApp {
 	
 	public:
@@ -48,7 +42,7 @@ class ZajalInterpreter : public ofBaseApp {
     void updateCurrentScript();
     char* getCurrentScriptPath();
     
-    InterpreterState getState();
+    ID getState();
     
     void appendLoadPath(char* path);
     void setInitialWidth(int w);
@@ -59,9 +53,6 @@ class ZajalInterpreter : public ofBaseApp {
     void logConsoleText(char* consoleName, char* format, ...);
     
   private:
-    // the state the interpreter is in
-    InterpreterState state;
-    
     // is a mouse button or key being held? used to implement key_up/mouse_down vs key_down/mouse_down
     bool keyIsPressed, mouseIsPressed;
     

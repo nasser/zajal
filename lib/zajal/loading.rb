@@ -149,6 +149,7 @@ def live_load new_code, forced
   # stay out of the way, you
   GC.disable
   
+  unglobalized_code = new_code.clone
   new_code = globalize_code new_code
   old_code = App::Internals.current_code
   
@@ -193,15 +194,19 @@ def live_load new_code, forced
   # run the code
   begin
     if new_sexp.fetch("/method_add_block/method_add_arg/fcall/@ident").empty?
-      # no blocks are used, we're in reduced mode
-      Events::Internals.reset_defaults
-      Events::Internals.defaults_proc.call
-      Events::Internals.draw_proc = proc new_code
-      Events::Internals.current_event = :draw
-      Events::Internals.draw_proc.call
+      # no blocks are used, we're in bare mode, save contents of sketch to fbo to display later
+      App::Internals.state = :bare
+      App::Internals.frame = FBO.new do
+        Events::Internals.reset_defaults
+        Events::Internals.defaults_proc.call
+        Graphics.reset_frame
+        proc(unglobalized_code).call
+      end
       
     else
-      # blocks are used, we're in complete mode
+      # blocks are used, we're in complete mode, save code to procs to run later
+      App::Internals.state = :complete
+      App::Internals.frame = FBO.new
       
       # TODO support global assigns burried under if/while/etc blocks
       if forced or (added.fetch("/method_add_block/method_add_arg/fcall/@ident").include? "setup" or not added.fetch("/assign/var_field/@gvar").empty?)

@@ -21,6 +21,9 @@
 
 /* app */
 extern VALUE zj_mApp;
+#define APP_STATE_IS(s) SYM2ID(INTERNAL_GET(zj_mApp, state)) == rb_intern(#s)
+#define APP_STATE_GET INTERNAL_GET(zj_mApp, state)
+#define APP_STATE_SET(s) INTERNAL_SET(zj_mApp, state, SYM(#s))
 
 /* events */
 extern VALUE zj_mEvents;

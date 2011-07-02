@@ -121,6 +121,13 @@ void zj_graphics_reset_frame() {
   zj_typography_reset_stacked_text();
 }
 
+/* TODO figure out naming conventions! */
+VALUE zj_reset_frame(VALUE self) {
+  zj_graphics_reset_frame();
+  
+  return Qnil;
+}
+
 /* TODO move this to a helper source file */
 int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a) {
   VALUE arg1, arg2, arg3, arg4;
@@ -1090,7 +1097,9 @@ VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
       
     } else {
       /*  called with arguments, change the background */
+      /* TODO does combining ofBackground and ofClear break things? */
       ofBackground(r, g, b);
+      ofClear(r, g, b, a);
       
     }
     
@@ -1113,38 +1122,21 @@ VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
 
 VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
   VALUE new_background_auto;
-  int argca = rb_scan_args(argc, argv, "01", &new_background_auto);
+  rb_scan_args(argc, argv, "01", &new_background_auto);
   
   if(IS_IN_SETUP && argc > 0) {
     SET_DEFAULT(background_auto, rb_ary_new3(1, new_background_auto) );
   
   } else {
-    switch(argca) {
-      case 0:
-        /*  called without argument, return current background auto setting */
-        return _zj_background_auto;
+    switch(argc) {
+      /* called without argument, return current background auto setting */
+      case 0: return ofbClearBg() ? Qtrue : Qfalse;
 
-      case 1:
-        if(new_background_auto == Qtrue){
-          /*  called with true, enable auto background */
-          _zj_background_auto = new_background_auto;
-          ofSetBackgroundAuto(true);
-        
-        } else if(new_background_auto == Qfalse) {
-          /*  called with false, disable auto background */
-          _zj_background_auto = new_background_auto;
-          ofSetBackgroundAuto(false);
-        
-        } else {
-          rb_raise(rb_eArgError, "Expected true or false!");
-        
-        }
-        break;
+      /* called with argument, enable/disable auto background */
+      case 1: ofSetBackgroundAuto(RTEST(new_background_auto)); return Qnil;
     }
     
   }
-  
-  return Qnil;
 }
 
 /* 
@@ -1346,4 +1338,8 @@ void Init_Graphics() {
   
   rb_define_private_method(zj_mGraphics, "background", RUBY_METHOD_FUNC(zj_background), -1);
   rb_define_private_method(zj_mGraphics, "color", RUBY_METHOD_FUNC(zj_color), -1);
+  
+  /* Internal stuff */
+  rb_define_method(zj_mGraphics, "reset_frame", RUBY_METHOD_FUNC(zj_reset_frame), 0);
+  
 }

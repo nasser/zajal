@@ -34,7 +34,6 @@ ZajalInterpreter::ZajalInterpreter() {
   keyIsPressed = false;
   mouseIsPressed = false;
   
-  state = INTERPRETER_NO_SKETCH;
   scriptModifiedTime = 0;
   
   scriptName = NULL;
@@ -47,8 +46,8 @@ ZajalInterpreter::ZajalInterpreter() {
   initialHeight = DEFAULT_INITIAL_HEIGHT;
 }
 
-InterpreterState ZajalInterpreter::getState() {
-  return state;
+ID ZajalInterpreter::getState() {
+  return SYM2ID(APP_STATE_GET);
 }
 
 void ZajalInterpreter::printVersion() {
@@ -68,13 +67,11 @@ void ZajalInterpreter::printVersion() {
 }
 
 void ZajalInterpreter::run() {
-  state = INTERPRETER_RUNNING;
   ofSetupOpenGL(initialWidth, initialHeight, OF_WINDOW);
   ofRunApp(this);
 }
 
 void ZajalInterpreter::run(ofAppBaseWindow* window) {
-  state = INTERPRETER_RUNNING;
   ofSetupOpenGL(window, initialWidth, initialHeight, OF_WINDOW);
   ofRunApp(this);
 }
@@ -106,16 +103,16 @@ void ZajalInterpreter::setInitialHeight(int h) {
 void ZajalInterpreter::setup() {
   ofSetDefaultRenderer(&renderer);
   
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     INTERNAL_SET(zj_mEvents, current_event, SYM("setup"));
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, setup_proc), 0);
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::update() {
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     INTERNAL_SET(zj_mEvents, current_event, SYM("update"));
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
     
@@ -129,7 +126,7 @@ void ZajalInterpreter::update() {
     
     // if no error exists, run user update method, catch runtime errors
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, update_proc), 0);
-    if(ruby_error) {state = INTERPRETER_ERROR; return; }
+    if(ruby_error) {APP_STATE_SET(error); return; }
     
     VALUE posthooks_ary = INTERNAL_GET(zj_mEvents, update_posthooks);
     VALUE* posthooks_ptr = RARRAY_PTR(posthooks_ary);
@@ -149,81 +146,96 @@ void ZajalInterpreter::draw() {
   char* error_message_ptr, *error_class;
   long backtrace_length;
   
-  switch(state) {
-    case INTERPRETER_ERROR:
-      INTERNAL_SET(zj_mEvents, current_event, SYM("draw"));
-      // TODO stop all playing videos
-      
-      error_message = zj_safe_funcall(rb_cObject, rb_intern("process_error"), 0);
-      if(ruby_error) {
-        error_message_ptr = RSTRING_PTR(rb_obj_as_string(rb_gv_get("$!")));
-      } else {
-        error_message_ptr = RSTRING_PTR(error_message);
-      }
-      
-      if(RTEST(INTERNAL_GET(zj_mApp, verbose))) {
-        // http://metaeditor.sourceforge.net/embed/
-        last_error = rb_gv_get("$!");
-        error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
-        error_message_ptr = RSTRING_PTR(rb_obj_as_string(last_error));
-        logConsoleText("$stderr", "class   = %s\n", error_class); 
-        logConsoleText("$stderr", "message = %s\n", error_message_ptr); 
-        
-        logConsoleText("$stderr", "backtrace = \n");
-        backtrace = rb_attr_get(last_error, rb_intern("bt"));
-        backtrace_length = RARRAY_LEN(backtrace);
-        backtrace_ptr = RARRAY_PTR(backtrace);
-        for(int i=0; i<backtrace_length; i++)
-          logConsoleText("$stderr", "\tfrom %s\n", RSTRING_PTR(backtrace_ptr[i]));
-      }
-      
-      // an error exists, draw error screen
-      ofSetColor(255, 255, 255, 255);
-      //lastErrorImage.draw(0, 0);
-      // TODO apply filters to lastErrorImage instead of drawing a rect
-      //ofEnableAlphaBlending();
-      ofFill();
-      ofSetColor(255, 255, 255, 128);
-      ofRect(0, 0, ofGetWidth(), ofGetHeight());
-      ofSetColor(255, 255, 255, 255);
-      ofRect(0, ofGetHeight()/2-25, ofGetWidth(), 35);
-      ofSetColor(0, 0, 0, 255);
-      ofDrawBitmapString(error_message_ptr, 10, ofGetHeight()/2-10);
-      zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
-      break;
-      
-    case INTERPRETER_RUNNING:
-      INTERNAL_SET(zj_mEvents, current_event, SYM("draw"));
-      VALUE prehooks_ary = INTERNAL_GET(zj_mEvents, draw_prehooks);
-      VALUE* prehooks_ptr = RARRAY_PTR(prehooks_ary);
-      int prehooks_len = RARRAY_LEN(prehooks_ary);
+  VALUE prehooks_ary, posthooks_ary;
+  VALUE* prehooks_ptr, *posthooks_ptr;
+  int prehooks_len, posthooks_len;
+  
+  ofFbo* fbo_ptr;
+  
+  if(APP_STATE_IS(error)) {
+    INTERNAL_SET(zj_mEvents, current_event, SYM("draw"));
+    // TODO stop all playing videos
     
-      for(int i = 0; i < prehooks_len; i++) {
-        zj_safe_proc_call(prehooks_ptr[i], 0);
-      }
+    error_message = zj_safe_funcall(rb_cObject, rb_intern("process_error"), 0);
+    if(ruby_error) {
+      error_message_ptr = RSTRING_PTR(rb_obj_as_string(rb_gv_get("$!")));
+    } else {
+      error_message_ptr = RSTRING_PTR(error_message);
+    }
     
-      // no error exists, draw next frame of user code, catch runtime errors
-      zj_graphics_reset_frame();
-      zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
-      if(ruby_error) state = INTERPRETER_ERROR;
+    if(RTEST(INTERNAL_GET(zj_mApp, verbose))) {
+      // http://metaeditor.sourceforge.net/embed/
+      last_error = rb_gv_get("$!");
+      error_class = RSTRING_PTR(rb_class_path(CLASS_OF(last_error)));
+      error_message_ptr = RSTRING_PTR(rb_obj_as_string(last_error));
+      logConsoleText("$stderr", "class   = %s\n", error_class); 
+      logConsoleText("$stderr", "message = %s\n", error_message_ptr); 
       
-      VALUE posthooks_ary = INTERNAL_GET(zj_mEvents, draw_posthooks);
-      VALUE* posthooks_ptr = RARRAY_PTR(posthooks_ary);
-      int posthooks_len = RARRAY_LEN(posthooks_ary);
+      logConsoleText("$stderr", "backtrace = \n");
+      backtrace = rb_attr_get(last_error, rb_intern("bt"));
+      backtrace_length = RARRAY_LEN(backtrace);
+      backtrace_ptr = RARRAY_PTR(backtrace);
+      for(int i=0; i<backtrace_length; i++)
+        logConsoleText("$stderr", "\tfrom %s\n", RSTRING_PTR(backtrace_ptr[i]));
+    }
     
-      for(int i = 0; i < posthooks_len; i++){
-        zj_safe_proc_call(posthooks_ptr[i], 0);
-        if(ruby_error) state = INTERPRETER_ERROR;
-      } 
-      
-      // fake continious mouse press
-      if(mouseIsPressed)
-        zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, lastMouseX, lastMouseY, lastMouseButton);
-      if(ruby_error) state = INTERPRETER_ERROR;
-      
-      break;
-      
-  }
+    // an error exists, draw error screen
+    ofSetColor(255, 255, 255, 255);
+    //lastErrorImage.draw(0, 0);
+    // TODO apply filters to lastErrorImage instead of drawing a rect
+    //ofEnableAlphaBlending();
+    ofFill();
+    ofSetColor(255, 255, 255, 128);
+    ofRect(0, 0, ofGetWidth(), ofGetHeight());
+    ofSetColor(255, 255, 255, 255);
+    ofRect(0, ofGetHeight()/2-25, ofGetWidth(), 35);
+    ofSetColor(0, 0, 0, 255);
+    ofDrawBitmapString(error_message_ptr, 10, ofGetHeight()/2-10);
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
+    
+  } else if(APP_STATE_IS(complete)) {
+    INTERNAL_SET(zj_mEvents, current_event, SYM("draw"));
+    Data_Get_Struct(INTERNAL_GET(zj_mApp, frame), ofFbo, fbo_ptr);
+    
+    fbo_ptr->begin();
+    
+    prehooks_ary = INTERNAL_GET(zj_mEvents, draw_prehooks);
+    prehooks_ptr = RARRAY_PTR(prehooks_ary);
+    prehooks_len = RARRAY_LEN(prehooks_ary);
+  
+    for(int i = 0; i < prehooks_len; i++) {
+      zj_safe_proc_call(prehooks_ptr[i], 0);
+    }
+  
+    // no error exists, draw next frame of user code, catch runtime errors
+    zj_graphics_reset_frame();
+    zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
+    if(ruby_error) {
+      APP_STATE_SET(error);
+    }
+    
+    posthooks_ary = INTERNAL_GET(zj_mEvents, draw_posthooks);
+    posthooks_ptr = RARRAY_PTR(posthooks_ary);
+    posthooks_len = RARRAY_LEN(posthooks_ary);
+  
+    for(int i = 0; i < posthooks_len; i++){
+      zj_safe_proc_call(posthooks_ptr[i], 0);
+      if(ruby_error) APP_STATE_SET(error);
+    } 
+    
+    // fake continious mouse press
+    if(mouseIsPressed)
+      zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, lastMouseX, lastMouseY, lastMouseButton);
+    if(ruby_error) APP_STATE_IS(error);
+    
+    fbo_ptr->end();
+    fbo_ptr->draw(0, 0);
+    
+  } else if(APP_STATE_IS(bare)) {
+    Data_Get_Struct(INTERNAL_GET(zj_mApp, frame), ofFbo, fbo_ptr);
+    fbo_ptr->draw(0, 0);
+    
+  } 
   
   // try to update script at end of setup-update-draw loop
   if(nextUpdate-- == 0) updateCurrentScript();
@@ -258,19 +270,19 @@ char* ZajalInterpreter::getCurrentScriptPath() {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::exit() {
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     // TODO convert key into symbols
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, exit_proc), 0);
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::keyPressed  (int key) {
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     VALUE zj_cKeyEvent = rb_const_get(rb_cObject, rb_intern("KeyEvent"));
     VALUE keyEvent = zj_safe_funcall(zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
     
     if(keyIsPressed) {
       zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, keyEvent);
@@ -280,19 +292,19 @@ void ZajalInterpreter::keyPressed  (int key) {
       keyIsPressed = true;
     }
     
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::keyReleased  (int key) {
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     VALUE zj_cKeyEvent = rb_const_get(rb_cObject, rb_intern("KeyEvent"));
     VALUE keyEvent = zj_safe_funcall(zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
     
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_up_proc), 1, keyEvent);
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
     
     keyIsPressed = false;
   }
@@ -301,52 +313,52 @@ void ZajalInterpreter::keyReleased  (int key) {
 //--------------------------------------------------------------
 // http://www.ruby-forum.com/topic/76498
 void ZajalInterpreter::mouseMoved(int x, int y) {
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_moved_proc), 2, INT2FIX(x), INT2FIX(y));
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseDragged(int x, int y, int button) {
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     lastMouseX = INT2FIX(x);
     lastMouseY = INT2FIX(y);
     lastMouseButton = zj_button_to_symbol(button);
 
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_dragged_proc), 3, lastMouseX, lastMouseY, lastMouseButton);
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mousePressed(int x, int y, int button) {
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     lastMouseX = INT2FIX(x);
     lastMouseY = INT2FIX(y);
     lastMouseButton = zj_button_to_symbol(button);
     
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_down_proc), 3, lastMouseX, lastMouseY, lastMouseButton);
     mouseIsPressed = true;
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
   }
 }
 
 
 //--------------------------------------------------------------
 void ZajalInterpreter::mouseReleased(int x, int y, int button) {
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_up_proc), 3, INT2FIX(x), INT2FIX(y), zj_button_to_symbol(button));
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
     mouseIsPressed = false;
   }
 }
 
 //--------------------------------------------------------------
 void ZajalInterpreter::windowResized(int w, int h) {
-  if(state == INTERPRETER_RUNNING) {
+  if(APP_STATE_IS(complete)) {
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, window_resized_proc), 2, INT2FIX(w), INT2FIX(h));
-    if(ruby_error) state = INTERPRETER_ERROR;
+    if(ruby_error) APP_STATE_SET(error);
   }
 }
 
@@ -424,9 +436,9 @@ void ZajalInterpreter::reloadScript(bool forced) {
   fseek(scriptFile, 0, SEEK_SET);
   
   bool mustRestart = true;
-  bool wasLastError = (state == INTERPRETER_ERROR); // are we recovering from an error?
+  bool wasLastError = (APP_STATE_IS(error)); // are we recovering from an error?
   
-  if(state == INTERPRETER_RUNNING)
+  if(APP_STATE_IS(complete))
     lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
   
   logConsoleText("$stdout", "Reading %s (%db)\n", scriptName, (int)scriptFileSize);
@@ -438,7 +450,7 @@ void ZajalInterpreter::reloadScript(bool forced) {
   fclose(scriptFile);
   
   zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), forced? Qtrue : Qfalse);
-  state = ruby_error ? INTERPRETER_ERROR : INTERPRETER_RUNNING;
+  if(ruby_error) APP_STATE_SET(error);
   
   free(scriptFileContent);
 }
