@@ -3,6 +3,33 @@
 // main interpreter executable
 
 #include "ZajalInterpreter.h"
+#include "ofAppGlutWindow.h"
+#include <GLUT/glut.h>
+
+static ofBaseApp *	ofAppPtr;
+
+class ZajalGlutWindow : public ofAppGlutWindow {
+  void initializeWindow();
+  static void zj_idle_cb(void);
+};
+
+void ZajalGlutWindow::zj_idle_cb(void) {
+  idle_cb();
+  
+  char* stdoutText = ((ZajalInterpreter*)ofAppPtr)->readConsoleText("stdout");
+  if(stdoutText) fprintf(stdout, stdoutText);
+
+  char* stderrText = ((ZajalInterpreter*)ofAppPtr)->readConsoleText("stderr");
+  if(stderrText) fprintf(stderr, stderrText);
+  
+  fflush(stdout);
+  fflush(stderr);
+}
+
+void ZajalGlutWindow::initializeWindow() {
+  ofAppGlutWindow::initializeWindow();
+  glutIdleFunc(zj_idle_cb);
+}
 
 #define CLI_WIDTH_OPTION    1
 #define CLI_HEIGHT_OPTION   2
@@ -65,7 +92,7 @@ int main(int argc, char** argv) {
   // parse non-options (script file names) and run
   if(optind < argc) {
     zi->loadScript(argv[optind]);
-    zi->run();
+    zi->run(new ZajalGlutWindow());
   }
 }
 
