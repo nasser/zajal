@@ -14,6 +14,97 @@
 /* global graphics module */
 VALUE zj_mGraphics;
 
+VALUE zj_cFBO;
+
+bool _zj_old_background_auto;
+
+VALUE zj_fbo_begin(VALUE self) {
+  INIT_DATA_PTR(ofFbo, fbo_ptr);
+  
+  _zj_old_background_auto = ofbClearBg();
+  ofSetBackgroundAuto(false);
+  fbo_ptr->begin();
+  
+  return Qnil;
+}
+
+VALUE zj_fbo_end(VALUE self) {
+  INIT_DATA_PTR(ofFbo, fbo_ptr);
+  
+  fbo_ptr->end();
+  ofSetBackgroundAuto(_zj_old_background_auto);
+  
+  return Qnil;
+}
+
+VALUE zj_fbo_width(VALUE self) {
+  INIT_DATA_PTR(ofFbo, fbo_ptr);
+  
+  return INT2FIX(fbo_ptr->getWidth());
+}
+
+VALUE zj_fbo_height(VALUE self) {
+  INIT_DATA_PTR(ofFbo, fbo_ptr);
+  
+  return INT2FIX(fbo_ptr->getHeight());
+}
+
+VALUE zj_fbo_draw(VALUE self, VALUE x, VALUE y) {
+  INIT_DATA_PTR(ofFbo, fbo_ptr);
+  
+  fbo_ptr->draw(NUM2DBL(x), NUM2DBL(y));
+  
+  return Qnil;
+}
+
+void zj_fbo_dealloc(void* video) {
+  delete (ofVideoPlayer*)video;
+}
+
+// TODO support all FBO settings
+VALUE zj_fbo_initialize(int argc, VALUE* argv, VALUE self) {
+  INIT_DATA_PTR(ofFbo, fbo_ptr);
+  
+  VALUE w, h;
+  rb_scan_args(argc, argv, "02", &w, &h);
+  
+  switch(argc) {
+    /* called with no arguments, create FBO equal to window size */
+    case 0: fbo_ptr->setup(ofGetWidth(), ofGetHeight(), GL_RGBA, 8); break;
+
+    /* called with one argument, create a square FBO */
+    case 1: fbo_ptr->setup(NUM2INT(w), NUM2INT(w), GL_RGBA, 8); break;
+    
+    /* called with two arguments, create a rectangular FBO */
+    case 2: fbo_ptr->setup(NUM2INT(w), NUM2INT(h), GL_RGBA, 8); break;
+    
+    /* should never happen */
+    default: rb_raise(rb_eArgError, "Strange argument count in FBO#initialize");
+  }
+  
+  /* if a block is given, prime the FBO with it*/
+  if(rb_block_given_p()) {
+    zj_fbo_begin(self);
+    rb_yield(Qnil);
+    zj_fbo_end(self);
+  }
+  
+  return self;
+}
+
+VALUE zj_fbo_new(int argc, VALUE* argv, VALUE klass) {
+  ofFbo* fbo_ptr = new ofFbo();
+  
+  VALUE fbo = Data_Wrap_Struct(klass, 0, zj_fbo_dealloc, fbo_ptr);
+  rb_obj_call_init(fbo, argc, argv);
+  
+  return fbo;
+}
+
+// VALUE zj_fbo(VALUE self) {
+//   
+// }
+
 /*  internal global variables */
 /* TODO move these to Internals? they're all normally accessible... */
 VALUE _zj_curve_resolution = INT2FIX(20);
@@ -1196,6 +1287,17 @@ VALUE zj_next_contour(VALUE self, VALUE bClose) {
 void Init_Graphics() {
   zj_mGraphics = rb_define_module_under(zj_mZajal, "Graphics");
   rb_define_module_under(zj_mGraphics, "Internals");
+  
+  /* FBOs */
+  zj_cFBO = rb_define_class_under(zj_mGraphics, "FBO", rb_cObject);
+  rb_define_singleton_method(zj_cFBO, "new", RUBY_METHOD_FUNC(zj_fbo_new), -1);
+  rb_define_method(zj_cFBO, "initialize", RUBY_METHOD_FUNC(zj_fbo_initialize), -1);
+  rb_define_method(zj_cFBO, "begin", RUBY_METHOD_FUNC(zj_fbo_begin), 0);
+  rb_define_method(zj_cFBO, "end", RUBY_METHOD_FUNC(zj_fbo_end), 0);
+  rb_define_method(zj_cFBO, "draw", RUBY_METHOD_FUNC(zj_fbo_draw), 2);
+  
+  rb_define_method(zj_cFBO, "width", RUBY_METHOD_FUNC(zj_fbo_width), 0);
+  rb_define_method(zj_cFBO, "height", RUBY_METHOD_FUNC(zj_fbo_height), 0);
   
   /*  basic shapes */
   rb_define_private_method(zj_mGraphics, "rectangle", RUBY_METHOD_FUNC(zj_rectangle), 4);
