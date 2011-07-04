@@ -1,9 +1,6 @@
 module Zajal
   module Events
     module Internals
-      # FIXME this is a kludge. Get this into the language properly soon.
-      @current_event = nil
-      
       # FIXME the kludges keep on coming...
       @initial_defaults = {
         size: [500, 500],

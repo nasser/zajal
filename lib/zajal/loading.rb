@@ -215,7 +215,6 @@ def live_load new_code, forced
         eval new_code
         
         unless Events::Internals.setup_proc.nil?
-          Events::Internals.current_event = :setup
           Events::Internals.setup_proc.call
         end
       else

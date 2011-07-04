@@ -104,7 +104,6 @@ void ZajalInterpreter::setup() {
   ofSetDefaultRenderer(&renderer);
   
   if(APP_STATE_IS(complete)) {
-    INTERNAL_SET(zj_mEvents, current_event, SYM("setup"));
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, setup_proc), 0);
     if(ruby_error) APP_STATE_SET(error);
   }
@@ -113,7 +112,6 @@ void ZajalInterpreter::setup() {
 //--------------------------------------------------------------
 void ZajalInterpreter::update() {
   if(APP_STATE_IS(complete)) {
-    INTERNAL_SET(zj_mEvents, current_event, SYM("update"));
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
     
     VALUE prehooks_ary = INTERNAL_GET(zj_mEvents, update_prehooks);
@@ -153,7 +151,6 @@ void ZajalInterpreter::draw() {
   ofFbo* fbo_ptr;
   
   if(APP_STATE_IS(error)) {
-    INTERNAL_SET(zj_mEvents, current_event, SYM("draw"));
     // TODO stop all playing videos
     
     error_message = zj_safe_funcall(rb_cObject, rb_intern("process_error"), 0);
@@ -194,7 +191,6 @@ void ZajalInterpreter::draw() {
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
     
   } else if(APP_STATE_IS(complete)) {
-    INTERNAL_SET(zj_mEvents, current_event, SYM("draw"));
     Data_Get_Struct(INTERNAL_GET(zj_mApp, frame), ofFbo, fbo_ptr);
     
     fbo_ptr->begin();
