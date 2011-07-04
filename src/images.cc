@@ -31,8 +31,7 @@ VALUE image_new() {
  *   @param [String] filename The name of the file to load
  */
 VALUE zj_image_load(VALUE self, VALUE filename) {
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   char* data_filename = zj_to_data_path(StringValuePtr(filename));
   image_ptr->loadImage(data_filename);
@@ -98,8 +97,7 @@ VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
     
   }
   
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   /* TODO use existing zj_image functions instead of duplicating functionality */
   image_ptr->setUseTexture(RTEST(use_texture));
@@ -158,8 +156,7 @@ VALUE zj_image_draw(int argc, VALUE* argv, VALUE self) {
   VALUE x, y, w, h;
   rb_scan_args(argc, argv, "22", &x, &y, &w, &h);
   
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   if(NIL_P(w) && NIL_P(h)) {
     /* called without width and height, just use coords */
@@ -185,8 +182,8 @@ VALUE zj_image_draw(int argc, VALUE* argv, VALUE self) {
  * @overload clear
  */
 VALUE zj_image_clear(VALUE self) {
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
+  
   image_ptr->clear();
   
   return Qnil;
@@ -200,8 +197,7 @@ VALUE zj_image_clear(VALUE self) {
  *     in +.png+, +.jpg+ or +.jpeg+
  */
 VALUE zj_image_save(VALUE self, VALUE filename) {
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   char* save_filename = zj_to_data_path(StringValuePtr(filename));
   image_ptr->saveImage(save_filename);
@@ -225,8 +221,7 @@ VALUE zj_image_resize(int argc, VALUE* argv, VALUE self) {
   VALUE w, h;
   rb_scan_args(argc, argv, "11", &w, &h);
   
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   if(!NIL_P(w) && NIL_P(h)) {
     /* called with one argument, scale proportionally */
@@ -264,8 +259,7 @@ VALUE zj_image_grab_screen(int argc, VALUE* argv, VALUE self) {
   VALUE x, y, w, h;
   rb_scan_args(argc, argv, "04", &x, &y, &w, &h);
   
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   if(NIL_P(x) && NIL_P(y) && NIL_P(w) && NIL_P(h)) {
     /* called without arguments, grab whole screen */
@@ -296,8 +290,7 @@ VALUE zj_image_get_pixel(VALUE self, VALUE x, VALUE y) {
   int _x = NUM2INT(x);
   int _y = NUM2INT(y);
   
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   if(_x > image_ptr->width || _y > image_ptr->height || _x < 0 || _y < 0)
     return Qnil;
@@ -358,8 +351,7 @@ VALUE zj_image_each_pixel(int argc, VALUE* argv, VALUE self) {
   // VALUE x, y, w, h;
   // rb_scan_args(argc, argv, "04", &x, &y, &w, &h);
   
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   unsigned char* pixels = image_ptr->getPixels();
   int Bpp = image_ptr->bpp/8; // bytes per pixel = 1, 3 or 4
@@ -437,8 +429,7 @@ VALUE zj_image_width(int argc, VALUE* argv, VALUE self) {
   VALUE new_width;
   rb_scan_args(argc, argv, "01", &new_width);
   
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   if(NIL_P(new_width)) {
     /* called without arguments, return width */
@@ -466,8 +457,7 @@ VALUE zj_image_height(int argc, VALUE* argv, VALUE self) {
   VALUE new_height;
   rb_scan_args(argc, argv, "01", &new_height);
   
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   if(NIL_P(new_height)) {
     /* called without arguments, return width */
@@ -500,8 +490,7 @@ VALUE zj_image_type(int argc, VALUE* argv, VALUE self) {
   VALUE new_type;
   rb_scan_args(argc, argv, "01", &new_type);
   
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   ID grayscale_id = rb_intern("grayscale");
   ID rgb_id = rb_intern("rgb");
@@ -552,8 +541,7 @@ VALUE zj_image_type(int argc, VALUE* argv, VALUE self) {
  *   in the image
  */
 VALUE zj_image_bpp(VALUE self) {
-  ofImage* image_ptr;
-  Data_Get_Struct(self, ofImage, image_ptr);
+  INIT_DATA_PTR(ofImage, image_ptr);
   
   return DBL2NUM(image_ptr->bpp);
 }

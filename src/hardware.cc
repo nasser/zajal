@@ -139,8 +139,7 @@ VALUE zj_arduino_connect(VALUE self) {
  * @todo This should be managed internally on exit
  */
 VALUE zj_arduino_disconnect(VALUE self) {
-  ofArduino* arduino_ptr;
-  Data_Get_Struct(self, ofArduino, arduino_ptr);
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
   
   arduino_ptr->disconnect();
   
@@ -166,8 +165,7 @@ VALUE zj_arduino_update(VALUE self) {
  * @todo Whats the difference between this and #ready? ?
  */
 VALUE zj_arduino_initialized_p(VALUE self) {
-  ofArduino* arduino_ptr;
-  Data_Get_Struct(self, ofArduino, arduino_ptr);
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
   
   return arduino_ptr->isInitialized() ? Qtrue : Qfalse;
 }
@@ -178,8 +176,7 @@ VALUE zj_arduino_initialized_p(VALUE self) {
  * @return [Boolean]
  */
 VALUE zj_arduino_ready_p(VALUE self) {
-  ofArduino* arduino_ptr;
-  Data_Get_Struct(self, ofArduino, arduino_ptr);
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
   
   return arduino_ptr->isArduinoReady() ? Qtrue : Qfalse;
 }
@@ -188,8 +185,7 @@ VALUE zj_arduino_ready_p(VALUE self) {
  * Get firmware name
  */
 VALUE zj_arduino_firmware(VALUE self) {
-  ofArduino* arduino_ptr;
-  Data_Get_Struct(self, ofArduino, arduino_ptr);
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
   
   return rb_str_new2(arduino_ptr->getFirmwareName().c_str());
 }
@@ -400,8 +396,7 @@ VALUE zj_arduino_analog(VALUE self, VALUE pin) {
 }
 
 VALUE zj_arduino_setup(VALUE self) {
-  ofArduino* arduino_ptr;
-  Data_Get_Struct(self, ofArduino, arduino_ptr);
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
   
   if(!RTEST(rb_iv_get(self, "@did_setup")) && arduino_ptr->isArduinoReady()) {
     rb_iv_set(self, "@did_setup", Qtrue);
