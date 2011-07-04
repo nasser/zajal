@@ -96,19 +96,11 @@ VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
   
   } else if(NIL_P(h)) {
     /*  called with one argument, set window size to square */
-    if(IS_IN_SETUP) {
-      SET_DEFAULT(size, rb_ary_new3(2, w, w));
-    } else {
-      ofSetWindowShape(NUM2INT(w), NUM2INT(w));
-    }
+    ofSetWindowShape(NUM2INT(w), NUM2INT(w));
   
   } else {
     /*  called with two arguments, set window size to rectangle */
-    if(IS_IN_SETUP) {
-      SET_DEFAULT(size, rb_ary_new3(2, w, h));
-    } else {
-      ofSetWindowShape(NUM2INT(w), NUM2INT(h));
-    }
+    ofSetWindowShape(NUM2INT(w), NUM2INT(h));
   
   }
   
@@ -132,22 +124,16 @@ VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE klass) {
   VALUE new_vertical_sync;
   rb_scan_args(argc, argv, "01", &new_vertical_sync);
   
-  if(IS_IN_SETUP && argc > 0) {
-    SET_DEFAULT(vertical_sync, rb_ary_new3(1, new_vertical_sync) );
-    
+  if(NIL_P(new_vertical_sync)) {
+    /*  method called without argument, treat as a getter */
+    return _zj_value_vertical_sync;
+  
   } else {
-    if(NIL_P(new_vertical_sync)) {
-      /*  method called without argument, treat as a getter */
-      return _zj_value_vertical_sync;
-    
-    } else {
-      /*  method called with argument, treat as setter */
-      _zj_value_vertical_sync = new_vertical_sync;
-      ofSetVerticalSync(RTEST(new_vertical_sync));
-      return Qnil;
-    
-    }
-    
+    /*  method called with argument, treat as setter */
+    _zj_value_vertical_sync = new_vertical_sync;
+    ofSetVerticalSync(RTEST(new_vertical_sync));
+    return Qnil;
+  
   }
   
   return Qnil;
@@ -183,21 +169,15 @@ VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
   VALUE new_framerate;
   rb_scan_args(argc, argv, "01", &new_framerate);
   
-  if(IS_IN_SETUP && argc > 0) {
-    SET_DEFAULT(framerate, rb_ary_new3(1, new_framerate) );
-    
+  if(NIL_P(new_framerate)) {
+    /*  method called without argument, treat as a getter */
+    return rb_float_new(ofGetFrameRate());
+  
   } else {
-    if(NIL_P(new_framerate)) {
-      /*  method called without argument, treat as a getter */
-      return rb_float_new(ofGetFrameRate());
-    
-    } else {
-      /*  method called with argument, treat as setter */
-      ofSetFrameRate(NUM2DBL(new_framerate));
-      return Qnil;
-    
-    }
-    
+    /*  method called with argument, treat as setter */
+    ofSetFrameRate(NUM2DBL(new_framerate));
+    return Qnil;
+  
   }
   
   return Qnil;
@@ -218,21 +198,16 @@ VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
   VALUE new_title;
   rb_scan_args(argc, argv, "01", &new_title);
   
-  if(IS_IN_SETUP && argc > 0) {
-    SET_DEFAULT(title, rb_ary_new3(1, new_title) );
-    
+  if(NIL_P(new_title)) {
+    /*  method called without argument, treat as a getter */
+    return _zj_value_window_title;
+  
   } else {
-    if(NIL_P(new_title)) {
-      /*  method called without argument, treat as a getter */
-      return _zj_value_window_title;
-    
-    } else {
-      /*  method called with argument, treat as setter */
-      _zj_value_window_title = new_title;
-      ofSetWindowTitle(StringValuePtr(_zj_value_window_title));
-      return Qnil;
-    
-    }
+    /*  method called with argument, treat as setter */
+    _zj_value_window_title = new_title;
+    ofSetWindowTitle(StringValuePtr(_zj_value_window_title));
+    return Qnil;
+  
   }
   
   return Qnil;
@@ -254,22 +229,16 @@ VALUE zj_cursor(int argc, VALUE* argv, VALUE self) {
   VALUE cursor_visible;
   rb_scan_args(argc, argv, "01", &cursor_visible);
   
-  if(IS_IN_SETUP && argc > 0) {
-    SET_DEFAULT(cursor, rb_ary_new3(1, cursor_visible) );
-    
+  if(NIL_P(cursor_visible)) {
+    /*  method called without argument, treat as a getter */
+    return _zj_value_cursor_visible;
+  
   } else {
-    if(NIL_P(cursor_visible)) {
-      /*  method called without argument, treat as a getter */
-      return _zj_value_cursor_visible;
-    
-    } else {
-      /*  method called with argument, treat as setter */
-      _zj_value_cursor_visible = cursor_visible;
-      RTEST(_zj_value_cursor_visible) ? ofShowCursor() : ofHideCursor();
-      return Qnil;
-    
-    }
-    
+    /*  method called with argument, treat as setter */
+    _zj_value_cursor_visible = cursor_visible;
+    RTEST(_zj_value_cursor_visible) ? ofShowCursor() : ofHideCursor();
+    return Qnil;
+  
   }
   
   return Qnil;
@@ -291,21 +260,16 @@ VALUE zj_fullscreen(int argc, VALUE* argv, VALUE self) {
   VALUE fullscreen_mode;
   rb_scan_args(argc, argv, "01", &fullscreen_mode);
   
-  if(IS_IN_SETUP && argc > 0) {
-    SET_DEFAULT(fullscreen, rb_ary_new3(1, fullscreen_mode) );
-    
+  if(NIL_P(fullscreen_mode)) {
+    /*  method called without argument, treat as a getter */
+    return _zj_value_fullscreen_mode;
+  
   } else {
-    if(NIL_P(fullscreen_mode)) {
-      /*  method called without argument, treat as a getter */
-      return _zj_value_fullscreen_mode;
-    
-    } else {
-      /*  method called with argument, treat as setter */
-      _zj_value_fullscreen_mode = fullscreen_mode;
-      ofSetFullscreen(RTEST(_zj_value_fullscreen_mode));
-      return Qnil;
-    
-    }
+    /*  method called with argument, treat as setter */
+    _zj_value_fullscreen_mode = fullscreen_mode;
+    ofSetFullscreen(RTEST(_zj_value_fullscreen_mode));
+    return Qnil;
+  
   }
   
   return Qnil;
