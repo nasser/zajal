@@ -235,7 +235,7 @@ VALUE zj_set_rectangle_mode(ID mode) {
  *   Set the current +rectangle_mode+
  *   @param [Symbol] mode +:corner+ or +:center+
  */
-VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE self) {
   VALUE new_rectmode;
   rb_scan_args(argc, argv, "01", &new_rectmode);
   
@@ -625,7 +625,7 @@ VALUE zj_translate2(float x, float y, float z) {
  * @param [Numeric] y The distance to move in y
  * @param [Numeric] z The distance to move in z
  */
-VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_translate(int argc, VALUE* argv, VALUE self) {
   VALUE x, y, z;
   rb_scan_args(argc, argv, "21", &x, &y, &z);
   
@@ -669,7 +669,7 @@ VALUE zj_scale3(float x, float y, float z) {
  *   @param [Numeric] y The amount to scale by in y
  *   @param [Numeric] z The amount to scale by in z
  */
-VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_scale(int argc, VALUE* argv, VALUE self) {
   VALUE x, y, z;
   rb_scan_args(argc, argv, "12", &x, &y, &z);
   
@@ -689,7 +689,7 @@ VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
  * @overload rotate angle
  * @todo finish rotate method, it deviates significantly from OF and disables advanced functionality
  */
-VALUE zj_rotate(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_rotate(int argc, VALUE* argv, VALUE self) {
   VALUE arg1, arg2, arg3;
   int argca = rb_scan_args(argc, argv, "12", &arg1, &arg2, &arg3);
   
@@ -749,7 +749,7 @@ VALUE zj_bezier_vertex(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE
  * @overload curve_resolution
  * @overload curve_resolution res
  */
-VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE self) {
   VALUE new_resolution;
   int argca = rb_scan_args(argc, argv, "01", &new_resolution);
   
@@ -809,7 +809,7 @@ VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
  *   circle_resolution 16
  *   circle 185, 185, 200
  */
-VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE self) {
   VALUE new_resolution;
   int argca = rb_scan_args(argc, argv, "01", &new_resolution);
   
@@ -849,7 +849,7 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
  *     square 65, 30, 20
  *     triangle 75, 75, 20
  */
-VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_smoothing(int argc, VALUE* argv, VALUE self) {
   VALUE new_smoothing;
   int argca = rb_scan_args(argc, argv, "01", &new_smoothing);
   
@@ -895,7 +895,7 @@ VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
  * @see #color 
  * @see #background 
  */
-VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE self) {
   VALUE new_alpha_blending;
   int argca = rb_scan_args(argc, argv, "01", &new_alpha_blending);
   
@@ -929,7 +929,7 @@ VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
  * @overload arb_textures
  * @overload arb_textures state
  */
-VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_arb_textures(int argc, VALUE* argv, VALUE self) {
   VALUE new_arb_textures;
   int argca = rb_scan_args(argc, argv, "01", &new_arb_textures);
 
@@ -1022,7 +1022,7 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
  *     line_width 9
  *     line 80, height/2, width, height/2
  */    
-VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_line_width(int argc, VALUE* argv, VALUE self) {
   VALUE new_line_width;
   int argca = rb_scan_args(argc, argv, "01", &new_line_width);
   
@@ -1059,7 +1059,7 @@ VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
  *   @screenshot Blueish
  *     background 64, 99, 128
  */
-VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_background(int argc, VALUE* argv, VALUE self) {
   int r, g, b, a;
   if(zj_graphics_make_color(argc, argv, &r, &g, &b, &a)) {
     /*  called with arguments, change the background */
@@ -1084,7 +1084,7 @@ VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
   return Qnil;
 }
 
-VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_background_auto(int argc, VALUE* argv, VALUE self) {
   VALUE new_background_auto;
   rb_scan_args(argc, argv, "01", &new_background_auto);
   
@@ -1118,7 +1118,7 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
  *   square 65, 30, 20
  *   triangle 75, 75, 20
  */
-VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_fill(int argc, VALUE* argv, VALUE self) {
   VALUE new_fill;
   int argca = rb_scan_args(argc, argv, "01", &new_fill);
   
@@ -1211,7 +1211,7 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
  * 
  * @todo Should return the current color when called without arguments.
  */
-VALUE zj_color(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_color(int argc, VALUE* argv, VALUE self) {
   int r, g, b, a;
   zj_graphics_make_color(argc, argv, &r, &g, &b, &a);
   

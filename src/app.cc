@@ -22,7 +22,7 @@ VALUE _zj_value_fullscreen_mode = Qfalse;
  *   Get the current window width
  *   @return [Numeric] The current width of the window
  */
-VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_width(int argc, VALUE* argv, VALUE self) {
   VALUE w;
   rb_scan_args(argc, argv, "01", &w);
   
@@ -50,7 +50,7 @@ VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
  *   Get the current window height
  *   @return [Numeric] The current height of the window
  */
-VALUE zj_height(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_height(int argc, VALUE* argv, VALUE self) {
   VALUE h;
   rb_scan_args(argc, argv, "01", &h);
   
@@ -83,7 +83,7 @@ VALUE zj_height(int argc, VALUE* argv, VALUE klass) {
  *   Return the current window size
  *   @return [Array] The current size, e.g. +[500, 500]+
  */
-VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_size(int argc, VALUE* argv, VALUE self) {
   VALUE w, h;
   rb_scan_args(argc, argv, "02", &w, &h);
   
@@ -120,7 +120,7 @@ VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
  *   @return [Boolean] +true+ or +false+ indicating vertical sync is on or off
  *   respectively
  */
-VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE self) {
   VALUE new_vertical_sync;
   rb_scan_args(argc, argv, "01", &new_vertical_sync);
   
@@ -165,7 +165,7 @@ VALUE zj_frame(VALUE self) {
  *   Get the current framerate
  *   @return [Numeric] the current framerate
  */
-VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_framerate(int argc, VALUE* argv, VALUE self) {
   VALUE new_framerate;
   rb_scan_args(argc, argv, "01", &new_framerate);
   
@@ -194,7 +194,7 @@ VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
  *   Get the current title of the window
  *   @return [String] The current window title
  */
-VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_title(int argc, VALUE* argv, VALUE self) {
   VALUE new_title;
   rb_scan_args(argc, argv, "01", &new_title);
   

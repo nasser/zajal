@@ -41,7 +41,7 @@ VALUE zj_mMathematics;
  *     text [(random*10).round, (random*10).round, (random*10).round]
  *     text [(random*10).round, (random*10).round, (random*10).round]
  */
-VALUE zj_seed_random(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_seed_random(int argc, VALUE* argv, VALUE self) {
   VALUE val;
   rb_scan_args(argc, argv, "01", &val);
   
@@ -76,7 +76,7 @@ VALUE zj_seed_random(int argc, VALUE* argv, VALUE klass) {
  *   @param [Numeric] max The upper bound of the pseudorandom number to generate
  *   @return [min..max] A pseudorandom number
  */
-VALUE zj_random(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_random(int argc, VALUE* argv, VALUE self) {
   VALUE min, max;
   rb_scan_args(argc, argv, "02", &min, &max);
   
@@ -210,7 +210,7 @@ VALUE zj_random_height(VALUE self) {
  *   @param [Numeric] w
  *   @return [0...1] The four dimentional noise at +x+, +y+, +z+, +w+
  */
-VALUE zj_noise(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_noise(int argc, VALUE* argv, VALUE self) {
   VALUE x, y, z, w;
   rb_scan_args(argc, argv, "13", &x, &y, &z, &w);
   
@@ -273,7 +273,7 @@ VALUE zj_noise(int argc, VALUE* argv, VALUE klass) {
  *   @param [Numeric] w
  *   @return [-1..1] The four dimentional noise at +x+, +y+, +z+, +w+
  */
-VALUE zj_signed_noise(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_signed_noise(int argc, VALUE* argv, VALUE self) {
   VALUE x, y, z, w;
   rb_scan_args(argc, argv, "13", &x, &y, &z, &w);
   

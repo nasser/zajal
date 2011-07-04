@@ -551,7 +551,7 @@ VALUE zj_image_bpp(VALUE self) {
  * 
  * @return [Image] An Image containing the contents of the current frame
  */
-VALUE zj_grab_screen(int argc, VALUE* argv, VALUE klass) {
+VALUE zj_grab_screen(int argc, VALUE* argv, VALUE self) {
   VALUE new_image = image_new();
   rb_funcall2(new_image, rb_intern("grab_screen"), argc, argv);
   

@@ -134,7 +134,7 @@ VALUE zj_ary_every(int argc, VALUE* argv, VALUE self) {
 }
 
 // a hack!
-VALUE zj_grab_screen(int argc, VALUE* argv, VALUE klass);
+VALUE zj_grab_screen(int argc, VALUE* argv, VALUE self);
 VALUE zj_image_save(VALUE self, VALUE filename);
 
 VALUE zj_export(VALUE self, VALUE filename) {

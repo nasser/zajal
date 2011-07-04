@@ -24,7 +24,7 @@ VALUE zj_enumerate_serial_devices(bool arduino_only=false) {
   return devices_ary;
 }
 
-VALUE zj_arduino_devices(VALUE klass) {
+VALUE zj_arduino_devices(VALUE self) {
   return zj_enumerate_serial_devices(true);
 }
 
