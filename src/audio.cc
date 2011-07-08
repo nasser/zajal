@@ -12,8 +12,8 @@ void zj_sound_dealloc(void* sound) {
 
 /* 
  * Load a sound from the computer to play.
- * @TODO support streaming, web
  * 
+ * @todo support streaming, web
  * @param [String] filename File name of the sound to load
  */
 VALUE zj_sound_load(VALUE self, VALUE filename) {
