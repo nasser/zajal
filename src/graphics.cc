@@ -750,22 +750,16 @@ VALUE zj_bezier_vertex(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE
  * @overload curve_resolution res
  */
 VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE self) {
-  VALUE new_resolution;
-  int argca = rb_scan_args(argc, argv, "01", &new_resolution);
+  VALUE resolution;
+  rb_scan_args(argc, argv, "01", &resolution);
   
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current curve resolution */
-      return _zj_curve_resolution;
+  switch(argc) {
+    /* called without argument, return current curve resolution */
+    case 0: return INT2FIX(ofGetStyle().curveResolution);
     
-    case 1:
-      /*  called with argument, set curve resolution */
-      _zj_curve_resolution = new_resolution;
-      ofSetCurveResolution(NUM2INT(_zj_curve_resolution));
-      break;
+    /* called with argument, set curve resolution */
+    case 1: ofSetCurveResolution(NUM2INT(resolution)); return Qnil;
   }
-  
-  return Qnil;
 }
 
 /* 
@@ -810,22 +804,16 @@ VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE self) {
  *   circle 185, 185, 200
  */
 VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE self) {
-  VALUE new_resolution;
-  int argca = rb_scan_args(argc, argv, "01", &new_resolution);
+  VALUE resolution;
+  rb_scan_args(argc, argv, "01", &resolution);
   
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current circle resolution */
-      return _zj_circle_resolution;
+  switch(argc) {
+    /* called without argument, return current circle resolution */
+    case 0: return INT2FIX(ofGetStyle().circleResolution);
     
-    case 1:
-      /*  called with argument, set circle resolution */
-      _zj_circle_resolution = new_resolution;
-      ofSetCircleResolution(NUM2INT(_zj_circle_resolution));
-      break;
+    /* called with argument, set circle resolution */
+    case 1: ofSetCircleResolution(NUM2INT(resolution)); return Qnil;
   }
-  
-  return Qnil;
 }
 
 /* 
@@ -850,33 +838,16 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE self) {
  *     triangle 75, 75, 20
  */
 VALUE zj_smoothing(int argc, VALUE* argv, VALUE self) {
-  VALUE new_smoothing;
-  int argca = rb_scan_args(argc, argv, "01", &new_smoothing);
+  VALUE smoothing;
+  rb_scan_args(argc, argv, "01", &smoothing);
   
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current smoothing */
-      return _zj_smoothing;
+  switch(argc) {
+    /* called without argument, return current smoothing */
+    case 0: return ofGetStyle().smoothing ? Qtrue : Qfalse;
 
-    case 1:
-      if(new_smoothing == Qtrue) {
-        /*  called with true, enable smoothing */
-        _zj_smoothing = new_smoothing;
-        ofEnableSmoothing();
-      
-      } else if(new_smoothing == Qfalse) {
-        /*  called with false, disable smoothing */
-        _zj_smoothing = new_smoothing;
-        ofDisableSmoothing();
-      
-      } else {
-        rb_raise(rb_eArgError, "Expected true or false!");
-      
-      }
-      break;
+    /* called with argument, set smoothing */
+    case 1: RTEST(smoothing) ? ofEnableSmoothing() : ofDisableSmoothing(); return Qnil;
   }
-
-  return Qnil;
 }
 
 /* 
@@ -896,33 +867,16 @@ VALUE zj_smoothing(int argc, VALUE* argv, VALUE self) {
  * @see #background 
  */
 VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE self) {
-  VALUE new_alpha_blending;
-  int argca = rb_scan_args(argc, argv, "01", &new_alpha_blending);
+  VALUE alpha;
+  rb_scan_args(argc, argv, "01", &alpha);
   
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current alpha blending */
-      return _zj_alpha_blending;
-
-    case 1:
-      if(new_alpha_blending == Qtrue) {
-        /*  called with true, enable alpha blending */
-        _zj_alpha_blending = new_alpha_blending;
-        ofEnableAlphaBlending();
-      
-      } else if(new_alpha_blending == Qfalse) {
-        /*  called with false, disable alpha blending */
-        _zj_alpha_blending = new_alpha_blending;
-        ofDisableAlphaBlending();
-      
-      } else {
-        rb_raise(rb_eArgError, "Expected true or false!");
-      
-      }
-      break;
+  switch(argc) {
+    /* called without argument, return current alpha blending */
+    case 0: return ofGetStyle().blendingMode == OF_BLENDMODE_ALPHA ? Qtrue : Qfalse;
+    
+    /* called with argument, set current alpha blending */
+    case 1: RTEST(alpha) ? ofEnableAlphaBlending() : ofDisableAlphaBlending(); return Qnil;
   }
-
-  return Qnil;
 }
 
 /* 
@@ -930,33 +884,16 @@ VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE self) {
  * @overload arb_textures state
  */
 VALUE zj_arb_textures(int argc, VALUE* argv, VALUE self) {
-  VALUE new_arb_textures;
-  int argca = rb_scan_args(argc, argv, "01", &new_arb_textures);
+  VALUE use_arb;
+  rb_scan_args(argc, argv, "01", &use_arb);
 
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current arb texture setting */
-      return _zj_arb_textures;
+  switch(argc) {
+    /* called without argument, return current arb texture setting */
+    case 0: return ofGetUsingArbTex() ? Qtrue : Qfalse;
 
-    case 1:
-      if(new_arb_textures == Qtrue) {
-        /*  called with true, enable arb textures */
-        _zj_arb_textures = new_arb_textures;
-        ofEnableArbTex();
-        
-      } else if(new_arb_textures == Qfalse) {
-        /*  called with false, disable arb textures */
-        _zj_arb_textures = new_arb_textures;
-        ofDisableArbTex();
-        
-      } else {
-        rb_raise(rb_eArgError, "Expected true or false!");
-        
-      }
-      break;
+    /* called with argument, set current arb texture setting */
+    case 1: RTEST(use_arb) ? ofEnableArbTex() : ofDisableArbTex(); return Qnil;
   }
-  
-  return Qnil;
 }
 
 /* 
@@ -1023,21 +960,16 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE self) {
  *     line 80, height/2, width, height/2
  */    
 VALUE zj_line_width(int argc, VALUE* argv, VALUE self) {
-  VALUE new_line_width;
-  int argca = rb_scan_args(argc, argv, "01", &new_line_width);
+  VALUE w;
+  rb_scan_args(argc, argv, "01", &w);
   
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current line width */
-      return _zj_line_width;
-
-    case 1:
-      /*  called with argument, set line width */
-      ofSetLineWidth(NUM2DBL(new_line_width));
-      break;
+  switch(argc) {
+    /* called without argument, return current line width */
+    case 0: return DBL2NUM(ofGetStyle().lineWidth);
+      
+    /* called with argument, set line width */
+    case 1: ofSetLineWidth(NUM2DBL(w)); return Qnil;
   }
-  
-  return Qnil;
 }
 
 /* 
@@ -1085,17 +1017,16 @@ VALUE zj_background(int argc, VALUE* argv, VALUE self) {
 }
 
 VALUE zj_background_auto(int argc, VALUE* argv, VALUE self) {
-  VALUE new_background_auto;
-  rb_scan_args(argc, argv, "01", &new_background_auto);
+  VALUE bg_auto;
+  rb_scan_args(argc, argv, "01", &bg_auto);
   
   switch(argc) {
     /* called without argument, return current background auto setting */
     case 0: return ofbClearBg() ? Qtrue : Qfalse;
 
     /* called with argument, enable/disable auto background */
-    case 1: ofSetBackgroundAuto(RTEST(new_background_auto)); return Qnil;
+    case 1: ofSetBackgroundAuto(RTEST(bg_auto)); return Qnil;
   }
-  
 }
 
 /* 
@@ -1119,33 +1050,16 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE self) {
  *   triangle 75, 75, 20
  */
 VALUE zj_fill(int argc, VALUE* argv, VALUE self) {
-  VALUE new_fill;
-  int argca = rb_scan_args(argc, argv, "01", &new_fill);
+  VALUE fill;
+  rb_scan_args(argc, argv, "01", &fill);
   
-  switch(argca) {
-    case 0:
-      /*  called without argument, return current fill setting */
-      return _zj_fill;
-
-    case 1:
-      if(new_fill == Qtrue) {
-        /*  called with true, enable fill */
-        _zj_fill = new_fill;
-        ofFill();
-      
-      } else if(new_fill == Qfalse) {
-        /*  called with false, disable fill */
-        _zj_fill = new_fill;
-        ofNoFill();
-      
-      } else {
-        rb_raise(rb_eArgError, "Expected true or false!");
-      
-      }
-      break;
+  switch(argc) {
+    /* called without argument, return current fill setting */
+    case 0: return ofGetStyle().bFill ? Qtrue : Qfalse;
+    
+    /* called with argument, set current fill setting */
+    case 1: RTEST(fill) ? ofFill() : ofNoFill(); return Qnil;
   }
-  
-  return Qnil;
 }
 
 /* 
