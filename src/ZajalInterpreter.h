@@ -48,9 +48,9 @@ class ZajalInterpreter : public ofBaseApp {
     void setInitialWidth(int w);
     void setInitialHeight(int h);
     
-    char* readConsoleText(char* consoleName, char* prefix="", bool clear=true);
-    void writeConsoleText(char* consoleName, char* text);
-    void logConsoleText(char* consoleName, char* format, ...);
+    char* readConsoleText(const char* consoleName, const char* prefix="", bool clear=true);
+    void writeConsoleText(const char* consoleName, const char* text);
+    void logConsoleText(const char* consoleName, const char* format, ...);
     
   private:
     // is a mouse button or key being held? used to implement key_up/mouse_down vs key_down/mouse_down

@@ -451,7 +451,7 @@ void ZajalInterpreter::reloadScript(bool forced) {
   free(scriptFileContent);
 }
 
-char* ZajalInterpreter::readConsoleText(char* consoleName, char* prefix, bool clear) {
+char* ZajalInterpreter::readConsoleText(const char* consoleName, const char* prefix, bool clear) {
   VALUE buffer = rb_gv_get(consoleName);
   // TODO prefixing is buggy (creates empty lines in output)
   // rb_funcall(buffer, rb_intern("prefix_lines"), 1, rb_str_new2(prefix));
@@ -460,12 +460,12 @@ char* ZajalInterpreter::readConsoleText(char* consoleName, char* prefix, bool cl
   return buffer_str == Qnil ? NULL : RSTRING_PTR(buffer_str);
 }
 
-void ZajalInterpreter::writeConsoleText(char* consoleName, char* text) {
+void ZajalInterpreter::writeConsoleText(const char* consoleName, const char* text) {
   VALUE buffer = rb_gv_get(consoleName);
   rb_funcall(buffer, rb_intern("write"), 1, rb_str_new2(text));
 }
 
-void ZajalInterpreter::logConsoleText(char* consoleName, char* format, ...) {
+void ZajalInterpreter::logConsoleText(const char* consoleName, const char* format, ...) {
   // TODO sort out how verbosity works
   if(INTERNAL_GET(zj_mApp, verbose) == Qfalse) return;
   
