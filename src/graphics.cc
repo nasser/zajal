@@ -243,7 +243,7 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE self) {
     /* called without argument, return current rect mode */
     case 0: return zj_get_rectangle_mode();
     
-    /*  called with argument, set new rectmode */
+    /* called with argument, set new rectmode */
     case 1: return zj_set_rectangle_mode(SYM2ID(new_rectmode));
   }
 }
@@ -695,7 +695,7 @@ VALUE zj_rotate(int argc, VALUE* argv, VALUE self) {
   
   switch(argca) {
     case 1:
-    /*  called with one argument, treat it as z */
+    /* called with one argument, treat it as z */
     ofRotateZ(NUM2DBL(arg1));
   }
   
@@ -704,6 +704,7 @@ VALUE zj_rotate(int argc, VALUE* argv, VALUE self) {
 
 VALUE zj_begin_shape(VALUE self) {
   ofBeginShape();
+  
   return Qnil;
 }
 
@@ -994,13 +995,13 @@ VALUE zj_line_width(int argc, VALUE* argv, VALUE self) {
 VALUE zj_background(int argc, VALUE* argv, VALUE self) {
   int r, g, b, a;
   if(zj_graphics_make_color(argc, argv, &r, &g, &b, &a)) {
-    /*  called with arguments, change the background */
+    /* called with arguments, change the background */
     /* TODO does combining ofBackground and ofClear break things? */
     ofBackground(r, g, b);
     ofClear(r, g, b, a);
     
   } else {
-    /*  called without arguments, return current background */
+    /* called without arguments, return current background */
     float* background = ofBgColorPtr();
     
     VALUE return_array = rb_ary_new();
@@ -1136,6 +1137,7 @@ VALUE zj_color(int argc, VALUE* argv, VALUE self) {
 
 VALUE zj_next_contour(VALUE self, VALUE bClose) {
   ofNextContour(RTEST(bClose));
+  
   return Qnil;
 }
 
