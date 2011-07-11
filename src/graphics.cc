@@ -107,13 +107,7 @@ VALUE zj_fbo_new(int argc, VALUE* argv, VALUE klass) {
 
 /*  internal global variables */
 /* TODO move these to Internals? they're all normally accessible... */
-VALUE _zj_curve_resolution = INT2FIX(20);
-VALUE _zj_circle_resolution = INT2FIX(22);
 VALUE _zj_smoothing = Qfalse;
-VALUE _zj_alpha_blending = Qfalse;
-VALUE _zj_arb_textures = Qtrue;
-VALUE _zj_line_width = INT2FIX(1);
-VALUE _zj_background_auto = Qtrue;
 VALUE _zj_fill = Qtrue;
 
 /* reset internal variables at start of each frame */
