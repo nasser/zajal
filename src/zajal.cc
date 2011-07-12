@@ -8,12 +8,10 @@
 #include "ofGLRenderer.h"
 #include "ofRendererCollection.h"
 
-ofGLRenderer gl;
-ofRendererCollection renderer;
-
 /* global zajal module and context */
 VALUE zj_mZajal;
 
+// TODO should this just be a patch to ofToDataPath?
 char* zj_to_data_path(char* path) {
   char* _zj_data_path = RSTRING_PTR(INTERNAL_GET(zj_mApp, data_path));
   
@@ -138,6 +136,7 @@ VALUE zj_grab_screen(int argc, VALUE* argv, VALUE self);
 VALUE zj_image_save(VALUE self, VALUE filename);
 
 VALUE zj_export(VALUE self, VALUE filename) {
+  /*
   string filename_str = string(zj_to_data_path(StringValuePtr(filename)));
   char* filename_ptr = (char*)filename_str.c_str();
   
@@ -147,7 +146,7 @@ VALUE zj_export(VALUE self, VALUE filename) {
     zj_image_save(screen, filename);
       
   } else {
-    ofCairoRenderer* cairo = new ofCairoRenderer();
+    ofPtr<ofCairoRenderer> cairo;
   
     if(filename_str.find(".pdf") != filename_str.npos) {
       cairo->setup(filename_ptr, ofCairoRenderer::PDF, false);
@@ -157,12 +156,12 @@ VALUE zj_export(VALUE self, VALUE filename) {
       
     }
     
-    renderer.renderers.pop_back();
-    renderer.renderers.push_back(cairo);
+    renderer->renderers.pop_back();
+    renderer->renderers.push_back(cairo);
   
     // background hack!
     cairo_t* cr = cairo->getCairoContext();
-    float* bg = gl.getBgColor().v;
+    float* bg = gl->getBgColor().v;
     if(bg[3] > 0) {
       cairo_rectangle(cr, 0.0, 0.0, ofGetWidth(), ofGetHeight());
     	cairo_set_source_rgba(cr, bg[0], bg[1], bg[2], bg[3]);
@@ -173,19 +172,18 @@ VALUE zj_export(VALUE self, VALUE filename) {
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
     // draw twice for background to work, this sucks!
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
-    renderer.renderers.pop_back();
+    renderer->renderers.pop_back();
   
-    renderer.renderers.push_back(&gl);
-  
-    delete cairo;
+    renderer->renderers.push_back(gl);
   }
+  */
+  
+  return Qnil;
 }
 
 void zajal_init() {
   /* define the global zajal module */
   zj_mZajal = rb_define_module("Zajal");
-  
-  renderer.renderers.push_back(&gl);
   
   /* init zajal modules */
   Init_App();
