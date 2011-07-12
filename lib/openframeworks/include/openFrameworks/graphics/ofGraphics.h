@@ -7,12 +7,18 @@
 #include "ofRectangle.h"
 #include "ofTypes.h"
 #include "ofBaseTypes.h"
+#include "ofGLRenderer.h"
 
 #define  	CIRC_RESOLUTION		    22				// 22 pts for a circle...
 
 
-void ofSetDefaultRenderer(ofBaseRenderer * renderer);
-ofBaseRenderer * ofGetDefaultRenderer();
+void ofSetCurrentRenderer(ofPtr<ofBaseRenderer> renderer);
+ofPtr<ofBaseRenderer> & ofGetCurrentRenderer();
+ofPtr<ofGLRenderer> ofGetGLRenderer();
+
+//for pdf screenshot
+void ofBeginSaveScreenAsPDF(string filename, bool bMultipage = false, bool b3D = false, ofRectangle viewport = ofRectangle(0,0,0,0));
+void ofEndSaveScreenAsPDF();
 
 //opengl specifics
 
@@ -52,11 +58,12 @@ void ofPopView();
 // if nearDist or farDist are 0 assume defaults (calculated based on width / height)
 void ofViewport(ofRectangle viewport);
 void ofViewport(float x = 0, float y = 0, float width = 0, float height = 0, bool invertY = true);
-void ofSetupScreenPerspective(float width = 0, float height = 0, int orientation = 0, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0);
-void ofSetupScreenOrtho(float width = 0, float height = 0, bool vFlip = true, float nearDist = -1, float farDist = 1);
+void ofSetupScreenPerspective(float width = 0, float height = 0, ofOrientation orientation = OF_ORIENTATION_UNKNOWN, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0);
+void ofSetupScreenOrtho(float width = 0, float height = 0, ofOrientation orientation = OF_ORIENTATION_UNKNOWN, bool vFlip = true, float nearDist = -1, float farDist = 1);
 ofRectangle ofGetCurrentViewport();
 int ofGetViewportWidth();
 int ofGetViewportHeight();
+int ofOrientationToDegrees(ofOrientation orientation);
 
 void ofSetCoordHandedness(ofHandednessType handedness);
 ofHandednessType ofGetCoordHandedness();
@@ -224,7 +231,6 @@ void ofBox(float size);
 
 
 // bitmapped type
-// ** note, this uses glDrawPixels and may be S L 0 W on some graphics cards
 void ofSetDrawBitmapMode(ofDrawBitmapMode mode);
 void ofDrawBitmapString(string textString, const ofPoint & p);
 void ofDrawBitmapString(string textString, float x, float y);

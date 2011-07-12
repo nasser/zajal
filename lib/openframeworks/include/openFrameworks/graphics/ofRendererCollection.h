@@ -6,7 +6,26 @@ class ofRendererCollection: public ofBaseRenderer{
 public:
 	 ~ofRendererCollection(){}
 
+	 string getType(){ return "collection"; }
+
+	 ofPtr<ofGLRenderer> getGLRenderer(){
+		 for(int i=0;i<(int)renderers.size();i++){
+			 if(renderers[i]->getType()=="GL"){
+				 return (ofPtr<ofGLRenderer>&)renderers[i];
+			 }
+		 }
+		 return ofPtr<ofGLRenderer>();
+	 }
+
 	 bool rendersPathPrimitives(){return true;}
+
+	 void update(){
+		 for(int i=0;i<(int)renderers.size();i++){
+			 renderers[i]->update();
+		 }
+	 }
+
+
 	 void draw(ofPolyline & poly){
 		 for(int i=0;i<(int)renderers.size();i++){
 			 renderers[i]->draw(poly);
@@ -35,6 +54,25 @@ public:
 		 }
 	}
 
+	void draw(ofImage & img, float x, float y, float z, float w, float h){
+		 for(int i=0;i<(int)renderers.size();i++){
+			 renderers[i]->draw(img,x,y,z,w,h);
+		 }
+	}
+	
+	void draw(ofFloatImage & img, float x, float y, float z, float w, float h){
+		for(int i=0;i<(int)renderers.size();i++){
+			renderers[i]->draw(img,x,y,z,w,h);
+		}
+	}
+	
+	void draw(ofShortImage & img, float x, float y, float z, float w, float h){
+		for(int i=0;i<(int)renderers.size();i++){
+			renderers[i]->draw(img,x,y,z,w,h);
+		}
+	}
+	
+
 
 	//--------------------------------------------
 	// transformations
@@ -62,14 +100,14 @@ public:
 			 renderers[i]->viewport(x,y,width,height,invertY);
 		 }
 	 }
-	 void setupScreenPerspective(float width = 0, float height = 0, int orientation=0, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0){
+	 void setupScreenPerspective(float width = 0, float height = 0, ofOrientation orientation=OF_ORIENTATION_UNKNOWN, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0){
 		 for(int i=0;i<(int)renderers.size();i++){
 			 renderers[i]->setupScreenPerspective(width,height,orientation,vFlip,fov,nearDist,farDist);
 		 }
 	 }
-	 void setupScreenOrtho(float width = 0, float height = 0, bool vFlip = true, float nearDist = -1, float farDist = 1){
+	 void setupScreenOrtho(float width = 0, float height = 0, ofOrientation orientation=OF_ORIENTATION_UNKNOWN, bool vFlip = true, float nearDist = -1, float farDist = 1){
 		 for(int i=0;i<(int)renderers.size();i++){
-			 renderers[i]->setupScreenOrtho(width,height,vFlip,nearDist,farDist);
+			 renderers[i]->setupScreenOrtho(width,height,orientation,vFlip,nearDist,farDist);
 		 }
 	 }
 	 ofRectangle getCurrentViewport(){
@@ -209,11 +247,11 @@ public:
 	 }; // hex, like web 0xFF0033;
 
 	// bg color
-	ofColor & getBgColor(){
+	ofFloatColor & getBgColor(){
 		 if(renderers.size()){
 			 return renderers[0]->getBgColor();
 		 }else{
-			 static ofColor c;
+			 static ofFloatColor c;
 			 return c;
 		 }
 	}
@@ -370,5 +408,5 @@ public:
 		 }
 	}
 
-	vector<ofBaseRenderer *> renderers;
+	vector<ofPtr<ofBaseRenderer> > renderers;
 };

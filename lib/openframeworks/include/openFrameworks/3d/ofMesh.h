@@ -41,12 +41,12 @@ public:
 	void setNormal(int index, const ofVec3f& n);
 	void clearNormals();
 	
-	ofColor getColor(int i);
-	void addColor(const ofColor& c);
-	void addColors(const vector<ofColor>& cols);
-	void addColors(const ofColor* cols, int amt);
+	ofFloatColor getColor(int i);
+	void addColor(const ofFloatColor& c);
+	void addColors(const vector<ofFloatColor>& cols);
+	void addColors(const ofFloatColor* cols, int amt);
 	void removeColor(int index);
-	void setColor(int index, const ofColor& c);
+	void setColor(int index, const ofFloatColor& c);
 	void clearColors();
 	
 	ofVec2f getTexCoord(int i);
@@ -63,7 +63,9 @@ public:
 	void addIndices(const ofIndexType* inds, int amt);
 	void removeIndex(int i);
 	void setIndex(int i, ofIndexType val);
-	void clearIndexes();
+	void clearIndices();
+	
+    void addTriangle(ofIndexType index1, ofIndexType index2, ofIndexType index3);
 	
 	int getNumVertices() const;
 	int getNumColors() const;
@@ -72,18 +74,22 @@ public:
 	int getNumIndices() const;
 	
 	ofVec3f* getVerticesPointer();
-	ofColor* getColorsPointer();
+	ofFloatColor* getColorsPointer();
 	ofVec3f* getNormalsPointer();
 	ofVec2f* getTexCoordsPointer();
 	ofIndexType* getIndexPointer();
 	
-	const float* getVerticesPointer() const;
-	const float* getColorsPointer() const;
-	const float* getNormalsPointer() const;
-	const float* getTexCoordsPointer() const;
+	const ofVec3f* getVerticesPointer() const;
+	const ofFloatColor* getColorsPointer() const;
+	const ofVec3f* getNormalsPointer() const;
+	const ofVec2f* getTexCoordsPointer() const;
 	const ofIndexType* getIndexPointer() const;
 
 	vector<ofVec3f> & getVertices();
+	vector<ofFloatColor> & getColors();
+	vector<ofVec3f> & getNormals();
+	vector<ofVec2f> & getTexCoords();
+	vector<ofIndexType> & getIndices();
 
 	vector<int>& getFace(int faceId);
 	
@@ -95,18 +101,26 @@ public:
 	bool haveTexCoordsChanged();
 	bool haveIndicesChanged();
 	
+	bool hasVertices();
+	bool hasColors();
+	bool hasNormals();
+	bool hasTexCoords();
+	bool hasIndices();
+
 	friend std::ostream& operator<<(std::ostream& os, ofMesh& data);
 	
 	void drawVertices();
 	void drawWireframe();
 	void drawFaces();
+	void draw();
 
 protected:
 	virtual void draw(ofPolyRenderMode renderType);
 
 private:
+
 	vector<ofVec3f> vertices;
-	vector<ofColor> colors;
+	vector<ofFloatColor> colors;
 	vector<ofVec3f> normals;
 	vector<ofVec2f> texCoords;
 	vector<ofIndexType> indices;

@@ -3,17 +3,21 @@
 #include "ofConstants.h"
 #include "ofPoint.h"
 #include "ofRectangle.h"
+#include "ofTypes.h"
 
 class ofAppBaseWindow;
 class ofBaseApp;
 
-void 		ofSetupOpenGL(ofAppBaseWindow * windowPtr, int w, int h, int screenMode);	// sets up the opengl context!
+void 		ofSetupOpenGL(ofPtr<ofAppBaseWindow> windowPtr, int w, int h, int screenMode);	// sets up the opengl context!
+void 		ofSetupOpenGL(ofAppBaseWindow * windowPtr, int w, int h, int screenMode); // this is deprecated, use an ofPtr
 void 		ofSetupOpenGL(int w, int h, int screenMode);	// sets up the opengl context!
+
+void 		ofRunApp(ofPtr<ofBaseApp> OFSA); // this is for deprecated, use an ofPtr
 void 		ofRunApp(ofBaseApp * OFSA = NULL);
+
 ofBaseApp * ofGetAppPtr();
-void ofSetAppPtr(ofBaseApp *appPtr);
-ofAppBaseWindow * ofGetAppWindowPtr();
-void ofSetAppWindowPtr(ofAppBaseWindow *windowPtr);
+void ofSetAppPtr(ofPtr<ofBaseApp> appPtr);
+
 void		ofExit(int status=0);
 
 //-------------------------- time
@@ -24,7 +28,7 @@ void		ofSleepMillis(int millis);
 double		ofGetLastFrameTime();
 
 void		ofSetOrientation(ofOrientation orientation);
-int			ofGetOrientation();
+ofOrientation			ofGetOrientation();
 
 //-------------------------- cursor
 void 		ofHideCursor();
@@ -35,8 +39,11 @@ int 		ofGetWindowPositionY();
 int 		ofGetScreenWidth();
 int 		ofGetScreenHeight();
 int			ofGetWindowMode();
-int 		ofGetWidth();			// <-- should we call this ofGetWindowWidth?
+int 		ofGetWidth();			// ofGetWidth is correct for orientation
 int 		ofGetHeight();
+int 		ofGetWindowWidth();			// ofGetWindowWidth is correct for actual window coordinates - so doesn't change with orientation. 
+int 		ofGetWindowHeight();
+bool		ofDoesHWOrientation();
 ofPoint		ofGetWindowSize();
 ofRectangle	ofGetWindowRect();
 

@@ -1,8 +1,9 @@
 #pragma once
 
 #include "ofConstants.h"
+#include "ofTypes.h"
 
-#if !defined( TARGET_OF_IPHONE ) && !defined(TARGET_ANDROID) && !defined(OF_SOUND_PLAYER_QUICKTIME)
+#if !defined( TARGET_OF_IPHONE ) && !defined(TARGET_ANDROID)
 extern "C" {
 #include "fmod.h"
 #include "fmod_errors.h"
@@ -34,25 +35,36 @@ void ofSoundShutdown();
 #include "ofBaseTypes.h"
 #include "ofBaseSoundPlayer.h"
 
-#ifdef TARGET_OF_IPHONE 
-	#define OF_SOUND_PLAYER_IPHONE
-#elif !defined(TARGET_ANDROID) && !defined(OF_SOUND_PLAYER_QUICKTIME)
-	#define OF_SOUND_PLAYER_FMOD
+#if !defined(OF_SOUND_PLAYER_QUICKTIME) && !defined(OF_SOUND_PLAYER_FMOD) && !defined(OF_SOUND_PLAYER_OPENAL)
+  #ifdef TARGET_OF_IPHONE 
+  	#define OF_SOUND_PLAYER_IPHONE
+  #elif defined TARGET_LINUX
+  	#define OF_SOUND_PLAYER_OPENAL
+  #elif !defined(TARGET_ANDROID)
+  	#define OF_SOUND_PLAYER_FMOD
+  #else
+  	void ofSoundShutdown(){}
+  #endif
 #endif
 
 #ifdef OF_SOUND_PLAYER_QUICKTIME
 #include "ofQuicktimeSoundPlayer.h"
-#define OF_SOUND_PLAYER_TYPE ofQuicktimeSoundPlayer()
+#define OF_SOUND_PLAYER_TYPE ofQuicktimeSoundPlayer
 #endif
 
 #ifdef OF_SOUND_PLAYER_FMOD
 #include "ofFmodSoundPlayer.h"
-#define OF_SOUND_PLAYER_TYPE ofFmodSoundPlayer()
+#define OF_SOUND_PLAYER_TYPE ofFmodSoundPlayer
+#endif
+
+#ifdef OF_SOUND_PLAYER_OPENAL
+#include "ofOpenALSoundPlayer.h"
+#define OF_SOUND_PLAYER_TYPE ofOpenALSoundPlayer
 #endif
 
 #ifdef TARGET_OF_IPHONE
 #include "ofxOpenALSoundPlayer.h"
-#define OF_SOUND_PLAYER_TYPE ofxOpenALSoundPlayer()
+#define OF_SOUND_PLAYER_TYPE ofxOpenALSoundPlayer
 #endif
 
 //---------------------------------------------
@@ -61,10 +73,9 @@ class ofSoundPlayer : public ofBaseSoundPlayer {
 	public:
 		
 		ofSoundPlayer();
-		~ofSoundPlayer();
 		
-		bool setPlayer(ofBaseSoundPlayer * newPlayer);
-		ofBaseSoundPlayer *	getPlayer();
+		void setPlayer(ofPtr<ofBaseSoundPlayer> newPlayer);
+		ofPtr<ofBaseSoundPlayer> getPlayer();
 		
 		void loadSound(string fileName, bool stream = false);
 		void unloadSound();
@@ -87,7 +98,7 @@ class ofSoundPlayer : public ofBaseSoundPlayer {
 		
 	protected:
 		
-		ofBaseSoundPlayer		* player;
+		ofPtr<ofBaseSoundPlayer> player;
 	
 	
 };

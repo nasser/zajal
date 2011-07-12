@@ -2,6 +2,7 @@
 #include "ofPoint.h"
 #include "ofConstants.h"
 #include <deque>
+#include "ofRectangle.h"
 
 // ofPolyline
 // A line composed of straight line segments.
@@ -18,6 +19,7 @@ public:
 	void addVertex( const ofPoint& p );
 	void addVertex( float x, float y, float z=0 );
 	void addVertexes( const vector<ofPoint>& verts );
+	void addVertexes(const ofPoint* verts, int numverts);
 
 	// adds a straight line to the polyline
 	void lineTo(const ofPoint & to ){ addVertex(to); }
@@ -61,22 +63,41 @@ public:
 		quadBezierTo(cx1,cy1,0,cx2,cy2,0,x,y,0,curveResolution);
 	}
 
+	ofPolyline getSmoothed(int smoothingSize, float smoothingShape = 0);
+
+	// resample a polyline based on the distance between the points
+	ofPolyline getResampledBySpacing(float spacing);
+
+	// resample a polyline based on the total point count
+	ofPolyline getResampledByCount(int count);
+
+	// get the bounding box of a polyline
+	ofRectangle getBoundingBox();
+	
+	// find the closest point 'target' on a polyline
+	// optionally pass a pointer to/address of an unsigned int to get the index of the closest vertex
+	ofPoint getClosestPoint(const ofPoint& target, unsigned int* nearestIndex = NULL);
+
 	void simplify(float tolerance=0.3);
 
 	/// points vector access
 	size_t size() const;
 	const ofPoint& operator[] (int index) const;
 	ofPoint& operator[] (int index);
+	void resize(size_t size);
 
 	/// closed
 	void setClosed( bool tf );
 	bool isClosed() const;
+	void close();
 
 	bool hasChanged();
 
 	vector<ofPoint> & getVertices();
 
 	float getPerimeter() const;
+
+	void draw();		
 
 private:
 	void setCircleResolution(int res);

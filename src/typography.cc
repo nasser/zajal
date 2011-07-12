@@ -165,25 +165,25 @@ VALUE zj_font_height_of(VALUE self, VALUE string) {
 VALUE zj_font_loaded_p(VALUE self) {
   INIT_DATA_PTR(ZajalTrueTypeFont, font_ptr);
   
-  return font_ptr->bLoadedOk ? Qtrue : Qfalse;
+  return font_ptr->isLoaded() ? Qtrue : Qfalse;
 }
 
 VALUE zj_font_anti_aliased_p(VALUE self) {
   INIT_DATA_PTR(ZajalTrueTypeFont, font_ptr);
   
-  return font_ptr->bAntiAlised ? Qtrue : Qfalse;
+  return font_ptr->isAntiAliased() ? Qtrue : Qfalse;
 }
 
 VALUE zj_font_full_character_set_p(VALUE self) {
   INIT_DATA_PTR(ZajalTrueTypeFont, font_ptr);
   
-  return font_ptr->bFullCharacterSet ? Qtrue : Qfalse;
+  return font_ptr->hasFullCharacterSet() ? Qtrue : Qfalse;
 }
 
 VALUE zj_font_character_count(VALUE self) {
   INIT_DATA_PTR(ZajalTrueTypeFont, font_ptr);
   
-  return INT2FIX(font_ptr->nCharacters);
+  return INT2FIX(font_ptr->getNumCharacters());
 }
 
 /* 

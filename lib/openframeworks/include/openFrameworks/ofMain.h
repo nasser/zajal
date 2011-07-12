@@ -3,7 +3,6 @@
 //--------------------------
 // utils
 #include "ofConstants.h"
-#include "ofDirectoryLister.h"
 #include "ofFileUtils.h"
 #include "ofSystemUtils.h"
 #include "ofThread.h"
@@ -39,6 +38,9 @@
 #include "ofFbo.h"
 #include "ofShader.h"
 #include "ofPixels.h"
+#include "ofCairoRenderer.h"
+#include "ofGLRenderer.h"
+#include "ofRendererCollection.h"
 
 //--------------------------
 // app
@@ -51,17 +53,11 @@
 #ifndef TARGET_ANDROID
 #include "ofSoundPlayer.h"
 #endif
-#ifndef TARGET_OF_IPHONE			//(temp for now, until this is ported)
-	#include "ofSoundUnit.h"
-	#include "ofSoundEffect.h"
-#endif
 
 //--------------------------
 // video
 #include "ofVideoGrabber.h"
-#if !defined( TARGET_OF_IPHONE )		//(temp for now, until this is ported)
-	#include "ofVideoPlayer.h"
-#endif
+#include "ofVideoPlayer.h"
 
 //--------------------------
 // events
@@ -76,4 +72,5 @@
 #include "ofMesh.h"
 #include "ofEasyCam.h"
 #include "ofLight.h"
+#include "ofVboMesh.h"
 

@@ -1,30 +1,32 @@
 #pragma once
 
 
-#include <cairo-features.h>
-#include <cairo-pdf.h>
-#include <cairo-svg.h>
-#include <cairo.h>
+#include "cairo-features.h"
+#include "cairo-pdf.h"
+#include "cairo-svg.h"
+#include "cairo.h"
 #include <deque>
 #include <stack>
 #include "ofMatrix4x4.h"
 #include "ofBaseTypes.h"
 #include "ofPath.h"
 
-
-
 class ofCairoRenderer: public ofBaseRenderer{
 public:
 	ofCairoRenderer();
 	~ofCairoRenderer();
+
+	string getType(){ return "cairo"; }
 
 	enum Type{
 		PDF,
 		SVG,
 		PNG
 	};
-	void setup(string filename, Type type=ofCairoRenderer::PDF, bool multiPage=true, bool b3D=false);
+	void setup(string filename, Type type=ofCairoRenderer::PDF, bool multiPage=true, bool b3D=false, ofRectangle viewport = ofRectangle(0,0,0,0));
 	void close();
+
+	void update();
 
 	void draw(ofPath & shape);
 	void draw(ofSubPath & path);
@@ -32,6 +34,9 @@ public:
 	void draw(ofMesh & vertexData);
 	void draw(ofMesh & vertexData, ofPolyRenderMode mode);
 	void draw(vector<ofPoint> & vertexData, ofPrimitiveMode drawMode);
+	void draw(ofImage & img, float x, float y, float z, float w, float h);
+	void draw(ofFloatImage & image, float x, float y, float z, float w, float h);
+	void draw(ofShortImage & image, float x, float y, float z, float w, float h);
 
 	bool rendersPathPrimitives(){
 		return true;
@@ -47,8 +52,8 @@ public:
 	// if nearDist or farDist are 0 assume defaults (calculated based on width / height)
 	void viewport(ofRectangle viewport);
 	void viewport(float x = 0, float y = 0, float width = 0, float height = 0, bool invertY = true);
-	void setupScreenPerspective(float width = 0, float height = 0, int orientation = 0, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0);
-	void setupScreenOrtho(float width = 0, float height = 0, bool vFlip = true, float nearDist = -1, float farDist = 1);
+	void setupScreenPerspective(float width = 0, float height = 0, ofOrientation orientation = OF_ORIENTATION_UNKNOWN, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0);
+	void setupScreenOrtho(float width = 0, float height = 0, ofOrientation orientation = OF_ORIENTATION_UNKNOWN, bool vFlip = true, float nearDist = -1, float farDist = 1);
 	ofRectangle getCurrentViewport();
 	int getViewportWidth();
 	int getViewportHeight();
@@ -90,7 +95,7 @@ public:
 	void setHexColor( int hexColor ); // hex, like web 0xFF0033;
 
 	// bg color
-	ofColor & getBgColor();
+	ofFloatColor & getBgColor();
 	bool bClearBg();
 	void background(const ofColor & c);
 	void background(float brightness);
@@ -125,7 +130,7 @@ private:
 	cairo_t * cr;
 	cairo_surface_t * surface;
 	bool bBackgroundAuto;
-	ofColor bgColor;
+	ofFloatColor bgColor;
 
 	stack<cairo_matrix_t> matrixStack;
 	cairo_matrix_t tmpMatrix;

@@ -3,6 +3,7 @@
 #include "ofConstants.h"
 #include "ofAppBaseWindow.h"
 #include "ofEvents.h"
+#include "ofTypes.h"
 
 //class ofPoint;
 class ofBaseApp;

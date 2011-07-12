@@ -1,7 +1,8 @@
 #pragma once
 
 //-------------------------------
-#define OF_VERSION	6
+#define OF_VERSION	7
+#define OF_VERSION_MINOR 0
 //-------------------------------
 
 enum ofLoopType{
@@ -44,6 +45,12 @@ enum ofLoopType{
 		#   define _WIN32_WINNT 0x400
 	#endif
 	#define WIN32_LEAN_AND_MEAN
+
+	#if (_MSC_VER)
+		#define NOMINMAX		
+		//http://stackoverflow.com/questions/1904635/warning-c4003-and-errors-c2589-and-c2059-on-x-stdnumeric-limitsintmax
+	#endif
+
 	#include <windows.h>
 	#define GLEW_STATIC
 	#include "GL\glew.h"
@@ -52,6 +59,7 @@ enum ofLoopType{
 	#define __WINDOWS_DS__
 	#define __WINDOWS_MM__
 	#if (_MSC_VER)       // microsoft visual studio
+		typedef unsigned __int64  uint64_t;		// allow us to use uint64_t
 		#pragma warning(disable : 4996)     // disable all deprecation warnings
 		#pragma warning(disable : 4068)     // unknown pragmas
 		#pragma warning(disable : 4101)     // unreferenced local variable
@@ -89,8 +97,8 @@ enum ofLoopType{
 	#ifndef __MACOSX_CORE__
 		#define __MACOSX_CORE__
 	#endif
-#include <unistd.h>
-	#include "glew.h"
+	#include <unistd.h>
+	#include "GL/glew.h"
 	#include <OpenGL/gl.h>
 	#include <ApplicationServices/ApplicationServices.h>
 
@@ -139,11 +147,13 @@ enum ofLoopType{
 
 #ifdef TARGET_OPENGLES
 	#include "glu.h"
-	typedef GLushort ofIndexType ;
+	//typedef GLushort ofIndexType ;
 #else
-	typedef GLuint ofIndexType;
+	//typedef GLuint ofIndexType;
 #endif
 
+#include "tesselator.h"
+typedef TESSindex ofIndexType;
 
 
 #ifndef __MWERKS__
@@ -176,10 +186,11 @@ enum ofLoopType{
 		#define OF_VIDEO_CAPTURE_GSTREAMER
 	#endif
 
+#elif defined(TARGET_OSX) 
 
-#elif defined(TARGET_OSX) || defined(TARGET_WIN32)
+    #define OF_VIDEO_CAPTURE_QUICKTIME
 
-    // non - linux, pc or osx
+#elif defined (TARGET_WIN32)
 
     // comment out this following line, if you'd like to use the
     // quicktime capture interface on windows
@@ -189,25 +200,19 @@ enum ofLoopType{
     #define OF_SWITCH_TO_DSHOW_FOR_WIN_VIDCAP
 
     #ifdef OF_SWITCH_TO_DSHOW_FOR_WIN_VIDCAP
-        #ifdef TARGET_OSX
-            #define OF_VIDEO_CAPTURE_QUICKTIME
-        #else
-			#ifdef TARGET_OF_IPHONE
-				#define OF_VIDEO_CAPTURE_IPHONE
-			#else
-				#define OF_VIDEO_CAPTURE_DIRECTSHOW
-			#endif
-        #endif
+		#define OF_VIDEO_CAPTURE_DIRECTSHOW
     #else
-		#ifdef TARGET_OF_IPHONE
-			#define OF_VIDEO_CAPTURE_IPHONE
-		#else
-			#define OF_VIDEO_CAPTURE_QUICKTIME
-		#endif
+		#define OF_VIDEO_CAPTURE_QUICKTIME
     #endif
 
 #elif defined(TARGET_ANDROID)
+
 	#define OF_VIDEO_CAPTURE_ANDROID
+
+#elif defined(TARGET_OF_IPHONE)
+
+    #define OF_VIDEO_CAPTURE_IPHONE
+
 #endif
 
 
@@ -215,6 +220,7 @@ enum ofLoopType{
 	#define OF_VIDEO_PLAYER_GSTREAMER
 #else 
 	#ifdef TARGET_OF_IPHONE
+		#define OF_VIDEO_CAPTURE_IPHONE
 		#define OF_VIDEO_PLAYER_IPHONE
 	#elif !defined(TARGET_ANDROID)
 		#define OF_VIDEO_PLAYER_QUICKTIME
@@ -341,6 +347,7 @@ enum ofBlendMode{
 //this is done to match the iPhone defaults 
 //we don't say landscape, portrait etc becuase iPhone apps default to portrait while desktop apps are typically landscape
 enum ofOrientation{
+	OF_ORIENTATION_UNKNOWN = 0,
 	OF_ORIENTATION_DEFAULT = 1,	
 	OF_ORIENTATION_180 = 2,
 	OF_ORIENTATION_90_RIGHT = 3,
@@ -360,11 +367,11 @@ enum ofOrientation{
 // (CSG ideas)
 
 enum ofPolyWindingMode{
-	OF_POLY_WINDING_ODD 	        = 100130,
-	OF_POLY_WINDING_NONZERO         = 100131,
-	OF_POLY_WINDING_POSITIVE        = 100132,
-	OF_POLY_WINDING_NEGATIVE        = 100133,
-	OF_POLY_WINDING_ABS_GEQ_TWO     = 100134
+	OF_POLY_WINDING_ODD 	        ,
+	OF_POLY_WINDING_NONZERO         ,
+	OF_POLY_WINDING_POSITIVE        ,
+	OF_POLY_WINDING_NEGATIVE        ,
+	OF_POLY_WINDING_ABS_GEQ_TWO
 };
 
 #define 	OF_CLOSE						  (true)

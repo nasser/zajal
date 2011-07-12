@@ -70,13 +70,13 @@ VALUE zj_fbo_initialize(int argc, VALUE* argv, VALUE self) {
   
   switch(argc) {
     /* called with no arguments, create FBO equal to window size */
-    case 0: fbo_ptr->setup(ofGetWidth(), ofGetHeight(), GL_RGBA, 8); break;
+    case 0: fbo_ptr->allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8); break;
 
     /* called with one argument, create a square FBO */
-    case 1: fbo_ptr->setup(NUM2INT(w), NUM2INT(w), GL_RGBA, 8); break;
+    case 1: fbo_ptr->allocate(NUM2INT(w), NUM2INT(w), GL_RGBA, 8); break;
     
     /* called with two arguments, create a rectangular FBO */
-    case 2: fbo_ptr->setup(NUM2INT(w), NUM2INT(h), GL_RGBA, 8); break;
+    case 2: fbo_ptr->allocate(NUM2INT(w), NUM2INT(h), GL_RGBA, 8); break;
     
     /* should never happen */
     default: rb_raise(rb_eArgError, "Strange argument count in FBO#initialize");

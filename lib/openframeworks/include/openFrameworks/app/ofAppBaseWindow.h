@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofPoint.h"
+#include "ofTypes.h"
 
 class ofBaseApp;
 
@@ -31,6 +32,7 @@ public:
 
 	virtual void			setOrientation(ofOrientation orientation){ }
 	virtual ofOrientation	getOrientation(){ return OF_ORIENTATION_DEFAULT; }
+	virtual bool	doesHWOrientation(){return false;}
 
 	//this is used by ofGetWidth and now determines the window width based on orientation
 	virtual int		getWidth(){ return 0; }

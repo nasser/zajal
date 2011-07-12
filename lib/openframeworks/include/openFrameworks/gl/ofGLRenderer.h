@@ -1,19 +1,31 @@
 #pragma once
 #include "ofBaseTypes.h"
 #include "ofPolyline.h"
+#include <stack>
 class ofShapeTessellation;
 class ofMesh;
+class ofFbo;
 
 
 class ofGLRenderer: public ofBaseRenderer{
 public:
 	ofGLRenderer(bool useShapeColor=true);
 	~ofGLRenderer(){}
+
+	string getType(){ return "GL"; }
+
+	void setCurrentFBO(ofFbo * fbo);
+
+	void update();
+
 	void draw(ofMesh & vertexData);
 	void draw(ofMesh & vertexData, ofPolyRenderMode renderType);
 	void draw(ofPolyline & poly);
 	void draw(ofPath & path);
 	void draw(vector<ofPoint> & vertexData, ofPrimitiveMode drawMode);
+	void draw(ofImage & image, float x, float y, float z, float w, float h);
+	void draw(ofFloatImage & image, float x, float y, float z, float w, float h);
+	void draw(ofShortImage & image, float x, float y, float z, float w, float h);
 
 	bool rendersPathPrimitives(){
 		return false;
@@ -31,8 +43,8 @@ public:
 	// if nearDist or farDist are 0 assume defaults (calculated based on width / height)
 	void viewport(ofRectangle viewport);
 	void viewport(float x = 0, float y = 0, float width = 0, float height = 0, bool invertY = true);
-	void setupScreenPerspective(float width = 0, float height = 0, int orientation = 0, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0);
-	void setupScreenOrtho(float width = 0, float height = 0, bool vFlip = true, float nearDist = -1, float farDist = 1);
+	void setupScreenPerspective(float width = 0, float height = 0, ofOrientation orientation = OF_ORIENTATION_UNKNOWN, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0);
+	void setupScreenOrtho(float width = 0, float height = 0, ofOrientation orientation = OF_ORIENTATION_UNKNOWN, bool vFlip = true, float nearDist = -1, float farDist = 1);
 	ofRectangle getCurrentViewport();
 	int getViewportWidth();
 	int getViewportHeight();
@@ -77,7 +89,7 @@ public:
 	void setHexColor( int hexColor ); // hex, like web 0xFF0033;
 
 	// bg color
-	ofColor & getBgColor();
+	ofFloatColor & getBgColor();
 	bool bClearBg();
 	void background(const ofColor & c);
 	void background(float brightness);
@@ -104,9 +116,9 @@ private:
 	void endSmoothing();
 
 	ofHandednessType coordHandedness;
-	deque <ofRectangle> viewportHistory;
+	stack <ofRectangle> viewportHistory;
 	bool bBackgroundAuto;
-	ofColor bgColor;
+	ofFloatColor bgColor;
 
 	vector<ofPoint> linePoints;
 	vector<ofPoint> rectPoints;
@@ -117,5 +129,7 @@ private:
 	ofFillFlag bFilled;
 	bool bSmoothHinted;
 	ofRectMode rectMode;
+
+	ofFbo * currentFbo;
 
 };

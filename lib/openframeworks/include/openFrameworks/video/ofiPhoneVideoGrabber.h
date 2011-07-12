@@ -4,12 +4,13 @@
 
 class AVFoundationVideoGrabber;
 
+#include "ofVideoGrabber.h"
+
 class ofiPhoneVideoGrabber : public ofBaseVideoGrabber {
 	
 	public :
 	
 	ofiPhoneVideoGrabber();
-	virtual ~ofiPhoneVideoGrabber();
 	
 	//needs implementing
 	void listDevices();	
@@ -37,11 +38,10 @@ class ofiPhoneVideoGrabber : public ofBaseVideoGrabber {
 	//should implement!
 	/*void setVerbose(bool bTalkToMe);
 	
-	
 	void videoSettings();*/
 	
 protected:
-	AVFoundationVideoGrabber * grabber;
+	ofPtr<AVFoundationVideoGrabber> grabber;
 };
 
 #endif

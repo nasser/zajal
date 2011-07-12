@@ -15,7 +15,15 @@
 #include "ofConstants.h"
 #include "ofColor.h"
 #include "ofMesh.h"
-class ofPixels;
+#include "ofPixels.h"
+
+template<typename T>
+class ofImage_;
+
+typedef ofImage_<unsigned char> ofImage;
+typedef ofImage_<float> ofFloatImage;
+typedef ofImage_<unsigned short> ofShortImage;
+
 class ofPath;
 class ofPolyline;
 typedef ofPixels& ofPixelsRef;
@@ -72,22 +80,86 @@ public:
 };
 
 //----------------------------------------------------------
+// ofAbstractHasPixels
+//----------------------------------------------------------
+class ofAbstractHasPixels{
+public:
+	virtual ~ofAbstractHasPixels(){}
+};
+
+//----------------------------------------------------------
 // ofBaseHasPixels
 //----------------------------------------------------------
-class ofBaseHasPixels{
+template<typename T>
+class ofBaseHasPixels_: public ofAbstractHasPixels{
 public:
-	virtual ~ofBaseHasPixels(){}
-	virtual unsigned char * getPixels()=0;
-	virtual ofPixelsRef getPixelsRef()=0;
+	virtual ~ofBaseHasPixels_<T>(){}
+	virtual T * getPixels()=0;
+	virtual ofPixels_<T> & getPixelsRef()=0;
+};
+
+typedef ofBaseHasPixels_<unsigned char> ofBaseHasPixels;
+typedef ofBaseHasPixels_<float> ofBaseHasFloatPixels;
+
+//----------------------------------------------------------
+// ofAbstractImage    ->   to be able to put different types of images in vectors...
+//----------------------------------------------------------
+class ofAbstractImage: public ofBaseDraws, public ofBaseHasTexture{
+public:
+	virtual ~ofAbstractImage(){}
 };
 
 //----------------------------------------------------------
 // ofBaseImage
 //----------------------------------------------------------
-class ofBaseImage: public ofBaseDraws, public ofBaseHasTexture, public ofBaseHasPixels{
+template<typename T>
+class ofBaseImage_: public ofAbstractImage, public ofBaseHasPixels_<T>{
 public:
-	
+	virtual ~ofBaseImage_<T>(){};
 };
+
+typedef ofBaseImage_<unsigned char> ofBaseImage;
+typedef ofBaseImage_<float> ofBaseFloatImage;
+
+//----------------------------------------------------------
+// ofBaseHasSoundStream
+//----------------------------------------------------------
+class ofBaseSoundInput{
+
+	public:
+        virtual ~ofBaseSoundInput() {};
+    
+		virtual void audioIn( float * input, int bufferSize, int nChannels, int deviceID, long unsigned long tickCount ){
+			audioIn(input, bufferSize, nChannels);
+		}
+
+		virtual void audioIn( float * input, int bufferSize, int nChannels ){  
+			audioReceived(input, bufferSize, nChannels);
+		}
+
+		virtual void audioReceived( float * input, int bufferSize, int nChannels ){}
+};
+
+//----------------------------------------------------------
+// ofBaseHasSoundStream
+//----------------------------------------------------------
+class ofBaseSoundOutput{
+
+	public:
+        virtual ~ofBaseSoundOutput() {};
+    
+		virtual void audioOut( float * output, int bufferSize, int nChannels, int deviceID, long unsigned long tickCount  ){
+			audioOut(output, bufferSize, nChannels);
+		}
+
+		virtual void audioOut( float * output, int bufferSize, int nChannels ){
+			audioRequested(output, bufferSize, nChannels);
+		}
+
+		//legacy
+		virtual void audioRequested( float * output, int bufferSize, int nChannels ){}
+};
+
 
 //----------------------------------------------------------
 // ofBaseVideo
@@ -101,15 +173,21 @@ public:
 
 
 //----------------------------------------------------------
+// ofBaseVideoDraws
+//----------------------------------------------------------
+class ofBaseVideoDraws: virtual public ofBaseVideo, public ofBaseDraws, public ofBaseHasTexture{
+public:
+	virtual ~ofBaseVideoDraws(){}
+};
+
+//----------------------------------------------------------
 // ofBaseVideoGrabber
 //----------------------------------------------------------
-class ofBaseVideoGrabber: public ofBaseVideo{
+class ofBaseVideoGrabber: virtual public ofBaseVideo{
 	
 	public :
-	
-	ofBaseVideoGrabber();
 	virtual ~ofBaseVideoGrabber();
-	
+
 	//needs implementing
 	virtual void	listDevices() = 0;		
 	virtual bool	initGrabber(int w, int h) = 0;
@@ -137,11 +215,9 @@ class ofBaseVideoGrabber: public ofBaseVideo{
 //----------------------------------------------------------
 // ofBaseVideoPlayer
 //----------------------------------------------------------
-class ofBaseVideoPlayer: public ofBaseVideo{
+class ofBaseVideoPlayer: virtual public ofBaseVideo{
 	
 public:
-	
-	ofBaseVideoPlayer();
 	virtual ~ofBaseVideoPlayer();
 	
 	//needs implementing
@@ -194,11 +270,19 @@ public:
 class ofBaseRenderer{
 public:
 	virtual ~ofBaseRenderer(){}
+
+	virtual string getType()=0;
+
+	virtual void update()=0;
+
 	virtual void draw(ofPolyline & poly)=0;
 	virtual void draw(ofPath & shape)=0;
 	virtual void draw(ofMesh & vertexData)=0;
 	virtual void draw(ofMesh & vertexData, ofPolyRenderMode renderType)=0;
 	virtual void draw(vector<ofPoint> & vertexData, ofPrimitiveMode drawMode)=0;
+	virtual void draw(ofImage & image, float x, float y, float z, float w, float h)=0;
+	virtual void draw(ofFloatImage & image, float x, float y, float z, float w, float h)=0;
+	virtual void draw(ofShortImage & image, float x, float y, float z, float w, float h)=0;
 
 	//--------------------------------------------
 	// transformations
@@ -210,8 +294,8 @@ public:
 	// if nearDist or farDist are 0 assume defaults (calculated based on width / height)
 	virtual void viewport(ofRectangle viewport){};
 	virtual void viewport(float x = 0, float y = 0, float width = 0, float height = 0, bool invertY = true){};
-	virtual void setupScreenPerspective(float width = 0, float height = 0, int orientation=0, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0){}
-	virtual void setupScreenOrtho(float width = 0, float height = 0, bool vFlip = true, float nearDist = -1, float farDist = 1){};
+	virtual void setupScreenPerspective(float width = 0, float height = 0, ofOrientation orientation=OF_ORIENTATION_UNKNOWN, bool vFlip = true, float fov = 60, float nearDist = 0, float farDist = 0){}
+	virtual void setupScreenOrtho(float width = 0, float height = 0, ofOrientation orientation=OF_ORIENTATION_UNKNOWN, bool vFlip = true, float nearDist = -1, float farDist = 1){};
 	virtual ofRectangle getCurrentViewport(){return ofRectangle();};
 	virtual int getViewportWidth(){return 0;};
 	virtual int getViewportHeight(){return 0;};
@@ -256,7 +340,7 @@ public:
 	virtual void setHexColor( int hexColor ){}; // hex, like web 0xFF0033;
 
 	// bg color
-	virtual ofColor & getBgColor()=0;
+	virtual ofFloatColor & getBgColor()=0;
 	virtual bool bClearBg(){return true;};
 	virtual void background(const ofColor & c){};
 	virtual void background(float brightness){};

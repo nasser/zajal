@@ -1,21 +1,26 @@
 #pragma once
 
+#include <deque>
+#include <queue>
+
 #include "ofThread.h"
 #include "ofEvents.h"
 #include "ofFileUtils.h"
 
-#include <deque>
-#include <queue>
+#include "Poco/Condition.h"
+
 
 class ofHttpRequest{
 public:
-	ofHttpRequest(string url,string name,int id=0)
+	ofHttpRequest(string url,string name,bool saveTo=false)
 	:url(url)
 	,name(name)
+	,saveTo(saveTo)
 	,id(nextID++){}
 
 	string				url;
 	string				name;
+	bool				saveTo;
 
 	int getID(){return id;}
 private:
@@ -43,8 +48,11 @@ public:
 };
 
 ofHttpResponse ofLoadURL(string url);
-void ofLoadURLAsync(string url, string name="");
-void ofRemoveURLRequest(ofHttpRequest request);
+int ofLoadURLAsync(string url, string name=""); // returns id
+ofHttpResponse ofSaveURLTo(string url, string path);
+int ofSaveURLAsync(string url, string path);
+void ofRemoveURLRequest(int id);
+void ofRemoveAllURLRequests();
 
 extern ofEvent<ofHttpResponse> ofURLResponseEvent;
 
@@ -65,8 +73,11 @@ class ofURLFileLoader : public ofThread  {
 
         ofURLFileLoader();
         ofHttpResponse get(string url);
-		void getAsync(string url, string name="");
-		void remove(ofHttpRequest httpRequest);
+        int getAsync(string url, string name=""); // returns id
+        ofHttpResponse saveTo(string url, string path);
+        int saveAsync(string url, string path);
+		void remove(int id);
+		void clear();
 
     protected:
 
@@ -83,5 +94,7 @@ class ofURLFileLoader : public ofThread  {
 
 		deque<ofHttpRequest> requests;
 		queue<ofHttpResponse> responses;
+
+		Poco::Condition condition;
 
 };
