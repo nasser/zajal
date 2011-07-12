@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <sys/stat.h>
 #include <libgen.h>
+#include <unistd.h>
 
 #include "ZajalInterpreter.h"
 #include "ruby/encoding.h"
@@ -97,6 +98,7 @@ void ZajalInterpreter::setInitialHeight(int h) {
 
 //--------------------------------------------------------------
 void ZajalInterpreter::setup() {
+  chdir(RSTRING_PTR(INTERNAL_GET(zj_mApp, data_path)));
   
   if(APP_STATE_IS(complete)) {
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, setup_proc), 0);
@@ -397,26 +399,36 @@ void ZajalInterpreter::initialize() {
 
 void ZajalInterpreter::loadScript(char* fileName) {
   if(scriptName != NULL) free(scriptName);
-  scriptName = (char*)calloc(strlen(fileName)+1, sizeof(char));
-  strncpy(scriptName, fileName, strlen(fileName)+1);
+  
+  // compute abolsute paths
+  char* absoluteScriptName = realpath(fileName, NULL);
+  char* absoluteScriptDirectory = dirname(absoluteScriptName);
+  char* baseScriptName = basename(absoluteScriptName);
   
   // try to stat the file, bail out if inaccessible
   struct stat attrib;
-  if(stat(scriptName, &attrib)) {
-    fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", scriptName);
+  if(stat(absoluteScriptName, &attrib)) {
+    fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", fileName);
     fprintf(stderr, "  The file is either missing or otherwise inaccessible. Check the file name\n");
     fprintf(stderr, "  or the file's permissions.\n");
     ::exit(1);
   }
   
   // establish the data path and add it to ruby's load path
-  char* scriptNameResolved = realpath(scriptName, NULL);
-  VALUE script_directory = rb_str_new2(dirname(scriptNameResolved));
-  INTERNAL_SET(zj_mApp, data_path, script_directory);
-  rb_ary_unshift(rb_gv_get("$:"), script_directory);
+  INTERNAL_SET(zj_mApp, data_path, rb_str_new2(absoluteScriptDirectory));
+  rb_ary_unshift(rb_gv_get("$:"), rb_str_new2(absoluteScriptDirectory));
   rb_funcall(rb_gv_get("$:"), rb_intern("uniq!"), 0);
   
-  free(scriptNameResolved);
+  // move into data path
+  chdir(RSTRING_PTR(INTERNAL_GET(zj_mApp, data_path)));
+  
+  // save script name for later
+  scriptName = (char*)calloc(strlen(baseScriptName)+1, sizeof(char));
+  strncpy(scriptName, baseScriptName, strlen(baseScriptName)+1);
+  
+  free(absoluteScriptName);
+  free(absoluteScriptDirectory);
+  free(baseScriptName);
 }
 
 void ZajalInterpreter::reloadScript(bool forced) {
