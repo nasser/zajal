@@ -15,10 +15,6 @@
 #define INIT_DATA_PTR(klass, ptr) klass* ptr;Data_Get_Struct(self, klass, ptr);
 #define INIT_DATA_PTR2(klass, ptr, obj) klass* ptr;Data_Get_Struct(obj, klass, ptr);
 
-// FIXME part of a kludge
-// #define IS_IN_SETUP (SYM2ID(INTERNAL_GET(zj_mEvents, current_event)) == rb_intern("setup"))
-// #define SET_DEFAULT(name, ary) rb_hash_aset(INTERNAL_GET(zj_mEvents, defaults), SYM(#name), ary);
-
 /* app */
 extern VALUE zj_mApp;
 #define APP_STATE_IS(s) SYM2ID(INTERNAL_GET(zj_mApp, state)) == rb_intern(#s)
