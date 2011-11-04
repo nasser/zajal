@@ -423,8 +423,9 @@ void ZajalInterpreter::reloadScript(bool forced) {
   long scriptFileSize = ftell(scriptFile);
   fseek(scriptFile, 0, SEEK_SET);
   
-  bool mustRestart = true;
-  bool wasLastError = (state == INTERPRETER_ERROR); // are we recovering from an error?
+  // recovering from an error, force restart
+  if(state == INTERPRETER_ERROR)
+    forced = true;
   
   if(state == INTERPRETER_RUNNING)
     lastErrorImage.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
@@ -437,7 +438,11 @@ void ZajalInterpreter::reloadScript(bool forced) {
   scriptFileContent[scriptFileSize * sizeof(char)] = '\0';
   fclose(scriptFile);
   
-  zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), forced? Qtrue : Qfalse);
+  // neccecity is the mother of all kludges
+  if(forced)
+    zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(""), Qtrue);
+  
+  zj_safe_funcall(rb_cObject, rb_intern("live_load"), 2, rb_str_new2(scriptFileContent), forced ? Qtrue : Qfalse);
   state = ruby_error ? INTERPRETER_ERROR : INTERPRETER_RUNNING;
   
   free(scriptFileContent);
