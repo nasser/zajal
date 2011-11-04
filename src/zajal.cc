@@ -8,6 +8,8 @@
 #include "ofGLRenderer.h"
 #include "ofRendererCollection.h"
 
+#include <wordexp.h>
+
 ofGLRenderer gl;
 ofRendererCollection renderer;
 
@@ -17,11 +19,18 @@ VALUE zj_mZajal;
 char* zj_to_data_path(char* path) {
   char* _zj_data_path = RSTRING_PTR(INTERNAL_GET(zj_mApp, data_path));
   
+  // http://www.davidverhasselt.com/2009/09/16/expanding-a-leading-tilde-in-cc/
+  wordexp_t exp_result;
+	wordexp(path, &exp_result, 0);
+	path = exp_result.we_wordv[0];
+  
   if(path[0] == '/' || strstr(path, "http://") != NULL) {
     // path is absolute or remote, return a copy of it
     // allocate space for copied path
     char* copied_path = (char*)calloc(strlen(path)+1, sizeof(char));
     strncpy(copied_path, path, strlen(path)+1);
+    
+    wordfree(&exp_result);
     return copied_path;
     
   } else {
@@ -34,7 +43,8 @@ char* zj_to_data_path(char* path) {
     strncat(joined_path, _zj_data_path, joined_path_length);
     strncat(joined_path, "/", joined_path_length);
     strncat(joined_path, path, joined_path_length);
-  
+    
+    wordfree(&exp_result);
     return joined_path;
   }
   
