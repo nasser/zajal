@@ -1,40 +1,32 @@
-# Wormsign
-# Ramsey Nasser - Nov 2010
-# Play around with the code to see how it changes
+# This code is running live. You are invited to edit anything below. Hit save 
+# to see the sketch window update to match your changes.
 
-t = 0
+# By Ramsey Nasser, May 2011
 
 setup do
-  size 500
-  # smoothing true
+  size 800
+  background :black
   alpha_blending true
-  circle_resolution 64
-  background 0
-  title "Wormsign"
-  framerate 60
-end
-
-def disc x, y, r, res
-  res.times do |n|
-    p = n/res.to_f
-    q = 1-p
-    
-    color 0, 40*p
-    circle x, y, (r*1.5)*q
-  end
-  
-  color 230, 25, 25
-  circle x, y, r
+  fill false
 end
 
 draw do
-  color 255
-  text framerate.round
-  t += 0.02
+  line_width 2
   
-  80.times do |n|
+  for n in 0..170
     n *= 0.1
-    disc 100+n*30+sin(t+n)*40, 240+sin(t+n)*40, 40+cos(n)*10, 5
+    x = n * 130 + sin(time * 0.001 + n) * 140
+    y = height/2 + sin(time * 0.001 + n) * 140
+    r = 200 + cos(n) * 40
+    
+    color :red, 128
+    circle x, y, r
+    
+    color :green, 64
+    circle x, y, r/2
+    
+    color :white, 64
+    circle x, y, r/4
   end
 end
 
