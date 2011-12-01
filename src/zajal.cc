@@ -166,7 +166,7 @@ VALUE zj_export(VALUE self, VALUE filename) {
       
     }
     
-    renderer.renderers.pop_back();
+//    renderer.renderers.pop_back();
     renderer.renderers.push_back(cairo);
   
     // background hack!
@@ -182,9 +182,9 @@ VALUE zj_export(VALUE self, VALUE filename) {
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
     // draw twice for background to work, this sucks!
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, draw_proc), 0);
+    
     renderer.renderers.pop_back();
-  
-    renderer.renderers.push_back(&gl);
+//    renderer.renderers.push_back(&gl);
   
     delete cairo;
   }
