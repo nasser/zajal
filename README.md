@@ -7,7 +7,7 @@ A blend of [Ruby](http://ruby-lang.org), [openFrameworks](http://openframeworks.
 
 Can I use it?
 -------------
-Sure! The easiest way to get started is to grab the [latest stable release](https://zajal.cc/release/cocoa/Zajal-0.3.3.zip) off of the [main site](http://zajal.cc). The built in examples under Help > Examples and the [sketch book](http://sketch.zajal.cc) are a great place to start learning the language. [The documentation](http://docs.zajal.cc/) is also an option, but is pretty messy at the moment.
+Sure! The easiest way to get started is to grab the [latest stable release](https://zajal.cc/release/cocoa/Zajal-0.3.3.zip) off of the [main site](http://zajal.cc). The built in examples under Help > Examples and the [sketch book](http://sketch.zajal.cc) are great places to start learning the language. [The documentation](http://docs.zajal.cc/) is also an option, but is pretty messy at the moment.
 
 You'll need a Mac running OSX 10.6 or later. We're working on Windows/Linux support, but we're not there yet!
 
