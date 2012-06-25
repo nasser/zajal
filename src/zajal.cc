@@ -206,7 +206,10 @@ void zajal_init() {
   Init_Typography();
   Init_Version();
   Init_Hardware();
-  
+
+  rb_define_module_under(zj_mZajal, "Internals");
+  INTERNAL_SET(zj_mZajal, watched_files, rb_ary_new());
+
   rb_define_method(zj_mZajal, "export", RUBY_METHOD_FUNC(zj_export), 1);
   rb_define_method(rb_cArray, "every", RUBY_METHOD_FUNC(zj_ary_every), -1);
   

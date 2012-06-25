@@ -18,6 +18,24 @@ class Float
   end
 end
 
+module Kernel
+  def find_on_load_path f
+    $:.each do |path|
+      %w[.rb .zj .so .o .dll .dylib .bundle].each do |ext|
+        return "#{path}/#{f}#{ext}" if File.exists? "#{path}/#{f}#{ext}"
+      end
+    end
+
+    return nil
+  end
+
+  alias :old_require :require
+  def require f
+    Zajal::Internals.watched_files.push find_on_load_path(f) if find_on_load_path(f)
+    Zajal::Internals.watched_files.uniq!
+    old_require f
+  end
+end
 
 # add sugar to some each* methods
 class Array

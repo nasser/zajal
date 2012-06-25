@@ -44,7 +44,7 @@ class ZajalInterpreter : public ofBaseApp {
     void run();
     void initialize();
     void loadScript(char* filename);
-    void reloadScript(bool forced=false);
+    void reloadScript(bool forced=false, char* filename=NULL);
     void updateCurrentScript();
     char* getCurrentScriptPath();
     

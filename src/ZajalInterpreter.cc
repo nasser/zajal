@@ -230,22 +230,30 @@ void ZajalInterpreter::draw() {
 }
 
 void ZajalInterpreter::updateCurrentScript() {
-  if(scriptName) {
-    struct stat attrib;
-    if(stat(scriptName, &attrib)) {
-      fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", scriptName);
-      fprintf(stderr, "  The file is either missing or otherwise inaccessible. Check the file name\n");
-      fprintf(stderr, "  or the file's permissions.\n");
-      ::exit(1);
-      
-    } else {
-      if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
-        logConsoleText("$stdout", "Updating %s in place...\n", scriptName);
-        scriptModifiedTime = attrib.st_mtimespec.tv_sec;
-        reloadScript();
+  VALUE watched_files_ary = INTERNAL_GET(zj_mZajal, watched_files);
+  VALUE* watched_files_ptr = RARRAY_PTR(watched_files_ary);
+  int watched_files_len = RARRAY_LEN(watched_files_ary);
+
+  for (int i = 0; i < watched_files_len; ++i) {
+    char* filePath = StringValuePtr(watched_files_ptr[i]);
+
+    if(filePath) {
+      struct stat attrib;
+      if(stat(filePath, &attrib)) {
+        fprintf(stderr, "FATAL ERROR: Could not access `%s'. Zajal must quit.\n", filePath);
+        fprintf(stderr, "  The file is either missing or otherwise inaccessible. Check the file name\n");
+        fprintf(stderr, "  or the file's permissions.\n");
+        ::exit(1);
+        
+      } else {
+        if(attrib.st_mtimespec.tv_sec > scriptModifiedTime) {
+          logConsoleText("$stdout", "Updating %s in place...\n", filePath);
+          scriptModifiedTime = attrib.st_mtimespec.tv_sec;
+          if(i > 0) rb_funcall(rb_mKernel, rb_intern("load"), 1, rb_str_new2(filePath));
+          reloadScript();
+        }
         
       }
-      
     }
   }
   
@@ -429,13 +437,17 @@ void ZajalInterpreter::loadScript(char* fileName) {
   INTERNAL_SET(zj_mApp, data_path, script_directory);
   rb_ary_unshift(rb_gv_get("$:"), script_directory);
   rb_funcall(rb_gv_get("$:"), rb_intern("uniq!"), 0);
+
+  rb_ary_unshift(INTERNAL_GET(zj_mZajal, watched_files), rb_str_new2(zj_to_data_path(fileName)));
   
   free(scriptNameResolved);
 }
 
-void ZajalInterpreter::reloadScript(bool forced) {
+void ZajalInterpreter::reloadScript(bool forced, char* filename) {
   // open file, measure size
-  FILE *scriptFile = fopen(scriptName, "r");
+  if(filename == NULL) filename = scriptName;
+
+  FILE *scriptFile = fopen(filename, "r");
   fseek(scriptFile, 0, SEEK_END);
   long scriptFileSize = ftell(scriptFile);
   fseek(scriptFile, 0, SEEK_SET);
