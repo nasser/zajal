@@ -244,6 +244,9 @@ void Init_Events() {
   
   INTERNAL_SET(zj_mEvents, draw_prehooks, rb_ary_new());
   INTERNAL_SET(zj_mEvents, draw_posthooks, rb_ary_new());
+
+  INTERNAL_SET(zj_mEvents, exit_prehooks, rb_ary_new());
+  INTERNAL_SET(zj_mEvents, exit_posthooks, rb_ary_new());
   
   INTERNAL_SET(zj_mEvents, defaults_proc, Qnil);
   INTERNAL_SET(zj_mEvents, setup_proc, Qnil);

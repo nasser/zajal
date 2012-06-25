@@ -259,10 +259,27 @@ char* ZajalInterpreter::getCurrentScriptPath() {
 //--------------------------------------------------------------
 void ZajalInterpreter::exit() {
   if(state == INTERPRETER_RUNNING) {
+    VALUE prehooks_ary = INTERNAL_GET(zj_mEvents, exit_prehooks);
+    VALUE* prehooks_ptr = RARRAY_PTR(prehooks_ary);
+    int prehooks_len = RARRAY_LEN(prehooks_ary);
+    
+    for(int i = 0; i < prehooks_len; i++) {
+      zj_safe_proc_call(prehooks_ptr[i], 0);
+    }
+
     // TODO convert key into symbols
     zj_safe_proc_call(INTERNAL_GET(zj_mEvents, exit_proc), 0);
     if(ruby_error) state = INTERPRETER_ERROR;
   }
+
+    VALUE posthooks_ary = INTERNAL_GET(zj_mEvents, exit_posthooks);
+    VALUE* posthooks_ptr = RARRAY_PTR(posthooks_ary);
+    int posthooks_len = RARRAY_LEN(posthooks_ary);
+    
+    for(int i = 0; i < posthooks_len; i++) {
+      zj_safe_proc_call(posthooks_ptr[i], 0);
+    }
+
 }
 
 //--------------------------------------------------------------
