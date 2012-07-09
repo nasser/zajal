@@ -70,12 +70,14 @@ void ZajalInterpreter::printVersion() {
 void ZajalInterpreter::run() {
   state = INTERPRETER_RUNNING;
   ofSetupOpenGL(initialWidth, initialHeight, OF_WINDOW);
+  reloadScript();
   ofRunApp(this);
 }
 
 void ZajalInterpreter::run(ofAppBaseWindow* window) {
   state = INTERPRETER_RUNNING;
   ofSetupOpenGL(window, initialWidth, initialHeight, OF_WINDOW);
+  reloadScript();
   ofRunApp(this);
 }
 
