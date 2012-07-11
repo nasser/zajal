@@ -1,0 +1,62 @@
+<section class="content">
+	<section class="docs">
+		<div class="wrapper">
+			<article class="function">
+				{{#method}}
+				<div class="title">
+					{{method_name}}
+				</div>
+				<div class="description">
+					<p>{{{summary}}}</p>
+				</div>
+				{{#elaboration}}
+				<div class="elaboration">
+					<p>{{{elaboration}}}</p>
+				</div>
+				{{/elaboration}}
+				<div class="signature">
+					{{#syntaxes}}
+					<h3>{{name}} <em>{{params}}</em> {{#return}}&rarr; <em>{{return}}</em>{{/return}}</h3>
+					{{/syntaxes}}
+				</div>
+				<div class="parameters">
+					{{#params}}
+					<div class="parameter">
+						<h3>{{name}}</h3><p>{{{linkified_text}}} <span class="types">({{clean_types}})</p>
+					</div>
+					{{/params}}
+					{{#returns}}
+					<div class="parameter">
+						<h3>{{name}}</h3><p>{{{linkified_text}}} <span class="types">({{clean_types}})</p>
+					</div>
+					{{/returns}}
+				</div>
+				<div class="examples">
+				{{#examples}}
+					<pre><code class="ruby">{{#title}}# {{title}}&#10;{{/title}}{{code}}</code><img src="data:image/gif;base64,{{image_b64}}"></pre>
+				{{/examples}}
+				</div>
+				<div class="related">
+					{{#related}}
+					See also
+					{{/related}}
+					{{#related}}
+					{{#href}}
+						{{#text}} <a href="{{href}}">{{text}}</a> {{/text}}
+						{{^text}} <a href="{{href}}">{{name}}</a> {{/text}}
+					{{/href}}
+					{{^href}}
+						{{#text}} {{text}} {{/text}}
+						{{^text}} {{name}} {{/text}}
+					{{/href}}
+					{{/related}}
+				</div>
+				<div class="view-source">
+				<a href="#" class="toggle-source">View Source</a>
+				<pre class="source"><code class="cpp">/* <a target="_blank" href="https://github.com/nasser/zajal/blob/develop/{{short_file}}#L{{line}}">{{short_file}}:{{line}}</a> */&#10;{{source}}</code></pre>
+				</div>
+				{{/method}}
+			</article>
+		</div>
+	</section>
+</section>

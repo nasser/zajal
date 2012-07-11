@@ -1,0 +1,24 @@
+<section class="sidebar">
+	<input id="quick-search" type="search" placeholder="Filter">
+	<ul id="contents">
+		{{#modules}}
+		<ul class="nav-functions">
+			<li>{{module_name}}</li>
+			{{#constants}}
+			<li class="searchable"><a href="/{{file_path}}/">{{name}}</a></li>
+			{{/constants}}
+			{{#methods}}
+			<li class="searchable"><a href="/{{file_path}}/">{{method_name}}</a></li>
+			{{/methods}}
+			{{#classes}}
+			{{#class_methods}}
+			<li class="searchable"><a href="/{{file_path}}/">{{class_name}}{{sep}}{{method_name}}</a></li>
+			{{/class_methods}}
+			{{#instance_methods}}
+			<li class="searchable"><a href="/{{file_path}}/">{{class_name}}{{sep}}{{method_name}}</a></li>
+			{{/instance_methods}}
+			{{/classes}}
+		</ul>
+		{{/modules}}
+	</ul>
+</section>

@@ -1,0 +1,29 @@
+<title>Home</title>
+<link rel="stylesheet" href="/css/style.css">
+<meta name="viewport" content="user-scalable=no, width=device-width">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"> </script>
+<script type="text/javascript" src="/js/application.js"> </script>
+<script type="text/javascript" src="/js/highlight.pack.js"> </script>
+<script type="text/javascript" src="/js/quicksearch.js"> </script>
+
+<link rel="stylesheet" href="http://yandex.st/highlightjs/7.0/styles/sunburst.min.css">
+<script src="http://yandex.st/highlightjs/7.0/highlight.min.js"></script>
+<script>
+	hljs.tabReplace = '    ';
+	hljs.initHighlightingOnLoad();
+	$(function() {
+		$(".toggle-source").click(function() {
+			$(this).next().toggle();
+		});
+		$(document).keydown(function(e) {
+			$("#quick-search").trigger(jQuery.Event('keypress', e));
+		});
+	});
+</script>
+<!--
+<script type="text/javascript" src="http://use.typekit.com/qbg6qye.js"> </script>
+<script type="text/javascript">try{Typekit.load();}catch(e){} </script>
+<script>
+	document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"> </' + 'script>')
+</script>
+-->
