@@ -64,7 +64,9 @@ class ZajalInterpreter : public ofBaseApp {
     
     // is a mouse button or key being held? used to implement key_up/mouse_down vs key_down/mouse_down
     bool keyIsPressed, mouseIsPressed;
-    
+
+    VALUE lastKeyEvent;
+
     // store informaton on last mouse position to emulate continious mouse press
     VALUE lastMouseX, lastMouseY, lastMouseButton;
     

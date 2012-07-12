@@ -33,7 +33,9 @@ ZajalInterpreter::ZajalInterpreter() {
   
   keyIsPressed = false;
   mouseIsPressed = false;
-  
+
+  lastKeyEvent - Qnil;
+
   state = INTERPRETER_NO_SKETCH;
   scriptModifiedTime = 0;
   
@@ -223,6 +225,11 @@ void ZajalInterpreter::draw() {
         zj_safe_proc_call(INTERNAL_GET(zj_mEvents, mouse_pressed_proc), 3, lastMouseX, lastMouseY, lastMouseButton);
       if(ruby_error) state = INTERPRETER_ERROR;
       
+      // fake continious mouse press
+      if(keyIsPressed)
+        zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, lastKeyEvent);
+      if(ruby_error) state = INTERPRETER_ERROR;
+
       break;
       
   }
@@ -299,12 +306,11 @@ void ZajalInterpreter::keyPressed  (int key) {
     VALUE keyEvent = zj_safe_funcall(zj_cKeyEvent, rb_intern("new"), 1, INT2FIX(key));
     if(ruby_error) state = INTERPRETER_ERROR;
     
-    if(keyIsPressed) {
-      zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_pressed_proc), 1, keyEvent);
-      
-    } else {
+    if(!keyIsPressed) {
       zj_safe_proc_call(INTERNAL_GET(zj_mEvents, key_down_proc), 1, keyEvent);
       keyIsPressed = true;
+      lastKeyEvent = keyEvent;
+
     }
     
     if(ruby_error) state = INTERPRETER_ERROR;
@@ -448,6 +454,7 @@ void ZajalInterpreter::loadScript(char* fileName) {
 void ZajalInterpreter::reloadScript(bool forced, char* filename) {
   // open file, measure size
   if(filename == NULL) filename = scriptName;
+  if(filename == NULL) return;
 
   FILE *scriptFile = fopen(filename, "r");
   fseek(scriptFile, 0, SEEK_END);
