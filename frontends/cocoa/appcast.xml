@@ -6,6 +6,28 @@
         <description>Most recent changes with links to updates.</description>
         <language>en</language>
         <item>
+            <title>Zajal 0.3.4</title>
+            <sparkle:releaseNotesLink>https://www.zajal.cc/release/cocoa/notes.html</sparkle:releaseNotesLink>
+            <pubDate>Thu, 12 Jul 2012 15:20:27 -0400</pubDate>
+            <enclosure
+                url="https://www.zajal.cc/release/cocoa/Zajal-0.3.4.zip"
+                sparkle:version="0.3.4"
+                type="application/octet-stream"
+                length="8620856"
+            />
+        </item>
+        <item>
+            <title>Zajal 0.3.4</title>
+            <sparkle:releaseNotesLink>https://www.zajal.cc/release/cocoa/notes.html</sparkle:releaseNotesLink>
+            <pubDate>Thu, 12 Jul 2012 15:17:10 -0400</pubDate>
+            <enclosure
+                url="https://www.zajal.cc/release/cocoa/Zajal-0.3.4.zip"
+                sparkle:version="0.3.4"
+                type="application/octet-stream"
+                length="8620856"
+            />
+        </item>
+        <item>
             <title>Zajal 0.3.2</title>
             <sparkle:releaseNotesLink>https://www.zajal.cc/release/cocoa/notes.html</sparkle:releaseNotesLink>
             <pubDate>Tue, 26 Apr 2011 13:54:12 -0400</pubDate>

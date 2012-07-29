@@ -94,6 +94,7 @@
 -(IBAction) onlineHelpMenuClick:(id)sender;
 
 -(IBAction) toggleConsole:(id)sender;
+-(IBAction) toggleToolbar:(id)sender;
 
 -(IBAction) reloadScript:(id)sender;
 -(IBAction) launchExample:(id)sender;

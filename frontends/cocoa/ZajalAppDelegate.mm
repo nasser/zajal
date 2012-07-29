@@ -171,7 +171,7 @@
     [playPauseToolbarItem setEnabled:NO];
     [reloadToolbarItem setEnabled:NO];
     
-    [toolbar setVisible:[defaults boolForKey:@"window.toolbar-visible"]];
+    [toolbar setVisible:YES];
     
     stdoutAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
                         [NSColor whiteColor], NSForegroundColorAttributeName,
@@ -280,14 +280,31 @@
 }
 
 - (IBAction) toggleConsole:(id)sender {
-    if([errorConsoleDrawer state] == NSDrawerClosedState || [errorConsoleDrawer state] == NSDrawerClosingState) {
+    if([consoleMenuItem state] == NSOffState) {
+        // console was hidden, show it
         [errorConsoleDrawer openOnEdge:NSMinYEdge];
-        [consoleToolbarItem setImage:consoleDownIcon];
-        [consoleMenuItem setTitle:@"Show Console"];
-    } else {
-        [errorConsoleDrawer close];
         [consoleToolbarItem setImage:consoleUpIcon];
-        [consoleMenuItem setTitle:@"Hide Console"];
+        [consoleMenuItem setState:NSOnState];
+        
+    } else {
+        // console was showing, hide it
+        [errorConsoleDrawer close];
+        [consoleToolbarItem setImage:consoleDownIcon];
+        [consoleMenuItem setState:NSOffState];
+        
+    }
+}
+
+- (IBAction) toggleToolbar:(id)sender {
+    if([sender state] == NSOffState) {
+        // toolbar was hidden, show it
+        [toolbar setVisible:YES];
+        [sender setState:NSOnState];
+        
+    } else {
+        // toolbar was showing, hide it
+        [toolbar setVisible:NO];
+        [sender setState:NSOffState];
     }
 }
 

@@ -44,11 +44,11 @@
 	<key>CFBundleURLTypes</key>
 	<array/>
 	<key>CFBundleVersion</key>
-	<string>0.3.3</string>
+	<string>0.3.5</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2010, 2011 Ramsey Nasser</string>
+	<string>© 2010, 2011, 2012 Ramsey Nasser</string>
 	<key>NSMainNibFile</key>
 	<string>WithWindow</string>
 	<key>NSPrincipalClass</key>
@@ -63,6 +63,7 @@
 	<array/>
 	<key>ZJTextEditors</key>
 	<array>
+		<string>Sublime Text 2</string>
 		<string>TextMate</string>
 		<string>MacVim</string>
 		<string>TextWrangler</string>
