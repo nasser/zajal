@@ -2,6 +2,8 @@
 #include "ofMain.h"
 #include "zajal.h"
 
+#define BAIL_IF_ARDUINO_NOT_READY if(!arduino_ptr->isArduinoReady() || !arduino_ptr->isInitialized()) return Qnil;
+
 /* global hardware module */
 VALUE zj_mHardware;
 
@@ -78,7 +80,6 @@ VALUE zj_arduino_new(int argc, VALUE* argv, VALUE klass) {
   
   VALUE arduino = rb_hash_aref(INTERNAL_GET(zj_mHardware, arduino_hash), device);
   
-  
   if(NIL_P(arduino)) {
     /* arduino device never used before, create it, cache it */
     ofArduino* arduino_ptr = new ofArduino();
@@ -91,9 +92,6 @@ VALUE zj_arduino_new(int argc, VALUE* argv, VALUE klass) {
     rb_iv_set(arduino, "@analog_pin_names", rb_hash_new());
     rb_iv_set(arduino, "@setup_proc", Qnil);
 
-    /* TODO remove me */
-    rb_iv_set(arduino, "@did_setup", Qfalse);
-    
     /* connect right away unless user set connect: false hash key */
     if(RTEST(connect)) rb_funcall(arduino, rb_intern("connect"), 0);
 
@@ -103,8 +101,17 @@ VALUE zj_arduino_new(int argc, VALUE* argv, VALUE klass) {
   return arduino;
 }
 
-VALUE zj_arduino_initialize(int argc, VALUE* argv, VALUE self) {
-  
+VALUE zj_arduino_initialize(VALUE self) {
+  return self;
+}
+
+VALUE zj_arduino_init_analog_pins(VALUE self) {
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
+
+  for(int i = 0; i < 6; i++)
+    arduino_ptr->sendAnalogPinReporting(i, ARD_ON);
+
+  return Qnil;
 }
 
 /* 
@@ -182,69 +189,21 @@ VALUE zj_arduino_firmware(VALUE self) {
   return rb_str_new2(arduino_ptr->getFirmwareName().c_str());
 }
 
-// VALUE zj_arduino_digital(VALUE self, VALUE pin, VALUE val) {
-//   INIT_DATA_PTR(ofArduino, arduino_ptr);
-//   
-//   arduino_ptr->sendDigital(NUM2INT(pin), NUM2INT(val));
-//   
-//   return Qnil;
-// }
-
-VALUE zj_arduino_pwm(VALUE self, VALUE pin, VALUE val) {
-  INIT_DATA_PTR(ofArduino, arduino_ptr);
-  
-  arduino_ptr->sendPwm(NUM2INT(pin), NUM2INT(val));
-  
-  return Qnil;
-}
-
-VALUE zj_arduino_servo(VALUE self, VALUE pin, VALUE val) {
-  INIT_DATA_PTR(ofArduino, arduino_ptr);
-  
-  arduino_ptr->sendServo(NUM2INT(pin), NUM2INT(val));
-  
-  return Qnil;
-}
-
 VALUE zj_arduino_set_pin_mode(VALUE self, VALUE pinrb, VALUE mode) {
   INIT_DATA_PTR(ofArduino, arduino_ptr);
 
   ID modeid = SYM2ID(mode);
   int pin = FIX2INT(pinrb);
   
-  if(modeid == rb_intern("input")) {
-    if((pin>=2 && pin<=13) || (pin>=16 && pin<=21)) {
-      arduino_ptr->sendDigitalPinMode(pin, ARD_INPUT);
-    } else {
-      rb_raise(rb_eArgError, "Can't set pin %d mode to input! Only pins 2-13, 16-21 supported.", pin);
-    }
-    
-  } else if(modeid == rb_intern("output")) {
-    if((pin>=2 && pin<=13) || (pin>=16 && pin<=21)) {
-      arduino_ptr->sendDigitalPinMode(pin, ARD_OUTPUT);
-    } else {
-      rb_raise(rb_eArgError, "Can't set pin %d mode to output! Only pins 2-13, 16-21 supported.", pin);
-    }
-    
-  } else if(modeid == rb_intern("pwm")) {
-    if(pin==3 || pin==5 || pin==6 || pin==8 || pin==10 || pin==11) {
-      arduino_ptr->sendDigitalPinMode(pin, ARD_PWM);
-    } else {
-      rb_raise(rb_eArgError, "Can't set pin %d mode to pwm! Only pins 3, 5, 6, 9, 10 and 11 supported.", pin);
-    }
-    
-  } else if(modeid == rb_intern("servo")) {
-    if(pin==9 || pin==10) {
-      arduino_ptr->sendServoAttach(pin);
-    } else {
-      rb_raise(rb_eArgError, "Can't set pin %d mode to servo! Only pins 9 and 10 supported.", pin);
-    }
-    
-  } else {
-    rb_raise(rb_eArgError, "Unexpected pin mode!");
-    
-  }
-  
+  int cmode;
+  if(modeid == rb_intern("input")) cmode = ARD_INPUT;
+  else if(modeid == rb_intern("output")) cmode = ARD_OUTPUT;
+  else if(modeid == rb_intern("pwm")) cmode = ARD_PWM;
+  else if(modeid == rb_intern("servo")) cmode = ARD_SERVO;
+  else rb_raise(rb_eArgError, "Unexpected pin mode!");
+
+  arduino_ptr->sendDigitalPinMode(pin, cmode);
+
   return Qnil;
 }
 
@@ -266,139 +225,86 @@ VALUE zj_arduino_get_pin_mode(VALUE self, VALUE pinrb) {
   return Qnil;
 }
 
-VALUE zj_arduino_setup_digital(int argc, VALUE* argv, VALUE self) {
-  VALUE pin, mode, name;
-  rb_scan_args(argc, argv, "21", &pin, &mode, &name);
-  
-  if(!NIL_P(name)) rb_hash_aset(rb_iv_get(self, "@digital_pin_names"), name, pin);
-  
-  zj_arduino_set_pin_mode(self, pin, mode);
-  
-  return Qnil;
-}
-
-VALUE zj_arduino_send_digital_value(VALUE self, VALUE pin, VALUE value) {
-  INIT_DATA_PTR(ofArduino, arduino_ptr);
-
-  int cpin = INT2FIX(pin);
-  int cvalue = INT2FIX(value);
-  
-  arduino_ptr->sendDigitalPinMode(cpin, ARD_OUTPUT);
-
-  switch(arduino_ptr->getDigitalPinMode(cpin)) {
-    case ARD_INPUT:
-    case ARD_OUTPUT:
-      arduino_ptr->sendDigital(cpin, cvalue);
-      break;
-      
-    case ARD_PWM:
-      arduino_ptr->sendPwm(cpin, cvalue);
-      break;
-      
-    case ARD_SERVO:
-      arduino_ptr->sendServo(cpin, cvalue);
-      break;
-  }
-  
-  return Qnil;
-}
-
-VALUE zj_arduino_read_digital_pin(VALUE self, VALUE pin) {
-  INIT_DATA_PTR(ofArduino, arduino_ptr);
-
-  int cpin = FIX2INT(pin);
-
-  // printf("Reading from pin %d, mode %d", cpin, arduino_ptr->getDigitalPinMode(cpin));
-
-  arduino_ptr->sendDigitalPinMode(cpin, ARD_INPUT);
-  switch(arduino_ptr->getDigitalPinMode(cpin)) {
-    case ARD_OUTPUT:
-    case ARD_INPUT:
-      return arduino_ptr->getDigital(cpin) == 1 ? Qtrue : Qfalse;
-      break;
-    
-    case ARD_PWM:
-      return INT2FIX(arduino_ptr->getPwm(cpin));
-      break;
-    
-    case ARD_SERVO:
-      return INT2FIX(arduino_ptr->getServo(cpin));
-      break;
-  }
-  
-  return Qnil;
-}
-
-
-VALUE zj_arduino_digital(int argc, VALUE* argv, VALUE self) {
-  VALUE pin, value;
-  rb_scan_args(argc, argv, "11", &pin, &value);
-  
-  switch(argc) {
-    /* called with one argument, return pin mode */
-    case 1: return zj_arduino_read_digital_pin(self, FIX2INT(pin)); break;
-    
-    /* called with two arguments, send value to pin */
-    case 2: return zj_arduino_send_digital_value(self, FIX2INT(pin), NUM2INT(value));
-  }
-  
-  return Qnil;
-}
-
-VALUE zj_arduino_setup_analog(int argc, VALUE* argv, VALUE self) {
-  INIT_DATA_PTR(ofArduino, arduino_ptr);
-
-  VALUE pin, mode, pin_mode, name;
-  rb_scan_args(argc, argv, "11", &pin_mode, &name);
-  
-  if(TYPE(pin_mode) == T_SYMBOL) {
-    pin = Qnil;
-    mode = pin_mode;
-  } else {
-    pin = pin_mode;
-    mode = Qnil;
-  }
-  
-  if(!NIL_P(mode)) {
-    ID modeid = SYM2ID(mode);
-    
-    if(modeid == rb_intern("all_digital")) {
-      for(int i = 0; i < 6; i++) {
-        arduino_ptr->sendAnalogPinReporting(i, ARD_OFF);
-        arduino_ptr->sendDigitalPinMode(16+i, ARD_INPUT);
-      }
-      
-    } else if(modeid == rb_intern("all_analog")) {
-      for(int i = 0; i < 6; i++) {
-        arduino_ptr->sendAnalogPinReporting(i, ARD_ON);
-      }
-      
-    } else {
-      rb_raise(rb_eArgError, "Unrecognized analog pin mode!");
-      
-    }
-    
-  } else if(!NIL_P(pin) && !NIL_P(name)) {
-    rb_hash_aset(rb_iv_get(self, "@analog_pin_names"), name, pin);
-    
-  }
-  
-  
-  return Qnil;
-}
-
 VALUE zj_arduino_analog(VALUE self, VALUE pin) {
   INIT_DATA_PTR(ofArduino, arduino_ptr);
+
+  BAIL_IF_ARDUINO_NOT_READY
   
   return INT2FIX(arduino_ptr->getAnalog(pin));
 }
 
-VALUE zj_arduino_setup(VALUE self) {
-  /* store setup block to be invoked when arduino is ready */
-  if(rb_block_given_p()) rb_iv_set(self, "@setup_proc", rb_block_proc());
+VALUE zj_arduino_write_digital(VALUE self, VALUE pin, VALUE value) {
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
+
+  BAIL_IF_ARDUINO_NOT_READY
+
+  int cpin = FIX2INT(pin);
+  int cvalue = FIX2INT(value);
+  
+  arduino_ptr->sendDigital(cpin, cvalue);
 
   return Qnil;
 }
+
+VALUE zj_arduino_write_pwm(VALUE self, VALUE pin, VALUE value) {
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
+
+  BAIL_IF_ARDUINO_NOT_READY
+
+  int cpin = FIX2INT(pin);
+  int cvalue = FIX2INT(value);
+  
+  arduino_ptr->sendPwm(cpin, cvalue);
+
+  return Qnil;
+}
+
+VALUE zj_arduino_write_servo(VALUE self, VALUE pin, VALUE value) {
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
+
+  BAIL_IF_ARDUINO_NOT_READY
+
+  int cpin = FIX2INT(pin);
+  int cvalue = FIX2INT(value);
+  
+  arduino_ptr->sendServo(cpin, cvalue);
+
+  return Qnil;
+}
+
+VALUE zj_arduino_read_digital(VALUE self, VALUE pin) {
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
+
+  BAIL_IF_ARDUINO_NOT_READY
+
+  int cpin = FIX2INT(pin);
+
+  return INT2FIX(arduino_ptr->getDigital(cpin));
+}
+
+VALUE zj_arduino_read_pwm(VALUE self, VALUE pin) {
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
+
+  BAIL_IF_ARDUINO_NOT_READY
+
+  int cpin = FIX2INT(pin);
+
+  return INT2FIX(arduino_ptr->getPwm(cpin));
+}
+
+VALUE zj_arduino_read_servo(VALUE self, VALUE pin) {
+  INIT_DATA_PTR(ofArduino, arduino_ptr);
+
+  BAIL_IF_ARDUINO_NOT_READY
+
+  int cpin = FIX2INT(pin);
+
+  return INT2FIX(arduino_ptr->getServo(cpin));
+}
+
+
+
+
 
 VALUE zj_serial_devices(VALUE klass) {
   return zj_enumerate_serial_devices();
@@ -597,7 +503,7 @@ void Init_Hardware() {
   zj_cArduino = rb_define_class_under(zj_mHardware, "Arduino", rb_cObject);
   rb_define_singleton_method(zj_cArduino, "new", RUBY_METHOD_FUNC(zj_arduino_new), -1);
   rb_define_singleton_method(zj_cArduino, "devices", RUBY_METHOD_FUNC(zj_arduino_devices), 0);
-  rb_define_method(zj_cArduino, "initialize", RUBY_METHOD_FUNC(zj_arduino_initialize), -1);
+  rb_define_method(zj_cArduino, "initialize", RUBY_METHOD_FUNC(zj_arduino_initialize), 0);
   rb_define_method(zj_cArduino, "connect", RUBY_METHOD_FUNC(zj_arduino_connect), 0);
   rb_define_method(zj_cArduino, "disconnect", RUBY_METHOD_FUNC(zj_arduino_disconnect), 0);
   rb_define_method(zj_cArduino, "update", RUBY_METHOD_FUNC(zj_arduino_update), 0);
@@ -605,22 +511,20 @@ void Init_Hardware() {
   rb_define_method(zj_cArduino, "ready?", RUBY_METHOD_FUNC(zj_arduino_ready_p), 0);
   rb_define_method(zj_cArduino, "firmware", RUBY_METHOD_FUNC(zj_arduino_firmware), 0);
   
-  rb_define_method(zj_cArduino, "setup", RUBY_METHOD_FUNC(zj_arduino_setup), 0);
-  
-  rb_define_method(zj_cArduino, "setup_digital", RUBY_METHOD_FUNC(zj_arduino_setup_digital), -1);
-  rb_define_method(zj_cArduino, "read_digital", RUBY_METHOD_FUNC(zj_arduino_read_digital_pin), 1);
-  rb_define_method(zj_cArduino, "write_digital", RUBY_METHOD_FUNC(zj_arduino_send_digital_value), 2);
+  rb_define_method(zj_cArduino, "read_digital", RUBY_METHOD_FUNC(zj_arduino_read_digital), 1);
+  rb_define_method(zj_cArduino, "read_pwm", RUBY_METHOD_FUNC(zj_arduino_read_pwm), 1);
+  rb_define_method(zj_cArduino, "read_servo", RUBY_METHOD_FUNC(zj_arduino_read_servo), 1);
 
-  rb_define_method(zj_cArduino, "setup_analog", RUBY_METHOD_FUNC(zj_arduino_setup_analog), -1);
-  rb_define_method(zj_cArduino, "read_analog", RUBY_METHOD_FUNC(zj_arduino_analog), 1);
- 
+  rb_define_method(zj_cArduino, "write_digital", RUBY_METHOD_FUNC(zj_arduino_write_digital), 2);
+  rb_define_method(zj_cArduino, "write_pwm", RUBY_METHOD_FUNC(zj_arduino_write_pwm), 2);
+  rb_define_method(zj_cArduino, "write_servo", RUBY_METHOD_FUNC(zj_arduino_write_servo), 2);
+
   rb_define_method(zj_cArduino, "set_pin_mode", RUBY_METHOD_FUNC(zj_arduino_set_pin_mode), 2);
-  
-  // rb_define_method(zj_cArduino, "more_digital_pins", RUBY_METHOD_FUNC(zj_arduino_pin_mode), -1);
-  // rb_define_method(zj_cArduino, "pin_mode", RUBY_METHOD_FUNC(zj_arduino_pin_mode), -1);
-  // rb_define_method(zj_cArduino, "digital", RUBY_METHOD_FUNC(zj_arduino_digital), 2);
-  // rb_define_method(zj_cArduino, "pwm", RUBY_METHOD_FUNC(zj_arduino_pwm), 2);
-  // rb_define_method(zj_cArduino, "servo", RUBY_METHOD_FUNC(zj_arduino_servo), 2);
+  rb_define_method(zj_cArduino, "get_pin_mode", RUBY_METHOD_FUNC(zj_arduino_get_pin_mode), 1);
+
+  rb_define_method(zj_cArduino, "read_analog", RUBY_METHOD_FUNC(zj_arduino_analog), 1);
+
+  rb_define_private_method(zj_cArduino, "init_analog_pins", RUBY_METHOD_FUNC(zj_arduino_init_analog_pins), 0);
   
   zj_cSerial = rb_define_class_under(zj_mHardware, "Serial", rb_cObject);
   rb_define_singleton_method(zj_cSerial, "devices", RUBY_METHOD_FUNC(zj_serial_devices), 0);
