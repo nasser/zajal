@@ -152,7 +152,7 @@ void ZajalInterpreter::draw() {
   VALUE* backtrace_ptr;
   char* error_message_ptr, *error_class;
   long backtrace_length;
-  
+
   switch(state) {
     case INTERPRETER_ERROR:
       INTERNAL_SET(zj_mEvents, current_event, SYM("draw"));
@@ -172,7 +172,7 @@ void ZajalInterpreter::draw() {
         error_message_ptr = RSTRING_PTR(rb_obj_as_string(last_error));
         logConsoleText("$stderr", "class   = %s\n", error_class); 
         logConsoleText("$stderr", "message = %s\n", error_message_ptr); 
-        
+
         logConsoleText("$stderr", "backtrace = \n");
         backtrace = rb_attr_get(last_error, rb_intern("bt"));
         backtrace_length = RARRAY_LEN(backtrace);
@@ -193,7 +193,7 @@ void ZajalInterpreter::draw() {
       ofRect(0, ofGetHeight()/2-25, ofGetWidth(), 35);
       ofSetColor(0, 0, 0, 255);
       ofDrawBitmapString(error_message_ptr, 10, ofGetHeight()/2-10);
-      zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
+      // zj_safe_proc_call(INTERNAL_GET(zj_mEvents, defaults_proc), 0);
       break;
       
     case INTERPRETER_RUNNING:
@@ -446,7 +446,7 @@ void ZajalInterpreter::loadScript(char* fileName) {
   rb_ary_unshift(rb_gv_get("$:"), script_directory);
   rb_funcall(rb_gv_get("$:"), rb_intern("uniq!"), 0);
 
-  rb_ary_unshift(INTERNAL_GET(zj_mZajal, watched_files), rb_str_new2(zj_to_data_path(fileName)));
+  rb_ary_unshift(INTERNAL_GET(zj_mZajal, watched_files), rb_str_new2(scriptNameResolved));
   
   free(scriptNameResolved);
 }
