@@ -6,40 +6,42 @@
 VALUE zj_mMathematics;
 
 /* 
- * @overload seed_random
- *   Seeds random values using the current time. Useful to have unpredictable
- *   series of random numbers.
- *   @screenshot Unpredictable random numbers
- *     seed_random
- *     text [(random*10).round, (random*10).round, (random*10).round]
- *     text [(random*10).round, (random*10).round, (random*10).round]
- *     text ""
- *     
- *     seed_random
- *     text [(random*10).round, (random*10).round, (random*10).round]
- *     text ""
- *     
- *     seed_random
- *     text [(random*10).round, (random*10).round, (random*10).round]
- *     text [(random*10).round, (random*10).round, (random*10).round]
+ * Seeds random values. Called without an argument, seed_random uses the
+ * current time as a seed and results in unpredictable random numbers. Called
+ * with an argument, seed_random uses that number as the seed, so you can
+ * create reproducable sets of random numbers.
  * 
- * @overload seed_random k
- *   Seeds random values using +k+. Useful to have predictable series of
- *   random numbers.
- *   @param [Numeric] k The seed to use
- *   @screenshot Predictable random numbers
- *     seed_random 0
- *     text [(random*10).round, (random*10).round, (random*10).round]
- *     text [(random*10).round, (random*10).round, (random*10).round]
- *     text ""
- *     
- *     seed_random 9000
- *     text [(random*10).round, (random*10).round, (random*10).round]
- *     text ""
- *     
- *     seed_random 0
- *     text [(random*10).round, (random*10).round, (random*10).round]
- *     text [(random*10).round, (random*10).round, (random*10).round]
+ * @syntax seed_random
+ * @syntax seed_random k
+ * @param [Numeric] k The seed to use
+ * 
+ * @example Unpredictable random numbers
+ *   seed_random
+ *   text [(random*10).round, (random*10).round, (random*10).round]
+ *   text [(random*10).round, (random*10).round, (random*10).round]
+ *   text ""
+ *   
+ *   seed_random
+ *   text [(random*10).round, (random*10).round, (random*10).round]
+ *   text ""
+ *   
+ *   seed_random
+ *   text [(random*10).round, (random*10).round, (random*10).round]
+ *   text [(random*10).round, (random*10).round, (random*10).round]
+ * 
+ * @example Predictable random numbers
+ *   seed_random 0
+ *   text [(random*10).round, (random*10).round, (random*10).round]
+ *   text [(random*10).round, (random*10).round, (random*10).round]
+ *   text ""
+ *   
+ *   seed_random 9000
+ *   text [(random*10).round, (random*10).round, (random*10).round]
+ *   text ""
+ *   
+ *   seed_random 0
+ *   text [(random*10).round, (random*10).round, (random*10).round]
+ *   text [(random*10).round, (random*10).round, (random*10).round]
  */
 VALUE zj_seed_random(int argc, VALUE* argv, VALUE klass) {
   VALUE val;
@@ -59,22 +61,19 @@ VALUE zj_seed_random(int argc, VALUE* argv, VALUE klass) {
 }
   
 /* 
- * Generate a pseudorandom number
+ * Generate a random number between a minimum and a maximum. Called
+ * without an argument, the minimum is 0 and the maximum is 1.
  * 
- * @overload random
- *   Generate a pseudorandom number between zero and one
- *   @return [0..1] A pseudorandom number
+ * Strictly speaking, the number is not truly random, but pseudorandom. It is
+ * random enough for most uses, but don't try and encrypt passwords with it.
  * 
- * @overload random max
- *   Generate a pseudorandom number between zero and +max+
- *   @param [Numeric] max The upper bound of the pseudorandom number to generate
- *   @return [0..max] A pseudorandom number
+ * @syntax random -> r
+ * @syntax random max -> r
+ * @syntax random min, max -> r
  * 
- * @overload random min, max
- *   Generate a pseudorandom number between +min+ and +max+
- *   @param [Numeric] min The lower bound of the pseudorandom number to generate
- *   @param [Numeric] max The upper bound of the pseudorandom number to generate
- *   @return [min..max] A pseudorandom number
+ * @param [Numeric] min The lower bound of the random number to generate
+ * @param [Numeric] max The upper bound of the random number to generate
+ * @return [min..max] r A random number
  */
 VALUE zj_random(int argc, VALUE* argv, VALUE klass) {
   VALUE min, max;
@@ -99,8 +98,12 @@ VALUE zj_random(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @return [0...width] A pseudorandom value
- * @screenshot Bars
+ * Generate a number between 0 and the with of the window
+ * 
+ * @syntax random_width -> r
+ * @return [0...width] r A pseudorandom value
+ * 
+ * @example Bars
  *   rectangle_mode :center
  *   
  *   rectangle width/2, 10, random_width, 20
@@ -109,7 +112,7 @@ VALUE zj_random(int argc, VALUE* argv, VALUE klass) {
  *   rectangle width/2, 70, random_width, 20
  *   rectangle width/2, 90, random_width, 20
  * 
- * @screenshot Squares
+ * @example Squares
  *   rectangle_mode :center
  *   
  *   color 240
@@ -132,90 +135,101 @@ VALUE zj_random_width(VALUE self) {
 }
 
 /* 
- * @return [0...height] A pseudorandom value
- */
-VALUE zj_random_height(VALUE self) {
+ * Generate a number between 0 and the height of the window
+ * 
+ * @syntax random_height -> r
+ * @return [0...height] r A pseudorandom value
+ * 
+ * @example Bars
+ *   rectangle_mode :center
+ *   
+ *   rectangle width/2, 10, random_height, 20
+ *   rectangle width/2, 30, random_height, 20
+ *   rectangle width/2, 50, random_height, 20
+ *   rectangle width/2, 70, random_height, 20
+ *   rectangle width/2, 90, random_height, 20
+ * 
+ * @example Squares
+ *   rectangle_mode :center
+ *   
+ *   color 240
+ *   square random_height, 10, 5
+ *   
+ *   color 200
+ *   square random_height, 30, 5
+ *   
+ *   color 160
+ *   square random_height, 50, 5
+ *   
+ *   color 120
+ *   square random_height, 70, 5
+ *   
+ *   color 80
+ *   square random_height, 90, 5
+ */VALUE zj_random_height(VALUE self) {
   return DBL2NUM(ofRandomHeight());
 }
 
 /* 
  * Generate perlin noise, a value between zero and one dependant on parameters
  * 
- * @overload noise x
- *   Generate one dimentional perlin noise
- *   @param [Numeric] x
- *   @return [0...1] The one dimentional noise at +x+
- *   @screenshot Noise across x
- *     for x in 0..width
- *       noise_height = height * noise(x)
- *       line x, noise_height, x, height
- *     end
+ * @syntax noise x -> n
+ * @syntax noise x, y -> n
+ * @syntax noise x, y, z -> n
+ * @syntax noise x, y, z, w -> n
+ * 
+ * @return [0..1] n The noise
+ * 
+ * @example Noise across x
+ *   for x in 0..width
+ *     noise_height = height * noise(x)
+ *     line x, noise_height, x, height
+ *   end
+ * 
+ * @example Smoother noise
+ *   for x in 0..width
+ *     noise_height = height * noise(x*0.05)
+ *     line x, noise_height, x, height
+ *   end
+ * 
+ * @example Complex effect
+ *   x = width/2
+ *   y = height/2
+ *   s = 70
  *   
- *   @screenshot Smoother noise
- *     for x in 0..width
- *       noise_height = height * noise(x*0.05)
- *       line x, noise_height, x, height
- *     end
- *   
- *   @todo `x, y = width/2, height/2` does not work!
- *   @screenshot Complex effect
- *     x = width/2
- *     y = height/2
- *     s = 70
+ *   for i in 0..600
+ *     a = i / 600.0 * (0..TWO_PI)
+ *     r = noise(a+1) * (200..255)
+ *     g = noise(a+2) * (200..32)
+ *     b = noise(a) * (32..255)
  *     
- *     for i in 0..600
- *       a = i / 600.0 * (0..TWO_PI)
- *       r = noise(a+1) * (200..255)
- *       g = noise(a+2) * (200..32)
- *       b = noise(a) * (32..255)
- *       
- *       color r, g, b
- *       line x, y,
- *       x + cos(a) * s, y + sin(a) * s
+ *     color r, g, b
+ *     line x, y,
+ *     x + cos(a) * s, y + sin(a) * s
+ *   end
+ *   
+ * @example Snow
+ *   for x in 0..width
+ *     for y in 0..height
+ *       color 255 * noise(x, y)
+ *       point x, y
  *     end
+ *   end
  * 
- * @overload noise x, y
- *   Generate two dimentional perlin noise
- *   @param [Numeric] x
- *   @param [Numeric] y
- *   @return [0...1] The two dimentional noise at +x+, +y+
- *   @screenshot Snow
- *     for x in 0..width
- *       for y in 0..height
- *         color 255 * noise(x, y)
- *         point x, y
- *       end
+ * @example Smoother snow
+ *   for x in 0..width
+ *     for y in 0..height
+ *       color 255 * noise(x*0.02, y*0.02)
+ *       point x, y
  *     end
- * 
- *   @screenshot Smoother snow
- *     for x in 0..width
- *       for y in 0..height
- *         color 255 * noise(x*0.02, y*0.02)
- *         point x, y
- *       end
- *     end
- * 
- * @overload noise x, y, z
- *   Generate three dimentional perlin noise
- *   @param [Numeric] x
- *   @param [Numeric] y
- *   @param [Numeric] z
- *   @return [0...1] The three dimentional noise at +x+, +y+, +z+
- * 
- * @overload noise x, y, z, w
- *   Generate four dimentional perlin noise
- *   @param [Numeric] x
- *   @param [Numeric] y
- *   @param [Numeric] z
- *   @param [Numeric] w
- *   @return [0...1] The four dimentional noise at +x+, +y+, +z+, +w+
+ *   end
  */
 VALUE zj_noise(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z, w;
   rb_scan_args(argc, argv, "13", &x, &y, &z, &w);
   
   if(!NIL_P(y) && !NIL_P(z) && !NIL_P(w)) {
-    /* called with four arguments, return 4D noise */
+    /* called height four arguments, return 4D noise */
     return DBL2NUM(ofNoise(NUM2DBL(x), NUM2DBL(y), NUM2DBL(z), NUM2DBL(w)));
     
   } else if(!NIL_P(y) && !NIL_P(z) && NIL_P(w)) {
@@ -238,40 +252,29 @@ VALUE zj_noise(int argc, VALUE* argv, VALUE klass) {
 
 /* 
  * Generate signed perlin noise, a value between minus one and one dependant
- * on parameters
+ * on parameters.
  * 
- * @overload signed_noise x
- *   @param [Numeric] x
- *   @return [-1..1] The one dimentional noise at +x+
- *   @screenshot Signed noise
- *     for x in 0..width
- *       noise_height = height/2 * signed_noise(x)
- *       rectangle x, height/2, 1, noise_height
- *     end
+ * @syntax signed_noise x -> n
+ * @syntax signed_noise x, y -> n
+ * @syntax signed_noise x, y, z -> n
+ * @syntax signed_noise x, y, z, w -> n
  * 
- *   @screenshot Smoother signed noise
- *     for x in 0..width
- *       noise_height = height/2 * signed_noise(x*0.05)
- *       rectangle x, height/2, 1, noise_height
- *     end
+ * @param [Numeric] x
+ * @param [Numeric] y
+ * @param [Numeric] z
+ * @param [Numeric] w
+ * @return [-1..1] n The noise at +x+, +y+, +z+, +w+
  * 
- * @overload signed_noise x, y
- *   @param [Numeric] x
- *   @param [Numeric] y
- *   @return [-1..1] The two dimentional noise at +x+, +y+
- * 
- * @overload signed_noise x, y, z
- *   @param [Numeric] x
- *   @param [Numeric] y
- *   @param [Numeric] z
- *   @return [-1..1] The three dimentional noise at +x+, +y+, +z+
- * 
- * @overload signed_noise x, y, z, w
- *   @param [Numeric] x
- *   @param [Numeric] y
- *   @param [Numeric] z
- *   @param [Numeric] w
- *   @return [-1..1] The four dimentional noise at +x+, +y+, +z+, +w+
+ * @example Signed noise
+ *   for x in 0..width
+ *     noise_height = height/2 * signed_noise(x)
+ *     rectangle x, height/2, 1, noise_height
+ *   end
+ * @example Smoother signed noise
+ *   for x in 0..width
+ *     noise_height = height/2 * signed_noise(x*0.05)
+ *     rectangle x, height/2, 1, noise_height
+ *   end
  */
 VALUE zj_signed_noise(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z, w;

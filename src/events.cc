@@ -15,7 +15,8 @@ VALUE zj_mEvents;
 /* 
  * Define code to run once at the beginning of a sketch
  * 
- * @yield The code to run once at the beginning of a sketch
+ * @syntax setup do...end
+ * 
  */
 VALUE zj_setup(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, setup_proc, rb_block_proc());
@@ -26,7 +27,12 @@ VALUE zj_setup(VALUE self) {
 /* 
  * Define code to run once every frame during a sketch
  * 
- * @yield The code to run once every frame during a sketch
+ * This is a useful place to update variables and modify the state of your
+ * sketch. update code is called before {#draw} code.
+ * 
+ * @syntax update do...end
+ * 
+ * @see #draw
  */
 VALUE zj_update(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, update_proc, rb_block_proc());
@@ -37,7 +43,13 @@ VALUE zj_update(VALUE self) {
 /* 
  * Define code to draw each frame of a sketch
  * 
- * @yield The code to draw each frame of a sketch
+ * This is where you use drawing methods to render your sketch. Only drawing
+ * commands done in draw code will appear on the screen. draw code is called
+ * after {#update} code.
+ * 
+ * @syntax draw do...end
+ *
+ * @see #update
  */
 VALUE zj_draw(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, draw_proc, rb_block_proc());
@@ -47,8 +59,6 @@ VALUE zj_draw(VALUE self) {
 
 /* 
  * Define code to run right before the sketch exits
- * 
- * @overload exit { ... }
  */
 VALUE zj_exit(VALUE self) {
   if(rb_block_given_p()) {
@@ -63,9 +73,9 @@ VALUE zj_exit(VALUE self) {
 /* 
  * Define code to run when the sketch window is resized
  * 
- * @overload window_resized
- *   @yieldparam [Numeric] w The new width of the window
- *   @yieldparam [Numeric] h The new height of the window
+ * @syntax window_resized do |w, h| ... end
+ @param [Numeric] w The new width of the window
+ @param [Numeric] h The new height of the window
  */
 VALUE zj_window_resized(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, window_resized_proc, rb_block_proc());
@@ -76,8 +86,8 @@ VALUE zj_window_resized(VALUE self) {
 /* 
  * Define code to run on the first frame when a key is pressed
  * 
- * @overload key_down
- *   @yieldparam [KeyEvent] key The key that was just pressed
+ * @syntax key_down
+ * @param [KeyEvent] key The key that was just pressed
  */
 VALUE zj_key_down(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_down_proc, rb_block_proc());
@@ -88,8 +98,8 @@ VALUE zj_key_down(VALUE self) {
 /* 
  * Define code to run every frame while a key is pressed
  * 
- * @overload key_pressed
- *   @yieldparam [KeyEvent] key The key that is being held down
+ * @syntax key_pressed
+ * @param [KeyEvent] key The key that is being held down
  */
 VALUE zj_key_pressed(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_pressed_proc, rb_block_proc());
@@ -100,8 +110,8 @@ VALUE zj_key_pressed(VALUE self) {
 /* 
  * Define code to run on the first frame when a key is released
  * 
- * @overload key_up
- *   @yieldparam [KeyEvent] key The key that was just released
+ * @syntax key_up
+ * @param [KeyEvent] key The key that was just released
  */
 VALUE zj_key_up(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, key_up_proc, rb_block_proc());
@@ -112,9 +122,9 @@ VALUE zj_key_up(VALUE self) {
 /* 
  * Define code to run when the mouse moves over the sketch window
  * 
- * @overload mouse_moved
- *   @yieldparam [Numeric] x The x coordinate of the mouse
- *   @yieldparam [Numeric] y The y coordinate of the mouse
+ * @syntax mouse_moved
+ * @param [Numeric] x The x coordinate of the mouse
+ * @param [Numeric] y The y coordinate of the mouse
  */
 VALUE zj_mouse_moved(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_moved_proc, rb_block_proc());
@@ -126,10 +136,10 @@ VALUE zj_mouse_moved(VALUE self) {
  * Define code to run when the mouse moves over the sketch window while a
  * button is pressed.
  * 
- * @overload mouse_dragged
- *   @yieldparam [Numeric] x The x coordinate of the mouse
- *   @yieldparam [Numeric] y The y coordinate of the mouse
- *   @yieldparam [Symbol] button Either +:left+, +:middle+ or +:right+
+ * @syntax mouse_dragged
+ * @param [Numeric] x The x coordinate of the mouse
+ * @param [Numeric] y The y coordinate of the mouse
+ * @param [Symbol] button Either +:left+, +:middle+ or +:right+
  */
 VALUE zj_mouse_dragged(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_dragged_proc, rb_block_proc());
@@ -140,10 +150,10 @@ VALUE zj_mouse_dragged(VALUE self) {
 /* 
  * Define code to run on the first frame when the mouse is pressed
  * 
- * @overload mouse_down
- *   @yieldparam [Numeric] x The x coordinate of the mouse
- *   @yieldparam [Numeric] y The y coordinate of the mouse
- *   @yieldparam [Symbol] button Either +:left+, +:middle+ or +:right+
+ * @syntax mouse_down
+ * @param [Numeric] x The x coordinate of the mouse
+ * @param [Numeric] y The y coordinate of the mouse
+ * @param [Symbol] button Either +:left+, +:middle+ or +:right+
  */
 VALUE zj_mouse_down(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_down_proc, rb_block_proc());
@@ -154,10 +164,10 @@ VALUE zj_mouse_down(VALUE self) {
 /* 
  * Define code to run every frame while the mouse is pressed
  * 
- * @overload mouse_down
- *   @yieldparam [Numeric] x The x coordinate of the mouse
- *   @yieldparam [Numeric] y The y coordinate of the mouse
- *   @yieldparam [Symbol] button Either +:left+, +:middle+ or +:right+
+ * @syntax mouse_down
+ * @param [Numeric] x The x coordinate of the mouse
+ * @param [Numeric] y The y coordinate of the mouse
+ * @param [Symbol] button Either +:left+, +:middle+ or +:right+
  */
 VALUE zj_mouse_pressed(VALUE self) {
   if(rb_block_given_p()) INTERNAL_SET(zj_mEvents, mouse_pressed_proc, rb_block_proc());
@@ -168,10 +178,10 @@ VALUE zj_mouse_pressed(VALUE self) {
 /* 
  * Define code to run on the first frame when the mouse is released
  * 
- * @overload mouse_up
- *   @yieldparam [Numeric] x The x coordinate of the mouse
- *   @yieldparam [Numeric] y The y coordinate of the mouse
- *   @yieldparam [Symbol] button Either +:left+, +:middle+ or +:right+
+ * @syntax mouse_up
+ * @param [Numeric] x The x coordinate of the mouse
+ * @param [Numeric] y The y coordinate of the mouse
+ * @param [Symbol] button Either +:left+, +:middle+ or +:right+
  */
 
 VALUE zj_mouse_up(VALUE self) {

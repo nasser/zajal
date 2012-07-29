@@ -12,15 +12,19 @@ VALUE _zj_value_cursor_visible = Qtrue;
 VALUE _zj_value_fullscreen_mode = Qfalse;
 
 /* 
- * Gets or sets the width of the sketch window
+ * Gets and sets the width of the sketch window in pixels
  * 
- * @overload width w
- *   Set the window width
- *   @param [Numeric] w The new width of the window
+ * Dividing the width by 2 is an easy way to get the horizontal midpoint of
+ * the window
  * 
- * @overload width
- *   Get the current window width
- *   @return [Numeric] The current width of the window
+ * @!setting [Integer]
+ * 
+ * @example Centering circles
+ *  circle width/2, 10, 5
+ *  circle width/2, 50, 5
+ *  circle width/2, 90, 5
+ * 
+ * @see #height
  */
 VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
   VALUE w;
@@ -40,15 +44,19 @@ VALUE zj_width(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * Gets or sets the height of the sketch window
+ * Gets and sets the height of the sketch window in pixels
  * 
- * @overload height h
- *   Set the window height
- *   @param [Numeric] h The new height of the window
+ * Dividing the height by 2 is an easy way to get the vertical midpoint of
+ * the window
  * 
- * @overload height
- *   Get the current window height
- *   @return [Numeric] The current height of the window
+ * @!setting [Integer]
+ * 
+ * @example Centering circles
+ *  circle 10, height/2, 5
+ *  circle 50, height/2, 5
+ *  circle 90, height/2, 5
+ * 
+ * @see #width
  */
 VALUE zj_height(int argc, VALUE* argv, VALUE klass) {
   VALUE h;
@@ -70,18 +78,16 @@ VALUE zj_height(int argc, VALUE* argv, VALUE klass) {
 /* 
  * Gets or sets the size of the sketch window
  * 
- * @overload size s
- *   Set window size to a square
- *   @param [Numeric] s The new length of each side of the window
+ * @syntax size s
+ * @syntax size w, h
+ * @syntax size -> [W, H]
  * 
- * @overload size w, h
- *   Set window size to a rectangle
- *   @param [Numeric] w The width of the window
- *   @param [Numeric] h The height of the window
+ * @param [Integer] s The new length of each side of the window
+ * @param [Integer] w The width of the window
+ * @param [Integer] h The height of the window
+ * @return [Integer] W The current width of the window
+ * @return [Integer] H The current height of the window
  * 
- * @overload size
- *   Return the current window size
- *   @return [Array] The current size, e.g. +[500, 500]+
  */
 VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
   VALUE w, h;
@@ -117,16 +123,11 @@ VALUE zj_size(int argc, VALUE* argv, VALUE klass) {
 
 /* 
  * Gets or sets the whether or not vertical sync is enabled. Vertical sync
- * helps eliminate the tearing effect seen in some sketches.
+ * helps eliminate the tearing effect seen in some sketches. It is enabled by
+ * default.
  * 
- * @overload vertical_sync state
- *   Enable or disable vertical sync
- *   @param [Boolean] state +true+ or +false+ to enable or disable respectively
+ * @!setting [Boolean]
  * 
- * @overload vertical_sync
- *   Return the current vertical sync state
- *   @return [Boolean] +true+ or +false+ indicating vertical sync is on or off
- *   respectively
  */
 VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE klass) {
   VALUE new_vertical_sync;
@@ -154,30 +155,58 @@ VALUE zj_vertical_sync(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @return [Fixnum] The current elapsed time in milliseconds
+ * Get the number of milliseconds since the sketch was started.
+ * 
+ * Aside from mmeasuring how long a sketch has been running, this is a useful
+ * source of a constantly increasing number, which can be used in trigonometry
+ * or noise methods.
+ * 
+ * @syntax time -> current_time
+ * @return [Integer] current_time The current elapsed time in milliseconds
+ * 
+ * @example Making a millisecond clock
+ *  text time
+ * 
+ * @see Zajal::Mathematics#sin
+ * @see Zajal::Mathematics#cos
+ * @see Zajal::Mathematics#noise
  */
 VALUE zj_time(VALUE self) {
   return INT2NUM(ofGetElapsedTimeMillis());
 }
 
 /* 
- * @return [Fixnum] The current frame
+ * Get the current frame
+ * 
+ * Similar to {#time}, this method measures the number of frames actually
+ * rendered so far. It is roughly equal to time * framerate, although
+ * framerate can change and fluctuate over time.
+ * 
+ * @syntax frame -> current_frame
+ * @return [Integer] current_frame The current frame
+ * 
+ * @example Counting frames
+ *   text frame
  */
 VALUE zj_frame(VALUE self) {
   return INT2NUM(ofGetFrameNum());
 }
 
 /* 
- * Gets or sets the current framerate
+ * Gets the current framerate or sets the target framerate, in frames per
+ * second
  * 
- * @overload framerate new_framerate
- *   Set a new framerate
- *   @param [Numeric] new_framerate The new framerate measured in frames per
- *   second
+ * This is the number of frames that Zajal will try to render each second.
+ * Note that it is a target, and not a guarantee. Complex sketches will cause
+ * the framerate to drop.
  * 
- * @overload framerate
- *   Get the current framerate
- *   @return [Numeric] the current framerate
+ * @syntax framerate -> current_framerate
+ * @syntax framerate target_framerate
+ * 
+ * @param [Float] target_framerate The number of frames to try and render in
+ *   a second
+ * @return [Float] current_framerate The number of frames actually being
+ *   rendered in a second
  */
 VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
   VALUE new_framerate;
@@ -206,13 +235,8 @@ VALUE zj_framerate(int argc, VALUE* argv, VALUE klass) {
 /* 
  * Gets or sets the title of the sketch window
  * 
- * @overload title new_title
- *   Set a new tite for the window
- *   @param [String] new_title The new window title
+ * @!setting [String]
  * 
- * @overload title
- *   Get the current title of the window
- *   @return [String] The current window title
  */
 VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
   VALUE new_title;
@@ -241,14 +265,7 @@ VALUE zj_title(int argc, VALUE* argv, VALUE klass) {
 /* 
  * Gets or sets the visibility of the cursor
  * 
- * @overload cursor state
- *   Show or hide the cursor
- *   @param [Boolean] state +true+ to show the cursor, +false+ to hide it
- * 
- * @overload cursor
- *   Get the current visibility of the cursor
- *   @return [Boolean] +true+ or +false+ indicating that the cursor is visible
- *   or hidden respectively
+ * @!setting [true, false]
  */
 VALUE zj_cursor(int argc, VALUE* argv, VALUE self) {
   VALUE cursor_visible;
@@ -278,14 +295,7 @@ VALUE zj_cursor(int argc, VALUE* argv, VALUE self) {
 /* 
  * Get or set whether or not the sketch is in fullscreen mode
  * 
- * @overload fullscreen state
- *   Enter or exit fullscreen mode
- *   @param [Boolean] state +true+ to enter fullscreen mode, +false+ to exit
- * 
- * @overload fullscreen
- *   Return the current fullscreen state
- *   @return [Boolean] +true+ if the sketch is in fullscreen mode, +false+
- *   otherwise
+ * @!setting [true, false]
  */
 VALUE zj_fullscreen(int argc, VALUE* argv, VALUE self) {
   VALUE fullscreen_mode;
@@ -311,15 +321,21 @@ VALUE zj_fullscreen(int argc, VALUE* argv, VALUE self) {
   return Qnil;
 }
 
-/* 
- * @return [Fixnum] The width of the screen
+/* Gets the width of the whole screen. This is as opposed to {#width} which
+ * gets the width of the sketch window.
+ * 
+ * @syntax screen_width -> w
+ * @return [Fixnum] w The width of the screen
  */
 VALUE zj_screen_width(VALUE self) {
   return INT2NUM(ofGetScreenWidth());
 }
 
-/* 
- * @return [Fixnum] The height of the screen
+/* Gets the height of the whole screen. This is as opposed to {#height} which
+ * gets the height of the sketch window.
+ * 
+ * @syntax screen_height -> h
+ * @return [Fixnum] w The height of the screen
  */
 VALUE zj_screen_height(VALUE self) {
   return INT2NUM(ofGetScreenHeight());
@@ -330,15 +346,7 @@ VALUE zj_screen_height(VALUE self) {
  * around on the screen. The window's position is measured from the top left
  * corner.
  * 
- * @overload window_x
- *   Called without an argument, returns the current x position of the window
- *   @return [Fixnum] The x position of the window
- * 
- * @overload window_x new_x
- *   Called with an argument, sets the current x position of the window.
- *   
- *   @param [Numeric] new_x The new x position of the window
- *   @return [nil] Nothing
+ * @!setting [Integer]
  */
 VALUE zj_window_x(int argc, VALUE* argv, VALUE self) {
   VALUE new_x;
@@ -361,15 +369,7 @@ VALUE zj_window_x(int argc, VALUE* argv, VALUE self) {
  * around on the screen. The window's position is measured from the top left
  * corner.
  * 
- * @overload window_y
- *   Called without an argument, returns the current y position of the window
- *   @return [Fixnum] The y position of the window
- * 
- * @overload window_y new_y
- *   Called with an argument, sets the current y position of the window.
- *   
- *   @param [Numeric] new_y The new y position of the window
- *   @return [nil] Nothing
+ * @!setting [Integer]
  */
 VALUE zj_window_y(int argc, VALUE* argv, VALUE self) {
   VALUE new_y;
@@ -404,7 +404,7 @@ void Init_App() {
   
   INTERNAL_SET(zj_mApp, verbose, Qfalse);
   
-  rb_define_private_method(zj_mApp, "segfault", RUBY_METHOD_FUNC(zj_segfault), 0);
+  // rb_define_private_method(zj_mApp, "segfault", RUBY_METHOD_FUNC(zj_segfault), 0);
   rb_define_private_method(zj_mApp, "height", RUBY_METHOD_FUNC(zj_height), -1);
   rb_define_private_method(zj_mApp, "width", RUBY_METHOD_FUNC(zj_width), -1);
   rb_define_private_method(zj_mApp, "size", RUBY_METHOD_FUNC(zj_size), -1);

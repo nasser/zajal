@@ -110,13 +110,17 @@ int zj_graphics_make_color(int argc, VALUE* argv, int* r, int* g, int* b, int* a
 /* 
  * Gets and sets the current rectangle mode.
  * 
- * @overload rectangle_mode
- *   Get the current +rectangle_mode+
- *   @return [Symbol] +:corner+ or +:center+
+ * Rectangle mode affects the way coordinates are interpreted
+ * in some methods {#circle}. Also {#babar}, but {Zajal::Graphics#background}.
  * 
- * @overload rectangle_mode mode
- *   Set the current +rectangle_mode+
- *   @param [Symbol] mode +:corner+ or +:center+
+ * @!setting [:corner,:center]
+ * 
+ * @see #square
+ * @see #rectangle
+ * 
+ * @example centering
+ *    rectangle_mode :center
+ *    square 10, 20, 30
  */
 VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
   VALUE new_rectmode;
@@ -172,21 +176,21 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  * Draws a rectangle. The way the +x+ and +y+ arguments are interpreted
  * depends on the current rectangle mode.
  * 
- * @overload rectangle x, y, w, h
+ * @syntax rectangle x, y, w, h
  * 
  * @param [Numeric] x The x coordinate of the center or corner, depending on rectangle mode
  * @param [Numeric] y The y coordinate of the center or corner, depending on rectangle_mode
  * @param [Numeric] w The width of the rectangle
  * @param [Numeric] h The height of the rectangle
  * 
- * @screenshot Single rectangle
+ * @example Single rectangle
  *   rectangle 10, 10, 80, 20
  * 
- * @screenshot Single centered rectangle
+ * @example Single centered rectangle
  *   rectangle_mode :center
  *   rectangle 50, 50, 80, 20
  * 
- * @screenshot Corner mode rectangles
+ * @example Corner mode rectangles
  *   rectangle 10, 10, 80, 10
  *   rectangle 10, 20, 70, 10
  *   rectangle 10, 30, 60, 10
@@ -196,7 +200,7 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  *   rectangle 10, 70, 20, 10
  *   rectangle 10, 80, 10, 10
  * 
- * @screenshot Center mode rectangles
+ * @example Center mode rectangles
  *   rectangle_mode :center
  *   rectangle 50, 10, 80, 10
  *   rectangle 50, 20, 70, 10
@@ -207,7 +211,7 @@ VALUE zj_rectangle_mode(int argc, VALUE* argv, VALUE klass) {
  *   rectangle 50, 70, 20, 10
  *   rectangle 50, 80, 10, 10
  * 
- * @screenshot Center/corner mode comparison
+ * @example Center/corner mode comparison
  *   fill false
  *   
  *   color :red
@@ -233,16 +237,18 @@ VALUE zj_rectangle(VALUE self, VALUE x1, VALUE y1, VALUE w, VALUE h) {
 }
 
 /*
- * Draws a square.The way the x and y arguments are interpreted depends on
- * the current rectangle mode.
+ * Draws a square.
  * 
- * @overload square x, y, s
+ * The way the x and y arguments are interpreted depends on the current
+ * rectangle mode.
+ * 
+ * @syntax square x, y, s
  * 
  * @param [Numeric] x The x coordinate
  * @param [Numeric] y The y coordinate
  * @param [Numeric] s The side of the square's sides
  * 
- * @screenshot Small square
+ * @example Small square
  *   square 10, 10, 5 
  *   square 15, 15, 10
  *   square 25, 25, 15
@@ -266,43 +272,42 @@ VALUE zj_square(VALUE self, VALUE x1, VALUE y1, VALUE s) {
 /* 
  * Draws an equilateral, isosceles or scalene triangle.
  * 
- * @overload triangle x, y, r
- *   @param [Numeric] x x coordinate of the triangle's center               
- *   @param [Numeric] y y coordinate of the triangle's center               
- *   @param [Numeric] s The "size" of the triangle. More specifically, the
- *                      radius of the circle the triangle is inscribed in.  
- *   @screenshot Nested equilaterals
- *     fill false
- *     triangle width/2, height/2, 50
- *     triangle width/2, height/2, 40
- *     triangle width/2, height/2, 30
- *     triangle width/2, height/2, 20
- *     triangle width/2, height/2, 10
- *   
- * @overload triangle x, y, r, a
- *   @param [Numeric] x x coordinate of the triangle's center               
- *   @param [Numeric] y y coordinate of the triangle's center               
- *   @param [Numeric] s The "size" of the triangle. More specifically, the
- *                      distance from the center point to the top.
- *   @param [Numeric] a The size of the isosceles angle in radians
- *   @screenshot Nested isosceles
- *     fill false
- *     triangle width/2, height/2, 50, 60.to_rad
- *     triangle width/2, height/2, 50, 50.to_rad
- *     triangle width/2, height/2, 50, 40.to_rad
- *     triangle width/2, height/2, 50, 30.to_rad
- *     triangle width/2, height/2, 50, 20.to_rad
- *     triangle width/2, height/2, 50, 10.to_rad
+ * @syntax triangle x, y, r
+ * @syntax triangle x, y, r, a
+ * @syntax triangle x1, y1, x2, y2, x3, y3
  * 
- * @overload triangle x1, y1, x2, y2, x3, y3
- *   @param [Numeric] x1 x coordinate of the triangle's first point
- *   @param [Numeric] y1 y coordinate of the triangle's first point
- *   @param [Numeric] x2 x coordinate of the triangle's second point
- *   @param [Numeric] y2 y coordinate of the triangle's second point
- *   @param [Numeric] x3 x coordinate of the triangle's third point
- *   @param [Numeric] y3 y coordinate of the triangle's third point
- *   @screenshot Aribitrary triangle
- *     triangle 40, 5, 85, 40, 12, 90
+ * @param [Numeric] x x coordinate of the triangle's center               
+ * @param [Numeric] y y coordinate of the triangle's center               
+ * @param [Numeric] x x coordinate of the triangle's center               
+ * @param [Numeric] y y coordinate of the triangle's center               
+ * @param [Numeric] s The "size" of the triangle
+ * @param [Numeric] a The size of the isosceles angle in radians
+ * @param [Numeric] x1 x coordinate of the triangle's first point
+ * @param [Numeric] y1 y coordinate of the triangle's first point
+ * @param [Numeric] x2 x coordinate of the triangle's second point
+ * @param [Numeric] y2 y coordinate of the triangle's second point
+ * @param [Numeric] x3 x coordinate of the triangle's third point
+ * @param [Numeric] y3 y coordinate of the triangle's third point
+ * 
+ * @example Nested equilaterals
+ *   fill false
+ *   triangle width/2, height/2, 50
+ *   triangle width/2, height/2, 40
+ *   triangle width/2, height/2, 30
+ *   triangle width/2, height/2, 20
+ *   triangle width/2, height/2, 10
+ * 
+ * @example Nested isosceles
+ *   fill false
+ *   triangle width/2, height/2, 50, 60.to_rad
+ *   triangle width/2, height/2, 50, 50.to_rad
+ *   triangle width/2, height/2, 50, 40.to_rad
+ *   triangle width/2, height/2, 50, 30.to_rad
+ *   triangle width/2, height/2, 50, 20.to_rad
+ *   triangle width/2, height/2, 50, 10.to_rad
+ * 
+ * @example Aribitrary triangle
+ *   triangle 40, 5, 85, 40, 12, 90
  *   
  */
 VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
@@ -373,12 +378,12 @@ VALUE zj_triangle(int argc, VALUE* argv, VALUE self) {
 /* 
  * Draws a circle.
  * 
- * @overload circle x, y, r
+ * @syntax circle x, y, r
  * 
- * @screenshot One circle
+ * @example One circle
  *   circle 50, 50, 20
  * 
- * @screenshot Five circles
+ * @example Five circles
  *   circle 50, 50, 30
  *   
  *   circle 20, 20, 10
@@ -407,19 +412,21 @@ VALUE zj_circle(VALUE self, VALUE x, VALUE y, VALUE radius) {
 /* 
  * Draws an ellipse.
  * 
- * @overload ellipse x, y, w, h
- *   @screenshot One ellipse
- *     ellipse width/2, height/2, 90, 50
- * 
- *   @screenshot Different sizes
- *     ellipse 50, 15, 50, 10
- *     ellipse 50, 37, 10, 25
- *     ellipse 50, 75, 50, 40
+ * @syntax ellipse x, y, w, h
  * 
  * @param [Numeric] x the x coordinate of the ellipse's center
  * @param [Numeric] y the y coordinate of the ellipse's center
  * @param [Numeric] w the width of the ellipse
  * @param [Numeric] h the height of the ellipse
+ * 
+ * @example One ellipse
+ *  ellipse width/2, height/2, 90, 50
+ * 
+ * @example Different sizes
+ *   ellipse 50, 15, 50, 10
+ *   ellipse 50, 37, 10, 25
+ *   ellipse 50, 75, 50, 40
+ * 
  */
 VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
   ofEllipse(NUM2DBL(x), NUM2DBL(y), NUM2DBL(width), NUM2DBL(height));
@@ -439,23 +446,23 @@ VALUE zj_ellipse(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height) {
  * Draw a line between two points. The width of the line is determined by
  * {#line_width}.
  * 
- * @overload line x1, y1, x2, y2
+ * @syntax line x1, y1, x2, y2
  * 
  * @param [Numeric] x1 the x coordinate of the first point
  * @param [Numeric] y1 the y coordinate of the first point
  * @param [Numeric] x2 the x coordinate of the second point
  * @param [Numeric] y2 the y coordinate of the second point
  * 
- * @screenshot Single line
+ * @example Single line
  *   line 25, 25, 75, 75
  * 
- * @screenshot More lines
+ * @example More lines
  *   line 25, 25, 75, 75
  *   line 75, 25, 25, 75
  *   line 50, 25, 50, 75
  *   line 75, 50, 25, 50
  * 
- * @screenshot Complex lines
+ * @example Complex lines
  *   line 0, 10, 10, 100
  *   line 0, 20, 20, 100
  *   line 0, 30, 30, 100
@@ -482,7 +489,7 @@ VALUE zj_line(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2) {
 }
 
 /* 
- * @overload curve x0, y0, x1, y1, x2, y2, x3, y3
+ * @syntax curve x0, y0, x1, y1, x2, y2, x3, y3
  */
 VALUE zj_curve(VALUE self, VALUE x0, VALUE y0, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
   ofCurve(NUM2DBL(x0), NUM2DBL(y0), NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
@@ -490,7 +497,7 @@ VALUE zj_curve(VALUE self, VALUE x0, VALUE y0, VALUE x1, VALUE y1, VALUE x2, VAL
 }
 
 /* 
- * @overload bezier x0, y0, x1, y1, x2, y2, x3, y3
+ * @syntax bezier x0, y0, x1, y1, x2, y2, x3, y3
  */
 VALUE zj_bezier(VALUE self, VALUE x0, VALUE y0, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE x3, VALUE y3) {
   ofBezier(NUM2DBL(x0), NUM2DBL(y0), NUM2DBL(x1), NUM2DBL(y1), NUM2DBL(x2), NUM2DBL(y2), NUM2DBL(x3), NUM2DBL(y3));
@@ -508,13 +515,28 @@ VALUE zj_pop_matrix(VALUE self) {
 }
 
 /* 
- * Runs code in an isolated matrix. Using this method is equivalent to calling
+ * Runs code in an isolated matrix.
+ * 
+ * Using this method is equivalent to calling
  * {#push_matrix}, running the code in the block, then calling {#pop_matrix},
  * just cleaner. It is useful when using {#translate}, {#rotate} and {#scale}
  * as it contains their effects (in fact, if not using any transform methods
  * {#matrix} will have no visible effect).
  * 
- * @yield The code to run, usually containing transform and drawing commands
+ * @syntax matrix do...end
+ * 
+ * @param do...end The code to run, usually containing transform and drawing
+ *   commands
+ * 
+ * @example Nested Matrixes
+ *    matrix do
+ *      translate 10, 30
+ *        matrix do
+ *          rotate 45
+ *          ellipse 0, 0, 30, 20
+ *        end
+ *    end
+ *    
  */
 VALUE zj_matrix(VALUE self) {
   ofPushMatrix();
@@ -527,7 +549,7 @@ VALUE zj_matrix(VALUE self) {
  * Apply a translation transformation to the current matrix. Accepts 2D and
  * 3D coordinates.
  * 
- * @overload translate x, y, z=0
+ * @syntax translate x, y, z=0
  * 
  * @param [Numeric] x The distance to move in x
  * @param [Numeric] y The distance to move in y
@@ -555,15 +577,14 @@ VALUE zj_translate(int argc, VALUE* argv, VALUE klass) {
 /*
  * Apply a scaling transformation to the current matrix about the origin.
  * 
- * @overload scale s
- *   Called with one parameter, scales equally in all directions
- *   @param [Numeric] s The amount to scale by
+ * @syntax scale s
+ * @syntax scale x, y
+ * @syntax scale x, y, z
  * 
- * @overload scale x, y, z=1
- *   Called with two or three parameter, scales in x, y and z directions
- *   @param [Numeric] x The amount to scale by in x
- *   @param [Numeric] y The amount to scale by in y
- *   @param [Numeric] z The amount to scale by in z
+ * @param [Numeric] s The amount to scale by in all directions
+ * @param [Numeric] x The amount to scale by in x
+ * @param [Numeric] y The amount to scale by in y
+ * @param [Numeric] z The amount to scale by in z
  */
 VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
   VALUE x, y, z;
@@ -590,7 +611,7 @@ VALUE zj_scale(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @overload rotate angle
+ * @syntax rotate angle
  * @todo finish rotate method, it deviates significantly from OF and disables advanced functionality
  */
 VALUE zj_rotate(int argc, VALUE* argv, VALUE klass) {
@@ -680,8 +701,8 @@ VALUE zj_bezier_vertex(VALUE self, VALUE x1, VALUE y1, VALUE x2, VALUE y2, VALUE
 }
 
 /* 
- * @overload curve_resolution
- * @overload curve_resolution res
+ * @syntax curve_resolution
+ * @syntax curve_resolution res
  */
 VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
   VALUE new_resolution;
@@ -703,7 +724,13 @@ VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @screenshot Reslution series
+ * Does nothing useful.
+ * 
+ * Seriously. Nothing.
+ * 
+ * @!setting Numeric
+ * 
+ * @example Reslution series
  *   circle_resolution 3
  *   circle 20, 20, 10
  *   
@@ -731,15 +758,15 @@ VALUE zj_curve_resolution(int argc, VALUE* argv, VALUE klass) {
  *   circle_resolution 11
  *   circle 80, 80, 10
  * 
- * @screenshot Closeup @ 64
+ * @example Closeup @ 64
  *   circle_resolution 64
  *   circle 185, 185, 200
  * 
- * @screenshot Closeup @ 32
+ * @example Closeup @ 32
  *   circle_resolution 32
  *   circle 185, 185, 200
  * 
- * @screenshot Closeup @ 16
+ * @example Closeup @ 16
  *   circle_resolution 16
  *   circle 185, 185, 200
  */
@@ -770,24 +797,25 @@ VALUE zj_circle_resolution(int argc, VALUE* argv, VALUE klass) {
 
 /* 
  * Gets and sets the smoothing setting. Smoothing determines whether shapes
- * will be drawn antialiased or with jagged pixel edges. Smoothing slows
- * drawing down, so it defaults to false.
+ * will be drawn antialiased or with *jagged pixel edges*. Smoothing slows
+ * drawing down, so it defaults to false. {#square}
  * 
- * @overload smoothing
- *   @return [Boolean] +true+ if smoothing is on, +false+ if it is off.
+ * @syntax smoothing
+ * @syntax smoothing -> state
  * 
- * @overload smoothing state
- *   @param [Boolean] state +true+ to enable smoothing or +false+ to disable it
- *   @screenshot
- *     smoothing false
- *     circle 25, 15, 10
- *     square 15, 30, 20
- *     triangle 25, 75, 20
- *     
- *     smoothing true
- *     circle 75, 15, 10
- *     square 65, 30, 20
- *     triangle 75, 75, 20
+ * @return [Boolean] state `true` if smoothing is on, `false` if it is off.
+ * @param [Boolean] state `true` to enable smoothing or `false` to disable it
+ * 
+ * @example
+ *   smoothing false
+ *   circle 25, 15, 10
+ *   square 15, 30, 20
+ *   triangle 25, 75, 20
+ *   
+ *   smoothing true
+ *   circle 75, 15, 10
+ *   square 65, 30, 20
+ *   triangle 75, 75, 20
  */
 VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
   VALUE new_smoothing;
@@ -830,15 +858,13 @@ VALUE zj_smoothing(int argc, VALUE* argv, VALUE klass) {
  * you to specify alpha values in colors and have them blend together. It is
  * enabled by default, but disabling it might improve performance.
  * 
- * @overload alpha_blending
- *   Called with no argument, returns the current alpha blending state
- *   @return [Boolean] +true+ if blending is on, +false+ if its off
- * @overload alpha_blending state
- *   Called with an argument, sets the current alpha blending state
- *   @param [Boolean] state +true+ to turn blending on, +false+ to turn it off
- *   @return [nil] Nothing
+ * @syntax alpha_blending -> current_state
+ * @syntax alpha_blending state
  * 
- * @see #color 
+ * @param [true, false] state +true+ to turn blending on, +false+ turn it off
+ * @return [true, false] current_state +true+ if blending is on, +false+ if its off
+ * 
+ * @see Zajal::Graphics#color
  * @see #background 
  */
 VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
@@ -878,8 +904,8 @@ VALUE zj_alpha_blending(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @overload arb_textures
- * @overload arb_textures state
+ * @syntax arb_textures
+ * @syntax arb_textures state
  */
 VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
   VALUE new_arb_textures;
@@ -912,68 +938,76 @@ VALUE zj_arb_textures(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @overload line_width
- * @overload line_width w
- *   @param [Numeric] w The new line width
- *   @screenshot Blinds
- *     line_width 1
- *     line 0, 10, width, 10
- *     
- *     line_width 2
- *     line 0, 20, width, 20
- *     
- *     line_width 3
- *     line 0, 30, width, 30
- *     
- *     line_width 4
- *     line 0, 40, width, 40
- *     
- *     line_width 5
- *     line 0, 50, width, 50
- *     
- *     line_width 6
- *     line 0, 60, width, 60
- *     
- *     line_width 7
- *     line 0, 70, width, 70
- *     
- *     line_width 8
- *     line 0, 80, width, 80
- *     
- *     line_width 9
- *     line 0, 90, width, 90
- *     
- *     line_width 10
- *     line 0, 100, width, 100
+ * Controls the width of lines
  * 
- *   @screenshot Cone
- *     line_width 1
- *     line 0, height/2, width, height/2
- *     
- *     line_width 2
- *     line 10, height/2, width, height/2
- *     
- *     line_width 3
- *     line 20, height/2, width, height/2
- *     
- *     line_width 4
- *     line 30, height/2, width, height/2
- *     
- *     line_width 5
- *     line 40, height/2, width, height/2
- *     
- *     line_width 6
- *     line 50, height/2, width, height/2
- *     
- *     line_width 7
- *     line 60, height/2, width, height/2
- *     
- *     line_width 8
- *     line 70, height/2, width, height/2
- *     
- *     line_width 9
- *     line 80, height/2, width, height/2
- */    
+ * @!setting Numeric
+ * 
+ * @example Drawing thick and thin lines
+ *  line_width 1
+ *  line 20, 20, 80, 20
+ *  
+ *  line_width 10
+ *  line 20, 80, 80, 80
+ * 
+ * @example Drawing blinds
+ *   line_width 1
+ *   line 0, 10, width, 10
+ *   
+ *   line_width 2
+ *   line 0, 20, width, 20
+ *   
+ *   line_width 3
+ *   line 0, 30, width, 30
+ *   
+ *   line_width 4
+ *   line 0, 40, width, 40
+ *   
+ *   line_width 5
+ *   line 0, 50, width, 50
+ *   
+ *   line_width 6
+ *   line 0, 60, width, 60
+ *   
+ *   line_width 7
+ *   line 0, 70, width, 70
+ *   
+ *   line_width 8
+ *   line 0, 80, width, 80
+ *   
+ *   line_width 9
+ *   line 0, 90, width, 90
+ *   
+ *   line_width 10
+ *   line 0, 100, width, 100
+ * 
+ * @example Drawing a cone
+ *   line_width 1
+ *   line 0, height/2, width, height/2
+ *   
+ *   line_width 2
+ *   line 10, height/2, width, height/2
+ *   
+ *   line_width 3
+ *   line 20, height/2, width, height/2
+ *   
+ *   line_width 4
+ *   line 30, height/2, width, height/2
+ *   
+ *   line_width 5
+ *   line 40, height/2, width, height/2
+ *   
+ *   line_width 6
+ *   line 50, height/2, width, height/2
+ *   
+ *   line_width 7
+ *   line 60, height/2, width, height/2
+ *   
+ *   line_width 8
+ *   line 70, height/2, width, height/2
+ *   
+ *   line_width 9
+ *   line 80, height/2, width, height/2
+ */   
 VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
   VALUE new_line_width;
   int argca = rb_scan_args(argc, argv, "01", &new_line_width);
@@ -1000,23 +1034,33 @@ VALUE zj_line_width(int argc, VALUE* argv, VALUE klass) {
 }
 
 /* 
- * @overload background name
- *   @screenshot Default
- *     background :dark
+ * Sets the background color.
  * 
- *   @screenshot Orange
- *     background :orange
+ * @syntax background name
+ * @syntax background grey
+ * @syntax background r, g, b
+ * @syntax background -> [r, g, b, a]
  * 
- * @overload background grey
- *   @screenshot Light
- *     background 200
+ * @param [Symbol] name A named color
+ * @param [0..255] grey A level of grey. 0 is black, 255 is white.
+ * @param [0..255] r A level of red. 0 is none, 255 is full.
+ * @param [0..255] g A level of green. 0 is none, 255 is full.
+ * @param [0..255] b A level of blue. 0 is none, 255 is full.
+ * @param [0..255] a A level of alpha. Always 255 for now.
  * 
- *   @screenshot Dark
- *     background 50
+ * @example Setting a named background
+ *   background :orange
  * 
- * @overload background r, g, b
- *   @screenshot Blueish
- *     background 64, 99, 128
+ * @example Setting a greyscale background
+ *   background 200
+ * 
+ * @example Setting a background with r, g, b values
+ *   background 64, 99, 128
+ * 
+ * @example Getting the current background
+ *  background :red
+ *  text background
+ * 
  */
 VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
   int r, g, b, a;
@@ -1027,7 +1071,7 @@ VALUE zj_background(int argc, VALUE* argv, VALUE klass) {
     } else {
       /*  called with arguments, change the background */
       ofBackground(r, g, b);
-      
+      ofClear(r, g, b, a); /* does this break things? */
     }
     
   } else {
@@ -1086,13 +1130,9 @@ VALUE zj_background_auto(int argc, VALUE* argv, VALUE klass) {
 /* 
  * Controls whether shapes are filled in or not
  * 
- * @overload fill
- *   @return [Boolean]
- * @overload fill state
+ * @!setting true, false
  * 
- * @param [Boolean] state +true+ or +false+, enabling or disabling filling respectively
- * 
- * @screenshot
+ * @example
  *   fill true
  *   circle 25, 15, 10
  *   square 15, 30, 20
@@ -1141,60 +1181,40 @@ VALUE zj_fill(int argc, VALUE* argv, VALUE klass) {
  * Sets the current color. Everything drawn following this command will be in
  * this color. All +color+ parameters are numbers from 0 to 255.
  * 
- * @overload color name
- *   @param [Symbol] name The name of the color
+ * @syntax color name
+ * @syntax color name, a
+ * @syntax color grey
+ * @syntax color grey, a
+ * @syntax color r, g, b
+ * @syntax color r, g, b, a
  * 
- * @overload color name, a
- *   @param [Symbol] name The name of the color
- *   @param [Fixnum] a Amount of alpha
- *   @screenshot The Sun
- *     alpha_blending true
- *     
- *     color :orange, 8
- *     circle width/2, height/2, 45
- *     
- *     color :orange, 16
- *     circle width/2, height/2, 40
- *     
- *     color :orange, 32
- *     circle width/2, height/2, 35
- *     
- *     color :orange, 64
- *     circle width/2, height/2, 30
- *     
- *     color :orange, 128
- *     circle width/2, height/2, 25
- *     
- *     color :orange, 255
- *     circle width/2, height/2, 20
+ * @param [Symbol] name The name of the color
+ * @param [0..255] grey Shade of grey
+ * @param [0..255] r Amount of red
+ * @param [0..255] g Amount of green
+ * @param [0..255] b Amount of blue
+ * @param [0..255] a Amount of alpha
  * 
- * @overload color grey
- *   @param [Fixnum] grey Shade of grey
- * 
- * @overload color grey, a
- *   @param [Fixnum] grey Shade of grey
- *   @param [Fixnum] a Amount of alpha
- * 
- * @overload color r, g, b
- *   @param [Fixnum] r Amount of red
- *   @param [Fixnum] g Amount of green
- *   @param [Fixnum] b Amount of blue
- * 
- *   @screenshot Drawing the french flag
- *     color 0, 0, 200
- *     rectangle 5, 5, 30, 90
+ * @example The Sun
+ *   alpha_blending true
  *   
- *     color 200, 200, 200
- *     rectangle 35, 5, 30, 90
+ *   color :orange, 8
+ *   circle width/2, height/2, 45
  *   
- *     color 200, 0, 0
- *     rectangle 65, 5, 30, 90
- * 
- * @overload color r, g, b, a
- *   @param [Fixnum] r Amount of red
- *   @param [Fixnum] g Amount of green
- *   @param [Fixnum] b Amount of blue
- *   @param [Fixnum] a Amount of alpha
+ *   color :orange, 16
+ *   circle width/2, height/2, 40
+ *   
+ *   color :orange, 32
+ *   circle width/2, height/2, 35
+ *   
+ *   color :orange, 64
+ *   circle width/2, height/2, 30
+ *   
+ *   color :orange, 128
+ *   circle width/2, height/2, 25
+ *   
+ *   color :orange, 255
+ *   circle width/2, height/2, 20
  * 
  * @see #alpha_blending
  * 

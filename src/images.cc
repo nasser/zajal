@@ -10,6 +10,9 @@ void zj_image_dealloc(void* image) {
   delete (ofImage*)image;
 }
 
+/*
+ * Docs for Image.new
+ */
 VALUE zj_image_new(int argc, VALUE* argv, VALUE klass) {
   ofImage* image_ptr = new ofImage();
   
@@ -66,15 +69,16 @@ ofImageType zj_sym_to_image_type(VALUE sym) {
  * Create a new Image object. If a filename is provided, the new image is
  * loaded from that file. Otherwise, a blank image is created.
  * 
- * @overload initialize opts
- *   @param [Hash] opts Image options
- *   @option opts [String] :file The name of the file to load
- *   @option opts [Numeric] :width The width to load the image as
- *   @option opts [Numeric] :height The height to load the image as
- *   @option opts [Numeric] :scale The amount to scale the image by
- *   @option opts [Symbol] :type Either +:rgb+, +:rgba+ or +:grayscale+
- *   @option opts [Boolean] :use_texture +true+ to use a texture (make the
- *     image drawable), +false+ to just load it into memory.
+ * @syntax Image.new opts
+ * 
+ * @param [Hash] opts Image options
+ * @option opts [String] :file The name of the file to load
+ * @option opts [Numeric] :width The width to load the image as
+ * @option opts [Numeric] :height The height to load the image as
+ * @option opts [Numeric] :scale The amount to scale the image by
+ * @option opts [Symbol] :type Either +:rgb+, +:rgba+ or +:grayscale+
+ * @option opts [Boolean] :use_texture +true+ to use a texture (make the
+ *   image drawable), +false+ to just load it into memory.
  */
 VALUE zj_image_initialize(int argc, VALUE* argv, VALUE self) {
   VALUE file = Qnil, width = Qnil, height = Qnil, scale = Qnil;
@@ -561,7 +565,17 @@ VALUE zj_image_bpp(VALUE self) {
 /* 
  * Capture the current frame of the sketch as an Image
  * 
- * @return [Image] An Image containing the contents of the current frame
+ * @syntax grab_screen x, y, w, h -> img
+ * 
+ * @param [Numeric] x x coordinate to star grabbing from
+ * @param [Numeric] y y coordinate to star grabbing from
+ * @param [Numeric] w how far right to grab
+ * @param [Numeric] h how far down to grab
+ * @return [Image] img An Image containing the contents of the current frame
+ * 
+ * @see #image
+ * @see Image
+ * 
  */
 VALUE zj_grab_screen(int argc, VALUE* argv, VALUE klass) {
   VALUE new_image = image_new();
