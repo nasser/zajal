@@ -2,8 +2,7 @@
 src/config.h
 bin/
 scratch/
-.yardoc
-doc
+docs/out
 
 build/
 *.pbxuser
