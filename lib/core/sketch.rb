@@ -1,8 +1,9 @@
 module Zajal
 	class Sketch
-		include Zajal::Graphics
-		include Zajal::Version
 		include Math
+		include Zajal
+		include Graphics
+		include Version
 
 		def self.support_event event
 			module_eval <<-EVENT
