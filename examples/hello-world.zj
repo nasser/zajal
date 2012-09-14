@@ -1,0 +1,9 @@
+setup do
+	puts "Here we go"
+end
+
+draw do
+	100.times do |i|
+		circle 200 + sin(i)*(30 + i), 150 + cos(i)*(30 + i), 0, 1 + i * 0.1
+	end
+end

@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/zajal"
+
+Zajal::Version.print
+
+glfw = Zajal::Frontends::Glfw.new 400, 300
+glfw.sketch = Zajal::Sketch.new ARGV.first
+glfw.run
