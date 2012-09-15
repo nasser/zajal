@@ -1,5 +1,9 @@
 module Zajal
 	module Graphics
+		def alpha_blending(on)
+			on ? Native.ofEnableAlphaBlending : Native.ofDisableAlphaBlending
+		end
+
 		def circle x, y, z_or_r, r=nil
 			if r.nil?
 				Native.ofCircle x.to_f, y.to_f, 0.0, z_or_r.to_f
@@ -39,6 +43,8 @@ module Zajal
 
 			attach_function :ofSetupOpenGL, [:ofAppBaseWindow, :int, :int, :int], :void
 			attach_function :ofSetupScreen, [], :void
+			attach_function :ofEnableAlphaBlending, [], :void
+			attach_function :ofDisableAlphaBlending, [], :void
 			attach_function :ofCircle, [:float, :float, :float, :float], :void
 			attach_function :ofClear, [:float, :float, :float, :float], :void
 			attach_function :ofRect, [:float, :float, :float, :float], :void
