@@ -14,6 +14,7 @@ Install Rubinius in 1.9 mode
 Get Zajal
 
     git clone https://github.com/nasser/zajal.git
+    cd zajal
     git co amsterdam
     ./bin/zajal examples/hello-world.zj
 
