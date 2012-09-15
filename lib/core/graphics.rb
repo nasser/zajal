@@ -8,6 +8,10 @@ module Zajal
 			Native.ofRect x.to_f, y.to_f, w.to_f, h.to_f
 		end
 
+		def square x, y, s
+			Native.ofRect x.to_f, y.to_f, s.to_f, s.to_f
+		end
+
 		def translate x, y, z=0.0
 			Native.ofTranslate x.to_f, y.to_f, z.to_f
 		end
