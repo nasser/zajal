@@ -1,7 +1,11 @@
 module Zajal
 	module Graphics
-		def circle x, y, z, r
-			Native.ofCircle x.to_f, y.to_f, z.to_f, r.to_f
+		def circle x, y, z_or_r, r=nil
+			if r.nil?
+				Native.ofCircle x.to_f, y.to_f, 0.0, z_or_r.to_f
+			else
+				Native.ofCircle x.to_f, y.to_f, z_or_r.to_f, r.to_f
+			end
 		end
 
 		def rectangle x, y, w, h
