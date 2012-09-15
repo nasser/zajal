@@ -11,6 +11,10 @@ Install Rubinius in 1.9 mode
     rvm install rbx --1.9
     rvm use rbx
 
+Install GLFW
+
+    brew install glfw
+
 Get Zajal
 
     git clone https://github.com/nasser/zajal.git

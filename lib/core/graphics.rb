@@ -1,7 +1,19 @@
 module Zajal
 	module Graphics
-		def circle x, y, z, r
-			Native.ofCircle x.to_f, y.to_f, z.to_f, r.to_f
+		def circle x, y, z_or_r, r=nil
+			if r.nil?
+				Native.ofCircle x.to_f, y.to_f, 0.0, z_or_r.to_f
+			else
+				Native.ofCircle x.to_f, y.to_f, z_or_r.to_f, r.to_f
+			end
+		end
+
+		def rectangle x, y, w, h
+			Native.ofRect x.to_f, y.to_f, w.to_f, h.to_f
+		end
+
+		def square x, y, s
+			Native.ofRect x.to_f, y.to_f, s.to_f, s.to_f
 		end
 
 		def translate x, y, z=0.0
@@ -29,6 +41,7 @@ module Zajal
 			attach_function :ofSetupScreen, [], :void
 			attach_function :ofCircle, [:float, :float, :float, :float], :void
 			attach_function :ofClear, [:float, :float, :float, :float], :void
+			attach_function :ofRect, [:float, :float, :float, :float], :void
 			attach_function :ofTranslate, [:float, :float, :float], :void
 			attach_function :ofDrawBitmapCharacterStart, [:int], :void
 			attach_function :ofDrawBitmapCharacterEnd, [], :void
