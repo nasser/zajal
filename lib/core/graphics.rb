@@ -23,8 +23,12 @@ module Zajal
 		# @param radius [Numeric] radius of the circle
 		# 
 		# @return [nil] Nothing
-		def circle x, y, radius
-			Native.ofCircle x.to_f, y.to_f, radius.to_f
+		def circle x, y, z_or_radius, radius=nil
+			if radius.nil?
+				Native.ofCircle x.to_f, y.to_f, 0.0, z_or_radius.to_f
+			else
+				Native.ofCircle x.to_f, y.to_f, z_or_radius.to_f, r.to_f
+			end
 		end
 
 		# Draw a rectangle
