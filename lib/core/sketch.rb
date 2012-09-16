@@ -5,6 +5,8 @@ module Zajal
 		include Graphics
 		include Version
 
+		attr_reader :file
+
 		def self.support_event event
 			module_eval <<-EVENT
 				def #{event} *args, &blk
@@ -15,9 +17,15 @@ module Zajal
 		end
 
 		%w[setup update draw].each { |event| support_event event }
+
 		def initialize file
-			@code = open(file).read
-			instance_eval @code
+			@file = open(file)
+			@file_last_modified = @file.mtime
+			instance_eval @file.read
+		end
+
+		def stale?
+			@file.mtime > @file_last_modified
 		end
 	end
 end
