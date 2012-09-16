@@ -27,5 +27,21 @@ module Zajal
 		def stale?
 			@file.mtime > @file_last_modified
 		end
+
+		def refresh_continue
+			sk = Sketch.new @file.path
+			sk.copy_instance_variables_from self, [:@setup_proc, :@draw_proc, :@update_proc, :@file_last_modified]
+			sk
+		end
+
+		def refresh_restart
+			Sketch.new @file.path
+		end
+
+		# http://apidock.com/rails/Object/copy_instance_variables_from
+		def copy_instance_variables_from object, exclude = []
+			vars = object.instance_variables.map(&:to_s) - exclude.map(&:to_s)
+			vars.each { |name| instance_variable_set(name, object.instance_variable_get(name)) }
+		end
 	end
 end

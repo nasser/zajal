@@ -18,9 +18,7 @@ module Zajal
 					@sketch.draw
 					Native.glfwSwapBuffers
 
-					if @sketch.stale?
-						@sketch = Zajal::Sketch.new(@sketch.file.path)
-					end
+					@sketch = @sketch.refresh_continue if @sketch.stale?
 				end
 			end
 
