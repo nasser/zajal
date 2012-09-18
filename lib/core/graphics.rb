@@ -20,6 +20,14 @@ module Zajal
 			end
 		end
 
+		def line x1, y1, x2, y2
+			Native.ofLine x1.to_f, y1.to_f, x2.to_f, y2.to_f
+		end
+
+		def line_width width
+			Native.ofSetLineWidth width.to_f
+		end
+
 		def rectangle x, y, w, h
 			Native.ofRect x.to_f, y.to_f, w.to_f, h.to_f
 		end
@@ -55,7 +63,9 @@ module Zajal
 			attach_function :ofDisableAlphaBlending, [], :void
 			attach_function :ofCircle, [:float, :float, :float, :float], :void
 			attach_function :ofClear, [:float, :float, :float, :float], :void
+			attach_function :ofLine, [:float, :float, :float, :float], :void
 			attach_function :ofRect, [:float, :float, :float, :float], :void
+			attach_function :ofSetLineWidth, [:float], :void
 			attach_function :ofTranslate, [:float, :float, :float], :void
 			attach_function :ofDrawBitmapCharacterStart, [:int], :void
 			attach_function :ofDrawBitmapCharacterEnd, [], :void
