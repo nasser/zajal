@@ -4,6 +4,14 @@ module Zajal
 			on ? Native.ofEnableAlphaBlending : Native.ofDisableAlphaBlending
 		end
 
+		def background r=nil, g=nil, b=nil, a=255
+			if r.present? && g.present? && b.present?
+				@background_color = {r: r, g: g, b: b}
+			else
+				@background_color
+			end
+		end
+
 		def circle x, y, z_or_r, r=nil
 			if r.nil?
 				Native.ofCircle x.to_f, y.to_f, 0.0, z_or_r.to_f

@@ -11,10 +11,11 @@ module Zajal
 
 			def run
 				sketch.setup
+				bg ||= sketch.background
 				while true do
 					Zajal::Graphics::Native.ofSetupScreen
 					sketch.update
-					Zajal::Graphics::Native.ofClear 160.0, 37.0, 37.0, 255.0
+					Zajal::Graphics::Native.ofClear bg[:r].to_f, bg[:g].to_f, bg[:b].to_f, 255.0
 					sketch.draw
 					Native.glfwSwapBuffers
 				end

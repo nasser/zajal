@@ -16,6 +16,8 @@ module Zajal
 
 		%w[setup update draw].each { |event| support_event event }
 		def initialize file
+			@background_color = {r: 160, g: 37, b: 37}
+
 			@code = open(file).read
 			instance_eval @code
 		end
