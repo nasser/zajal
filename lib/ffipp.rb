@@ -98,8 +98,8 @@ module FFI::Cpp::Library
 		end
 	end
 
-	def attach_constructor klass, size, params
-		mangled_name = FFI::Cpp::Manglers::GCC4X.mangle_method klass, :ctor, params
+	def attach_constructor klass, size, params, mangled_name=nil
+		mangled_name ||= FFI::Cpp::Manglers::GCC4X.mangle_method klass, :ctor, params
 		implicit_params = [:pointer] + params
 
 		attach_c_function "#{klass.downcase}_ctor", mangled_name, implicit_params, :void
