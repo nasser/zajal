@@ -32,5 +32,3 @@ module Zajal
 		end
 	end
 end
-
-
