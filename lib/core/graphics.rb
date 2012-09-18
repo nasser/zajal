@@ -1,6 +1,6 @@
 module Zajal
 	module Graphics
-		def alpha_blending(on)
+		def alpha_blending on
 			on ? Native.ofEnableAlphaBlending : Native.ofDisableAlphaBlending
 		end
 
