@@ -1,7 +1,20 @@
+# FFI extension to allow calling into C++ code.
+# 
+# FFIPP (Foreign Function Interface Plus Plus) handles the name mangling and
+# calling convention issues that come up when calling compiled C++ code. This
+# allows for pure-Ruby bridges to C++ libraries like openFrameworks without
+# clunky C shims or generated wrappers. The goal is to be able to use
+# unmodified C++ shared objects as if they were written in C.
+# 
+# It supports normal functions, instance methods, and class construtcors.
+# Still missing are class destructors, templates, std::strings, and others.
+# GCC 4.x only at the moment.
 module FFI::Cpp
+	# Contains manglers for different compiler/versions
 	module Manglers
+		# Mangler for GCC 4.x
+		# @see http://mentorembedded.github.com/cxx-abi/abi.html#mangling
 		class GCC4X
-			# http://mentorembedded.github.com/cxx-abi/abi.html#mangling
 			MangledTypes = {
 				stdstring:			"Ss",
 				void: 				"v",
@@ -38,6 +51,17 @@ module FFI::Cpp
 				stdnullptr_t: 		"Dn"
 			}
 
+			# Mangle a type
+			# 
+			# Used by {GCC4X.mangle_function} and {GCC4X.mangle_method} to
+			# generate signatures out of arrays of symbols.
+			# 
+			# @example
+			# 	[:int, :int, :float].map { |t| GCC4X.mangle_type(t) }.join # => "iif"
+			# 
+			# @param [Symbol] t Type to mangle. One of the symbols in
+			#   {MangledTypes}
+			# @return [String] mangled representation of +t+
 			def self.mangle_type t
 				if MangledTypes.has_key? t
 					MangledTypes[t] 
@@ -47,6 +71,18 @@ module FFI::Cpp
 				end
 			end
 
+			# Mangle an identifier, generally a method or class name
+			# 
+			# @example
+			# 	GCC4X.mangle_identifier "ofCircle" # => "8ofCircle"
+			# 
+			# @example
+			# 	GCC4X.mangle_identifier :ctor # => "C1"
+			# 
+			# @param [#to_s, :ctor, :dtor] i the identifier to mangle.
+			# 	Construtcors and destructors don't have identifiers, so use
+			# 	:ctor or :dtor instead
+			# @return [String] mangled representation of i
 			def self.mangle_identifier i
 				case i
 				when :ctor; "C1"
@@ -55,13 +91,36 @@ module FFI::Cpp
 				end
 			end
 
-			def self.mangle_function method, params
-				method = mangle_identifier method
+			# Mangle a top level C++ function name
+			# 
+			# The resulting name can be succesfully used to attach to
+			# functions in a C++ shared object
+			# 
+			# @example
+			# 	GCC4X.mangle_function :ofCircle, [:float, :float, :float] # => "_Z8ofCirclefff"
+			# 
+			# @example
+			# 	GCC4X.mangle_function :ofNoFill, [] # => "_Z6ofFillv"
+			# 
+			# @param name [#to_s] name the name of the function
+			# @param params [Array<Symbol>] params the types and order of parameters
+			# 	the function takes, or an empty array if function doesnt take
+			# 	parameters.
+			# 
+			# @return [String] mangled function name
+			def self.mangle_function name, params
+				name = mangle_identifier name
 				params = [:void] if params.empty?
 
-				"_Z#{method}#{params.map { |p| mangle_type(p) }.join}"
+				"_Z#{name}#{params.map { |p| mangle_type(p) }.join}"
 			end
 
+			# Mangle an instance method name
+			# 
+			# @param klass [#to_s] the object's class
+			# @param klass [#to_s] the object's class
+			# 
+			# @return [String] mangled instance method name
 			def self.mangle_method klass, method, params
 				klass = "#{klass.size}#{klass}"
 				method = mangle_identifier method
@@ -72,55 +131,96 @@ module FFI::Cpp
 
 		end
 	end
-end
 
-module FFI::Cpp::Library
-	include FFI::Library
+	# C++ Library support
+	module Library
+		include FFI::Library
 
-	# support cpp linkage in attach_function
-	alias :attach_c_function :attach_function
-	def attach_function rbname, cname, params, returns=nil, options={}
-		if returns.nil?
-			returns = params
-			params = cname
-			cname = rbname
-		end
+		# support cpp linkage in attach_function
+		alias :attach_c_function :attach_function
 
-		begin
-			# try c linkage
-			attach_c_function rbname, cname, params, returns
-
-		rescue FFI::NotFoundError
-			# try cpp linkage
-			mangled_name = FFI::Cpp::Manglers::GCC4X.mangle_function cname, params
-			attach_c_function rbname, mangled_name, params, returns
-
-		end
-	end
-
-	def attach_constructor klass, size, params, mangled_name=nil
-		mangled_name ||= FFI::Cpp::Manglers::GCC4X.mangle_method klass, :ctor, params
-		implicit_params = [:pointer] + params
-
-		attach_c_function "#{klass.downcase}_ctor", mangled_name, implicit_params, :void
-
-		self.module_eval <<-code
-			def self.#{klass.downcase}_alloc
-				FFI::MemoryPointer.new(:pointer, #{size})
+		# Attatch top level C/C++ function to this module
+		# 
+		# @overload attach_function name, params, returns, options={}
+		# 	This variant will match the Ruby name to the C/C++ name
+		# 	@param name [Symbol] the name of the function
+		# 	@param params [Array<Symbol>] array of symbols indicating parameter 
+		# 		type
+		# 	@param returns [Symbol] symbol indicating return type
+		# 	@opthash foo
+		# 
+		# @overload attach_function ruby_name, c_name, params, returns, options={}
+		def attach_function rbname, cname, params, returns=nil, options={}
+			if returns.nil?
+				returns = params
+				params = cname
+				cname = rbname
 			end
 
-			def self.#{klass.downcase}_new *args
-				instance = #{klass.downcase}_alloc
-				#{klass.downcase}_ctor(instance, *args)
-				instance
+			begin
+				# try c linkage
+				attach_c_function rbname, cname, params, returns
+
+			rescue FFI::NotFoundError
+				# try cpp linkage
+				mangled_name = FFI::Cpp::Manglers::GCC4X.mangle_function cname, params
+				attach_c_function rbname, mangled_name, params, returns
+
 			end
-		code
-	end
+		end
 
-	def attach_method klass, name, params, returns, mangled_name=nil
-		mangled_name ||= FFI::Cpp::Manglers::GCC4X.mangle_method klass, name, params
-		implicit_params = [:pointer] + params
+		# Attatch constructor for class +klass+ to module
+		# 
+		# @example
+		# 	module Native
+		# 		attach_constructor :Widget, 682, [:float, :float, :int]
+		# 	end
+		def attach_constructor klass, size, params, mangled_name=nil
+			mangled_name ||= FFI::Cpp::Manglers::GCC4X.mangle_method klass, :ctor, params
+			implicit_params = [:pointer] + params
 
-		attach_c_function "#{klass.downcase}_#{name}", mangled_name, implicit_params, returns
+			attach_c_function "#{klass.downcase}_ctor", mangled_name, implicit_params, :void
+
+			self.module_eval <<-code
+				def self.#{klass.downcase}_alloc
+					FFI::MemoryPointer.new(:pointer, #{size})
+				end
+
+				def self.#{klass.downcase}_new *args
+					instance = #{klass.downcase}_alloc
+					#{klass.downcase}_ctor(instance, *args)
+					instance
+				end
+			code
+		end
+
+		def attach_method klass, name, params, returns, mangled_name=nil
+			mangled_name ||= FFI::Cpp::Manglers::GCC4X.mangle_method klass, name, params
+			implicit_params = [:pointer] + params
+
+			attach_c_function "#{klass.downcase}_#{name}", mangled_name, implicit_params, returns
+		end
+
+		def attatch_class klass, size
+			
+		end
 	end
 end
+
+
+module Native
+	attatch_class :ofImage, 687 do
+		attach_constructor [:float, :int]
+		attach_method :draw, [], :void
+		attach_method :resize, [:float, :float], :void
+	end
+end
+
+
+img = Native::OfImage.new
+img.draw
+img.resize 80, 90
+img.pointer
+
+
+
