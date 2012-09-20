@@ -1,4 +1,7 @@
 module Zajal
+	# Everyone who has contributed to or supported the project in any way.
+	# 
+	# Thanks everyone!
 	THANKS = [
 		"Milia Ayache",
 		"Lara Nasser",
