@@ -51,9 +51,11 @@ module Zajal
 				extend FFI::Cpp::Library
 				ffi_lib "lib/frontends/glfw/lib/libglfw.dylib"
 				attach_function :glfwSwapBuffers, [], :void
+				attach_function :glfwSetWindowPos, [:int, :int], :void
 
 				ffi_lib "lib/frontends/glfw/lib/GlfwFrontend.so"
 				attach_constructor :GlfwFrontend, 16, []
+				attach_method :GlfwFrontend, :setWindowShape, [:int, :int], :void
 			end
 		end
 	end

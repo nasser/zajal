@@ -27,3 +27,6 @@ void GlfwFrontend::setWindowTitle(string title) {
 	glfwSetWindowTitle(title.c_str());
 }
 
+void GlfwFrontend::setWindowShape(int w, int h) {
+	glfwSetWindowSize(w, h);
+}

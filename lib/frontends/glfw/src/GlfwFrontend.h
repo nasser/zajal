@@ -10,6 +10,8 @@ class GlfwFrontend : public ofAppBaseWindow {
 	int		getWidth();
 	int		getHeight();
 	ofPoint	getWindowSize();
+
+	void	setWindowShape(int w, int h);
 	void	setWindowTitle(string title);
 };
 
