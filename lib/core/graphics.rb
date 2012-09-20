@@ -18,8 +18,12 @@ module Zajal
 		# 	circle 75, 75, 20
 		# 	circle 25, 75, 20
 		# 
+		# @overload circle x, y, radius
+		# @overload circle x, y, z, radius
+		# 
 		# @param x [Numeric] x coordinate of circle's center
 		# @param y [Numeric] y coordinate of circle's center
+		# @param z [Numeric] z coordinate of circle's center
 		# @param radius [Numeric] radius of the circle
 		# 
 		# @return [nil] Nothing
