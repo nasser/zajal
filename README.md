@@ -20,4 +20,6 @@ Get Zajal
 
 Legal
 -----
+Zajal is a labor of love by [Ramsey Nasser](http://nas.sr/). Use it for good, not evil.
+
 Provided under the MIT License
