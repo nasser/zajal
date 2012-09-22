@@ -35,11 +35,27 @@ module Zajal
       end
     end
 
+    # Enable or disable alpha blending
+    # 
+    # Alpha blending allows for transparent colors in colors and images, but can
+    # slow down your sketch. You can enable and disable it as needed.
+    # 
+    # @param on [Boolean], +true+ to enable alpha blending, +false+ to disable
+    # 
+    # @return [Boolean] the new alpha blending value
     def alpha_blending on
       on ? Native.ofEnableAlphaBlending : Native.ofDisableAlphaBlending
     end
 
-    def background r=nil, g=nil, b=nil, a=255
+    # Set the background color and clear the screen to that color 
+    # 
+    # @param r [Numeric] the amount of red, 0..255
+    # @param g [Numeric] the amount of green, 0..255
+    # @param b [Numeric] the amount of blue, 0..255
+    # @param a [Numeric] the amount of alpha, 0..255
+    # 
+    # @return [nil] Nothing
+    def background r, g, b, a=255
       Native.ofClear r.to_f, g.to_f, b.to_f, a.to_f
     end
 
@@ -76,10 +92,23 @@ module Zajal
       Native.ofRect x.to_f, y.to_f, width.to_f, height.to_f
     end
 
+    # Draw a line between two points
+    # 
+    # #param x1 [Numeric] the x coordinate of the first point 
+    # #param y1 [Numeric] the y coordinate of the first point 
+    # #param x2 [Numeric] the x coordinate of the second point 
+    # #param y2 [Numeric] the y coordinate of the second point 
+    # 
+    # @return [nil] Nothing
     def line x1, y1, x2, y2
       Native.ofLine x1.to_f, y1.to_f, x2.to_f, y2.to_f
     end
 
+    # Set the width of subsequent lines
+    # 
+    # @param width [Numeric] the width of the lines
+    # 
+    # @return [nil] Nothing
     def line_width width
       Native.ofSetLineWidth width.to_f
     end
@@ -134,6 +163,13 @@ module Zajal
       Native.ofTranslate x.to_f, y.to_f, z.to_f
     end
 
+    # Set the color that subsequent drawing will be done in
+    # 
+    # @param r [Numeric] the amount of red, 0..255
+    # @param g [Numeric] the amount of green, 0..255
+    # @param b [Numeric] the amount of blue, 0..255
+    # 
+    # @return [nil] Nothing
     def color r, g, b
       Native.ofSetColor r, g, b
     end
