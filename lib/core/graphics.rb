@@ -35,6 +35,14 @@ module Zajal
 			end
 		end
 
+		def alpha_blending on
+			on ? Native.ofEnableAlphaBlending : Native.ofDisableAlphaBlending
+		end
+
+		def background r=nil, g=nil, b=nil, a=255
+			Native.ofClear r.to_f, g.to_f, b.to_f, a.to_f
+		end
+
 		# Draw a rectangle
 		# 
 		# @example Single thin rectangle
@@ -66,6 +74,14 @@ module Zajal
 		# @see #square
 		def rectangle x, y, width, height
 			Native.ofRect x.to_f, y.to_f, width.to_f, height.to_f
+		end
+
+		def line x1, y1, x2, y2
+			Native.ofLine x1.to_f, y1.to_f, x2.to_f, y2.to_f
+		end
+
+		def line_width width
+			Native.ofSetLineWidth width.to_f
 		end
 
 		# Draw a square
@@ -141,9 +157,13 @@ module Zajal
 
 			attach_function :ofSetupOpenGL, [:ofAppBaseWindow, :int, :int, :int], :void
 			attach_function :ofSetupScreen, [], :void
-			attach_function :ofCircle, [:float, :float, :float], :void
+			attach_function :ofEnableAlphaBlending, [], :void
+			attach_function :ofDisableAlphaBlending, [], :void
+			attach_function :ofCircle, [:float, :float, :float, :float], :void
 			attach_function :ofClear, [:float, :float, :float, :float], :void
+			attach_function :ofLine, [:float, :float, :float, :float], :void
 			attach_function :ofRect, [:float, :float, :float, :float], :void
+			attach_function :ofSetLineWidth, [:float], :void
 			attach_function :ofTranslate, [:float, :float, :float], :void
 
 			attach_function :ofSetColor, [:int, :int, :int], :void

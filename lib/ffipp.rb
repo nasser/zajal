@@ -200,27 +200,5 @@ module FFI::Cpp
 
 			attach_c_function "#{klass.downcase}_#{name}", mangled_name, implicit_params, returns
 		end
-
-		def attatch_class klass, size
-			
-		end
 	end
 end
-
-
-module Native
-	attatch_class :ofImage, 687 do
-		attach_constructor [:float, :int]
-		attach_method :draw, [], :void
-		attach_method :resize, [:float, :float], :void
-	end
-end
-
-
-img = Native::OfImage.new
-img.draw
-img.resize 80, 90
-img.pointer
-
-
-
