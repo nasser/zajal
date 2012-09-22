@@ -1,3 +1,10 @@
+Version 0.4
+===========
+
+Exciting News! Zajal's from-scratch rewrite for version 0.4 is finally public! It's still in its early stages, but the pure-Ruby architecture is holding up and has the potential to do amazing things. Follow the [Amsterdam branch](https://github.com/nasser/zajal/tree/amsterdam) for more!
+
+This is the future!
+
 Zajal
 =====
 
