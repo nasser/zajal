@@ -174,6 +174,17 @@ module Zajal
       Native.ofSetColor r, g, b
     end
 
+    # Draw text
+    # 
+    # @param message [#to_s] the text to write
+    # @param x [Numeric] the x coordinate to start writing text at
+    # @param y [Numeric] the y coordinate to start writing text at
+    # 
+    # @return [nil] Nothing
+    def text message, x, y
+      Native.ofDrawBitmapString message.to_s.to_ptr, x.to_f, y.to_f
+    end
+
     # FFI hooks to compiled openFrameworks functionality.
     # 
     # The methods in here do the actual work by invoking compiled C++
@@ -201,6 +212,8 @@ module Zajal
       attach_function :ofRect, [:float, :float, :float, :float], :void
       attach_function :ofSetLineWidth, [:float], :void
       attach_function :ofTranslate, [:float, :float, :float], :void
+
+      attach_function :ofDrawBitmapString, [:stdstring, :float, :float], :void
 
       attach_function :ofSetColor, [:int, :int, :int], :void
     end
