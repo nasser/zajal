@@ -24,6 +24,7 @@ module Zajal
     include Math
     include Zajal
     include Graphics
+    include Typography
     include Version
 
     # The {File} this sketch is watching
