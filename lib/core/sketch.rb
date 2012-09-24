@@ -96,7 +96,7 @@ module Zajal
     # 
     # @see Sketch.support_event
     def initialize file
-      @file = open(file)
+      @file = open(File.expand_path(file))
       @file_last_modified = @file.mtime
       instance_eval @file.read
     end
