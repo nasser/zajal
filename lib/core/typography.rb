@@ -5,15 +5,28 @@ module Zajal
   module Typography
     # A font
     class Font
+      # @param file [#to_s] the file to load
+      # @param size [Numeric] the size of the font
+      # 
+      # @todo Expose additional options that ofTrueTypeFont supports (e.g.
+      #   antialiased, full character sets, contours)
       def initialize file, size
         @pointer = Native.oftruetypefont_new
-        Native.oftruetypefont_loadFont @pointer, file.to_s.to_ptr, size, true, false, false, 0.3, 0
+        Native.oftruetypefont_loadFont @pointer, file.to_s.to_ptr, size.to_i, true, false, false, 0.3, 0
       end
 
+      # Draw text using this font's glyphs
+      # 
+      # @param text [#to_s] the text to draw
+      # @param x [Numeric] x coordinate of to start drawing text at
+      # @param y [Numeric] y coordinate of to start drawing text at
+      # 
+      # @return [nil] Nothing
       def draw text, x, y
-        Native.oftruetypefont_drawString @pointer, s.to_s.to_ptr, x.to_f, y.to_f
+        Native.oftruetypefont_drawString @pointer, text.to_s.to_ptr, x.to_f, y.to_f
       end
 
+      # @api internal
       def to_ptr
         @pointer
       end
@@ -26,6 +39,9 @@ module Zajal
     # @param y [Numeric] the y coordinate to start writing text at
     # 
     # @return [nil] Nothing
+    # 
+    # @todo Use the same font rendering path as {Font}, not
+    #   ofDrawBitmapString. Ship Zajal with a monospace font and use that.
     def text message, x, y
       Native.ofDrawBitmapString message.to_s.to_ptr, x.to_f, y.to_f
     end
