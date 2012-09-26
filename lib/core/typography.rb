@@ -31,6 +31,14 @@ module Zajal
         Native.oftruetypefont_drawString @pointer, text.to_s.to_ptr, x.to_f, y.to_f
       end
 
+      def size
+        Native.oftruetypefont_getSize @pointer
+      end
+
+      def line_height
+        Native.oftruetypefont_getLineHeight @pointer
+      end
+
       # @api internal
       def to_ptr
         @pointer
@@ -59,6 +67,8 @@ module Zajal
       attach_constructor :ofTrueTypeFont, 344, []
       attach_method :ofTrueTypeFont, :drawString, [:stdstring, :float, :float], :void
       attach_method :ofTrueTypeFont, :loadFont, [:stdstring, :int, :bool, :bool, :bool, :float, :int], :void
+      attach_method :ofTrueTypeFont, :getSize, [], :int
+      attach_method :ofTrueTypeFont, :getLineHeight, [], :float
 
       attach_function :ofDrawBitmapString, [:stdstring, :float, :float], :void
     end
