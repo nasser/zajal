@@ -181,12 +181,6 @@ module Zajal
     module Native
       extend FFI::Cpp::Library
 
-      # TODO move me!
-      ffi_lib "/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib"
-      %w[PocoFoundation PocoNet PocoXML PocoUtil glew tess freeimage freetype].each do |libname|
-        ffi_lib "lib/core/lib/#{libname}.so"
-      end
-
       ffi_lib "lib/core/lib/libof.so"
 
       typedef :pointer, :ofAppBaseWindow
