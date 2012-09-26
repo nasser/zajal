@@ -1,3 +1,5 @@
+# Color::Grayscale stores colors by its brightness level, and the
+# transparency (alpha) level for display.
 class Color::Grayscale
   attr_accessor :level, :a
 
