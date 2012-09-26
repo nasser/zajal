@@ -1,3 +1,5 @@
+# Color::RGB stores colors by their Red, Green, and Blue separations, and the
+# transparency (alpha) level for display.
 class Color::RGB
   attr_accessor :r, :g, :b, :a
 
