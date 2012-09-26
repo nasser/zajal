@@ -43,7 +43,11 @@ module Zajal
           @sketch.draw
           Native.glfwSwapBuffers
 
-          @sketch = @sketch.refresh_continue if @sketch.stale?
+          # TODO this should be taken care of by Sketch
+          if @sketch.stale?
+            @sketch = @sketch.refresh_continue 
+            @sketch.setup
+          end
         end
       end
 
