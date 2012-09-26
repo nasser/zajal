@@ -1,5 +1,5 @@
 require_relative "../../../../tools/of-includes"
 
 task :build, :of_dir do |t, args|
-	sh "g++ -shared #{of_includes(args[:of_dir])} -undefined suppress -flat_namespace GlfwFrontend.cpp -o ../lib/GlfwFrontend.so"
+  sh "g++ -shared #{of_includes(args[:of_dir])} -undefined suppress -flat_namespace GlfwFrontend.cpp -o ../lib/GlfwFrontend.so"
 end

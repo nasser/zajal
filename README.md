@@ -2,7 +2,7 @@ Zajal 0.4 - Amsterdam
 =====================
 Amsterdam is the first major rewrite of Zajal since the start of the project. It uses a brand new, all-Ruby architechture built on Rubinius and aims to be easier to hack, maintain, and expand on. Specifically, Amsterdam is designed to incorporate more easily with RubyGems and ofxAddons.
 
-A lot still needs to be done. All it does is open a window and draw circles. Live coding is very basic. Amsterdam won't be usable by the general public for a few more months. In the meantime, you should check out the very capable [public release](http://zajal.cc/) if you want to make things in Zajal.
+A lot still needs to be done. All it does is open a window and draw basic shapes. Live coding is very basic. Amsterdam won't be usable by the general public for a few more months. In the meantime, you should check out the very capable [public release](http://zajal.cc/) if you want to make things in Zajal.
 
 Using
 -----
@@ -20,4 +20,6 @@ Get Zajal
 
 Legal
 -----
+Zajal is a labor of love by [Ramsey Nasser](http://nas.sr/). Use it for good, not evil.
+
 Provided under the MIT License

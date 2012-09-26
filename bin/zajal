@@ -4,6 +4,17 @@ require_relative "../lib/zajal"
 
 Zajal::Version.print
 
-glfw = Zajal::Frontends::Glfw.new 400, 300
-glfw.sketch = Zajal::Sketch.new ARGV.first
+sketch_path = if ARGV.empty?
+  require 'tempfile'
+  tempfile = Tempfile.new "zajal-stdin-sketch"
+  tempfile.write STDIN.read
+  tempfile.close
+
+  tempfile.path
+else
+  ARGV.first
+end
+
+glfw = Zajal::Frontends::Glfw.new 400, 400
+glfw.sketch = Zajal::Sketch.new sketch_path
 glfw.run
