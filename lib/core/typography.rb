@@ -56,7 +56,8 @@ module Zajal
     # @todo Use the same font rendering path as {Font}, not
     #   ofDrawBitmapString. Ship Zajal with a monospace font and use that.
     def text message, x, y
-      Native.ofDrawBitmapString message.to_s.to_ptr, x.to_f, y.to_f
+      @basic_font ||= Font.new "/Library/Fonts/Andale Mono.ttf", 8, antialiased:false
+      @basic_font.draw message.to_s, x.to_f, y.to_f
     end
 
     module Native
