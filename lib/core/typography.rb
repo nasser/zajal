@@ -7,12 +7,17 @@ module Zajal
     class Font
       # @param file [#to_s] the file to load
       # @param size [Numeric] the size of the font
-      # 
-      # @todo Expose additional options that ofTrueTypeFont supports (e.g.
-      #   antialiased, full character sets, contours)
-      def initialize file, size
+      # @param options [Hash] additional options
+      # @option options [Boolean] :antialiased Smooth font edges?
+      # @option options [Boolean] :full_character_set Load all glyphs?
+      # @option options [Boolean] :full_character_set Prepare font for vector rendering?
+      # @option options [Float] :simplify
+      # @option options [Fixnum] :dpi
+      def initialize file, size, options={}
+        options.merge({ antialiased:true, full_character_set:false, contours:false, simplify:0.3, dpi:0 })
+        
         @pointer = Native.oftruetypefont_new
-        Native.oftruetypefont_loadFont @pointer, file.to_s.to_ptr, size.to_i, true, false, false, 0.3, 0
+        Native.oftruetypefont_loadFont @pointer, File.expand_path(file).to_s.to_ptr, size.to_i, options[:antialiased], options[:full_character_set], options[:contours], options[:simplify].to_f, options[:dpi].to_i
       end
 
       # Draw text using this font's glyphs
