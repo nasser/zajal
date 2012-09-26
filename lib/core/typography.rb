@@ -95,8 +95,6 @@ module Zajal
       attach_method :ofTrueTypeFont, :loadFont, [:stdstring, :int, :bool, :bool, :bool, :float, :int], :void
       attach_method :ofTrueTypeFont, :getSize, [], :int
       attach_method :ofTrueTypeFont, :getLineHeight, [], :float
-
-      attach_function :ofDrawBitmapString, [:stdstring, :float, :float], :void
     end
   end
 end

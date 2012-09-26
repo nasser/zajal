@@ -28,7 +28,6 @@ module Zajal
       attach_function :ofGetVersionMajor, [], :int
       attach_function :ofGetVersionMinor, [], :int
     end
-
   end
 
   # Human readable version string

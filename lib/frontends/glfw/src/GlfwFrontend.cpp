@@ -52,4 +52,3 @@ void GlfwFrontend::hideCursor() {
 void GlfwFrontend::showCursor() {
   glfwEnable(GLFW_MOUSE_CURSOR);
 }
-

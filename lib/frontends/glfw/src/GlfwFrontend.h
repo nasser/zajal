@@ -13,7 +13,7 @@ class GlfwFrontend : public ofAppBaseWindow {
 
   void hideCursor();
   void showCursor();
-
+  
 	void	setWindowShape(int w, int h);
 	void	setWindowTitle(string title);
 

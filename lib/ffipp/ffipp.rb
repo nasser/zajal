@@ -226,7 +226,6 @@ module FFI::Cpp
         # try cpp linkage
         mangled_name = mangle_function cname, params
         attach_c_function rbname, mangled_name, params.map { |p| p.to_sym }, returns
-
       end
     end
 
