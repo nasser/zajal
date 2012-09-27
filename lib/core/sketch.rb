@@ -21,12 +21,6 @@ module Zajal
   # 
   # @api internal
   class Sketch
-    include Math
-    include Zajal
-    include Graphics
-    include Typography
-    include Version
-
     # The {File} this sketch is watching
     attr_reader :file
 
@@ -145,5 +139,13 @@ module Zajal
       vars = object.instance_variables.map(&:to_s) - exclude.map(&:to_s)
       vars.each { |name| instance_variable_set(name, object.instance_variable_get(name)) }
     end
+
+    include Math
+    include Zajal
+    include Graphics
+    include Typography
+    include Mathematics
+    include Time
+    include Version
   end
 end
