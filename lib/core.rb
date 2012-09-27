@@ -5,6 +5,7 @@ end
 
 require_relative "core/graphics"
 require_relative "core/typography"
+require_relative "core/time"
 
 require_relative "core/version"
 require_relative "core/sketch"
