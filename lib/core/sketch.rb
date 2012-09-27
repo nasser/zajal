@@ -123,14 +123,14 @@ module Zajal
 
     # Refresh sketch and keep the sketch running going
     def refresh_continue
-      sk = Sketch.new @file.path
+      sk = self.class.new @file.path
       sk.copy_instance_variables_from self, [:@setup_proc, :@draw_proc, :@update_proc, :@file_last_modified]
       sk
     end
 
     # Reload the file and start the sketch over
     def refresh_restart
-      Sketch.new @file.path
+      self.class.new @file.path
     end
 
     # @see http://apidock.com/rails/Object/copy_instance_variables_from
