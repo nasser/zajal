@@ -51,9 +51,7 @@ module Zajal
       def run
         @sketch.setup
         while true do
-          Zajal::Graphics::Native.ofSetupScreen
           @sketch.update
-          Zajal::Graphics::Native.ofClear 160.0, 37.0, 37.0, 255.0
           @sketch.draw
           Native.glfwSwapBuffers
 
