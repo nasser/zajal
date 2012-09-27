@@ -54,11 +54,13 @@ module Zajal
           @sketch.update
           @sketch.draw
           Native.glfwSwapBuffers
+          Native.glfwfrontend_incrementFrameNum @pointer
 
           # TODO this should be taken care of by Sketch
           if @sketch.stale?
-            @sketch = @sketch.refresh_continue 
+            @sketch = @sketch.refresh_restart 
             @sketch.setup
+            Native.glfwfrontend_setFrameNum @pointer, 0
           end
         end
       end
@@ -169,6 +171,8 @@ module Zajal
         ffi_lib "lib/frontends/glfw/lib/GlfwFrontend.so"
         attach_constructor :GlfwFrontend, 16, []
         attach_method :GlfwFrontend, :setWindowShape, [:int, :int], :void
+        attach_method :GlfwFrontend, :incrementFrameNum, [], :void
+        attach_method :GlfwFrontend, :setFrameNum, [:int], :void
       end
     end
   end
