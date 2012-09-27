@@ -168,10 +168,30 @@ module Zajal
     # @param r [Numeric] the amount of red, 0..255
     # @param g [Numeric] the amount of green, 0..255
     # @param b [Numeric] the amount of blue, 0..255
+    # @param a [Numeric] the amount of alpha, 0..255
     # 
     # @return [nil] Nothing
-    def color r, g, b
-      Native.ofSetColor r, g, b
+    def color r, g, b, a
+      Native.ofSetColor r, g, b, a
+    end
+
+    # Clear the canvas to a color
+    # 
+    # @param r [Numeric] the amount of red, 0..255
+    # @param g [Numeric] the amount of green, 0..255
+    # @param b [Numeric] the amount of blue, 0..255
+    # 
+    # @return [nil] Nothing
+    def clear r, g, b
+      Native.ofClear r.to_f, g.to_f, b.to_f, 255.0
+    end
+
+    # @api internal
+    def self.included sketch
+      sketch.before_event :draw do
+        Native.ofSetupScreen
+        clear 160, 37, 37
+      end
     end
 
     # FFI hooks to compiled openFrameworks functionality.
@@ -197,6 +217,7 @@ module Zajal
       attach_function :ofTranslate, [:float, :float, :float], :void
 
       attach_function :ofSetColor, [:int, :int, :int], :void
+      attach_function :ofSetColor, [:int, :int, :int, :int], :void
     end
   end
 end
