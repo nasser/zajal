@@ -55,9 +55,28 @@ module Zajal
     # 
     # @todo Use the same font rendering path as {Font}, not
     #   ofDrawBitmapString. Ship Zajal with a monospace font and use that.
-    def text message, x, y
-      @basic_font ||= Font.new "/Library/Fonts/Andale Mono.ttf", 8, antialiased:false
-      @basic_font.draw message.to_s, x.to_f, y.to_f
+    def text message, x=nil, y=nil
+      @basic_font ||= Font.new File.join(File.dirname(__FILE__), "bin", "gohu.ttf"), 8, antialiased:false
+
+      if x.present?
+        x, y = x.to_f, y.to_f
+      else
+        @stacked_text_x ||= 1.0
+        @stacked_text_y ||= 10.0
+        
+        x, y = @stacked_text_x, @stacked_text_y
+
+        @stacked_text_y += 10.0
+      end
+
+      @basic_font.draw message.to_s, x, y
+    end
+
+    def self.included sketch
+      sketch.before_event :draw do
+        @stacked_text_x = 1.0
+        @stacked_text_y = 10.0
+      end
     end
 
     module Native
