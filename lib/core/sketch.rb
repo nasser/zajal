@@ -30,6 +30,17 @@ module Zajal
     # The {File} this sketch is watching
     attr_reader :file
 
+    @@pre_hooks = {}
+    @@post_hooks = {}
+
+    def self.before_event event, &blk
+      @@pre_hooks[event] << blk
+    end
+
+    def self.after_event event, &blk
+      @@post_hooks[event] << blk
+    end
+
     # Support a named event in user code
     # 
     # Allow an event block named +event+ in user code. This allows
@@ -72,13 +83,23 @@ module Zajal
     # 
     # @note This documents incomplete functionality
     # @todo Iron out custom events
-    def self.support_event event
-      module_eval <<-EVENT
-        def #{event} *args, &blk
-          @#{event}_proc = blk unless blk.nil?
-          @#{event}_proc.call(*args) if blk.nil? and not @#{event}_proc.nil?
-        end
-      EVENT
+    def self.support_event *events
+      events.each do |event|
+        @@pre_hooks[event.to_sym] = []
+        @@post_hooks[event.to_sym] = []
+
+        module_eval <<-EVENT
+          def #{event} *args, &blk
+            if not blk.nil?
+              @#{event}_proc = blk
+            elsif blk.nil? and not @#{event}_proc.nil?
+              @@pre_hooks[:#{event}].each { |hook| instance_eval &hook }
+              @#{event}_proc.call(*args)
+              @@post_hooks[:#{event}].each { |hook| instance_eval &hook }
+            end
+          end
+        EVENT
+      end
     end
 
     %w[setup update draw].each { |event| support_event event }
