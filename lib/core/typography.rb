@@ -15,6 +15,8 @@ module Zajal
       # @option options [Fixnum] :dpi
       def initialize file, size, options={}
         options.merge({ antialiased:true, full_character_set:false, contours:false, simplify:0.3, dpi:0 })
+
+        @name = File.basename(file)
         
         @pointer = Native.oftruetypefont_new
         Native.oftruetypefont_loadFont @pointer, File.expand_path(file).to_s.to_ptr, size.to_i, options[:antialiased], options[:full_character_set], options[:contours], options[:simplify].to_f, options[:dpi].to_i
@@ -37,6 +39,10 @@ module Zajal
 
       def line_height
         Native.oftruetypefont_getLineHeight @pointer
+      end
+
+      def inspect
+        "<#{@name} #{size}pt>"
       end
 
       # @api internal
