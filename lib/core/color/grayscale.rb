@@ -8,7 +8,7 @@ class Color::Grayscale
   # @param level [Numeric] the shade of gray from black to white, 0..255
   # 
   # @return [Color::Grayscale] a new Color::Grayscale instance
-  def initialize(level=0, a=0)
+  def initialize(level=0, a=255)
     @level = level
     @a = a
   end

@@ -11,7 +11,7 @@ class Color::HSV
   # @param a [Numeric] the amount of alpha, 0..255
   # 
   # @return [Color::RGB] a new Color::RGB instance
-  def initialize(h=0, s=0, v=0, a=0)
+  def initialize(h=0, s=0, v=0, a=255)
     @h = h
     @s = s
     @v = v

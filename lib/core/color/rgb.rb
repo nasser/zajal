@@ -11,7 +11,7 @@ class Color::RGB
   # @param a [Numeric] the amount of alpha, 0..255
   # 
   # @return [Color::RGB] a new Color::RGB instance
-  def initialize(r=0, g=0, b=0, a=0)
+  def initialize(r=0, g=0, b=0, a=255)
     @r = r
     @g = g
     @b = b
