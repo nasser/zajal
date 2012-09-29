@@ -8,6 +8,9 @@
 # so on. This moves the color-guessing functionality out of the graphic wrappers to
 # OpenFramework.
 class Color
+  require_relative 'rgb'
+  require_relative 'hsv'
+  require_relative 'grayscale'
   # Initializes a new Color subclass instance. It attempts to discern the color type
   # by the arguments supplied.
   # 

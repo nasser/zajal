@@ -1,7 +1,5 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/core/color/color'
-require_relative '../../../lib/core/color/grayscale'
-require_relative '../../../lib/core/color/rgb'
 
 describe Color::Grayscale do
   describe "#to_rgb" do
