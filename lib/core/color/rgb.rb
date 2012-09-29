@@ -31,4 +31,26 @@ class Color::RGB
   def to_hash
     {r: @r, g: @g, b: @b, a: @a}
   end
+
+  def to_hsv
+    r, g, b = @r / 255, @g / 255, @b / 255
+    max, min = [r, g, b].max, [r, g, b].min
+    h, s, v = max, max, max
+
+    d = max - min
+    s = max == 0 ? 0 : d / max
+
+    if max == min
+      h = 0 # achromatic
+    else
+      case max
+      when r then h = (g - b) / d + (g < b ? 6 : 0)
+      when g then h = (b - r) / d + 2
+      when b then h = (r - g) / d + 4
+      end
+      h = h / 6
+    end
+
+    Color::HSV.new(h * 255, s * 255, v * 255, @a)
+  end
 end
