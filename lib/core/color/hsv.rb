@@ -32,7 +32,8 @@ class Color::HSV
     {h: @h, s: @s, v: @v, a: @a}
   end
 
-  # Returns a Color::RGB instance in this shade of gray.
+  # Returns a Color::RGB instance that should closely match
+  # an instance's HSV values.
   # 
   # @return [Color::RGB]
   def to_rgb

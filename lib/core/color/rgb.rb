@@ -32,6 +32,10 @@ class Color::RGB
     {r: @r, g: @g, b: @b, a: @a}
   end
 
+  # Returns a Color::HSV instance that should closely match
+  # an instance's RGB values.
+  # 
+  # @return [Color::HSV]
   def to_hsv
     r, g, b = @r / 255, @g / 255, @b / 255
     max, min = [r, g, b].max, [r, g, b].min
