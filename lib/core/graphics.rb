@@ -171,7 +171,7 @@ module Zajal
     # 
     # @return [nil] Nothing
     def color r, g, b
-      Native.ofSetColor r, g, b
+      Native.ofSetColor r.to_i, g.to_i, b.to_i
     end
 
     # FFI hooks to compiled openFrameworks functionality.
