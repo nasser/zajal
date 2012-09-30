@@ -10,7 +10,7 @@ class Color::HSV
   # @param v [Numeric] the amount of value, 0..1
   # @param a [Numeric] the amount of alpha, 0..255
   # 
-  # @return [Color::RGB] a new Color::RGB instance
+  # @return [Color::HSV] a new Color::HSV instance
   def initialize(h=0, s=0, v=0, a=255)
     @h = h
     @s = s
