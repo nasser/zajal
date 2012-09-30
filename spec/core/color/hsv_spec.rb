@@ -1,5 +1,5 @@
 require_relative '../../spec_helper'
-require_relative '../../../lib/core/color/color'
+require_relative '../../../lib/core/color'
 
 describe Color::HSV do
   subject {Color::HSV.new(0, 255, 255, 40)} # Red, at 40/255 opacity

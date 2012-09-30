@@ -1,5 +1,5 @@
 require_relative '../../spec_helper'
-require_relative '../../../lib/core/color/color'
+require_relative '../../../lib/core/color'
 
 describe Color::NamedColor do
   subject {Color::NamedColor.new("SteelBlue", 40)}
