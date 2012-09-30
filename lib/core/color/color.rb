@@ -11,6 +11,7 @@ class Color
   require_relative 'rgb'
   require_relative 'hsv'
   require_relative 'grayscale'
+  require_relative 'named_color'
   # Initializes a new Color subclass instance. It attempts to discern the color type
   # by the arguments supplied.
   # 
