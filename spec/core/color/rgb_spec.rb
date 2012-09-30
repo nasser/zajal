@@ -1,5 +1,5 @@
 require_relative '../../spec_helper'
-require_relative '../../../lib/core/color/color'
+require_relative '../../../lib/core/color'
 
 describe Color::RGB do
   subject {Color::RGB.new(255, 128, 64, 32)}
