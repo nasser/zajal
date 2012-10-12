@@ -21,14 +21,19 @@ module Zajal
   # 
   # @api internal
   class Sketch
-    include Math
-    include Zajal
-    include Graphics
-    include Typography
-    include Version
-
     # The {File} this sketch is watching
     attr_reader :file
+
+    @@pre_hooks = {}
+    @@post_hooks = {}
+
+    def self.before_event event, &blk
+      @@pre_hooks[event] << blk
+    end
+
+    def self.after_event event, &blk
+      @@post_hooks[event] << blk
+    end
 
     # Support a named event in user code
     # 
@@ -72,13 +77,23 @@ module Zajal
     # 
     # @note This documents incomplete functionality
     # @todo Iron out custom events
-    def self.support_event event
-      module_eval <<-EVENT
-        def #{event} *args, &blk
-          @#{event}_proc = blk unless blk.nil?
-          @#{event}_proc.call(*args) if blk.nil? and not @#{event}_proc.nil?
-        end
-      EVENT
+    def self.support_event *events
+      events.each do |event|
+        @@pre_hooks[event.to_sym] = []
+        @@post_hooks[event.to_sym] = []
+
+        module_eval <<-EVENT
+          def #{event} *args, &blk
+            if not blk.nil?
+              @#{event}_proc = blk
+            elsif blk.nil? and not @#{event}_proc.nil?
+              @@pre_hooks[:#{event}].each { |hook| instance_eval &hook }
+              @#{event}_proc.call(*args)
+              @@post_hooks[:#{event}].each { |hook| instance_eval &hook }
+            end
+          end
+        EVENT
+      end
     end
 
     %w[setup update draw].each { |event| support_event event }
@@ -108,14 +123,14 @@ module Zajal
 
     # Refresh sketch and keep the sketch running going
     def refresh_continue
-      sk = Sketch.new @file.path
+      sk = self.class.new @file.path
       sk.copy_instance_variables_from self, [:@setup_proc, :@draw_proc, :@update_proc, :@file_last_modified]
       sk
     end
 
     # Reload the file and start the sketch over
     def refresh_restart
-      Sketch.new @file.path
+      self.class.new @file.path
     end
 
     # @see http://apidock.com/rails/Object/copy_instance_variables_from
@@ -124,5 +139,13 @@ module Zajal
       vars = object.instance_variables.map(&:to_s) - exclude.map(&:to_s)
       vars.each { |name| instance_variable_set(name, object.instance_variable_get(name)) }
     end
+
+    include Math
+    include Zajal
+    include Graphics
+    include Typography
+    include Mathematics
+    include Time
+    include Version
   end
 end

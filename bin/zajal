@@ -16,5 +16,5 @@ else
 end
 
 glfw = Zajal::Frontends::Glfw.new 400, 400
-glfw.sketch = Zajal::Sketch.new sketch_path
+glfw.sketch = Zajal::Frontends::Glfw::Sketch.new sketch_path
 glfw.run

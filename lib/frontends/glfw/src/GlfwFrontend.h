@@ -13,6 +13,12 @@ class GlfwFrontend : public ofAppBaseWindow {
 
 	void	setWindowShape(int w, int h);
 	void	setWindowTitle(string title);
+
+  int getFrameNum();
+  void setFrameNum(int newFrameCount);
+  void incrementFrameNum();
+
+  int frameCount;
 };
 
 #endif /* _GlfwFrontend_h_header */

@@ -14,7 +14,7 @@ module FFI::Cpp
   module Manglers
     # Mangler for GCC 4.x
     # @see http://mentorembedded.github.com/cxx-abi/abi.html#mangling
-    class GCC4X
+    module GCC4X
       MangledTypes = {
         stdstring:           "Ss",
         void:                "v",
@@ -55,37 +55,38 @@ module FFI::Cpp
 
       # Mangle a type
       # 
-      # Used by {GCC4X.mangle_function} and {GCC4X.mangle_method} to
+      # Used by {GCC4X#mangle_function} and {GCC4X#mangle_method} to
       # generate signatures out of arrays of symbols.
       # 
       # @example
-      #   [:int, :int, :float].map { |t| GCC4X.mangle_type(t) }.join # => "iif"
+      #   [:int, :int, :float].map { |t| mangle_type(t) }.join # => "iif"
       # 
       # @param [Symbol] t Type to mangle. One of the symbols in
       #   {MangledTypes}
       # @return [String] mangled representation of +t+
-      def self.mangle_type t
+      def mangle_type t
         if MangledTypes.has_key? t
           MangledTypes[t] 
-        # elsif FFI.find_type(t) == :pointer # TODO Fix kludge!
-        else
+        elsif find_type(t) == find_type(:pointer)
           "P#{t.length}#{t}"
+        else
+          "#{t.length}#{t}"
         end
       end
 
       # Mangle an identifier, generally a method or class name
       # 
       # @example
-      #   GCC4X.mangle_identifier "ofCircle" # => "8ofCircle"
+      #   mangle_identifier "ofCircle" # => "8ofCircle"
       # 
       # @example
-      #   GCC4X.mangle_identifier :ctor # => "C1"
+      #   mangle_identifier :ctor # => "C1"
       # 
       # @param [#to_s, :ctor, :dtor] i the identifier to mangle.
       #   Construtcors and destructors don't have identifiers, so use
       #   :ctor or :dtor instead
       # @return [String] mangled representation of i
-      def self.mangle_identifier i
+      def mangle_identifier i
         case i
         when :ctor; "C1"
         when :dtor; "D1"
@@ -99,10 +100,10 @@ module FFI::Cpp
       # functions in a C++ shared object
       # 
       # @example
-      #   GCC4X.mangle_function :ofCircle, [:float, :float, :float] # => "_Z8ofCirclefff"
+      #   mangle_function :ofCircle, [:float, :float, :float] # => "_Z8ofCirclefff"
       # 
       # @example
-      #   GCC4X.mangle_function :ofNoFill, [] # => "_Z6ofFillv"
+      #   mangle_function :ofNoFill, [] # => "_Z6ofFillv"
       # 
       # @param name [#to_s] name the name of the function
       # @param params [Array<Symbol>] params the types and order of parameters
@@ -110,7 +111,7 @@ module FFI::Cpp
       #   parameters.
       # 
       # @return [String] mangled function name
-      def self.mangle_function name, params
+      def mangle_function name, params
         name = mangle_identifier name
         params = [:void] if params.empty?
 
@@ -123,7 +124,7 @@ module FFI::Cpp
       # @param klass [#to_s] the object's class
       # 
       # @return [String] mangled instance method name
-      def self.mangle_method klass, method, params
+      def mangle_method klass, method, params
         klass = "#{klass.size}#{klass}"
         method = mangle_identifier method
         params = [:void] if params.empty?
@@ -137,6 +138,7 @@ module FFI::Cpp
   # C++ Library support
   module Library
     include FFI::Library
+    include FFI::Cpp::Manglers::GCC4X # TODO implement system to select correct mangler
 
     # support cpp linkage in attach_function
     alias :attach_c_function :attach_function
@@ -165,7 +167,7 @@ module FFI::Cpp
 
       rescue FFI::NotFoundError
         # try cpp linkage
-        mangled_name = FFI::Cpp::Manglers::GCC4X.mangle_function cname, params
+        mangled_name = mangle_function cname, params
         attach_c_function rbname, mangled_name, params, returns
 
       end
@@ -178,7 +180,7 @@ module FFI::Cpp
     #     attach_constructor :Widget, 682, [:float, :float, :int]
     #   end
     def attach_constructor klass, size, params, mangled_name=nil
-      mangled_name ||= FFI::Cpp::Manglers::GCC4X.mangle_method klass, :ctor, params
+      mangled_name ||= mangle_method klass, :ctor, params
       implicit_params = [:pointer] + params
 
       attach_c_function "#{klass.downcase}_ctor", mangled_name, implicit_params, :void
@@ -197,7 +199,7 @@ module FFI::Cpp
     end
 
     def attach_method klass, name, params, returns, mangled_name=nil
-      mangled_name ||= FFI::Cpp::Manglers::GCC4X.mangle_method klass, name, params
+      mangled_name ||= mangle_method klass, name, params
       implicit_params = [:pointer] + params
 
       attach_c_function "#{klass.downcase}_#{name}", mangled_name, implicit_params, returns

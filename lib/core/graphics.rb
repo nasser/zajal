@@ -168,10 +168,31 @@ module Zajal
     # @param r [Numeric] the amount of red, 0..255
     # @param g [Numeric] the amount of green, 0..255
     # @param b [Numeric] the amount of blue, 0..255
+    # @param a [Numeric] the amount of alpha, 0..255
     # 
     # @return [nil] Nothing
-    def color r, g, b
-      Native.ofSetColor r.to_i, g.to_i, b.to_i
+    def color r, g, b, a=255
+      Native.ofSetColor r.to_i, g.to_i, b.to_i, a.to_i
+    end
+
+    # Clear the canvas to a color
+    # 
+    # @param r [Numeric] the amount of red, 0..255
+    # @param g [Numeric] the amount of green, 0..255
+    # @param b [Numeric] the amount of blue, 0..255
+    # @param a [Numeric] the amount of alpha, 0..255
+    # 
+    # @return [nil] Nothing
+    def clear r, g, b, a=255.0
+      Native.ofClear r.to_f, g.to_f, b.to_f, a.to_f
+    end
+
+    # @api internal
+    def self.included sketch
+      sketch.before_event :draw do
+        Native.ofSetupScreen
+        clear 160, 37, 37
+      end
     end
 
     # FFI hooks to compiled openFrameworks functionality.
@@ -180,13 +201,6 @@ module Zajal
     # functions in +libof.so+.
     module Native
       extend FFI::Cpp::Library
-
-      # TODO move me!
-      ffi_lib "/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib"
-      %w[PocoFoundation PocoNet PocoXML PocoUtil glew tess freeimage freetype].each do |libname|
-        ffi_lib "lib/core/lib/#{libname}.so"
-      end
-
       ffi_lib "lib/core/lib/libof.so"
 
       typedef :pointer, :ofAppBaseWindow
@@ -201,8 +215,7 @@ module Zajal
       attach_function :ofRect, [:float, :float, :float, :float], :void
       attach_function :ofSetLineWidth, [:float], :void
       attach_function :ofTranslate, [:float, :float, :float], :void
-
-      attach_function :ofSetColor, [:int, :int, :int], :void
+      attach_function :ofSetColor, [:int, :int, :int, :int], :void
     end
   end
 end
