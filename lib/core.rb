@@ -1,6 +1,6 @@
 require_relative "core/graphics"
 require_relative "core/typography"
-require_relative "core/color/color"
+require_relative "core/color"
 
 require_relative "core/version"
 require_relative "core/sketch"
