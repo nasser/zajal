@@ -11,17 +11,28 @@ module Zajal
 
     # Release code name, named after the streets where Zajal is being
     # developed
-    NAME    = "Amsterdam"
+    NAME      = "Amsterdam"
 
     def self.print
       puts Zajal::VERSION
-      puts "Rubinius #{Rubinius::VERSION} - Ruby #{RUBY_VERSION}"
-      puts "of version: 7"
+      puts "Rubinius #{Rubinius::VERSION}"
+      puts "Ruby #{RUBY_VERSION}"
+      puts "openFrameworks 00#{Native.ofGetVersionMajor}#{Native.ofGetVersionMinor}"
     end
+
+    module Native
+      extend FFI::Cpp::Library
+
+      ffi_lib "lib/core/lib/libof.so"
+
+      attach_function :ofGetVersionMajor, [], :int
+      attach_function :ofGetVersionMinor, [], :int
+    end
+
   end
 
   # Human readable version string
   # @example
   #   VERSION # => "Zajal 0.4.0 Amsterdam"
-  VERSION = "Zajal - #{Version::MAJOR}.#{Version::MINOR}.#{Version::REVISION} #{Version::NAME}"
+  VERSION = "Zajal #{Version::MAJOR}.#{Version::MINOR}.#{Version::REVISION} #{Version::NAME}"
 end
