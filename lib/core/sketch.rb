@@ -143,6 +143,7 @@ module Zajal
     include Math
     include Zajal
     include Graphics
+    include Images
     include Typography
     include Mathematics
     include Time

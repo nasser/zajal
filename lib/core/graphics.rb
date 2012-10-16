@@ -205,7 +205,7 @@ module Zajal
 
       typedef :pointer, :ofAppBaseWindow
 
-      attach_function :ofSetupOpenGL, [:ofAppBaseWindow, :int, :int, :int], :void
+      attach_function :ofSetupOpenGL, [type(:ofAppBaseWindow).pointer, :int, :int, :int], :void
       attach_function :ofSetupScreen, [], :void
       attach_function :ofEnableAlphaBlending, [], :void
       attach_function :ofDisableAlphaBlending, [], :void
