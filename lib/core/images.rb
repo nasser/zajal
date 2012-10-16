@@ -49,5 +49,30 @@ module Zajal
         attach_method ofImage, :grabScreen, [:int, :int, :int, :int], :void
       end
     end
+
+    # Draw an image
+    # 
+    # This is shorthand for the {Image} class. It creates an image object,
+    # caches it for future use, and draws that image right away. If width and
+    # height are not given, the 
+    # 
+    # @overload image file x, y
+    # @overload image file x, y, width, height
+    # 
+    # @param file [#to_s] The image file to load
+    # @param x [Numeric] the x coordinate to draw the image at
+    # @param y [Numeric] the y coordinate to draw the image at
+    # @param width [Numeric] the width to draw the image at
+    # @param height [Numeric] the height to draw the image at
+    # 
+    # @note In reality, this function reads the first parameter as the file
+    #   to load and passes the rest of the arguments as is to {Image#draw}
+    def image *args
+      @cached_images ||= {}
+
+      file = args.shift
+      @cached_images[file] ||= Image.new file
+      @cached_images[file].draw *args
+    end
   end
 end
