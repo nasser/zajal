@@ -186,6 +186,20 @@ module Zajal
       Native.ofClear r.to_f, g.to_f, b.to_f, 255.0
     end
 
+    def push_matrix
+        Native.ofPushMatrix
+    end
+
+    def pop_matrix
+        Native.ofPushMatrix
+    end
+
+    def matrix
+        push_matrix
+        yield
+        pop_matrix
+    end
+
     # @api internal
     def self.included sketch
       sketch.before_event :draw do
@@ -214,6 +228,9 @@ module Zajal
       attach_function :ofLine, [:float, :float, :float, :float], :void
       attach_function :ofRect, [:float, :float, :float, :float], :void
       attach_function :ofSetLineWidth, [:float], :void
+
+      attach_function :ofPushMatrix, [], :void
+      attach_function :ofPopMatrix, [], :void
       attach_function :ofTranslate, [:float, :float, :float], :void
 
       attach_function :ofSetColor, [:int, :int, :int], :void
