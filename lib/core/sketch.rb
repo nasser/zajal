@@ -142,6 +142,7 @@ module Zajal
 
     include Math
     include Zajal
+    include App
     include Graphics
     include Images
     include Typography

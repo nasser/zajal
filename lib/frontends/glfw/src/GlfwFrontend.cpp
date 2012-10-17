@@ -44,3 +44,12 @@ void GlfwFrontend::setFrameNum(int newFrameCount) {
 void GlfwFrontend::incrementFrameNum() {
   frameCount++;
 }
+
+void GlfwFrontend::hideCursor() {
+  glfwDisable(GLFW_MOUSE_CURSOR);
+}
+
+void GlfwFrontend::showCursor() {
+  glfwEnable(GLFW_MOUSE_CURSOR);
+}
+
