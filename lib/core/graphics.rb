@@ -100,7 +100,16 @@ module Zajal
     # #param y2 [Numeric] the y coordinate of the second point 
     # 
     # @return [nil] Nothing
-    def line x1, y1, x2, y2
+    def line *args
+      x1, y1, x2, y2 = 0, 0, 0, 0
+
+      case args
+      when Signature[[:x,:y] ,[:x,:y]]
+        x1, y1 = args.first.x, args.first.y
+        x2, y2 = args.last.x, args.last.y
+      when Signature[:to_f ,:to_f ,:to_f ,:to_f]
+        x1, y1, x2, y2 = *args
+      end
       Native.ofLine x1.to_f, y1.to_f, x2.to_f, y2.to_f
     end
 

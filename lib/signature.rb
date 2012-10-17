@@ -38,6 +38,7 @@ class Signature
     @signature.zip(other).map { |match, argument|
       case match
       when Symbol; argument.respond_to? match
+      when Array; match.all? { |m| argument.respond_to? m }
       else; match === argument
       end
     }.all?
