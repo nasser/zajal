@@ -4,6 +4,7 @@ class Object
   end
 
   def present?
-    !blank?
+    not blank?
+  end
   end
 end
