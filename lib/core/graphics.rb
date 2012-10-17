@@ -163,6 +163,14 @@ module Zajal
       Native.ofTranslate x.to_f, y.to_f, z.to_f
     end
 
+    def scale x, y, z=0.0
+      Native.ofScale x.to_f, y.to_f, z.to_f
+    end
+
+    def rotate amount
+      Native.ofRotateZ amount.to_f
+    end
+
     # Set the color that subsequent drawing will be done in
     # 
     # @param r [Numeric] the amount of red, 0..255
@@ -171,8 +179,28 @@ module Zajal
     # @param a [Numeric] the amount of alpha, 0..255
     # 
     # @return [nil] Nothing
-    def color r, g, b, a
-      Native.ofSetColor r, g, b, a
+    def color *args
+      r, g, b, a = 255, 255, 255, 255
+
+      case args
+      when Signature[:to_i]
+        r = g = b = args.first
+      when Signature[:to_i, :to_i]
+        r = g = b = args.first
+        a = args.last
+      when Signature[:to_i, :to_i, :to_i]
+        r, g, b = *args
+      when Signature[:to_i, :to_i, :to_i, :to_i]
+        r, g, b, a = *args
+      when Signature[Symbol]
+        warn "Named colors not implemented yet!"
+      when Signature[Symbol, :to_i]
+        warn "Named colors not implemented yet!"
+      else
+        raise ArgumentError, args
+      end
+
+      Native.ofSetColor r.to_i, g.to_i, b.to_i, a.to_i
     end
 
     # Clear the canvas to a color
@@ -200,6 +228,17 @@ module Zajal
         pop_matrix
     end
 
+    def smoothing smooth=nil
+      @smoothing_enabled ||= false
+
+      if smooth.present?
+        @smoothing_enabled = smooth.to_bool
+        @smoothing_enabled ? Native.ofEnableSmoothing : Native.ofDisableSmoothing
+      else
+        @smoothing_enabled
+      end
+    end
+
     # @api internal
     def self.included sketch
       sketch.before_event :draw do
@@ -221,8 +260,12 @@ module Zajal
 
       attach_function :ofSetupOpenGL, [type(:ofAppBaseWindow).pointer, :int, :int, :int], :void
       attach_function :ofSetupScreen, [], :void
+
       attach_function :ofEnableAlphaBlending, [], :void
       attach_function :ofDisableAlphaBlending, [], :void
+      attach_function :ofEnableSmoothing, [], :void
+      attach_function :ofDisableSmoothing, [], :void
+
       attach_function :ofCircle, [:float, :float, :float, :float], :void
       attach_function :ofClear, [:float, :float, :float, :float], :void
       attach_function :ofLine, [:float, :float, :float, :float], :void
@@ -232,6 +275,8 @@ module Zajal
       attach_function :ofPushMatrix, [], :void
       attach_function :ofPopMatrix, [], :void
       attach_function :ofTranslate, [:float, :float, :float], :void
+      attach_function :ofScale, [:float, :float, :float], :void
+      attach_function :ofRotateZ, [:float], :void
 
       attach_function :ofSetColor, [:int, :int, :int], :void
       attach_function :ofSetColor, [:int, :int, :int, :int], :void
