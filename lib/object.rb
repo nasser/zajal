@@ -6,5 +6,8 @@ class Object
   def present?
     not blank?
   end
+
+  def to_bool
+    self ? true : false
   end
 end
