@@ -265,30 +265,150 @@ module Zajal
 
       ffi_lib "lib/core/lib/libof.so"
 
+      enum :ofOrientation,
+       [:default,
+        :oneEighty,
+        :ninety_left,
+        :ninety_right,
+        :unknown]
+      enum :ofHandednessType,
+       [:left,
+        :right]
+      enum :ofRectMode,
+       [:corner,
+        :center]
+      enum :ofFillFlag,
+       [:outline,
+        :filled]
+      enum :ofBlendMode,
+       [:disabled,
+        :alpha,
+        :add,
+        :subtract,
+        :multiply,
+        :screen]
+      enum :ofPolyWindingMode,
+       [:odd,
+        :nonzero,
+        :positive,
+        :negative,
+        :abs_geq_two]
+
+      typedef :pointer, :ofRectangle
+      typedef :pointer, :ofStyle
       typedef :pointer, :ofAppBaseWindow
 
+      # TODO technically, this is not a Graphics method. Move it.
       attach_function :ofSetupOpenGL, [type(:ofAppBaseWindow).pointer, :int, :int, :int], :void
-      attach_function :ofSetupScreen, [], :void
 
-      attach_function :ofEnableAlphaBlending, [], :void
-      attach_function :ofDisableAlphaBlending, [], :void
-      attach_function :ofEnableSmoothing, [], :void
-      attach_function :ofDisableSmoothing, [], :void
+      # pdf screenshot
+      attach_function :ofBeginSaveScreenAsPDF, [:stdstring, :bool, :bool, :ofRectangle], :void
+      attach_function :ofEndSaveScreenAsPDF, [], :void
 
-      attach_function :ofCircle, [:float, :float, :float, :float], :void
-      attach_function :ofClear, [:float, :float, :float, :float], :void
-      attach_function :ofLine, [:float, :float, :float, :float], :void
-      attach_function :ofRect, [:float, :float, :float, :float], :void
-      attach_function :ofSetLineWidth, [:float], :void
+      #  view transformations
+      attach_function :ofPushView, [], :void
+      attach_function :ofPopView, [], :void
 
+      #  matrices and viewport
+      attach_function :ofViewport, [:float, :float, :float, :float, :bool], :void
+      attach_function :ofSetupScreenPerspective, [:float, :float, :ofOrientation, :bool, :float, :float, :float], :void
+      attach_function :ofSetupScreenOrtho, [:float, :float, :ofOrientation, :bool, :float, :float], :void
+      attach_function :ofGetCurrentViewport, [], :ofRectangle
+      attach_function :ofGetViewportWidth, [], :int
+      attach_function :ofGetViewportHeight, [], :int
+      attach_function :ofOrientationToDegrees, [:ofOrientation], :int
+      attach_function :ofSetCoordHandedness, [:ofHandednessType], :void
+      attach_function :ofGetCoordHandedness, [], :ofHandednessType
+
+      # transformations
       attach_function :ofPushMatrix, [], :void
       attach_function :ofPopMatrix, [], :void
       attach_function :ofTranslate, [:float, :float, :float], :void
       attach_function :ofScale, [:float, :float, :float], :void
+      attach_function :ofRotate, [:float, :float, :float, :float], :void
+      attach_function :ofRotateX, [:float], :void
+      attach_function :ofRotateY, [:float], :void
       attach_function :ofRotateZ, [:float], :void
 
-      attach_function :ofSetColor, [:int, :int, :int], :void
-      attach_function :ofSetColor, [:int, :int, :int, :int], :void
+      #  screen coordinates / default gl values
+      attach_function :ofSetupGraphicDefaults, [], :void
+      attach_function :ofSetupScreen, [], :void
+
+      #  drawing modes
+      attach_function :ofGetRectMode, [], :ofRectMode
+      attach_function :ofSetCircleResolution, [:int], :void
+      attach_function :ofSetCurveResolution, [:int], :void
+      attach_function :ofSetSphereResolution, [:int], :void
+
+
+      #  drawing options
+      attach_function :ofNoFill, [], :void
+      attach_function :ofFill, [], :void
+      attach_function :ofGetFill, [], :ofFillFlag
+      attach_function :ofSetLineWidth, [:float], :void
+
+      #  color options
+      attach_function :ofSetColor, [:int, :int, :int, :int], :void 
+      attach_function :ofSetHexColor, [:int], :void
+
+      #  Blending
+      attach_function :ofEnableBlendMode, [:ofBlendMode], :void
+      attach_function :ofDisableBlendMode, [], :void
+
+      #  point
+      attach_function :ofEnablePointSprites, [], :void
+      attach_function :ofDisablePointSprites, [], :void
+
+      #  transparency
+      attach_function :ofEnableAlphaBlending, [], :void
+      attach_function :ofDisableAlphaBlending, [], :void
+
+      #  smooth 
+      attach_function :ofEnableSmoothing, [], :void
+      attach_function :ofDisableSmoothing, [], :void
+
+      #  drawing style
+      attach_function :ofGetStyle, [], :ofStyle
+      attach_function :ofSetStyle, [:ofStyle], :void
+      attach_function :ofPushStyle, [], :void
+      attach_function :ofPopStyle, [], :void
+      attach_function :ofSetPolyMode, [:ofPolyWindingMode], :void
+      attach_function :ofSetRectMode, [:ofRectMode], :void
+
+      #  background
+      attach_function :ofBgColorPtr, [], :pointer
+      attach_function :ofBackground, [:int, :int, :int, :int], :void
+      attach_function :ofBackgroundHex, [:int, :int], :void
+      # attach_function :ofBackgroundGradient, [const ofColor& start, const ofColor& end, ofGradientMode mode], :void
+      attach_function :ofSetBackgroundColor, [:int, :int, :int, :int], :void
+      attach_function :ofSetBackgroundColorHex, [:int, :int], :void
+      attach_function :ofSetBackgroundAuto, [:bool], :void
+      attach_function :ofClear, [:float, :float, :float, :float], :void
+      attach_function :ofClearAlpha, [], :void
+      attach_function :ofbClearBg, [], :bool
+
+      #  geometry
+      attach_function :ofTriangle, [:float, :float, :float, :float, :float, :float, :float, :float, :float], :void
+      attach_function :ofCircle, [:float, :float, :float, :float], :void
+      attach_function :ofEllipse, [:float, :float, :float, :float, :float], :void
+      attach_function :ofLine, [:float, :float, :float, :float, :float, :float], :void
+      attach_function :ofRect, [:float, :float, :float, :float, :float], :void
+      attach_function :ofRectRounded, [:float, :float, :float, :float, :float, :float], :void
+      attach_function :ofCurve, [:float, :float, :float, :float, :float, :float, :float, :float, :float, :float, :float, :float], :void
+      attach_function :ofBezier, [:float, :float, :float, :float, :float, :float, :float, :float, :float, :float, :float, :float], :void
+
+      # polygons
+      attach_function :ofBeginShape, [], :void
+      attach_function :ofVertex, [:float, :float, :float], :void
+      attach_function :ofCurveVertex, [:float, :float], :void
+      attach_function :ofBezierVertex, [:float, :float, :float, :float, :float, :float, :float, :float, :float], :void
+      attach_function :ofEndShape, [:bool], :void
+      attach_function :ofNextContour, [:bool], :void
+
+      # 3d
+      attach_function :ofSphere, [:float, :float, :float, :float], :void
+      attach_function :ofBox, [:float, :float, :float, :float], :void
+      attach_function :ofCone, [:float, :float, :float, :float, :float], :void
     end
   end
 end
