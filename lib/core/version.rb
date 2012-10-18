@@ -15,7 +15,7 @@ module Zajal
 
     def self.print
       puts Zajal::VERSION
-      puts "Rubinius #{Rubinius::VERSION}"
+      # puts "Rubinius #{Rubinius::VERSION}"
       puts "Ruby #{RUBY_VERSION}"
       puts "openFrameworks 00#{Native.ofGetVersionMajor}#{Native.ofGetVersionMinor}"
     end

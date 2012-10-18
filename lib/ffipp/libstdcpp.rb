@@ -2,6 +2,9 @@ module FFI::Cpp
   module Std
     extend FFI::Cpp::Library
 
+    ffi_lib_flags :global
+    ffi_lib FFI::CURRENT_PROCESS
+
     # TODO autogenerate std::string constructor mangled name
     # _Z         N      Ss          C1          E        PKc         RKSa                 Ic     E
     # Start name Nested std::string Constructor End name const char* const &std::allocator<char> End all

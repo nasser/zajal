@@ -109,9 +109,9 @@ module FFI::Cpp
       class Type < MangledSymbol
         bool_attr :const, :pointer, :reference
 
-        def initialize sym
-          @unmangled_symbol = sym
-          @mangled_identifier = MangledTypes.has_key?(sym) ? MangledTypes[sym] : "#{sym.length}#{sym}"
+        def initialize t
+          @unmangled_symbol = t
+          @mangled_identifier = MangledTypes.has_key?(t.to_sym) ? MangledTypes[t.to_sym] : "#{t.length}#{t}"
         end
 
         def template *params
@@ -220,9 +220,9 @@ module FFI::Cpp
 
       begin
         # try c linkage
-        attach_c_function rbname, cname, params, returns
+        attach_c_function rbname, cname, params.dup, returns
 
-      rescue FFI::NotFoundError
+      rescue FFI::NotFoundError, TypeError
         # try cpp linkage
         mangled_name = mangle_function cname, params
         attach_c_function rbname, mangled_name, params.map { |p| p.to_sym }, returns
