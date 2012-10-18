@@ -1,3 +1,6 @@
+require 'ostruct'
+require 'open-uri'
+
 require_relative "ffipp"
 require_relative "signature"
 require_relative "object"
