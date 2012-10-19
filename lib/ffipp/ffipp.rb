@@ -53,44 +53,105 @@ module FFI::Cpp
 
       FFI.add_typedef :pointer, :stdstring
 
-      # Mangle a type
-      # 
-      # Used by {GCC4X#mangle_function} and {GCC4X#mangle_method} to
-      # generate signatures out of arrays of symbols.
-      # 
-      # @example
-      #   [:int, :int, :float].map { |t| mangle_type(t) }.join # => "iif"
-      # 
-      # @param [Symbol] t Type to mangle. One of the symbols in
-      #   {MangledTypes}
-      # @return [String] mangled representation of +t+
-      def mangle_type t
-        if MangledTypes.has_key? t
-          MangledTypes[t] 
-        elsif find_type(t) == find_type(:pointer)
-          "P#{t.length}#{t}"
-        else
-          "#{t.length}#{t}"
+      # Base class for mangled symbols, including types and identifiers
+      class MangledSymbol
+        def self.bool_attr *args
+          args.each do |sym|
+            self.module_eval <<-code
+              def #{sym}; @#{sym} = true; self end
+              def #{sym}?; @#{sym} end
+            code
+          end
+        end
+
+        def self.new *args
+          if args.first.is_a? self
+            args.first
+          else
+            super *args
+          end
+        end
+
+        def self.ary ary
+          ary.map { |a| self.new(a) }
+        end
+
+        # TODO dubious
+        def to_s
+          mangle
+        end
+
+        def to_sym
+          @unmangled_symbol
+        end
+
+        def actually sym
+          @unmangled_symbol = sym
+          self
         end
       end
 
-      # Mangle an identifier, generally a method or class name
-      # 
-      # @example
-      #   mangle_identifier "ofCircle" # => "8ofCircle"
-      # 
-      # @example
-      #   mangle_identifier :ctor # => "C1"
-      # 
-      # @param [#to_s, :ctor, :dtor] i the identifier to mangle.
-      #   Construtcors and destructors don't have identifiers, so use
-      #   :ctor or :dtor instead
-      # @return [String] mangled representation of i
-      def mangle_identifier i
-        case i
-        when :ctor; "C1"
-        when :dtor; "D1"
-        else; "#{i.size}#{i}"
+      # A mangled identifier, such as a method name
+      class Identifier < MangledSymbol
+        def initialize sym
+          @mangled_identifier = case sym
+          when :ctor; "C1"
+          when :dtor; "D1"
+          else; "#{sym.size}#{sym}"
+          end
+        end
+
+        def mangle
+          @mangled_identifier
+        end
+      end
+
+      class Type < MangledSymbol
+        bool_attr :const, :pointer, :reference
+
+        def initialize sym
+          @unmangled_symbol = sym
+          @mangled_identifier = MangledTypes.has_key?(sym) ? MangledTypes[sym] : "#{sym.length}#{sym}"
+        end
+
+        def template *params
+          @template = true
+          @template_params = Type.ary(params)
+          self
+        end
+
+        def template?
+          @template
+        end
+
+        def mangle
+          "#{'P' if pointer?}" +
+          "#{'R' if reference?}" +
+          "#{'K' if const?}" + 
+          @mangled_identifier +
+          "#{'I' + @template_params.map { |t| t.mangle }.join + 'E' if template?}"
+        end
+      end
+
+      class Function < MangledSymbol
+        def initialize name, params
+          @name = name
+          @params = params.empty? ? [Type.new(:void)] : params
+        end
+
+        def mangle
+          "_Z#{@name.mangle}#{@params.map { |p| p.mangle }.join}"
+        end
+      end
+
+      class Method < Function
+        def initialize klass, name, params
+          super name, params
+          @klass = klass
+        end
+
+        def mangle
+          "_ZN#{@klass.mangle}#{@name.mangle}E#{@params.map { |p| p.mangle }.join}"
         end
       end
 
@@ -112,10 +173,7 @@ module FFI::Cpp
       # 
       # @return [String] mangled function name
       def mangle_function name, params
-        name = mangle_identifier name
-        params = [:void] if params.empty?
-
-        "_Z#{name}#{params.map { |p| mangle_type(p) }.join}"
+        Function.new(Identifier.new(name), Type.ary(params)).to_s
       end
 
       # Mangle an instance method name
@@ -124,14 +182,9 @@ module FFI::Cpp
       # @param klass [#to_s] the object's class
       # 
       # @return [String] mangled instance method name
-      def mangle_method klass, method, params
-        klass = "#{klass.size}#{klass}"
-        method = mangle_identifier method
-        params = [:void] if params.empty?
-
-        "_ZN#{klass}#{method}E#{params.map { |p| mangle_type(p) }.join}"
+      def mangle_method klass, name, params
+        Method.new(Type.new(klass), Identifier.new(name), Type.ary(params)).to_s
       end
-
     end
   end
 
@@ -139,6 +192,10 @@ module FFI::Cpp
   module Library
     include FFI::Library
     include FFI::Cpp::Manglers::GCC4X # TODO implement system to select correct mangler
+
+    def type t
+      Type.new(t)
+    end
 
     # support cpp linkage in attach_function
     alias :attach_c_function :attach_function
@@ -168,7 +225,7 @@ module FFI::Cpp
       rescue FFI::NotFoundError
         # try cpp linkage
         mangled_name = mangle_function cname, params
-        attach_c_function rbname, mangled_name, params, returns
+        attach_c_function rbname, mangled_name, params.map { |p| p.to_sym }, returns
 
       end
     end
@@ -183,16 +240,16 @@ module FFI::Cpp
       mangled_name ||= mangle_method klass, :ctor, params
       implicit_params = [:pointer] + params
 
-      attach_c_function "#{klass.downcase}_ctor", mangled_name, implicit_params, :void
+      attach_c_function "#{klass.to_sym.downcase}_ctor", mangled_name, implicit_params.map { |p| p.to_sym }, :void
 
       self.module_eval <<-code
-        def self.#{klass.downcase}_alloc
+        def self.#{klass.to_sym.downcase}_alloc
           FFI::MemoryPointer.new(:pointer, #{size})
         end
 
-        def self.#{klass.downcase}_new *args
-          instance = #{klass.downcase}_alloc
-          #{klass.downcase}_ctor(instance, *args)
+        def self.#{klass.to_sym.downcase}_new *args
+          instance = #{klass.to_sym.downcase}_alloc
+          #{klass.to_sym.downcase}_ctor(instance, *args)
           instance
         end
       code
@@ -202,7 +259,7 @@ module FFI::Cpp
       mangled_name ||= mangle_method klass, name, params
       implicit_params = [:pointer] + params
 
-      attach_c_function "#{klass.downcase}_#{name}", mangled_name, implicit_params, returns
+      attach_c_function "#{klass.to_sym.downcase}_#{name}", mangled_name, implicit_params.map { |p| p.to_sym }, returns
     end
   end
 end

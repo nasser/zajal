@@ -19,8 +19,21 @@ module Zajal
 
       ffi_lib "lib/core/lib/libof.so"
 
+      attach_function :ofDegToRad, [:float], :float
+      attach_function :ofRadToDeg, [:float], :float
+
       attach_function :ofNoise, [:float, :float, :float, :float], :float
       attach_function :ofSignedNoise, [:float, :float, :float, :float], :float
     end
+  end
+end
+
+class Numeric
+  def to_deg
+    Zajal::Mathematics::Native.ofRadToDeg self.to_f
+  end
+
+  def to_rad
+    Zajal::Mathematics::Native.ofDegToRad self.to_f
   end
 end
