@@ -4,3 +4,7 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.order = 'random'
 end
+
+# Require all extensions up front. They'll also assist in
+# writing tests.
+Dir[File.join(File.dirname(__FILE__), '..', 'lib', 'extensions', '*.rb')].each {|file| require file }

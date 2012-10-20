@@ -1,5 +1,5 @@
-require_relative 'spec_helper'
-require_relative '../lib/object'
+require_relative '../spec_helper'
+require_relative '../../lib/extensions/object'
 
 describe Object do
   describe "#blank?" do
