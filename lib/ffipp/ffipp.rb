@@ -58,7 +58,7 @@ module FFI::Cpp
         def self.bool_attr *args
           args.each do |sym|
             self.module_eval <<-code
-              def #{sym}; @#{sym} = true; self end
+              def #{sym}; ret = self.dup; ret.instance_variable_set :@#{sym}, true; ret end
               def #{sym}?; @#{sym} end
             code
           end
