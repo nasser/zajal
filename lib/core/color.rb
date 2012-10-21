@@ -8,17 +8,17 @@
 # so on. This moves the color-guessing functionality out of the graphic wrappers to
 # OpenFramework.
 class Color
-  require_relative 'color/rgb'
-  require_relative 'color/hsv'
-  require_relative 'color/grayscale'
-  require_relative 'color/named_color'
+  Dir[File.join(File.dirname(__FILE__), 'color', '*.rb')].each {|file| require file }
+
   # Initializes a new Color subclass instance. It attempts to discern the color type
   # by the arguments supplied.
   # 
+  # @param :type [Symbol] the type of color given
   # @param *args [Array]
   # 
-  # @return [Color::RGB] a new Color::RGB instance
-  def self.new(*args)
-    Color::RGB.new(args)
+  # @return [Color::___] a new instance of a child of the Color class
+  def self.new(type, *args)
+    type ||= "rgb"
+    Color.const_get(type.to_s.camelize).new(*args)
   end
 end

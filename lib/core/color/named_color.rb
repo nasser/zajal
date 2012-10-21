@@ -174,11 +174,11 @@ class Color::NamedColor
     {name: @name, a: @a}
   end
 
-  # Returns a Color::RGB instance to closely match the named color.
+  # Returns a Color::Rgb instance to closely match the named color.
   # 
-  # @return [Color::RGB]
+  # @return [Color::Rgb]
   def to_rgb
     r, g, b = COLORS[name]
-    Color::RGB.new(r, g, b, @a)
+    Color::Rgb.new(r, g, b, @a)
   end
 end

@@ -13,10 +13,10 @@ class Color::Grayscale
     @a = a
   end
 
-  # Returns a Color::RGB instance in this shade of gray.
+  # Returns a Color::Rgb instance in this shade of gray.
   # 
-  # @return [Color::RGB]
+  # @return [Color::Rgb]
   def to_rgb
-    Color::RGB.new(@level, @level, @level, @a)
+    Color::Rgb.new(@level, @level, @level, @a)
   end
 end

@@ -11,7 +11,7 @@ describe Color::NamedColor do
   end
 
   describe "#to_rgb" do
-    it "should create a new Color::RGB instance matching the named color" do
+    it "should create a new Color::Rrb instance matching the named color" do
       subject.to_rgb.to_a.should == [70, 130, 180, 40]
     end
   end

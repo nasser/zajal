@@ -1,6 +1,6 @@
-# Color::RGB stores colors by their Red, Green, and Blue separations, and the
+# Color::Rgb stores colors by their Red, Green, and Blue separations, and the
 # transparency (alpha) level for display.
-class Color::RGB
+class Color::Rgb
   attr_accessor :r, :g, :b, :a
 
   # Create a new Color object. 
@@ -10,12 +10,27 @@ class Color::RGB
   # @param b [Numeric] the amount of blue, 0..255
   # @param a [Numeric] the amount of alpha, 0..255
   # 
-  # @return [Color::RGB] a new Color::RGB instance
-  def initialize(r=0, g=0, b=0, a=255)
-    @r = r
-    @g = g
-    @b = b
-    @a = a
+  # @return [Color::Rgb] a new Color::Rgb instance
+  def initialize(*args)
+    @r, @g, @b, @a = 255, 255, 255, 255
+
+    case args
+    when Signature[:to_i]
+      @r = @g = @b = args.first
+    when Signature[:to_i, :to_i]
+      @r = @g = @b = args.first
+      @a = args.last
+    when Signature[:to_i, :to_i, :to_i]
+      @r, @g, @b = *args
+    when Signature[:to_i, :to_i, :to_i, :to_i]
+      @r, @g, @b, @a = *args
+    when Signature[Symbol]
+      @r, @g, @b, @a = Color::NamedColor.new(args.first).to_rgb
+    when Signature[Symbol, :to_i]
+      @r, @g, @b, @a = Color::NamedColor.new(args.first, args.last).to_rgb
+    else
+      raise ArgumentError, args
+    end
   end
 
   # Returns the RGBa values in an array.
@@ -32,10 +47,14 @@ class Color::RGB
     {r: @r, g: @g, b: @b, a: @a}
   end
 
-  # Returns a Color::HSV instance that should closely match
+  def to_rgb
+    self
+  end
+
+  # Returns a Color::Hsv instance that should closely match
   # an instance's RGB values.
   # 
-  # @return [Color::HSV]
+  # @return [Color::Hsv]
   def to_hsv
     r, g, b = @r / 255, @g / 255, @b / 255
     max, min = [r, g, b].max, [r, g, b].min
@@ -55,6 +74,6 @@ class Color::RGB
       h = h / 6
     end
 
-    Color::HSV.new(h * 255, s * 255, v * 255, @a)
+    Color::Hsv.new(h * 255, s * 255, v * 255, @a)
   end
 end

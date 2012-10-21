@@ -3,8 +3,8 @@ require_relative '../../../lib/core/color'
 
 describe Color do
   describe "#new" do
-    it "should create a new Color::RGB instance given RGBA values" do
-      Color.new(1, 2, 3, 4).should be_kind_of(Color::RGB)
+    it "should create a new Color::Rgb instance given RGBA values" do
+      Color.new(:rgb, 1, 2, 3, 4).should be_kind_of(Color::Rgb)
     end
   end
 end
