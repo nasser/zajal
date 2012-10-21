@@ -635,6 +635,12 @@ module Zajal
       Native.ofEndShape close.to_bool
     end
 
+    def shape close=true
+      begin_shape
+      yield
+      end_shape close
+    end
+
     def next_contour close=true
       Native.ofNextContour close.to_bool
     end
