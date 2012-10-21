@@ -47,7 +47,7 @@ module Zajal
       # 
       # @return [nil] nothing
       def save path, quality=:best
-        Native.ofimage_loadImage @pointer, File.expand_path(path.to_s).to_ptr, quality
+        Native.ofimage_saveImage @pointer, File.expand_path(path.to_s).to_ptr, quality
       end
 
       def grab_screen x, y, w, h
