@@ -7,6 +7,7 @@ require_relative "core/app"
 require_relative "core/graphics"
 require_relative "core/images"
 require_relative "core/typography"
+require_relative "core/color"
 require_relative "core/mathematics"
 require_relative "core/time"
 

@@ -7,6 +7,7 @@ module Zajal
   # 
   # @see http://www.openframeworks.cc/documentation/graphics/ofGraphics.html
   module Graphics
+
     # Draw a circle
     # 
     # @example Single circle
@@ -293,27 +294,22 @@ module Zajal
     # 
     # @return [nil] Nothing
     def color *args
-      r, g, b, a = 255, 255, 255, 255
-
-      case args
-      when Signature[:to_i]
-        r = g = b = args.first
-      when Signature[:to_i, :to_i]
-        r = g = b = args.first
-        a = args.last
-      when Signature[:to_i, :to_i, :to_i]
-        r, g, b = *args
-      when Signature[:to_i, :to_i, :to_i, :to_i]
-        r, g, b, a = *args
-      when Signature[Symbol]
-        warn "Named colors not implemented yet!"
-      when Signature[Symbol, :to_i]
-        warn "Named colors not implemented yet!"
-      else
-        raise ArgumentError, args
-      end
-
+      r, g, b, a = Color.new(@color_mode, *args).to_rgb.to_a
       Native.ofSetColor r.to_i, g.to_i, b.to_i, a.to_i
+    end
+
+    # Set the color mode
+    # 
+    # You can set the color mode to anything defined as a subclass of Color, including HSV or RGB.
+    # 
+    # @param mode [Symbol]
+    # 
+    # @return [Symbol] the new alpha blending value
+    def color_mode mode=nil
+      @color_mode ||= :rgb
+
+      @color_mode = mode.to_sym if mode.present?
+      @color_mode
     end
 
     # Clear the canvas to a color
@@ -321,10 +317,12 @@ module Zajal
     # @param r [Numeric] the amount of red, 0..255
     # @param g [Numeric] the amount of green, 0..255
     # @param b [Numeric] the amount of blue, 0..255
+    # @param a [Numeric] the amount of alpha, 0..255
     # 
     # @return [nil] Nothing
-    def clear r, g, b
-      Native.ofClear r.to_f, g.to_f, b.to_f, 255.0
+    def clear *args
+      r, g, b, a = Color.new(@color_type, *args).to_rgb.to_a
+      Native.ofClear r.to_f, g.to_f, b.to_f, a.to_f
     end
 
     def push_matrix
@@ -809,7 +807,6 @@ module Zajal
     # functions in +libof.so+.
     module Native
       extend FFI::Cpp::Library
-
       ffi_lib "lib/core/lib/libof.so"
 
       enum :ofOrientation,
