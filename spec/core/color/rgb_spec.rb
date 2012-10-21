@@ -1,8 +1,8 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/core/color'
 
-describe Color::RGB do
-  subject {Color::RGB.new(255, 128, 64, 32)}
+describe Color::Rgb do
+  subject {Color::Rgb.new(255, 128, 64, 32)}
   describe "#to_a" do
     it "should return an array of RGBA values" do
       subject.to_a.should == [255, 128, 64, 32]
@@ -16,8 +16,8 @@ describe Color::RGB do
   end
 
   describe "#to_rgb" do
-    it "should create a new Color::RGB instance at an accurate HSV value" do
-      Color::RGB.new(255, 0, 0, 40).to_hsv.to_a.should == [0, 255, 255, 40]
+    it "should create a new Color::Rgb instance at an accurate HSV value" do
+      Color::Rgb.new(255, 0, 0, 40).to_hsv.to_a.should == [0, 255, 255, 40]
     end
   end
 end
