@@ -7,16 +7,11 @@ module Zajal
     # the main loop.
     # 
     # @api internal
-    class Glfw
+    class Glfw < Frontend
       class Sketch < Zajal::Sketch
         support_event :mouse_down, :mouse_pressed, :mouse_up, :mouse_moved
         support_event :key_down, :key_pressed, :key_up
       end
-
-      # The sketch to render
-      # 
-      # A sketch must be set before {#run} is called.
-      attr_accessor :sketch
 
       # Create a new Glfw frontend, and open a window with size +(width,height)+
       # 
@@ -63,6 +58,16 @@ module Zajal
             Native.glfwfrontend_setFrameNum @pointer, 0
           end
         end
+      end
+
+      def run_once
+        @sketch.setup
+        @sketch.update
+        @sketch.draw
+
+        screenshot = Zajal::Images::Image.new
+        screenshot.grab_screen 0, 0, @sketch.width, @sketch.height
+        screenshot.save "~/Desktop/screen.png"
       end
 
       module Native
