@@ -666,23 +666,17 @@ module Zajal
     end
 
     def curve_vertex *args
-      x = y = z = 0
+      x = y = 0
 
       case args
-      when Signature[[:x,:y,:z]]
-        x, y, z, = args.first.x, args.first.y, args.first.z
-
       when Signature[[:x,:y]]
         x, y = args.first.x, args.first.y
 
       when Signature[:to_f, :to_f]
         x, y = *args
-
-      when Signature[:to_f, :to_f, :to_f]
-        x, y, z = *args
       end
 
-      Native.ofCurveVertex x.to_f, y.to_f, z.to_f
+      Native.ofCurveVertex x.to_f, y.to_f
     end
 
     def bezier_vertex *args
