@@ -1,0 +1,80 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require 'ostruct'
+require 'tempfile'
+require "base64"
+
+def temp_name name
+  Tempfile::Dir::Tmpname.make_tmpname Tempfile::Dir::Tmpname.tmpdir, name
+end
+
+require_relative "../lib/zajal"
+
+options = OpenStruct.new
+OptionParser.new do |opts|
+  opts.banner = "Usage: #{$0} -f sketch.zj -o screenshot.png"
+
+  options.width = 100
+  options.height = 100
+  options.b64 = false
+  options.file = nil
+  options.output = nil
+
+  opts.on( "-f", "--file FILE", String, "Script file to render" ) do |f|
+    options.file = File.expand_path(f)
+  end
+
+  opts.on("-o", "--output file.png", "Path to write resulting image to") do |o|
+    options.output = File.expand_path(o)
+  end
+
+  opts.on("-w", "--width W", "Width of the rendering, defaults to 100") do |w|
+    options.width = w
+  end
+
+  opts.on("-h", "--height H", "Height of the rendering, defaults to 100") do |h|
+    options.height = h
+  end
+
+  opts.on("-b", "--base64", "Write base64 encoded image to STDOUT") do |b|
+    options.b64 = true
+  end
+
+  opts.on( "-?", "--help", "Display this message" ) do |v|
+    puts opts.help
+    exit
+  end
+end.parse!
+
+# output defaults to {input}-screenshot.png
+if options.output.nil? and not options.file.nil?
+  options.output = "#{File.basename(options.file)}-screenshot.png"
+end
+
+options.file = if options.file.nil?
+  # use stdin if no file specified
+  tempfile = Tempfile.new "zajal-render-sketch"
+  tempfile.write STDIN.read
+  tempfile.close
+
+  tempfile.path
+else
+  options.file
+end
+
+# render sketch
+zj = Zajal::Frontends::Headless.new options.width, options.height
+zj.sketch = Zajal::Frontends::Headless::Sketch.new options.file
+zj.run
+
+if options.b64
+  # dump b64 to stdout
+  path = temp_name "screenshot.png"
+  zj.fbo.to_pixels.save path
+  puts Base64.encode64(open(path).read)
+  
+  File.unlink path
+else
+  # save image to disk
+  zj.fbo.to_pixels.save options.output
+end
