@@ -1,9 +1,9 @@
 module Zajal
   module Graphics
     class Fbo
-      def initialize width, height
+      def initialize width, height, samples=0
         @pointer = Native.offbo_new
-        Native.offbo_allocate @pointer, width.to_i, height.to_i, 0x1908, 0 # GL_RGBA=0x1908
+        Native.offbo_allocate @pointer, width.to_i, height.to_i, 0x1908, samples # GL_RGBA=0x1908
       end
 
       def to_ptr
