@@ -1,10 +1,10 @@
-#ifndef _HeadlessFrontend_h_header
-#define _HeadlessFrontend_h_header
+#ifndef _MinimalFrontend_h_header
+#define _MinimalFrontend_h_header
 
 #include "ofAppBaseWindow.h"
 
-class HeadlessFrontend : public ofAppBaseWindow {
-  HeadlessFrontend();
+class MinimalFrontend : public ofAppBaseWindow {
+  MinimalFrontend();
 
   void  setupOpenGL(int w, int h, int screenMode);
   int width, height;
@@ -15,4 +15,4 @@ class HeadlessFrontend : public ofAppBaseWindow {
   // void  setWindowShape(int w, int h);
 };
 
-#endif /* _HeadlessFrontend_h_header */
+#endif /* _MinimalFrontend_h_header */

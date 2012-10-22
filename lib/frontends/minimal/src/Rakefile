@@ -1,0 +1,6 @@
+require_relative "../../../../tools/of-includes"
+
+desc "Build frontend to ../lib/MinimalFrontend.so"
+task :build, :of_dir do |t, args|
+  sh "gcc -shared #{of_includes(args[:of_dir])} -undefined suppress -flat_namespace MinimalFrontend.mm -o ../lib/MinimalFrontend.so -framework Cocoa -framework OpenGL"
+end

@@ -1,12 +1,12 @@
-#include "HeadlessFrontend.h"
+#include "MinimalFrontend.h"
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
 #import <OpenGL/CGLMacro.h>
 
-HeadlessFrontend::HeadlessFrontend() {}
+MinimalFrontend::MinimalFrontend() {}
 
-void HeadlessFrontend::setupOpenGL(int w, int h, int screenMode) {
+void MinimalFrontend::setupOpenGL(int w, int h, int screenMode) {
     // http://lists.apple.com/archives/mac-opengl/2010/Jun/msg00080.html
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -24,22 +24,15 @@ void HeadlessFrontend::setupOpenGL(int w, int h, int screenMode) {
     id ctx = [[NSOpenGLContext alloc] initWithFormat:pf shareContext:nil];
     [ctx makeCurrentContext];
 
-    CGLContextObj cgl_ctx = (CGLContextObj)[ctx CGLContextObj];
-
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0.0, w, 0.0, h, -1, 1);
-
     width = w;
     height = h;
 }
 
-int HeadlessFrontend::getWidth() {
+int MinimalFrontend::getWidth() {
     return width;
 }
 
-int HeadlessFrontend::getHeight() {
+int MinimalFrontend::getHeight() {
     return height;
 }
 
