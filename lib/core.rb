@@ -5,6 +5,8 @@ end
 
 require_relative "core/app"
 require_relative "core/graphics"
+require_relative "core/fbo"
+require_relative "core/pixels"
 require_relative "core/images"
 require_relative "core/typography"
 require_relative "core/mathematics"
