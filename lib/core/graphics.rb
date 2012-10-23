@@ -294,8 +294,11 @@ module Zajal
     # 
     # @return [nil] Nothing
     def color *args
-      r, g, b, a = Color.new(@color_mode, *args).to_rgb.to_a
+      @color = Color.new(color_mode, *args)
+
+      r, g, b, a = @color.to_rgb.to_a
       Native.ofSetColor r.to_i, g.to_i, b.to_i, a.to_i
+      @color
     end
 
     # Set the color mode
@@ -320,7 +323,7 @@ module Zajal
     # 
     # @return [nil] Nothing
     def clear *args
-      r, g, b, a = Color.new(@color_type, *args).to_rgb.to_a
+      r, g, b, a = Color.new(color_mode, *args).to_rgb.to_a
       Native.ofClear r.to_f, g.to_f, b.to_f, a.to_f
     end
 
