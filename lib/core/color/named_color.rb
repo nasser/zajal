@@ -158,8 +158,8 @@ class Color::NamedColor
   # @param a [Numeric] the amount of alpha, 0..255
   # 
   # @return [Color::NamedColor] a new Color::NamedColor instance
-  def initialize(name="Black", a=255)
-    name = name.to_s
+  def initialize(name, a=255)
+    name = name.to_sym
     if ! COLOR_NAMES.include? name
       raise "Color name could not be found!: #{name}"
     end
