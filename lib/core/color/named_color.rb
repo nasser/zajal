@@ -181,4 +181,8 @@ class Color::NamedColor
     r, g, b = COLORS[name]
     Color::Rgb.new(r, g, b, @a)
   end
+
+  def to_hsv
+      to_rgb.to_hsv
+  end
 end

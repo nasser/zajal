@@ -19,4 +19,8 @@ class Color::Grayscale
   def to_rgb
     Color::Rgb.new(@level, @level, @level, @a)
   end
+
+  def to_hsv
+    to_rgb.to_hsv
+  end
 end

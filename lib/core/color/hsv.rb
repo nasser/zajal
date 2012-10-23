@@ -52,4 +52,8 @@ class Color::Hsv
 
     Color::Rgb.new(r * 255, g * 255, b * 255, @a)
   end
+
+  def to_hsv
+    self
+  end
 end
