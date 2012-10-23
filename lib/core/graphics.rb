@@ -952,29 +952,6 @@ module Zajal
       attach_function :ofSphere, [:float, :float, :float, :float], :void
       attach_function :ofBox, [:float, :float, :float, :float], :void
       attach_function :ofCone, [:float, :float, :float, :float, :float], :void
-
-      # TODO move me!
-      ffi_lib "/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib"
-      %w[PocoFoundation PocoNet PocoXML PocoUtil glew tess freeimage freetype].each do |libname|
-        ffi_lib "lib/core/lib/#{libname}.so"
-      end
-
-      ffi_lib "lib/core/lib/libof.so"
-
-      typedef :pointer, :ofAppBaseWindow
-
-      attach_function :ofSetupOpenGL, [:ofAppBaseWindow, :int, :int, :int], :void
-      attach_function :ofSetupScreen, [], :void
-      attach_function :ofEnableAlphaBlending, [], :void
-      attach_function :ofDisableAlphaBlending, [], :void
-      attach_function :ofCircle, [:float, :float, :float, :float], :void
-      attach_function :ofClear, [:float, :float, :float, :float], :void
-      attach_function :ofLine, [:float, :float, :float, :float], :void
-      attach_function :ofRect, [:float, :float, :float, :float], :void
-      attach_function :ofSetLineWidth, [:float], :void
-      attach_function :ofTranslate, [:float, :float, :float], :void
-
-      attach_function :ofSetColor, [:int, :int, :int], :void
     end
   end
 end
