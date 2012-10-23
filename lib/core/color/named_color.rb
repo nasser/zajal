@@ -161,7 +161,7 @@ class Color::NamedColor
   def initialize(name, a=255)
     name = name.to_sym
     if ! COLOR_NAMES.include? name
-      raise "Color name could not be found!: #{name}"
+      raise "Color `#{name}' could not be found!"
     end
     @name = name
     @a = a
