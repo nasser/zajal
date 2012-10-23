@@ -11,26 +11,8 @@ class Color::Rgb
   # @param a [Numeric] the amount of alpha, 0..255
   # 
   # @return [Color::Rgb] a new Color::Rgb instance
-  def initialize(*args)
-    @r, @g, @b, @a = 255, 255, 255, 255
-
-    case args
-    when Signature[:to_i]
-      @r = @g = @b = args.first
-    when Signature[:to_i, :to_i]
-      @r = @g = @b = args.first
-      @a = args.last
-    when Signature[:to_i, :to_i, :to_i]
-      @r, @g, @b = *args
-    when Signature[:to_i, :to_i, :to_i, :to_i]
-      @r, @g, @b, @a = *args
-    when Signature[Symbol]
-      @r, @g, @b, @a = Color::NamedColor.new(args.first).to_rgb
-    when Signature[Symbol, :to_i]
-      @r, @g, @b, @a = Color::NamedColor.new(args.first, args.last).to_rgb
-    else
-      raise ArgumentError, args
-    end
+  def initialize(r, g, b, a=255)
+    @r, @g, @b, @a = r, g, b, a
   end
 
   # Returns the RGBa values in an array.

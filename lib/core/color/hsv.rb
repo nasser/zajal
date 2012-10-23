@@ -11,26 +11,8 @@ class Color::Hsv
   # @param a [Numeric] the amount of alpha, 0..255
   # 
   # @return [Color::Hsv] a new Color::Hsv instance
-  def initialize(*args)
-    @h, @s, @v, @a = 255, 255, 255, 255
-
-    case args
-    when Signature[:to_i]
-      @h = args.first
-    when Signature[:to_i, :to_i]
-      @h, @a = args.first, args.last
-    when Signature[:to_i, :to_i, :to_i]
-      @h, @s, @v = *args
-    when Signature[:to_i, :to_i, :to_i, :to_i]
-      @h, @s, @v, @a = *args
-    when Signature[Symbol]
-      # TODO: .new().to_rgb.to_hsv is pretty terrible. Is there a better way to handle this?
-      @h, @s, @v, @a = Color::NamedColor.new(args.first).to_rgb.to_hsv
-    when Signature[Symbol, :to_i]
-      @h, @s, @v, @a = Color::NamedColor.new(args.first, args.last).to_rgb.to_hsv
-    else
-      raise ArgumentError, args
-    end
+  def initialize(h, s, v, a=255)
+    @h, @s, @v, @a = h, s, v, a
   end
 
   # Returns the HSVa values in an array.

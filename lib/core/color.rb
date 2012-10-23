@@ -17,8 +17,36 @@ class Color
   # @param *args [Array]
   # 
   # @return [Color::___] a new instance of a child of the Color class
-  def self.new(type, *args)
-    type ||= "rgb"
-    Color.const_get(type.to_s.camelize).new(*args)
+  def self.new(mode, *args)
+
+    case args
+    when Signature[:to_i]
+      Grayscale.new *args
+    when Signature[:to_i, :to_i]
+      Grayscale.new *args
+
+    when Signature[:to_i, :to_i, :to_i]
+      if mode == :hsv
+        Hsv.new *args
+      else
+        Rgb.new *args
+      end
+    when Signature[:to_i, :to_i, :to_i, :to_i]
+      if mode == :hsv
+        Hsv.new *args
+      else
+        Rgb.new *args
+      end
+
+    when Signature[Symbol]
+      NamedColor.new *args
+      
+    when Signature[Symbol, :to_i]
+      NamedColor.new *args
+      
+    else
+      raise ArgumentError, args
+    end
+
   end
 end
