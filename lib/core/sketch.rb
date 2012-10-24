@@ -98,6 +98,19 @@ module Zajal
 
     %w[setup update draw].each { |event| support_event event }
 
+    def self.new_from_file file
+      new file
+    end
+
+    def self.new_from_code code
+      require "tempfile"
+      tempfile = Tempfile.new "zajal-new-sketch"
+      tempfile.write code
+      tempfile.close
+
+      new tempfile.path
+    end
+
     # Create a new {Sketch} object watching +file+
     # 
     # The file's contents are loaded into the returned {Sketch} object.
