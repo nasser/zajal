@@ -22,6 +22,7 @@ module Zajal
         end
       end
 
+      # @api internal
       module Native
         extend FFI::Cpp::Library
         ffi_lib "lib/core/lib/libof.so"

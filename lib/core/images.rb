@@ -1,4 +1,5 @@
 module Zajal
+  # @api zajal
   module Images
     # An image
     # 
@@ -113,6 +114,7 @@ module Zajal
         Native.ofimage_mirror @pointer, *d
       end
 
+      # @api internal
       module Native
         extend FFI::Cpp::Library
         ffi_lib "lib/core/lib/libof.so"
