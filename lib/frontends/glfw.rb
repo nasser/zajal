@@ -60,16 +60,6 @@ module Zajal
         end
       end
 
-      def run_once
-        @sketch.setup
-        @sketch.update
-        @sketch.draw
-
-        screenshot = Zajal::Images::Image.new
-        screenshot.grab_screen 0, 0, @sketch.width, @sketch.height
-        screenshot.save "~/Desktop/screen.png"
-      end
-
       module Native
         extend FFI::Cpp::Library
 
