@@ -98,10 +98,25 @@ module Zajal
 
     %w[setup update draw].each { |event| support_event event }
 
+    # Create a new sketch from an exisiting file
+    # 
+    # @example
+    #   skt = Sketch.new_from_file "foo.zj"
+    # 
+    # @param file [String] the file to create the sketch from
     def self.new_from_file file
       new file
     end
 
+    # Create a new sketch from source code
+    # 
+    # Internally, the code it written to a temporary file and that file is
+    # loaded normally.
+    # 
+    # @example
+    #   skt = Sketch.new_from_code "draw do; circle 50, 50, 10 end"
+    # 
+    # @param code [String] the code to create the sketch from
     def self.new_from_code code
       require "tempfile"
       tempfile = Tempfile.new "zajal-new-sketch"
