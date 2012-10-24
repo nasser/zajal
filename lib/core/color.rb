@@ -18,8 +18,10 @@ class Color
   # 
   # @return [Color::___] a new instance of a child of the Color class
   def self.new(mode, *args)
-
     case args
+    when Signature[:to_rgb]
+      args.first
+
     when Signature[:to_i]
       Grayscale.new *args
     when Signature[:to_i, :to_i]
