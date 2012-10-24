@@ -796,10 +796,43 @@ module Zajal
     end
 
     # @Math::pI internal
+
+    # Reset graphics settings to Zajal's defaults
+    def defaults
+      alpha_blending false
+      background :ketchup
+      blend_mode :disabled
+      circle_resolution 22
+      clear_background true
+      color :white
+      curve_resolution 22
+      fill true
+      line_width 1
+      point_sprites false
+      polygon_winding_mode :odd
+      rectangle_mode :corner
+      smoothing false
+      sphere_resolution 8
+    end
+
+    # @api internal
     def self.included sketch
+      sketch.before_event :setup do
+        defaults
+      end
+
+      sketch.after_event :setup do
+        @defaults = {}
+        %w[alpha_blending background blend_mode circle_resolution clear_background
+          color curve_resolution fill line_width point_sprites polygon_winding_mode
+          rectangle_mode smoothing sphere_resolution].each do |m|
+          @defaults[m.to_sym] = self.send m.to_sym
+        end
+      end
+
       sketch.before_event :draw do
         Native.ofSetupScreen
-        clear 160, 37, 37
+        @defaults.each { |meth, val| self.send meth, val }
       end
     end
 
