@@ -1,0 +1,29 @@
+<section class="content">
+	<section class="docs">
+		<div class="wrapper">
+			{{#modules}}
+			<h1>{{module}}</h1>
+			{{#zajal_methods}}
+			<article class="function">
+				<div class="title">
+					<a href="/{{file_path}}/">{{method_name}}</a>
+				</div>
+				<div class="description">
+					<p>{{summary}}</p>
+				</div>
+				<div class="signature">
+					{{#syntaxes}}
+					<h3>{{name}} <em>{{params}}</em> {{#return}}&rarr; <em>{{return}}</em>{{/return}}</h3>
+					{{/syntaxes}}
+				</div>
+				<div class="examples">
+				{{#example}}
+					<pre><code class="ruby{{#image_b64}} screenshot{{/image_b64}}">{{#title}}# {{title}}&#10;{{/title}}{{code}}</code>{{#image_b64}}<img src="data:image/png;base64,{{image_b64}}">{{/image_b64}}</pre>
+				{{/example}}
+				</div>
+			</article>
+			{{/zajal_methods}}
+			{{/modules}}
+		</div>
+	</section>
+</section>
