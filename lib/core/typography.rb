@@ -2,6 +2,7 @@ module Zajal
   # {Zajal::Typography::Font} mostly a wrapper for ofTrueTypeFont in openFrameworks.
   # 
   # @see http://www.openframeworks.cc/documentation/graphics/ofTrueTypeFont.html
+  # @api zajal
   module Typography
     # A font
     class Font
@@ -72,11 +73,23 @@ module Zajal
 
     # Draw text
     # 
+    # @syntax text message
+    # @syntax text message, x, y
+    # 
+    # @screenshot
+    #   text "Hello, world!", 10, 50
+    # 
+    # @screenshot
+    #   text "Hello, world!"
+    # 
+    # @screenshot
+    #   text "Hello, world!"
+    #   text "This text..."
+    #   text "...can stack!"
+    # 
     # @param message [#to_s] the text to write
     # @param x [Numeric] the x coordinate to start writing text at
     # @param y [Numeric] the y coordinate to start writing text at
-    # 
-    # @return [nil] Nothing
     # 
     # @todo Use the same font rendering path as {Font}, not
     #   ofDrawBitmapString. Ship Zajal with a monospace font and use that.
@@ -97,6 +110,7 @@ module Zajal
       @basic_font.draw message.to_s, x, y
     end
 
+    # @api internal
     def self.included sketch
       sketch.before_event :draw do
         @stacked_text_x = 1.0
@@ -104,6 +118,7 @@ module Zajal
       end
     end
 
+    # @api internal
     module Native
       extend FFI::Cpp::Library
       
