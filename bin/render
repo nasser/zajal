@@ -51,20 +51,13 @@ if options.output.nil? and not options.file.nil?
   options.output = "#{File.basename(options.file)}-screenshot.png"
 end
 
-options.file = if options.file.nil?
-  # use stdin if no file specified
-  tempfile = Tempfile.new "zajal-render-sketch"
-  tempfile.write STDIN.read
-  tempfile.close
-
-  tempfile.path
-else
-  options.file
-end
-
 # render sketch
 zj = Zajal::Frontends::Headless.new options.width, options.height
-zj.sketch = Zajal::Frontends::Headless::Sketch.new options.file
+if options.file.nil?
+  zj.sketch = Zajal::Frontends::Headless::Sketch.new_from_code STDIN.read
+else
+  zj.sketch = Zajal::Frontends::Headless::Sketch.new_from_file options.file unless options.file.nil?
+end
 zj.run
 
 if options.b64
