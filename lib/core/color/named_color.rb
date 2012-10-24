@@ -147,7 +147,11 @@ class Color::NamedColor
     light_slate_gray: [119, 136, 153],
     slate_gray: [112, 128, 144],
     dark_slate_gray: [47, 79, 79],
-    black: [0, 0, 0]
+    black: [0, 0, 0],
+
+    dark: [32, 32, 32],
+    light: [200, 200, 200],
+    ketchup: [160, 37, 37]
   }.freeze
 
   COLOR_NAMES = COLORS.keys.freeze
