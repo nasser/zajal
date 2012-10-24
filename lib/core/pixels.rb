@@ -17,7 +17,9 @@ module Zajal
       end
 
       def save path, quality=:best
-        Native.ofSaveImage @pointer, File.expand_path(path.to_s).to_ptr, quality
+        Dir.chdir do
+          Native.ofSaveImage @pointer, File.expand_path(path.to_s).to_ptr, quality
+        end
       end
 
       module Native
