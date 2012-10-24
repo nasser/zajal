@@ -86,9 +86,9 @@ module Zajal
           def #{event} *args, &blk
             if not blk.nil?
               @#{event}_proc = blk
-            elsif blk.nil? and not @#{event}_proc.nil?
+            elsif blk.nil?
               @@pre_hooks[:#{event}].each { |hook| instance_eval &hook }
-              @#{event}_proc.call(*args)
+              @#{event}_proc.call(*args) unless @#{event}_proc.nil?
               @@post_hooks[:#{event}].each { |hook| instance_eval &hook }
             end
           end
