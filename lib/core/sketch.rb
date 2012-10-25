@@ -23,6 +23,7 @@ module Zajal
   class Sketch
     # The {File} this sketch is watching
     attr_reader :file
+    attr_accessor :frontend
 
     @@pre_hooks = {}
     @@post_hooks = {}

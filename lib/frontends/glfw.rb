@@ -11,6 +11,24 @@ module Zajal
       class Sketch < Zajal::Sketch
         support_event :mouse_down, :mouse_pressed, :mouse_up, :mouse_moved
         support_event :key_down, :key_pressed, :key_up
+
+        def smoothing s=nil
+          if s.present? and not @smoothing == s
+            @smoothing = s
+            case @smoothing
+            when TrueClass
+              @frontend.set_smoothing 8
+            when FalseClass
+              @frontend.set_smoothing 0
+            when 0..8
+              @frontend.set_smoothing @smoothing
+            else
+              raise ArgumentError, s
+            end
+          end
+        end
+
+        @smoothing
       end
 
       # Create a new Glfw frontend, and open a window with size +(width,height)+
@@ -34,6 +52,9 @@ module Zajal
 
         @fbo = Zajal::Graphics::Fbo.new width, height, 0
       end
+
+      def set_smoothing s
+        @fbo = Zajal::Graphics::Fbo.new @fbo.width, @fbo.height, s
       end
 
       # Run the sketch
@@ -47,6 +68,7 @@ module Zajal
       # 
       # @return [nil] Nothing
       def run
+        @sketch.frontend = self # hack
         @sketch.setup
         while true do
           @fbo.use { @sketch.update; @sketch.draw } unless @sketch.bare
@@ -58,6 +80,7 @@ module Zajal
           # TODO this should be taken care of by Sketch
           if @sketch.stale?
             @sketch = @sketch.refresh_restart 
+            @sketch.frontend = self # hack
             @sketch.setup
             Native.glfwfrontend_setFrameNum @pointer, 0
           end
