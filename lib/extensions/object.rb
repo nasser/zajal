@@ -1,5 +1,5 @@
 class Object
-  # An object is blank if it's false, empty, or a whitespace string.
+  # An object is blank if it's nil, empty, or a whitespace string.
   def blank?
     respond_to?(:empty?) ? empty? : self.nil?
   end
@@ -9,6 +9,7 @@ class Object
     not blank?
   end
 
+  # Convert object into actual true or false object
   def to_bool
     self ? true : false
   end
