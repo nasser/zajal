@@ -65,15 +65,19 @@ module Zajal
         Native.offbo_readToPixels @pointer, pix.to_ptr, attachment
       end
 
+      def texture
+        Native.offbo_getTextureReference @pointer
+      end
+
       module Native
         extend FFI::Cpp::Library
         ffi_lib "lib/core/lib/libof.so"
-
 
         attach_constructor :ofFbo, 232, []
         attach_method :ofFbo, :allocate, [:int, :int, :int, :int], :void
         attach_method :ofFbo, :begin, [:bool], :void
         attach_method :ofFbo, :end, [], :void
+        attach_method :ofFbo, :getTextureReference, [], :pointer
         attach_method :ofFbo, :isAllocated, [], :bool
         attach_method :ofFbo, :draw, [:float, :float, :float, :float], :void
         attach_method :ofFbo, :setAnchorPercent, [:float, :float], :void
