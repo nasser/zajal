@@ -1157,6 +1157,7 @@ module Zajal
       rectangle_mode :corner
       smoothing false
       sphere_resolution 8
+      Zajal::Graphics::Native.ofSetupScreenPerspective width.to_f, height.to_f, :default, false, 60.0, 0.0, 0.0
     end
 
     # @api internal

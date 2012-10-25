@@ -31,6 +31,9 @@ module Zajal
 
         @keyButtonCallback = Proc.new { |button, action| action == Native::GLFW_RELEASE ? @sketch.key_up(button) : @sketch.key_down(button) if @sketch }
         Native.glfwSetKeyCallback @keyButtonCallback
+
+        @fbo = Zajal::Graphics::Fbo.new width, height, 0
+      end
       end
 
       # Run the sketch
@@ -46,8 +49,9 @@ module Zajal
       def run
         @sketch.setup
         while true do
-          @sketch.update
-          @sketch.draw
+          @fbo.use { @sketch.update; @sketch.draw } unless @sketch.bare
+          @fbo.draw 0, 0
+
           Native.glfwSwapBuffers
           Native.glfwfrontend_incrementFrameNum @pointer
 
