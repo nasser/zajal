@@ -22,7 +22,7 @@ module Zajal
   # @api internal
   class Sketch
     # The {File} this sketch is watching
-    attr_reader :file
+    attr_reader :file, :code, :bare
     attr_accessor :frontend
 
     @@pre_hooks = {}
@@ -80,6 +80,8 @@ module Zajal
     # @todo Iron out custom events
     def self.support_event *events
       events.each do |event|
+        @@supported_events ||= []
+        @@supported_events += events.map { |e| e.to_sym }
         @@pre_hooks[event.to_sym] = []
         @@post_hooks[event.to_sym] = []
 
@@ -142,7 +144,17 @@ module Zajal
     def initialize file
       @file = open(File.expand_path(file))
       @file_last_modified = @file.mtime
-      instance_eval @file.read
+      @code = @file.read
+
+      @bare = true
+      # look for :call, nil, :setup/:draw/:update in the sexp
+      @code.to_sexp.flatten.each_cons(3) { |a, b, c| @bare = false if a == :call and @@supported_events.member? c }
+      
+      if @bare
+        instance_eval "draw do; #{@code}\nend"
+      else
+        instance_eval @code
+      end
     end
 
     # @return [Boolean] has the watched file has been updated?

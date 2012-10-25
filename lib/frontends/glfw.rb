@@ -12,6 +12,14 @@ module Zajal
         support_event :mouse_down, :mouse_pressed, :mouse_up, :mouse_moved
         support_event :key_down, :key_pressed, :key_up
 
+        def time
+          @bare ? 0.0 : super
+        end
+
+        def frame
+          @bare ? 0 : super
+        end
+
         def smoothing s=nil
           if s.present? and not @smoothing == s
             @smoothing = s
@@ -70,6 +78,8 @@ module Zajal
       def run
         @sketch.frontend = self # hack
         @sketch.setup
+        @fbo.use { @sketch.draw } if @sketch.bare
+
         while true do
           @fbo.use { @sketch.update; @sketch.draw } unless @sketch.bare
           @fbo.draw 0, 0
@@ -82,6 +92,8 @@ module Zajal
             @sketch = @sketch.refresh_restart 
             @sketch.frontend = self # hack
             @sketch.setup
+            @fbo.use { @sketch.draw } if @sketch.bare
+
             Native.glfwfrontend_setFrameNum @pointer, 0
           end
         end
