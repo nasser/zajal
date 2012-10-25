@@ -21,7 +21,7 @@ module Zajal
           Zajal::Graphics::Native.ofSetupScreenPerspective width.to_f, height.to_f, :default, false, 60.0, 0.0, 0.0
         end
 
-        @fbo.capture do
+        @fbo.use do
           @sketch.setup
           @sketch.update
           @sketch.draw

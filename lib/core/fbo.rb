@@ -24,7 +24,7 @@ module Zajal
         Native.offbo_end @pointer
       end
 
-      def capture
+      def use
         self.begin
         yield
         self.end
