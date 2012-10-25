@@ -27,7 +27,7 @@ module FFI::Cpp
         short:               "s",
         unsigned_short:      "t",
         int:                 "i",
-        unsigned_int:        "j",
+        uint:                "j",
         long:                "l",
         unsigned_long:       "m",
         long_long:           "x",

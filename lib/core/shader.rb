@@ -110,8 +110,8 @@ module Zajal
         # advanced use
         # these methods create and compile a shader from source or file
         # type: GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, GL_GEOMETRY_SHADER_EXT etc.
-        attach_method :ofShader, :setupShaderFromSource, [:unsigned_int, :stdstring], :bool
-        attach_method :ofShader, :setupShaderFromFile, [:unsigned_int, :stdstring], :bool
+        attach_method :ofShader, :setupShaderFromSource, [:uint, :stdstring], :bool
+        attach_method :ofShader, :setupShaderFromFile, [:uint, :stdstring], :bool
 
         # links program with all compiled shaders
         attach_method :ofShader, :linkProgram, [], :bool
