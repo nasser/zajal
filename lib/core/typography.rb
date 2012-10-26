@@ -14,7 +14,7 @@ module Zajal
       # @option options [Float] :simplify
       # @option options [Fixnum] :dpi
       def initialize file, size, options={}
-        options.merge({ antialiased:true, full_character_set:false, contours:false, simplify:0.3, dpi:0 })
+        options = { antialiased:true, full_character_set:false, contours:false, simplify:0.3, dpi:0 }.merge options
 
         @name = File.basename(file)
         
