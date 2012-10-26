@@ -16,10 +16,29 @@ module Zajal
       def initialize file, size, options={}
         options = { antialiased:true, full_character_set:false, contours:false, simplify:0.3, dpi:0 }.merge options
 
-        @name = File.basename(file)
-        
-        @pointer = Native.oftruetypefont_new
-        Native.oftruetypefont_loadFont @pointer, File.expand_path(file).to_s.to_ptr, size.to_i, options[:antialiased], options[:full_character_set], options[:contours], options[:simplify].to_f, options[:dpi].to_i
+        files = file.is_a?(Array) ? file : [file]
+
+        files.map! do |f|
+          if File.exists? File.expand_path(f.to_s)
+            f
+          else
+            [ "/Library/Fonts/#{f}", "/Library/Fonts/#{f}.ttf", "/Library/Fonts/#{f}.otf",
+              "/System/Library/Fonts/#{f}", "/System/Library/Fonts/#{f}.ttf", "/System/Library/Fonts/#{f}.otf",
+              "~/Library/Fonts/#{f}", "~/Library/Fonts/#{f}.ttf", "~/Library/Fonts/#{f}.otf" ]
+          end
+        end
+
+        files.flatten.each do |f|
+          f = File.expand_path(f.to_s)
+          next unless File.exists? f
+
+          @name = File.basename(f)
+          @pointer = Native.oftruetypefont_new
+          Native.oftruetypefont_loadFont @pointer, f.to_s.to_ptr, size.to_i, options[:antialiased].to_bool, options[:full_character_set].to_bool, options[:contours].to_bool, options[:simplify].to_f, options[:dpi].to_i
+          break
+        end
+
+        raise "Font not found!" unless @pointer
       end
 
       # Draw text using this font's glyphs
