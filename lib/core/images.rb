@@ -163,5 +163,11 @@ module Zajal
       @cached_images[file] ||= Image.new file
       @cached_images[file].draw *args
     end
+
+    def grab_screen *args
+      i = Image.new
+      i.grab_screen *args
+      i
+    end
   end
 end
