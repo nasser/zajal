@@ -28,15 +28,15 @@ module Zajal
     # 
     #   circle p, 10
     # 
-    # @syntax circle point, radius
     # @syntax circle x, y, radius
     # @syntax circle x, y, z, radius
+    # @syntax circle point, radius
     # 
-    # @param point [#x,#y] the circle's center
     # @param x [Numeric] x coordinate of circle's center
     # @param y [Numeric] y coordinate of circle's center
     # @param z [Numeric] z coordinate of circle's center
     # @param radius [Numeric] radius of the circle
+    # @param point [#x,#y] the circle's center
     # 
     # @see #circle_resolution
     def circle *args
@@ -68,18 +68,20 @@ module Zajal
     # 
     # @screenshot With and without blending
     #   alpha_blending false
-    #   color :green, 128
+    #   color :white, 128
     #   circle 40, 25, 20
     #   circle 60, 25, 20
     #   
     #   alpha_blending true
-    #   color :green, 128
+    #   color :white, 128
     #   circle 40, 75, 20
     #   circle 60, 75, 20
     # 
-    # @param on [Boolean], +true+ to enable alpha blending, +false+ to disable
+    # @syntax alpha_blending -> blending
+    # @syntax alpha_blending on
     # 
-    # @return [Boolean] the new alpha blending value
+    # @param on [Boolean] true to enable alpha blending, false to disable
+    # @return blending [Boolean] the new alpha blending value
     def alpha_blending on=nil
       @alpha_blending ||= false
 
@@ -375,6 +377,10 @@ module Zajal
     # @syntax scale x, y
     # @syntax scale x, y, z
     # 
+    # @param s [Numeric] amount to scale in all directions
+    # @param x [Numeric] amount to scale in x
+    # @param y [Numeric] amount to scale in y
+    # @param z [Numeric] amount to scale in z
     def scale x, y=nil, z=1.0
       y = x unless y.present?
       Native.ofScale x.to_f, y.to_f, z.to_f
@@ -631,6 +637,25 @@ module Zajal
       end
     end
 
+    # @screenshot Blend mode
+    #   color :white, 128
+    # 
+    #   blend_mode :add
+    #   circle 20, 25, 10
+    #   circle 30, 25, 10
+    # 
+    #   blend_mode :subtract
+    #   circle 80, 25, 10
+    #   circle 70, 25, 10
+    # 
+    #   blend_mode :multiply
+    #   circle 80, 75, 10
+    #   circle 70, 75, 10
+    # 
+    #   blend_mode :alpha
+    #   circle 20, 75, 10
+    #   circle 30, 75, 10
+    # 
     def blend_mode mode=nil
       @blend_mode ||= :disabled
 
