@@ -745,6 +745,7 @@ section.docs article.function .signature em {
 }
 
 section.docs article.function .examples img {
+  background: white;
   position: absolute;
   right: 1em;
   top: 1em;
