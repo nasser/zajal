@@ -13,10 +13,11 @@ module Zajal
     # developed
     NAME      = "Amsterdam"
 
+    RUBY_VM_VERSION = "Rubinius #{Rubinius::VERSION}"
+
     def self.print
       puts Zajal::VERSION
-      puts "Rubinius #{Rubinius::VERSION}"
-      puts "Ruby #{RUBY_VERSION}"
+      puts "Ruby #{RUBY_VERSION} (#{RUBY_VM_VERSION})"
       puts "openFrameworks 00#{Native.ofGetVersionMajor}#{Native.ofGetVersionMinor}"
     end
 
