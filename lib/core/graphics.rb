@@ -1173,6 +1173,7 @@ module Zajal
       blend_mode :disabled
       circle_resolution 22
       clear_background true
+      color_mode :rgb
       color :white
       curve_resolution 22
       fill true
