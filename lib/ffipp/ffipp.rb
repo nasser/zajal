@@ -17,6 +17,7 @@ module FFI
       # @see http://mentorembedded.github.com/cxx-abi/abi.html#mangling
       module GCC4X
         MangledTypes = {
+          string:              "PKc",
           stdstring:           "Ss",
           void:                "v",
           wchar_t:             "w",
@@ -27,7 +28,7 @@ module FFI
           short:               "s",
           unsigned_short:      "t",
           int:                 "i",
-          unsigned_int:        "j",
+          uint:                "j",
           long:                "l",
           unsigned_long:       "m",
           long_long:           "x",
