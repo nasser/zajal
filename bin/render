@@ -12,17 +12,12 @@ require_relative "../lib/zajal"
 
 options = OpenStruct.new
 OptionParser.new do |opts|
-  opts.banner = "Usage: #{$0} -f sketch.zj -o screenshot.png"
+  opts.banner = "Usage: #{$0} sketch.zj -o screenshot.png"
 
   options.width = 100
   options.height = 100
   options.b64 = false
-  options.file = nil
   options.output = nil
-
-  opts.on( "-f", "--file FILE", String, "Script file to render" ) do |f|
-    options.file = File.expand_path(f)
-  end
 
   opts.on("-o", "--output file.png", "Path to write resulting image to") do |o|
     options.output = File.expand_path(o)
@@ -46,17 +41,19 @@ OptionParser.new do |opts|
   end
 end.parse!
 
+sketch_file = ARGV.first
+
 # output defaults to {input}-screenshot.png
-if options.output.nil? and not options.file.nil?
-  options.output = "#{File.basename(options.file)}-screenshot.png"
+if options.output.nil? and not sketch_file.nil?
+  options.output = "#{File.basename(sketch_file)}-screenshot.png"
 end
 
 # render sketch
 zj = Zajal::Frontends::Headless.new options.width, options.height
-if options.file.nil?
+if sketch_file.nil?
   zj.sketch = Zajal::Frontends::Headless::Sketch.new_from_code STDIN.read
 else
-  zj.sketch = Zajal::Frontends::Headless::Sketch.new_from_file options.file unless options.file.nil?
+  zj.sketch = Zajal::Frontends::Headless::Sketch.new_from_file sketch_file unless sketch_file.nil?
 end
 zj.run
 
