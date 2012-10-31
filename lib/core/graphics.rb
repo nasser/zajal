@@ -88,9 +88,9 @@ module Zajal
       if on.present?
         @alpha_blending = on.to_bool
         @alpha_blending ? Native.ofEnableAlphaBlending : Native.ofDisableAlphaBlending
-      else
-        @alpha_blending
       end
+      
+      @alpha_blending
     end
 
     # Set the background color and clear the screen to that color 
