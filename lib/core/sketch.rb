@@ -113,27 +113,31 @@ module Zajal
     # @todo Iron out custom events
     # 
     # @see Sketch.support_event
-    def initialize code_or_file=nil
-      if code_or_file.is_a? File
-        @file = code_or_file
-        @file_last_modified = @file.mtime
-        @code = @file.read
-
-      elsif code_or_file.is_a? String
-        @code = code_or_file
-
+    def initialize code_or_file=nil, &blk
+      if blk
+        instance_eval &blk
       else
-        raise ArgumentError, "Can't create sketch!"
-      end
+        if code_or_file.is_a? File
+          @file = code_or_file
+          @file_last_modified = @file.mtime
+          @code = @file.read
 
-      @bare = true
-      # look for :call, nil, :setup/:draw/:update in the sexp
-      @code.to_sexp.flatten.each_cons(3) { |a, b, c| @bare = false if a == :call and @@supported_events.member? c }
-      
-      if @bare
-        instance_eval "draw do; #{@code}\nend"
-      else
-        instance_eval @code
+        elsif code_or_file.is_a? String
+          @code = code_or_file
+
+        else
+          raise ArgumentError, "Can't create sketch!"
+        end
+
+        @bare = true
+        # look for :call, nil, :setup/:draw/:update in the sexp
+        @code.to_sexp.flatten.each_cons(3) { |a, b, c| @bare = false if a == :call and @@supported_events.member? c }
+        
+        if @bare
+          instance_eval "draw do; #{@code}\nend"
+        else
+          instance_eval @code
+        end
       end
     end
 
