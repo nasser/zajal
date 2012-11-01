@@ -14,8 +14,8 @@ options = OpenStruct.new
 OptionParser.new do |opts|
   opts.banner = "Usage: #{$0} sketch.zj -o screenshot.png"
 
-  options.width = 100
-  options.height = 100
+  options.width = 400
+  options.height = 400
   options.b64 = false
   options.output = nil
 
@@ -23,11 +23,11 @@ OptionParser.new do |opts|
     options.output = File.expand_path(o)
   end
 
-  opts.on("-w", "--width W", "Width of the rendering, defaults to 100") do |w|
+  opts.on("-w", "--width W", "Width of the rendering, defaults to 400") do |w|
     options.width = w
   end
 
-  opts.on("-h", "--height H", "Height of the rendering, defaults to 100") do |h|
+  opts.on("-h", "--height H", "Height of the rendering, defaults to 400") do |h|
     options.height = h
   end
 
