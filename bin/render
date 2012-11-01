@@ -86,11 +86,7 @@ end
 
 # render sketch
 zj = Zajal::Frontends::Headless.new options.width, options.height
-if sketch_file.nil?
-  zj.sketch = Zajal::Frontends::Headless::Sketch.new STDIN.read
-else
-  zj.sketch = Zajal::Frontends::Headless::Sketch.new open(sketch_file)
-end
+zj.sketch = Zajal::Frontends::Headless::Sketch.new sketch_file.nil? ? STDIN.read : open(sketch_file)
 zj.run
 
 if options.b64

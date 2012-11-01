@@ -33,11 +33,5 @@ end.parse!
 Zajal::Version.print
 
 glfw = Zajal::Frontends::Glfw.new options.width, options.height
-
-if ARGV.empty?
-  glfw.sketch = Zajal::Frontends::Glfw::Sketch.new STDIN.read
-else
-  glfw.sketch = Zajal::Frontends::Glfw::Sketch.new open(ARGV.first)
-end
-
+glfw.sketch = Zajal::Frontends::Glfw::Sketch.new ARGV.empty? ? STDIN.read : open(ARGV.first)
 glfw.run
