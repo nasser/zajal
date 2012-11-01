@@ -32,17 +32,12 @@ end.parse!
 
 Zajal::Version.print
 
-sketch_path = if ARGV.empty?
-  require 'tempfile'
-  tempfile = Tempfile.new "zajal-stdin-sketch"
-  tempfile.write STDIN.read
-  tempfile.close
+glfw = Zajal::Frontends::Glfw.new options.width, options.height
 
-  tempfile.path
+if ARGV.empty?
+  glfw.sketch = Zajal::Frontends::Glfw::Sketch.new STDIN.read
 else
-  ARGV.first
+  glfw.sketch = Zajal::Frontends::Glfw::Sketch.new open(ARGV.first)
 end
 
-glfw = Zajal::Frontends::Glfw.new options.width, options.height
-glfw.sketch = Zajal::Frontends::Glfw::Sketch.new sketch_path
 glfw.run
