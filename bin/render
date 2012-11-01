@@ -8,6 +8,10 @@ def temp_name name
   Tempfile::Dir::Tmpname.make_tmpname Tempfile::Dir::Tmpname.tmpdir, name
 end
 
+def timestamped_name ext
+  "zajal-frame-#{Time.now.strftime("%Y%m%d%H%M%S")}.#{ext}"
+end
+
 require_relative "../lib/zajal"
 
 options = OpenStruct.new
@@ -18,6 +22,8 @@ OptionParser.new do |opts|
   options.height = 400
   options.b64 = false
   options.output = nil
+  options.extension = "png"
+  options.use_timestamp = false
 
   opts.on("-o", "--output file.png", "Path to write resulting image to") do |o|
     options.output = File.expand_path(o)
@@ -35,25 +41,55 @@ OptionParser.new do |opts|
     options.b64 = true
   end
 
+  opts.on("-p", "--png", "Use .png extension when generating filenames, the default") do |b|
+    options.extension = "png"
+  end
+
+  opts.on("-g", "--gif", "Use .gif extension when generating filenames") do |b|
+    options.extension = "gif"
+  end
+
+  opts.on("-t", "--tiff", "Use .tiff extension when generating filenames") do |b|
+    options.extension = "tiff"
+  end
+
+  opts.on("-j", "--jpg", "Use .jpg extension when generating filenames") do |b|
+    options.extension = "jpg"
+  end
+
+  opts.on("-J", "--jpeg", "Use .jpeg extension when generating filenames") do |b|
+    options.extension = "jpeg"
+  end
+
+  opts.on("-S", "--timestamp", "Use timestamped filename") do |b|
+    options.use_timestamp = true
+  end
+
   opts.on( "-?", "--help", "Display this message" ) do |v|
     puts opts.help
     exit
   end
 end.parse!
 
+options.output = timestamped_name options.extension if options.use_timestamp
+
 sketch_file = ARGV.first
 
 # output defaults to {input}-screenshot.png
-if options.output.nil? and not sketch_file.nil?
-  options.output = "#{File.basename(sketch_file)}-screenshot.png"
+if options.output.nil?
+  options.output = if sketch_file.nil?
+    timestamped_name options.extension
+  else
+    File.basename(sketch_file).gsub /\.[^\.]+/, ".#{options.extension}"
+  end
 end
 
 # render sketch
 zj = Zajal::Frontends::Headless.new options.width, options.height
 if sketch_file.nil?
-  zj.sketch = Zajal::Frontends::Headless::Sketch.new_from_code STDIN.read
+  zj.sketch = Zajal::Frontends::Headless::Sketch.new STDIN.read
 else
-  zj.sketch = Zajal::Frontends::Headless::Sketch.new_from_file sketch_file unless sketch_file.nil?
+  zj.sketch = Zajal::Frontends::Headless::Sketch.new open(sketch_file)
 end
 zj.run
 
