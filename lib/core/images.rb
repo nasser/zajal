@@ -22,7 +22,7 @@ module Zajal
         when Signature[]
         when Signature[:to_s]
           load args.first
-        when Signature[:to_f, :to_f]
+        when Signature[:to_i, :to_i]
           resize *args
         else
           raise ArgumentError, args.inspect
@@ -57,7 +57,7 @@ module Zajal
 
       def resize w, h=nil
         h = w unless h.present?
-        Native.ofimage_resize @pointer, w.to_f, h.to_f
+        Native.ofimage_resize @pointer, w.to_i, h.to_i
       end
 
       # @return [Float] current image width
