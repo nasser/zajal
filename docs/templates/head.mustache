@@ -35,8 +35,14 @@
 	<script type="text/javascript">
 	 $(function() {
 	 	$(".toggle-details").click(function() {
-	 		$(this).parent().parent().find("> .parameters").toggle();
-	 		$(this).parent().parent().find(".toggle-source").toggle();
+	 		$parent = $(this).parent().parent();
+
+	 		$parent.find("> .parameters").toggle();
+	 		$parent.find(".toggle-source").toggle();
+
+	 		if($parent.find(".toggle-source").is(":hidden"))
+	 			$parent.find(".view-source").hide();
+
 	 	});
 
 	 	$(".toggle-source").click(function() {
