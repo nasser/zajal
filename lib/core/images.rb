@@ -11,6 +11,9 @@ module Zajal
       # @overload initialize
       # @overload initialize filename
       #   @param filename [#to_s] name of the file to load
+      #   @screenshot
+      #     img = Image.new "docs/actual_zajal.jpg"
+      #     img.draw 20, 20
       # @overload initialize width, height
       #   @param width [Numeric] width of the new image
       #   @param width [Numeric] height of the new image
