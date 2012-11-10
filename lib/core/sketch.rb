@@ -150,7 +150,7 @@ module Zajal
     def refresh_continue
       return nil if @file.nil?
 
-      sk = self.class.new @file.path
+      sk = self.class.new open(@file.path)
       sk.copy_instance_variables_from self, [:@setup_proc, :@draw_proc, :@update_proc, :@file_last_modified]
       sk
     end
@@ -159,7 +159,7 @@ module Zajal
     def refresh_restart
       return nil if @file.nil?
 
-      self.class.new @file.path
+      self.class.new open(@file.path)
     end
 
     # @see http://apidock.com/rails/Object/copy_instance_variables_from
