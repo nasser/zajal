@@ -19,6 +19,11 @@ OptionParser.new do |opts|
     options.height = h
   end
 
+  opts.on("-s", "--size S", Integer, "Width and height of the window") do |s|
+    options.width = s
+    options.height = s
+  end
+
   opts.on("-v", "--version", "Print out version string and exit") do |o|
     Zajal::Version.print
     exit
