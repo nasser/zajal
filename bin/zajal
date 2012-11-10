@@ -11,11 +11,11 @@ OptionParser.new do |opts|
   options.width = 400
   options.height = 400
 
-  opts.on("-w", "--width W", Integer, "Width of the rendering, defaults to #{options.width}") do |w|
+  opts.on("-w", "--width W", Integer, "Width of the window, defaults to #{options.width}") do |w|
     options.width = w
   end
 
-  opts.on("-h", "--height H", Integer, "Height of the rendering, defaults to #{options.height}") do |h|
+  opts.on("-h", "--height H", Integer, "Height of the window, defaults to #{options.height}") do |h|
     options.height = h
   end
 
