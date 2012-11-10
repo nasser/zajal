@@ -82,7 +82,10 @@ module Zajal
 
         while true do
           @fbo.use { @sketch.update; @sketch.draw } unless @sketch.bare
-          @fbo.draw 0, 0
+          @sketch.style do
+            @sketch.color :white
+            @fbo.draw 0, 0
+          end
 
           Native.glfwSwapBuffers
           Native.glfwfrontend_incrementFrameNum @pointer
