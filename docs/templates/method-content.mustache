@@ -1,62 +1,29 @@
-<section class="content">
-	<section class="docs">
-		<div class="wrapper">
-			<article class="function">
-				{{#method}}
-				<div class="title">
-					{{method_name}}
-				</div>
-				<div class="description">
-					<p>{{{summary}}}</p>
-				</div>
-				{{#elaboration}}
-				<div class="elaboration">
-					<p>{{{elaboration}}}</p>
-				</div>
-				{{/elaboration}}
-				<div class="signature">
-					{{#syntaxes}}
-					<h3>{{name}} <em>{{params}}</em> {{#return}}&rarr; <em>{{return}}</em>{{/return}}</h3>
-					{{/syntaxes}}
-				</div>
-				<div class="parameters">
-					{{#params}}
-					<div class="parameter">
-						<h3>{{name}}</h3><p>{{{linkified_text}}} <span class="types">({{clean_types}})</p>
-					</div>
-					{{/params}}
-					{{#returns}}
-					<div class="parameter">
-						<h3>{{name}}</h3><p>{{{linkified_text}}} <span class="types">({{clean_types}})</p>
-					</div>
-					{{/returns}}
-				</div>
-				<div class="examples">
-				{{#examples}}
-					<pre><code class="ruby{{#image_b64}} screenshot{{/image_b64}}">{{#title}}# {{title}}&#10;{{/title}}{{code}}</code>{{#image_b64}}<img src="data:image/png;base64,{{image_b64}}">{{/image_b64}}</pre>
-				{{/examples}}
-				</div>
-				<div class="related">
-					{{#related}}
-					See also
-					{{/related}}
-					{{#related}}
-					{{#href}}
-						{{#text}} <a href="{{href}}">{{text}}</a> {{/text}}
-						{{^text}} <a href="{{href}}">{{name}}</a> {{/text}}
-					{{/href}}
-					{{^href}}
-						{{#text}} {{text}} {{/text}}
-						{{^text}} {{name}} {{/text}}
-					{{/href}}
-					{{/related}}
-				</div>
-				<div class="view-source">
-				<a href="#source" id="source" class="toggle-source">View Source</a>
-				<pre class="source"><code class="ruby"># <a target="_blank" href="https://github.com/nasser/zajal/blob/amsterdam/{{short_file}}#L{{line}}">{{short_file}}:{{line}}</a>&#10;{{source}}</code></pre>
-				</div>
-				{{/method}}
-			</article>
-		</div>
-	</section>
-</section>
+<div class="method sixteen columns" id="{{simple_path}}">
+<div class="signature">
+  <a href="#{{simple_path}}">{{#instance_name}}{{instance_name}}.{{/instance_name}}{{name}} 
+    <span class="parameters">
+      {{clean_parameters}}
+      {{#useful_returns}}&rarr; <em>{{text}}</em>{{/useful_returns}}
+    </span>
+  </a>
+</div>
+<div class="parameters" id="{{simple_path}}-parameters">
+  {{#params}}
+  <div class="parameter">
+    <span class="name">{{name}}</span> <span class="types">({{clean_types}})</span> <span class="description">&mdash; {{{linkified_text}}}</span>
+  </div>
+  {{/params}}
+</div>
+{{{summary}}}
+{{{elaboration}}}
+<p>
+  <a class="toggle-details">Details</a>
+  <a class="toggle-source">Source</a>
+</p>
+{{#examples}}
+  <pre><code class="ruby{{#image_b64}} screenshot{{/image_b64}}">{{#title}}# {{title}}&#10;{{/title}}{{code}}</code>{{#image_b64}}<img src="data:image/png;base64,{{image_b64}}">{{/image_b64}}</pre>
+{{/examples}}
+<div class="view-source" id="{{simple_path}}-source">
+<pre class="source"><code class="ruby"># <a target="_blank" href="https://github.com/nasser/zajal/blob/amsterdam/{{short_file}}#L{{line}}">{{short_file}}:{{line}}</a>&#10;{{source}}</code></pre>
+</div>
+</div>

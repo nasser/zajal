@@ -13,10 +13,10 @@ class Color
   # Initializes a new Color subclass instance. It attempts to discern the color type
   # by the arguments supplied.
   # 
-  # @param :type [Symbol] the type of color given
-  # @param *args [Array]
+  # @param [Symbol] mode the type of color given
+  # @param [Array] args the arguments
   # 
-  # @return [Color::___] a new instance of a child of the Color class
+  # @return [Color] a new instance of a child of the Color class
   def self.new(mode, *args)
     case args
     when Signature[:to_rgb]

@@ -43,6 +43,9 @@ module Zajal
       end
 
       # Draw text using this font's glyphs
+      # @screenshot
+      #   fnt = Font.new 'Georgia', 16
+      #   fnt.draw "Nice serifs!", 10, 60
       # 
       # @param text [#to_s] the text to draw
       # @param x [Numeric] x coordinate of to start drawing text at
@@ -71,25 +74,27 @@ module Zajal
       end
     end
 
-    # Draw text
+    # Render text using Zajal's built in font.
     # 
-    # @syntax text message
-    # @syntax text message, x, y
+    # @overload text message
+    #   Draw `message` in top left corner. Calling this method multiple times will
+    #   stack the text, making {#text} useful for quick debugging.
+    #   @screenshot
+    #     text "Hello, world!"
+    #   @screenshot
+    #     text "Hello, world!"
+    #     text "This text..."
+    #     text "...can stack!"
+    #   @param message [#to_s] the text to write
     # 
-    # @screenshot
-    #   text "Hello, world!", 10, 50
-    # 
-    # @screenshot
-    #   text "Hello, world!"
-    # 
-    # @screenshot
-    #   text "Hello, world!"
-    #   text "This text..."
-    #   text "...can stack!"
-    # 
-    # @param message [#to_s] the text to write
-    # @param x [Numeric] the x coordinate to start writing text at
-    # @param y [Numeric] the y coordinate to start writing text at
+    # @overload text message, x, y
+    #   Draw `message` at a specific location on screen. The first letter will be placed
+    #   at `x`,`y` and the text will continue to the left.
+    #   @screenshot
+    #     text "Hello, world!", 10, 50
+    #   @param message [#to_s] the text to write
+    #   @param x [Numeric] the x coordinate to start writing text at
+    #   @param y [Numeric] the y coordinate to start writing text at
     # 
     # @todo Use the same font rendering path as {Font}, not
     #   ofDrawBitmapString. Ship Zajal with a monospace font and use that.

@@ -1,29 +1,37 @@
-<section class="content">
-	<section class="docs">
-		<div class="wrapper">
-			{{#modules}}
-			<h1>{{module}}</h1>
-			{{#zajal_methods}}
-			<article class="function">
-				<div class="title">
-					<a href="/{{file_path}}/">{{method_name}}</a>
-				</div>
-				<div class="description">
-					<p>{{summary}}</p>
-				</div>
-				<div class="signature">
-					{{#syntaxes}}
-					<h3>{{name}} <em>{{params}}</em> {{#return}}&rarr; <em>{{return}}</em>{{/return}}</h3>
-					{{/syntaxes}}
-				</div>
-				<div class="examples">
-				{{#example}}
-					<pre><code class="ruby{{#image_b64}} screenshot{{/image_b64}}">{{#title}}# {{title}}&#10;{{/title}}{{code}}</code>{{#image_b64}}<img src="data:image/png;base64,{{image_b64}}">{{/image_b64}}</pre>
-				{{/example}}
-				</div>
-			</article>
-			{{/zajal_methods}}
-			{{/modules}}
-		</div>
-	</section>
-</section>
+<div class="sixteen columns">
+  <hr>
+  <h2>Reference</h2>
+  <p>This is a detailed description of Zajal's built in functionality. For a more general overview, read <a href="#">the guide</a>. For something more technical, read the <a href="http://rubydoc.info/github/nasser/zajal">the YARD documentation</a>.</p>
+</div>
+
+{{#modules}}
+  <div class="module sixteen columns">
+    <h3>{{name}}</h3>
+    <p>{{{summary}}}</p>
+    <p>{{{elaboration}}}</p>
+  </div>
+
+  <!-- {{name}} Methods -->
+  {{#zajal_methods}}
+    {{^overloads}}
+      {{> method-content}}
+    {{/overloads}}
+    {{#overloads}}
+      {{> method-content}}
+    {{/overloads}}
+  {{/zajal_methods}}
+  <!-- /{{name}} Methods -->
+
+  <!-- {{name}} Classes -->
+  {{#classes}}
+    {{#zajal_methods}}
+    {{^overloads}}
+      {{> method-content}}
+    {{/overloads}}
+    {{#overloads}}
+      {{> method-content}}
+    {{/overloads}}
+    {{/zajal_methods}}
+  {{/classes}}
+  <!-- /{{name}} Classes -->
+{{/modules}}

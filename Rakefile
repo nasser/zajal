@@ -23,14 +23,14 @@ namespace :docs do
     Dir.chdir d
     FileUtils.mkpath "#{OutputDirectory}"
     log.capture("Writing index") { File.open("#{OutputDirectory}/index.html", 'w') { |f| f.write Index.render } }
-    YARD::Registry.all(:method).each do |methobj|
-      if methobj.tag(:api) and methobj.tag(:api).text == "zajal"
-        log.capture("Writing #{methobj.file_path}") do
-          FileUtils.mkpath "#{OutputDirectory}/#{methobj.file_path}/"
-          File.open("#{OutputDirectory}/#{methobj.file_path}/index.html", 'w') { |f| f.write Mathod.new(methobj).render }
-        end
-      end
-    end
+    # YARD::Registry.all(:method).each do |methobj|
+    #   if methobj.tag(:api) and methobj.tag(:api).text == "zajal"
+    #     log.capture("Writing #{methobj.file_path}") do
+    #       FileUtils.mkpath "#{OutputDirectory}/#{methobj.file_path}/"
+    #       File.open("#{OutputDirectory}/#{methobj.file_path}/index.html", 'w') { |f| f.write Mathod.new(methobj).render }
+    #     end
+    #   end
+    # end
 
     cp_r FileList["#{StaticDirectory}/*"], OutputDirectory
   end

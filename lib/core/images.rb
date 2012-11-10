@@ -8,13 +8,12 @@ module Zajal
     class Image
       # Create a new image object
       # 
-      # @overload image
-      # @overload image filename
-      # @overload image width, height
-      # 
-      # @param filename [#to_s] name of the file to load
-      # @param width [Numeric] width of the new image
-      # @param width [Numeric] height of the new image
+      # @overload initialize
+      # @overload initialize filename
+      #   @param filename [#to_s] name of the file to load
+      # @overload initialize width, height
+      #   @param width [Numeric] width of the new image
+      #   @param width [Numeric] height of the new image
       def initialize *args
         @pointer = Native.ofimage_new
 
@@ -91,16 +90,17 @@ module Zajal
       # Draw the image
       # 
       # @overload draw x, y
+      #   @param x [Numeric] distance from the left to start drawing
+      #   @param y [Numeric] distance from the top to start drawing
       # @overload draw x, y, size
+      #   @param x [Numeric] distance from the left to start drawing
+      #   @param y [Numeric] distance from the top to start drawing
+      #   @param size [Numeric] proportional scale of the drawn image
       # @overload draw x, y, width, height
-      # 
-      # @param x [Numeric] distance from the left to start drawing
-      # @param y [Numeric] distance from the top to start drawing
-      # @param size [Numeric] proportional scale of the drawn image
-      # @param width [Numeric] width of the drawn image
-      # @param height [Numeric] height of the drawn image
-      # 
-      # @return [nil] nothing
+      #   @param x [Numeric] distance from the left to start drawing
+      #   @param y [Numeric] distance from the top to start drawing
+      #   @param width [Numeric] width of the drawn image
+      #   @param height [Numeric] height of the drawn image
       def draw x, y, w=nil, h=nil
         if not w.present?
           w = width
@@ -159,18 +159,21 @@ module Zajal
 
     # Draw an image
     # 
-    # This is shorthand for the {Image} class. It creates an image object,
-    # caches it for future use, and draws that image right away. If width and
-    # height are not given, the 
     # 
     # @overload image file x, y
-    # @overload image file x, y, width, height
+    #   This is shorthand for the {Image} class. It creates an image object,
+    #   caches it for future use, and draws that image right away. If width and
+    #   height are not given, the 
+    #   @param [#to_s] file The image file to load
+    #   @param [Numeric] x the x coordinate to draw the image at
+    #   @param [Numeric] y the y coordinate to draw the image at
     # 
-    # @param file [#to_s] The image file to load
-    # @param x [Numeric] the x coordinate to draw the image at
-    # @param y [Numeric] the y coordinate to draw the image at
-    # @param width [Numeric] the width to draw the image at
-    # @param height [Numeric] the height to draw the image at
+    # @overload image file x, y, width, height
+    #   @param [#to_s] file The image file to load
+    #   @param [Numeric] x the x coordinate to draw the image at
+    #   @param [Numeric] y the y coordinate to draw the image at
+    #   @param [Numeric] width the width to draw the image at
+    #   @param [Numeric] height the height to draw the image at
     # 
     # @return [nil] Nothing
     # 

@@ -9,34 +9,55 @@ module Zajal
   # 
   # @api zajal
   module Graphics
-
     # Draw a circle
     # 
-    # @screenshot Single circle
-    #   circle 50, 50, 25
+    # @overload circle x, y, radius
+    #   @param [Numeric] x x coordinate of circle's center
+    #   @param [Numeric] y y coordinate of circle's center
+    #   @param [Numeric] radius radius of the circle
+    #   @screenshot Single circle
+    #     circle 50, 50, 25
+    #   @screenshot Four circles
+    #     circle 25, 25, 20
+    #     circle 75, 25, 20
+    #     circle 75, 75, 20
+    #     circle 25, 75, 20
     # 
-    # @screenshot Four circles
-    #   circle 25, 25, 20
-    #   circle 75, 25, 20
-    #   circle 75, 75, 20
-    #   circle 25, 75, 20
+    # @overload circle x, y, z, radius
+    #   @param [Numeric] x x coordinate of circle's center
+    #   @param [Numeric] y y coordinate of circle's center
+    #   @param [Numeric] z z coordinate of circle's center
+    #   @param [Numeric] radius radius of the circle
     # 
-    # @screenshot Point object
-    #   p = OpenStruct.new
-    #   p.x = 80
-    #   p.y = 20
+    # @overload circle point, radius
+    #   `point` can be any object that responds to `x` and `y` messages
+    #   @param [#x,#y] point the circle's center
+    #   @param [Numeric] radius radius of the circle
+    #   @screenshot Point object
+    #     class MyPoint
+    #       def initialize x, y
+    #         @x = x
+    #         @y = y
+    #       end
     # 
-    #   circle p, 10
+    #       def x
+    #         @x
+    #       end
     # 
-    # @syntax circle x, y, radius
-    # @syntax circle x, y, z, radius
-    # @syntax circle point, radius
+    #       def y
+    #         @y
+    #       end
+    #     end
+    #     
+    #     p = MyPoint.new 25, 75
+    #     circle p, 20
     # 
-    # @param x [Numeric] x coordinate of circle's center
-    # @param y [Numeric] y coordinate of circle's center
-    # @param z [Numeric] z coordinate of circle's center
-    # @param radius [Numeric] radius of the circle
-    # @param point [#x,#y] the circle's center
+    #   @screenshot Using OpenStruct
+    #     p = OpenStruct.new
+    #     p.x = 80
+    #     p.y = 20
+    #   
+    #     circle p, 10
     # 
     # @see #circle_resolution
     def circle *args
@@ -61,27 +82,26 @@ module Zajal
       Native.ofCircle x.to_f, y.to_f, z.to_f, r.to_f
     end
 
-    # Enable or disable alpha blending
-    # 
-    # Alpha blending allows for transparent colors in colors and images, but can
-    # slow down your sketch. You can enable and disable it as needed.
-    # 
-    # @screenshot With and without blending
-    #   alpha_blending false
-    #   color :white, 128
-    #   circle 40, 25, 20
-    #   circle 60, 25, 20
+    # @overload alpha_blending on
+    #   Enable or disable alpha blending
     #   
-    #   alpha_blending true
-    #   color :white, 128
-    #   circle 40, 75, 20
-    #   circle 60, 75, 20
+    #   Alpha blending allows for transparent colors in colors and images, but can
+    #   slow down your sketch. You can enable and disable it as needed.
     # 
-    # @syntax alpha_blending -> blending
-    # @syntax alpha_blending on
+    #   @param on [Boolean] true to enable alpha blending, false to disable
+    #   @screenshot With and without blending
+    #     alpha_blending false
+    #     color :white, 128
+    #     circle 40, 25, 20
+    #     circle 60, 25, 20
+    #     
+    #     alpha_blending true
+    #     color :white, 128
+    #     circle 40, 75, 20
+    #     circle 60, 75, 20
     # 
-    # @param on [Boolean] true to enable alpha blending, false to disable
-    # @return blending [Boolean] the new alpha blending value
+    # @overload alpha_blending
+    #   @return [Boolean] current alpha blending
     def alpha_blending on=nil
       @alpha_blending ||= false
 
@@ -95,14 +115,33 @@ module Zajal
 
     # Set the background color and clear the screen to that color 
     # 
-    # @screenshot Blue background
-    #   background :blue
-    #   circle 50, 50, 30
+    # @overload background red, green, blue
+    #   @param [0..255] red the amount of red
+    #   @param [0..255] green the amount of green
+    #   @param [0..255] blue the amount of blue
     # 
-    # @param r [Numeric] the amount of red, 0..255
-    # @param g [Numeric] the amount of green, 0..255
-    # @param b [Numeric] the amount of blue, 0..255
-    # @param a [Numeric] the amount of alpha, 0..255
+    # @overload background red, green, blue, alpha
+    #   @param [0..255] red the amount of red
+    #   @param [0..255] green the amount of green
+    #   @param [0..255] blue the amount of blue
+    #   @param [0..255] alpha the amount of alpha
+    # 
+    # @overload background name
+    #   Use a named color
+    #   @param [Symbol] name the name of the color to use
+    #   @screenshot Blue background
+    #     background :blue
+    #     circle 50, 50, 30
+    # 
+    # @overload background name, alpha
+    # 
+    # @overload background hue, saturation, value
+    # 
+    # @overload background hue, saturation, value, alpha
+    # 
+    # @overload background
+    #   @return [Color] current background color
+    # 
     # 
     # @return [nil] Nothing
     def background *args
@@ -117,31 +156,34 @@ module Zajal
 
     # Draw a rectangle
     # 
-    # @screenshot Single thin rectangle
-    #   rectangle 45, 10, 10, 80
+    # @overload rectangle x, y, width, height
+    #   @screenshot Single thin rectangle
+    #     rectangle 45, 10, 10, 80
+    #   
+    #   @screenshot Single wide rectangle
+    #     rectangle 25, 10, 50, 80
+    #   
+    #   @screenshot Carefully placed rectangles
+    #     rectangle 10, 10, 1, 80
+    #     rectangle 12, 10, 2, 80
+    #     rectangle 15, 10, 3, 80
+    #     rectangle 19, 10, 4, 80
+    #     rectangle 24, 10, 5, 80
+    #     rectangle 30, 10, 6, 80
+    #     rectangle 37, 10, 7, 80
+    #     rectangle 45, 10, 8, 80
+    #     rectangle 54, 10, 9, 80
+    #     rectangle 64, 10, 10, 80
+    #     rectangle 75, 10, 11, 80
+    #   @param x [Numeric] x coordinate of top left corner
+    #   @param y [Numeric] y coordinate of top left corner
+    #   @param width [Numeric] width of rectangle
+    #   @param height [Numeric] height of rectangle
     # 
-    # @screenshot Single wide rectangle
-    #   rectangle 25, 10, 50, 80
-    # 
-    # @screenshot Carefully placed rectangles
-    #   rectangle 10, 10, 1, 80
-    #   rectangle 12, 10, 2, 80
-    #   rectangle 15, 10, 3, 80
-    #   rectangle 19, 10, 4, 80
-    #   rectangle 24, 10, 5, 80
-    #   rectangle 30, 10, 6, 80
-    #   rectangle 37, 10, 7, 80
-    #   rectangle 45, 10, 8, 80
-    #   rectangle 54, 10, 9, 80
-    #   rectangle 64, 10, 10, 80
-    #   rectangle 75, 10, 11, 80
-    # 
-    # @param x [Numeric] x coordinate of top left corner
-    # @param y [Numeric] y coordinate of top left corner
-    # @param width [Numeric] width of rectangle
-    # @param height [Numeric] height of rectangle
-    # 
-    # @return [nil] Nothing
+    # @overload rectangle x, y, z, width, height
+    # @overload rectangle x, y, z, width, height
+    # @overload rectangle x, y, size_object
+    # @overload rectangle x, y, size_object
     # 
     # @see #square
     def rectangle *args
@@ -175,36 +217,45 @@ module Zajal
 
     # Draw a line between two points
     # 
-    # @screenshot Single line
-    #   line 10, 10, 90, 90
+    # @overload line x1, y1, x2, y2
+    #   @screenshot Single line
+    #     line 10, 10, 90, 90
+    #   
+    #   @screenshot Multiple lines
+    #     line 10, 0, 90, 80
+    #     line 10, 10, 90, 90
+    #     line 10, 20, 90, 100
+    #   
+    #   @screenshot Mesh
+    #     10.times do |i|
+    #       line i*10, 100, 100, 100-i*10
+    #     end
+    #   
+    #   @param x1 [Numeric] the x coordinate of the first point 
+    #   @param y1 [Numeric] the y coordinate of the first point 
+    #   @param x2 [Numeric] the x coordinate of the second point 
+    #   @param y2 [Numeric] the y coordinate of the second point 
     # 
-    # @screenshot Multiple lines
-    #   line 10, 0, 90, 80
-    #   line 10, 10, 90, 90
-    #   line 10, 20, 90, 100
+    # @overload line x1, y1, z1, x2, y2, z2
+    #   @param x1 [Numeric] the x coordinate of the first point 
+    #   @param y1 [Numeric] the y coordinate of the first point 
+    #   @param z1 [Numeric] the z coordinate of the first point 
+    #   @param x2 [Numeric] the x coordinate of the second point 
+    #   @param y2 [Numeric] the y coordinate of the second point 
+    #   @param z2 [Numeric] the z coordinate of the second point 
     # 
-    # @screenshot Mesh
-    #   10.times do |i|
-    #     line i*10, 100, 100, 100-i*10
-    #   end
+    # @overload line start_point, end_point
+    #   @screenshot Point objects
+    #     a = OpenStruct.new
+    #     b = OpenStruct.new
+    #   
+    #     a.x = 10
+    #     a.y = 20
+    #     b.x = 90
+    #     b.y = 70
+    #   
+    #     line a, b
     # 
-    # @screenshot Point objects
-    #   a = OpenStruct.new
-    #   b = OpenStruct.new
-    # 
-    #   a.x = 10
-    #   a.y = 20
-    #   b.x = 90
-    #   b.y = 70
-    # 
-    #   line a, b
-    # 
-    # @param x1 [Numeric] the x coordinate of the first point 
-    # @param y1 [Numeric] the y coordinate of the first point 
-    # @param x2 [Numeric] the x coordinate of the second point 
-    # @param y2 [Numeric] the y coordinate of the second point 
-    # 
-    # @return [nil] Nothing
     def line *args
       x1 = y1 = z1 = x2 = y2 = z2 = 0
 
@@ -227,49 +278,26 @@ module Zajal
       Native.ofLine x1.to_f, y1.to_f, z1.to_f, x2.to_f, y2.to_f, z2.to_f
     end
 
-    # Set the width of subsequent lines
+    # @overload line_width new_width
+    #   Set the width of subsequent lines
+    #   @screenshot Two lines
+    #     line_width 1
+    #     line 10, 5, 90, 85
+    #   
+    #     line_width 5
+    #     line 10, 15, 90, 95
     # 
-    # @screenshot Two lines
-    #   line_width 1
-    #   line 10, 5, 90, 85
-    # 
-    #   line_width 5
-    #   line 10, 15, 90, 95
-    # 
-    # @screenshot Thicker lines
-    #   line_width 1
-    #   line 0, 10, 100, 10
-    # 
-    #   line_width 2
-    #   line 0, 20, 100, 20
-    # 
-    #   line_width 3
-    #   line 0, 30, 100, 30
-    # 
-    #   line_width 4
-    #   line 0, 40, 100, 40
-    # 
-    #   line_width 5
-    #   line 0, 50, 100, 50
-    # 
-    #   line_width 6
-    #   line 0, 60, 100, 60
-    # 
-    #   line_width 7
-    #   line 0, 70, 100, 70
-    # 
-    #   line_width 8
-    #   line 0, 80, 100, 80
-    # 
-    #   line_width 9
-    #   line 0, 90, 100, 90
+    #   @param new_width [Numeric] the width of the lines
     # 
     # @overload line_width
-    #   @return [Numeric] the current line width
+    #   Get the current line width
+    #   @screenshot
+    #     text line_width
+    #     line_width 10
+    #     text line_width
+    #   @return [Numeric] current line width
     # 
-    # @overload line_width new_width
-    #   @param new_width [Numeric] the width of the lines
-    #   @return [nil] Nothing
+    # 
     def line_width new_width=nil
       @line_width ||= 1
 
@@ -284,35 +312,33 @@ module Zajal
     # Draw a square
     # 
     # @overload square x, y, size
-    # 
-    # @screenshot Single square
-    #   square 10, 10, 80
-    #
-    # @screenshot Corner to corner
-    #   square 10, 10, 10
-    #   square 20, 20, 20
-    #   square 40, 40, 40
-    # 
-    # @screenshot Carefully placed squares
-    #   square 10, 50, 1
-    #   square 12, 50, 2
-    #   square 15, 50, 3
-    #   square 19, 50, 4
-    #   square 24, 50, 5
-    #   square 30, 50, 6
-    #   square 37, 50, 7
-    #   square 45, 50, 8
-    #   square 54, 50, 9
-    #   square 64, 50, 10
-    #   square 75, 50, 11
-    # 
-    # @param x [Numeric] x coordinate of the top left corner
-    # @param y [Numeric] y coordinate of the top left corner
-    # @param size [Numeric] the width and height of the square
-    # 
-    # @return [nil] Nothing
-    # 
-    # @see #rectangle
+    #   Draw a square centered at `x`,`y` with size `size`.
+    #   @screenshot Single square
+    #     square 10, 10, 80
+    #   
+    #   @screenshot Corner to corner
+    #     square 10, 10, 10
+    #     square 20, 20, 20
+    #     square 40, 40, 40
+    #   
+    #   @screenshot Carefully placed squares
+    #     square 10, 50, 1
+    #     square 12, 50, 2
+    #     square 15, 50, 3
+    #     square 19, 50, 4
+    #     square 24, 50, 5
+    #     square 30, 50, 6
+    #     square 37, 50, 7
+    #     square 45, 50, 8
+    #     square 54, 50, 9
+    #     square 64, 50, 10
+    #     square 75, 50, 11
+    #   
+    #   @param x [Numeric] x coordinate of the top left corner
+    #   @param y [Numeric] y coordinate of the top left corner
+    #   @param size [Numeric] the width and height of the square
+    #   
+    #   @return [nil] Nothing
     def square *args
       x = y = z = s = 0
 
@@ -355,32 +381,34 @@ module Zajal
     # 
     # Scaling is centered at the top left corner
     # 
-    # @screenshot Same circle scaled
-    #   fill false
+    # @overload scale size
+    #   @screenshot Same circle scaled
+    #     fill false
+    #   
+    #     scale 1
+    #     circle 10, 10, 10
+    #   
+    #     scale 1.5
+    #     circle 10, 10, 10
+    #   
+    #     scale 2
+    #     circle 10, 10, 10
+    #   
+    #     scale 2.5
+    #     circle 10, 10, 10
+    #   
+    #     scale 3
+    #     circle 10, 10, 10
+    #   @param size [Numeric] amount to scale in all directions
     # 
-    #   scale 1
-    #   circle 10, 10, 10
+    # @overload scale x, y
+    #   @param x [Numeric] amount to scale in x
+    #   @param y [Numeric] amount to scale in y
     # 
-    #   scale 1.5
-    #   circle 10, 10, 10
-    # 
-    #   scale 2
-    #   circle 10, 10, 10
-    # 
-    #   scale 2.5
-    #   circle 10, 10, 10
-    # 
-    #   scale 3
-    #   circle 10, 10, 10
-    # 
-    # @syntax scale s
-    # @syntax scale x, y
-    # @syntax scale x, y, z
-    # 
-    # @param s [Numeric] amount to scale in all directions
-    # @param x [Numeric] amount to scale in x
-    # @param y [Numeric] amount to scale in y
-    # @param z [Numeric] amount to scale in z
+    # @overload scale x, y, z
+    #   @param x [Numeric] amount to scale in x
+    #   @param y [Numeric] amount to scale in y
+    #   @param z [Numeric] amount to scale in z
     def scale x, y=nil, z=1.0
       y = x unless y.present?
       Native.ofScale x.to_f, y.to_f, z.to_f
@@ -434,58 +462,67 @@ module Zajal
 
     # Set the color that subsequent drawing will be done in
     # 
-    # @screenshot Named colors
-    #   color :yellow
-    #   circle 20, 50, 15
-    #   color :lime_green
-    #   circle 80, 50, 15
-    # 
-    # @screenshot RGB colors
-    #   color_mode :rgb
-    #   color 200, 128, 64
-    #   circle 20, 50, 15
-    # 
-    #   color 30, 128, 200
-    #   circle 80, 50, 15
-    # 
-    # @screenshot HSV colors
-    #   color_mode :hsv
-    #   background :white
-    # 
-    #   color 0, 200, 200
-    #   circle 20, 50, 15
-    # 
-    #   color 200, 200, 200
-    #   circle 80, 50, 15
-    # 
-    # @screenshot Splatter
-    #   translate width/2, height/2
+    # @overload color red, green, blue
+    #   `red`, `green`, and `blue` are numbers between 0 and 255
+    #   @screenshot RGB colors
+    #     color_mode :rgb
+    #     color 200, 128, 64
+    #     circle 20, 50, 15
     #   
-    #   color_mode :hsv
-    #   clear :black
+    #     color 30, 128, 200
+    #     circle 80, 50, 15
     #   
-    #   128.times do |i|
-    #     color i*2, 255, 255
-    #     line 0, 0, cos(i/128.0 * PI)*50, sin(i)*50
-    #   end
+    # @overload color red, green, blue, alpha
     # 
-    # @screenshot Esotetic colors
-    #   color :light_goldenrod_yellow
-    #   circle 20, 20, 15
+    # @overload color name
+    #   
+    #   @screenshot Common colors
+    #     color :yellow
+    #     circle 20, 50, 15
+    #     color :lime_green
+    #     circle 80, 50, 15
     # 
-    #   color :medium_aquamarine
-    #   circle 80, 20, 15
+    #   @screenshot Esotetic colors
+    #     color :light_goldenrod_yellow
+    #     circle 20, 20, 15
+    #   
+    #     color :medium_aquamarine
+    #     circle 80, 20, 15
+    #   
+    #     color :cornflower_blue
+    #     circle 20, 80, 15
+    #   
+    #     color :light_slate_gray
+    #     circle 80, 80, 15
     # 
-    #   color :cornflower_blue
-    #   circle 20, 80, 15
+    # @overload color name, alpha
+    # @overload color gray
+    # @overload color gray, alpha
+    # @overload color hue, saturation, value
+    #   @screenshot HSV colors
+    #     color_mode :hsv
+    #     background :white
+    #   
+    #     color 0, 200, 200
+    #     circle 20, 50, 15
+    #   
+    #     color 200, 200, 200
+    #     circle 80, 50, 15
+    #   
+    #   @screenshot Splatter
+    #     translate width/2, height/2
+    #     
+    #     color_mode :hsv
+    #     clear :black
+    #     
+    #     128.times do |i|
+    #       color i*2, 255, 255
+    #       line 0, 0, cos(i/128.0 * PI)*50, sin(i)*50
+    #     end
     # 
-    #   color :light_slate_gray
-    #   circle 80, 80, 15
-    # 
-    # @param r [Numeric] the amount of red, 0..255
-    # @param g [Numeric] the amount of green, 0..255
-    # @param b [Numeric] the amount of blue, 0..255
-    # @param a [Numeric] the amount of alpha, 0..255
+    # @overload color hue, saturation, value, alpha
+    # @overload color
+    #   @return [Color] current color
     # 
     # @return [nil] Nothing
     def color *args
@@ -515,7 +552,7 @@ module Zajal
     # 
     # @param mode [Symbol]
     # 
-    # @return [Symbol] the new alpha blending value
+    # @return [Symbol] current color mode
     def color_mode mode=nil
       @color_mode ||= :rgb
 
@@ -525,9 +562,21 @@ module Zajal
 
     # Clear the canvas to a color
     # 
-    # @param r [Numeric] the amount of red, 0..255
-    # @param g [Numeric] the amount of green, 0..255
-    # @param b [Numeric] the amount of blue, 0..255
+    # @overload clear red, green, blue
+    #   @param red [0..255] the amount of red
+    #   @param green [0..255] the amount of green
+    #   @param blue [0..255] the amount of blue
+    # 
+    # @overload clear r, g, b, a
+    #   @param red [0..255] the amount of red
+    #   @param green [0..255] the amount of green
+    #   @param blue [0..255] the amount of blue
+    #   @param alpha [0..255] the amount of alpha
+    # 
+    # @overload clear hue, saturation, value
+    # @overload clear hue, saturation, value, alpha
+    # @overload clear name
+    # @overload clear name, alpha
     # 
     # @return [nil] Nothing
     def clear *args
@@ -565,17 +614,20 @@ module Zajal
       end
     end
 
-    # @screenshot Low resolution circle
-    #   circle_resolution 10
-    #   circle 50, 50, 45
+    # @overload circle_resolution new_resolution
+    #   @screenshot Low resolution circle
+    #     circle_resolution 10
+    #     circle 50, 50, 45
+    #   
+    #   @screenshot Medium resolution circle
+    #     circle_resolution 20
+    #     circle 50, 50, 45
+    #   
+    #   @screenshot High resolution circle
+    #     circle_resolution 60
+    #     circle 50, 50, 45
     # 
-    # @screenshot Medium resolution circle
-    #   circle_resolution 20
-    #   circle 50, 50, 45
-    # 
-    # @screenshot High resolution circle
-    #   circle_resolution 60
-    #   circle 50, 50, 45
+    # @overload circle_resolution
     def circle_resolution new_resolution=nil
       @circle_resolution ||= 22 # TODO what is the default resolution
 
@@ -623,12 +675,15 @@ module Zajal
       end
     end
 
-    # @screenshot Filled and unfilled circles
-    #   fill true
-    #   circle 30, 50, 15
+    # @overload fill fill_or_not
+    #   @screenshot Filled and unfilled circles
+    #     fill true
+    #     circle 30, 50, 15
+    #   
+    #     fill false
+    #     circle 70, 50, 15
     # 
-    #   fill false
-    #   circle 70, 50, 15
+    # @overload fill
     def fill filled=nil
       if filled.present?
         filled ? Native.ofFill : Native.ofNoFill
@@ -637,24 +692,28 @@ module Zajal
       end
     end
 
-    # @screenshot Blend mode
-    #   color :white, 128
+    # @overload blend_mode new_mode
+    #   @screenshot Blend mode
+    #     color :white, 128
+    #   
+    #     blend_mode :add
+    #     circle 20, 25, 10
+    #     circle 30, 25, 10
+    #   
+    #     blend_mode :subtract
+    #     circle 80, 25, 10
+    #     circle 70, 25, 10
+    #   
+    #     blend_mode :multiply
+    #     circle 80, 75, 10
+    #     circle 70, 75, 10
+    #   
+    #     blend_mode :alpha
+    #     circle 20, 75, 10
+    #     circle 30, 75, 10
     # 
-    #   blend_mode :add
-    #   circle 20, 25, 10
-    #   circle 30, 25, 10
-    # 
-    #   blend_mode :subtract
-    #   circle 80, 25, 10
-    #   circle 70, 25, 10
-    # 
-    #   blend_mode :multiply
-    #   circle 80, 75, 10
-    #   circle 70, 75, 10
-    # 
-    #   blend_mode :alpha
-    #   circle 20, 75, 10
-    #   circle 30, 75, 10
+    # @overload blend_mode
+    #   @return [Symbol] current blend mode
     # 
     def blend_mode mode=nil
       @blend_mode ||= :disabled
@@ -713,30 +772,34 @@ module Zajal
       end
     end
 
-    # @screenshot Triangle
-    #   triangle 50, 50, 30
+    # @overload triangle x, y, size
+    #   @screenshot Triangle
+    #     triangle 50, 50, 30
+    #   @screenshot Equilateral triangles
+    #     fill false
+    #     triangle 50, 50, 50
+    #     triangle 50, 50, 40
+    #     triangle 50, 50, 30
+    #     triangle 50, 50, 20
+    #     triangle 50, 50, 10
     # 
-    # @screenshot Equilateral triangles
-    #   fill false
-    #   triangle 50, 50, 50
-    #   triangle 50, 50, 40
-    #   triangle 50, 50, 30
-    #   triangle 50, 50, 20
-    #   triangle 50, 50, 10
+    # @overload triangle point, size
+    # @overload triangle x, y, size, angle
+    #   @screenshot Isosceles triangles
+    #     fill false
+    #     triangle 50, 50, 30, 170
+    #     triangle 50, 50, 30, 150
+    #     triangle 50, 50, 30, 130
+    #     triangle 50, 50, 30, 110
+    #     triangle 50, 50, 30, 90
     # 
+    # @overload triangle point, size, angle
+    # @overload triangle x1, y1, x2, y2, x3, y3
+    #   @screenshot Scalene triangle
+    #     fill false
+    #     triangle 75, 60, 50, 50, 80, 10
     # 
-    # @screenshot Isosceles triangles
-    #   fill false
-    #   triangle 50, 50, 30, 170
-    #   triangle 50, 50, 30, 150
-    #   triangle 50, 50, 30, 130
-    #   triangle 50, 50, 30, 110
-    #   triangle 50, 50, 30, 90
-    # 
-    # 
-    # @screenshot Scalene triangle
-    #   fill false
-    #   triangle 75, 60, 50, 50, 80, 10
+    # @overload triangle point_a, point_b, point_c
     # 
     def triangle *args
       x1 = y1 = z1 = x2 = y2 = z2 = x3 = y3 = z3 = 0
