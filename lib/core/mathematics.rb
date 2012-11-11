@@ -1,4 +1,5 @@
 module Zajal
+  # @api zajal
   module Mathematics
     def noise x=nil, y=0.0, z=0.0, w=0.0
       x = time unless x.present?
@@ -14,6 +15,7 @@ module Zajal
       rand *args
     end
 
+    # @api internal
     module Native
       extend FFI::Cpp::Library
 
