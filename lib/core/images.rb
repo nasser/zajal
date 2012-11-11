@@ -54,7 +54,20 @@ module Zajal
         Native.ofimage_saveImage @pointer, File.expand_path(path.to_s).to_ptr, quality
       end
 
-      def grab_screen x, y, w, h
+      # @overload grab_screen
+      # @overload grab_screen x, y
+      # @overload grab_screen x, y, width, height
+      def grab_screen *args
+        x, y = 0, 0
+        w, h = Sketch.current.width, Sketch.current.height
+
+        case args
+        when Signature[:to_i, :to_i] # x, y
+          x, y = *args
+        when Signature[:to_i, :to_i, :to_i, :to_i] # x, y, w, h
+          x, y, w, h = *args
+        end
+
         Native.ofimage_grabScreen @pointer, x.to_i, y.to_i, w.to_i, h.to_i
       end
 
@@ -167,12 +180,18 @@ module Zajal
       file = args.shift
       @cached_images[file] ||= Image.new file
       @cached_images[file].draw *args
+
+      @cached_images[file]
     end
 
+    # @overload grab_screen
+    # @overload grab_screen x, y
+    # @overload grab_screen x, y, width, height
     def grab_screen *args
-      i = Image.new
-      i.grab_screen *args
-      i
+      img = Image.new
+      img.grab_screen *args
+
+      img
     end
   end
 end
