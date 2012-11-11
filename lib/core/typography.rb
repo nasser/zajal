@@ -43,7 +43,7 @@ module Zajal
       end
 
       # Draw text using this font's glyphs
-      # @screenshot
+      # @demo
       #   fnt = Font.new 'Georgia', 16
       #   fnt.draw "Nice serifs!", 10, 60
       # 
@@ -79,9 +79,9 @@ module Zajal
     # @overload text message
     #   Draw `message` in top left corner. Calling this method multiple times will
     #   stack the text, making {#text} useful for quick debugging.
-    #   @screenshot
+    #   @demo
     #     text "Hello, world!"
-    #   @screenshot
+    #   @demo
     #     text "Hello, world!"
     #     text "This text..."
     #     text "...can stack!"
@@ -90,7 +90,7 @@ module Zajal
     # @overload text message, x, y
     #   Draw `message` at a specific location on screen. The first letter will be placed
     #   at `x`,`y` and the text will continue to the left.
-    #   @screenshot
+    #   @demo
     #     text "Hello, world!", 10, 50
     #   @param message [#to_s] the text to write
     #   @param x [Numeric] the x coordinate to start writing text at

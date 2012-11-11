@@ -67,7 +67,7 @@ module YARD::Tags
     end
   end
 
-  class ScreenshotTag < ExampleTag
+  class DemoTag < ExampleTag
     def initialize tagname, text
       super tagname, text
 
@@ -89,7 +89,7 @@ module YARD::Tags
 
 
   Library.define_tag "Example", :example, ExampleTag
-  Library.define_tag "Screenshot", :screenshot, ScreenshotTag
+  Library.define_tag "Demo", :demo, DemoTag
   Library.define_tag "See Also", :see, SeeTag
   # Library.define_tag "Return", :return, :with_types_and_name
   # Library.define_directive :setting, SettingDirective
@@ -115,7 +115,7 @@ module Methodish
   def overloads; tags(:overload) end
   def syntaxes; tags(:syntax) end
   def example; examples.first end
-  def examples; tags(:screenshot) + tags(:example) end
+  def examples; tags(:demo) + tags(:example) end
   def params; tags(:param) end
   def returns; tags(:return) end
   def useful_returns; returns.select { |t| t.types and not t.types.all? { |y| y == "nil" or y == "Object" } } end

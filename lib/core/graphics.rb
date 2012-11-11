@@ -15,9 +15,9 @@ module Zajal
     #   @param [Numeric] x x coordinate of circle's center
     #   @param [Numeric] y y coordinate of circle's center
     #   @param [Numeric] radius radius of the circle
-    #   @screenshot Single circle
+    #   @demo Single circle
     #     circle 50, 50, 25
-    #   @screenshot Four circles
+    #   @demo Four circles
     #     circle 25, 25, 20
     #     circle 75, 25, 20
     #     circle 75, 75, 20
@@ -33,7 +33,7 @@ module Zajal
     #   `point` can be any object that responds to `x` and `y` messages
     #   @param [#x,#y] point the circle's center
     #   @param [Numeric] radius radius of the circle
-    #   @screenshot Point object
+    #   @demo Point object
     #     class MyPoint
     #       def initialize x, y
     #         @x = x
@@ -52,7 +52,7 @@ module Zajal
     #     p = MyPoint.new 25, 75
     #     circle p, 20
     # 
-    #   @screenshot Using OpenStruct
+    #   @demo Using OpenStruct
     #     p = OpenStruct.new
     #     p.x = 80
     #     p.y = 20
@@ -89,7 +89,7 @@ module Zajal
     #   slow down your sketch. You can enable and disable it as needed.
     # 
     #   @param on [Boolean] true to enable alpha blending, false to disable
-    #   @screenshot With and without blending
+    #   @demo With and without blending
     #     alpha_blending false
     #     color :white, 128
     #     circle 40, 25, 20
@@ -129,7 +129,7 @@ module Zajal
     # @overload background name
     #   Use a named color
     #   @param [Symbol] name the name of the color to use
-    #   @screenshot Blue background
+    #   @demo Blue background
     #     background :blue
     #     circle 50, 50, 30
     # 
@@ -157,13 +157,13 @@ module Zajal
     # Draw a rectangle
     # 
     # @overload rectangle x, y, width, height
-    #   @screenshot Single thin rectangle
+    #   @demo Single thin rectangle
     #     rectangle 45, 10, 10, 80
     #   
-    #   @screenshot Single wide rectangle
+    #   @demo Single wide rectangle
     #     rectangle 25, 10, 50, 80
     #   
-    #   @screenshot Carefully placed rectangles
+    #   @demo Carefully placed rectangles
     #     rectangle 10, 10, 1, 80
     #     rectangle 12, 10, 2, 80
     #     rectangle 15, 10, 3, 80
@@ -218,15 +218,15 @@ module Zajal
     # Draw a line between two points
     # 
     # @overload line x1, y1, x2, y2
-    #   @screenshot Single line
+    #   @demo Single line
     #     line 10, 10, 90, 90
     #   
-    #   @screenshot Multiple lines
+    #   @demo Multiple lines
     #     line 10, 0, 90, 80
     #     line 10, 10, 90, 90
     #     line 10, 20, 90, 100
     #   
-    #   @screenshot Mesh
+    #   @demo Mesh
     #     10.times do |i|
     #       line i*10, 100, 100, 100-i*10
     #     end
@@ -245,7 +245,7 @@ module Zajal
     #   @param z2 [Numeric] the z coordinate of the second point 
     # 
     # @overload line start_point, end_point
-    #   @screenshot Point objects
+    #   @demo Point objects
     #     a = OpenStruct.new
     #     b = OpenStruct.new
     #   
@@ -280,7 +280,7 @@ module Zajal
 
     # @overload line_width new_width
     #   Set the width of subsequent lines
-    #   @screenshot Two lines
+    #   @demo Two lines
     #     line_width 1
     #     line 10, 5, 90, 85
     #   
@@ -291,7 +291,7 @@ module Zajal
     # 
     # @overload line_width
     #   Get the current line width
-    #   @screenshot
+    #   @demo
     #     text line_width
     #     line_width 10
     #     text line_width
@@ -313,15 +313,15 @@ module Zajal
     # 
     # @overload square x, y, size
     #   Draw a square centered at `x`,`y` with size `size`.
-    #   @screenshot Single square
+    #   @demo Single square
     #     square 10, 10, 80
     #   
-    #   @screenshot Corner to corner
+    #   @demo Corner to corner
     #     square 10, 10, 10
     #     square 20, 20, 20
     #     square 40, 40, 40
     #   
-    #   @screenshot Carefully placed squares
+    #   @demo Carefully placed squares
     #     square 10, 50, 1
     #     square 12, 50, 2
     #     square 15, 50, 3
@@ -363,7 +363,7 @@ module Zajal
 
     # Move all subsequent drawing
     # 
-    # @screenshot Same circle shifted
+    # @demo Same circle shifted
     #   circle 20, 50, 10
     #   translate 60, 0
     #   circle 20, 50, 10
@@ -382,7 +382,7 @@ module Zajal
     # Scaling is centered at the top left corner
     # 
     # @overload scale size
-    #   @screenshot Same circle scaled
+    #   @demo Same circle scaled
     #     fill false
     #   
     #     scale 1
@@ -414,29 +414,32 @@ module Zajal
       Native.ofScale x.to_f, y.to_f, z.to_f
     end
 
-    # Rotate all subsequent drawing
-    # 
-    # Rotating is centered at the top left corner
-    # 
-    # @screenshot Same square rotated
-    #   fill false
-    #   rotate 0
-    #   square 50, 10, 20
-    # 
-    #   rotate 5
-    #   square 50, 10, 20
-    # 
-    #   rotate 10
-    #   square 50, 10, 20
-    # 
-    #   rotate 15
-    #   square 50, 10, 20
-    # 
-    #   rotate 20
-    #   square 50, 10, 20
-    # 
-    #   rotate 25
-    #   square 50, 10, 20
+    # @overload rotate degrees
+    #   Rotate all subsequent drawing
+    #   
+    #   Rotating is centered at the top left corner
+    #   
+    #   @demo Same square rotated
+    #     fill false
+    #     rotate 0
+    #     square 50, 10, 20
+    #   
+    #     rotate 5
+    #     square 50, 10, 20
+    #   
+    #     rotate 10
+    #     square 50, 10, 20
+    #   
+    #     rotate 15
+    #     square 50, 10, 20
+    #   
+    #     rotate 20
+    #     square 50, 10, 20
+    #   
+    #     rotate 25
+    #     square 50, 10, 20
+    # @overload rotate degrees, x, y, z
+    # @overload rotate degrees, vector
     def rotate *args
       degrees = x = y = z = 0
 
@@ -449,10 +452,6 @@ module Zajal
         degrees, v = *args
         x, y, z = v.x, v.y, v.z
 
-      when Signature[:to_f, [:x,:y]]
-        degrees, v = *args
-        x, y = v.x, v.y
-
       when Signature[:to_f, :to_f, :to_f, :to_f]
         degrees, x, y, z = *args
       end
@@ -464,7 +463,7 @@ module Zajal
     # 
     # @overload color red, green, blue
     #   `red`, `green`, and `blue` are numbers between 0 and 255
-    #   @screenshot RGB colors
+    #   @demo RGB colors
     #     color_mode :rgb
     #     color 200, 128, 64
     #     circle 20, 50, 15
@@ -476,13 +475,13 @@ module Zajal
     # 
     # @overload color name
     #   
-    #   @screenshot Common colors
+    #   @demo Common colors
     #     color :yellow
     #     circle 20, 50, 15
     #     color :lime_green
     #     circle 80, 50, 15
     # 
-    #   @screenshot Esotetic colors
+    #   @demo Esotetic colors
     #     color :light_goldenrod_yellow
     #     circle 20, 20, 15
     #   
@@ -499,7 +498,7 @@ module Zajal
     # @overload color gray
     # @overload color gray, alpha
     # @overload color hue, saturation, value
-    #   @screenshot HSV colors
+    #   @demo HSV colors
     #     color_mode :hsv
     #     background :white
     #   
@@ -509,7 +508,7 @@ module Zajal
     #     color 200, 200, 200
     #     circle 80, 50, 15
     #   
-    #   @screenshot Splatter
+    #   @demo Splatter
     #     translate width/2, height/2
     #     
     #     color_mode :hsv
@@ -535,24 +534,25 @@ module Zajal
       @color
     end
 
-    # Set the way subsequent colors will be interpreted
+    # @overload color_mode mode
+    #   Set the way subsequent colors will be interpreted
     # 
-    # @screenshot Splatter
-    #   translate width/2, height/2
+    #   `:rgb` and `:hsv` are recognized
     #   
-    #   color_mode :hsv
-    #   clear :black
+    #   @demo Splatter
+    #     translate width/2, height/2
+    #     
+    #     color_mode :hsv
+    #     clear :black
+    #     
+    #     128.times do |i|
+    #       color i*2, 255, 255
+    #       line 0, 0, cos(i/128.0 * PI)*50, sin(i)*50
+    #     end
+    #   @param mode [Symbol] new color mode
     #   
-    #   128.times do |i|
-    #     color i*2, 255, 255
-    #     line 0, 0, cos(i/128.0 * PI)*50, sin(i)*50
-    #   end
-    # 
-    # You can set the color mode to anything defined as a subclass of Color, including HSV or RGB.
-    # 
-    # @param mode [Symbol]
-    # 
-    # @return [Symbol] current color mode
+    # @overload color_mode
+    #   @return [Symbol] current color mode
     def color_mode mode=nil
       @color_mode ||= :rgb
 
@@ -598,14 +598,17 @@ module Zajal
         pop_matrix
     end
 
-    # @screenshot Rectangle modes
-    #   rectangle_mode :corner
-    #   color :white
-    #   square 50, 50, 20
-    # 
-    #   rectangle_mode :center
-    #   color :black
-    #   square 50, 50, 20
+    # @overload rectangle_mode mode
+    #   @demo Rectangle modes
+    #     rectangle_mode :corner
+    #     color :white
+    #     square 50, 50, 20
+    #   
+    #     rectangle_mode :center
+    #     color :black
+    #     square 50, 50, 20
+    # @overload rectangle_mode
+    #   @return [Symbol] current rectangle mode
     def rectangle_mode mode=nil
       if mode.present?
         Native.ofSetRectMode mode
@@ -615,15 +618,15 @@ module Zajal
     end
 
     # @overload circle_resolution new_resolution
-    #   @screenshot Low resolution circle
+    #   @demo Low resolution circle
     #     circle_resolution 10
     #     circle 50, 50, 45
     #   
-    #   @screenshot Medium resolution circle
+    #   @demo Medium resolution circle
     #     circle_resolution 20
     #     circle 50, 50, 45
     #   
-    #   @screenshot High resolution circle
+    #   @demo High resolution circle
     #     circle_resolution 60
     #     circle 50, 50, 45
     # 
@@ -639,6 +642,8 @@ module Zajal
       end
     end
 
+    # @overload curve_resolution new_resolution
+    # @overload curve_resolution
     def curve_resolution new_resolution=nil
       @curve_resolution ||= 22 # TODO what is the default resolution
 
@@ -650,20 +655,23 @@ module Zajal
       end
     end
 
-    # @screenshot Low resolution sphere
-    #   fill false
-    #   sphere_resolution 5
-    #   sphere 50, 50, 40
-    # 
-    # @screenshot Medium resolution sphere
-    #   fill false
-    #   sphere_resolution 12
-    #   sphere 50, 50, 40
-    # 
-    # @screenshot High resolution sphere
-    #   fill false
-    #   sphere_resolution 16
-    #   sphere 50, 50, 40
+    # @overload sphere_resolution new_resolution
+    #   @demo Low resolution sphere
+    #     fill false
+    #     sphere_resolution 5
+    #     sphere 50, 50, 40
+    #   
+    #   @demo Medium resolution sphere
+    #     fill false
+    #     sphere_resolution 12
+    #     sphere 50, 50, 40
+    #   
+    #   @demo High resolution sphere
+    #     fill false
+    #     sphere_resolution 16
+    #     sphere 50, 50, 40
+    # @overload sphere_resolution
+    #   @return [Fixnum] current sphere resolution
     def sphere_resolution new_resolution=nil
       @sphere_resolution ||= 22 # TODO what is the default resolution
 
@@ -676,7 +684,7 @@ module Zajal
     end
 
     # @overload fill fill_or_not
-    #   @screenshot Filled and unfilled circles
+    #   @demo Filled and unfilled circles
     #     fill true
     #     circle 30, 50, 15
     #   
@@ -684,6 +692,7 @@ module Zajal
     #     circle 70, 50, 15
     # 
     # @overload fill
+    #   @return [Boolean] current fill
     def fill filled=nil
       if filled.present?
         filled ? Native.ofFill : Native.ofNoFill
@@ -693,7 +702,7 @@ module Zajal
     end
 
     # @overload blend_mode new_mode
-    #   @screenshot Blend mode
+    #   @demo Blend mode
     #     color :white, 128
     #   
     #     blend_mode :add
@@ -727,6 +736,8 @@ module Zajal
       end
     end
 
+    # @overload point_sprites sprites
+    # @overload point_sprites
     def point_sprites sprites=nil
       @point_sprites ||= false
 
@@ -746,7 +757,7 @@ module Zajal
       Native.ofPopStyle
     end
 
-    # @screenshot Isolated style
+    # @demo Isolated style
     #   fill true
     #   color :white
     #   circle 30, 30, 15
@@ -764,6 +775,8 @@ module Zajal
       pop_style
     end
 
+    # @overload clear_background clear
+    # @overload clear_background
     def clear_background clear=nil
       if clear.present?
         Native.ofSetBackgroundAuto clear.to_bool
@@ -773,9 +786,9 @@ module Zajal
     end
 
     # @overload triangle x, y, size
-    #   @screenshot Triangle
+    #   @demo Triangle
     #     triangle 50, 50, 30
-    #   @screenshot Equilateral triangles
+    #   @demo Equilateral triangles
     #     fill false
     #     triangle 50, 50, 50
     #     triangle 50, 50, 40
@@ -785,7 +798,7 @@ module Zajal
     # 
     # @overload triangle point, size
     # @overload triangle x, y, size, angle
-    #   @screenshot Isosceles triangles
+    #   @demo Isosceles triangles
     #     fill false
     #     triangle 50, 50, 30, 170
     #     triangle 50, 50, 30, 150
@@ -795,7 +808,7 @@ module Zajal
     # 
     # @overload triangle point, size, angle
     # @overload triangle x1, y1, x2, y2, x3, y3
-    #   @screenshot Scalene triangle
+    #   @demo Scalene triangle
     #     fill false
     #     triangle 75, 60, 50, 50, 80, 10
     # 
@@ -881,9 +894,13 @@ module Zajal
       Native.ofTriangle x1.to_f, y1.to_f, z1.to_f, x2.to_f, y2.to_f, z2.to_f, x3.to_f, y3.to_f, z3.to_f
     end
 
-    # @screenshot Ellipse
-    #   ellipse 50, 50, 80, 40
-    # 
+    # @overload ellipse x, y, width, height
+    #   @demo Ellipse
+    #     ellipse 50, 50, 80, 40
+    # @overload ellipse x, y, z, width, height
+    # @overload ellipse point, dimentions
+    # @overload ellipse point, width, height
+    # @overload ellipse x, y, dimentions
     def ellipse *args
       x = y = z = w = h = 0
 
@@ -911,8 +928,10 @@ module Zajal
       Native.ofEllipse x.to_f, y.to_f, z.to_f, w.to_f, h.to_f
     end
 
-    # @screenshot Basic rounded rectangle
-    #   rounded_rectangle 10, 10, 80, 80, 10
+    # @overload rounded_rectangle x, y, width, height, radius
+    #   @demo Basic rounded rectangle
+    #     rounded_rectangle 10, 10, 80, 80, 10
+    # @overload rounded_rectangle x, y, z, width, height, radius
     def rounded_rectangle *args
       x = y = z = w = h = r = 0
 
@@ -945,9 +964,12 @@ module Zajal
       Native.ofRectRounded x.to_f, y.to_f, z.to_f, w.to_f, h.to_f, r.to_f
     end
 
-    # @screenshot
-    #   fill false
-    #   curve 10, -100, 10, 50, 90, 50, 90, 200
+    # @overload curve x0, y0, x1, y1, x2, y2, x3, y3
+    #   @demo
+    #     fill false
+    #     curve 10, -100, 10, 50, 90, 50, 90, 200
+    # @overload curve x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3
+    # @overload curve point0, point1, point2, point3
     def curve *args
       x0 = y0 = z0 = x1 = y1 = z1 = x2 = y2 = z2 = x3 = y3 = z3 = 0
 
@@ -976,9 +998,13 @@ module Zajal
       Native.ofCurve x0.to_f, y0.to_f, z0.to_f, x1.to_f, y1.to_f, z1.to_f, x2.to_f, y2.to_f, z2.to_f, x3.to_f, y3.to_f, z3.to_f
     end
 
-    # @screenshot Bezier curve
-    #   fill false
-    #   bezier 10, 10, 10, 50, 90, 50, 90, 90
+    # @overload bezier x0, y0, x1, y1, x2, y2, x3, y3
+    #   @demo Bezier curve
+    #     fill false
+    #     bezier 10, 10, 10, 50, 90, 50, 90, 90
+    # 
+    # @overload bezier x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3
+    # @overload bezier point0, point1, point2, point3
     def bezier *args
       x0 = y0 = z0 = x1 = y1 = z1 = x2 = y2 = z2 = x3 = y3 = z3 = 0
 
@@ -1015,7 +1041,7 @@ module Zajal
       Native.ofEndShape close.to_bool
     end
 
-    # @screenshot Star
+    # @demo Star
     #   shape do
     #     vertex 50, 10
     #     vertex 40, 30
@@ -1029,7 +1055,7 @@ module Zajal
     #     vertex 60, 30
     #   end
     # 
-    # @screenshot Wave
+    # @demo Wave
     #   fill false
     #   shape :open do
     #     width.to_i.times do |x|
@@ -1068,21 +1094,23 @@ module Zajal
       Native.ofVertex x.to_f, y.to_f, z.to_f
     end
 
-    # @screenshot Soft star
-    #   shape do
-    #     curve_vertex 50, 10
-    #     curve_vertex 50, 10
-    #     curve_vertex 40, 30
-    #     curve_vertex 10, 30
-    #     curve_vertex 40, 45
-    #     curve_vertex 20, 80
-    #     curve_vertex 50, 60
-    #     curve_vertex 80, 80
-    #     curve_vertex 60, 45
-    #     curve_vertex 90, 30
-    #     curve_vertex 60, 30
-    #     curve_vertex 50, 10
-    #   end
+    # @overload curve_vertex x, y
+    #   @demo Soft star
+    #     shape do
+    #       curve_vertex 50, 10
+    #       curve_vertex 50, 10
+    #       curve_vertex 40, 30
+    #       curve_vertex 10, 30
+    #       curve_vertex 40, 45
+    #       curve_vertex 20, 80
+    #       curve_vertex 50, 60
+    #       curve_vertex 80, 80
+    #       curve_vertex 60, 45
+    #       curve_vertex 90, 30
+    #       curve_vertex 60, 30
+    #       curve_vertex 50, 10
+    #     end
+    # @overload curve_vertex point
     def curve_vertex *args
       x = y = 0
 
@@ -1097,6 +1125,9 @@ module Zajal
       Native.ofCurveVertex x.to_f, y.to_f
     end
 
+    # @overload bezier_vertex x1, y1, x2, y2
+    # @overload bezier_vertex x1, y1, z1, x2, y2, z2
+    # @overload bezier_vertex point1, point2
     def bezier_vertex *args
       x1 = y1 = z1 = x2 = y2 = z2 = 0
 
@@ -1121,7 +1152,7 @@ module Zajal
       Native.ofBezierVertex x1.to_f, y1.to_f, z1.to_f, x2.to_f, y2.to_f, z2.to_f
     end
 
-    # @screenshot Wireframe Sphere
+    # @demo Wireframe Sphere
     #   fill false
     #   sphere 50, 50, 40
     def sphere *args
@@ -1146,12 +1177,15 @@ module Zajal
       Native.ofSphere x.to_f, y.to_f, z.to_f, r.to_f
     end
 
-    # @screenshot Boxes in the corners
-    #   fill false
-    #   box 20, 20, 30
-    #   box 20, 80, 30
-    #   box 80, 20, 30
-    #   box 80, 80, 30
+    # @overload box x, y, size
+    #   @demo Boxes in the corners
+    #     fill false
+    #     box 20, 20, 30
+    #     box 20, 80, 30
+    #     box 80, 20, 30
+    #     box 80, 80, 30
+    # @overload box x, y, z, size
+    # @overload box center, size
     def box *args
       x = y = z = r = 0
 
@@ -1174,6 +1208,8 @@ module Zajal
       Native.ofBox x.to_f, y.to_f, z.to_f, r.to_f
     end
 
+    # @overload polygon_winding_mode mode
+    # @overload polygon_winding_mode
     def polygon_winding_mode mode=nil
       @polygon_winding_mode ||= :odd # is this the default?
 
@@ -1211,7 +1247,8 @@ module Zajal
       Native.ofGetViewportWidth
     end
 
-    # Enable smoothing
+    # @overload smoothing smooth
+    # @overload smoothing
     def smoothing smooth=nil
       @smoothing_enabled ||= false
 
@@ -1223,7 +1260,7 @@ module Zajal
       end
     end
 
-    # @screenshot Single point
+    # @demo Single point
     #   point 50, 50
     def point x, y
       shape { vertex x, y; vertex x, y+1 }

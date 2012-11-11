@@ -1,25 +1,87 @@
 module Zajal
   # @api zajal
   module App
-    def framerate new_framerate=nil
+    # @overload framerate target
+    #   @param [#to_i] target target framerate
+    #   Set a new target framerate
+    # 
+    #   Zajal will try to match `target`, but complex scenes may run slower
+    # 
+    # @overload framerate
+    #   Get the average number of frames rendered every second
+    #   
+    #   This is a good way to check the performance of your sketch
+    #   
+    #   @return [Float] actual framerate
+    # @api internal
+    def framerate target=nil
       warn "WARNING: App##{__method__} still needs native implementation!"
-      if new_framerate.present?
-        Native.ofSetFrameRate new_framerate.to_i
+      if target.present?
+        Native.ofSetFrameRate target.to_i
       else
         Native.ofGetFrameRate
       end
     end
 
+    # Get the number of frames rendered since the sketch started
+    # 
+    # @example Screenshot every 30 frames
+    #   draw do
+    #     # draw sketch
+    #     fill false
+    #     30.times do |i|
+    #       circle width/2, height/2, noise(time, i/10.0) * width
+    #     end
+    # 
+    #     # save a screenshot if frame evenly divides 30
+    #     grab_screen.save "~/Desktop/screenshot.png" if frame % 30 == 0
+    #   end
+    # 
+    # @example Render out numbered sequence
+    #   draw do
+    #     # draw sketch
+    #     fill false
+    #     30.times do |i|
+    #       circle width/2, height/2, noise(time, i/10.0) * width
+    #     end
+    #   
+    #     # save a screenshot every frame
+    #     # use frame number to sequentially number them
+    #     grab_screen.save "~/Desktop/frame-#{frame}.png"
+    #   end
+    #     
+    # 
+    # @return [Fixnum] current frame number
     def frame
       # TODO set frame number?
       Native.ofGetFrameNum
     end
 
+    # Get the time it took to render the last frame
+    # 
+    # @return [Float] time to render last frame
+    # @api internal
     def last_frame_time
       warn "WARNING: App##{__method__} still needs native implementation!"
       Native.ofGetLastFrameTime
     end
 
+    # @overload cursor show
+    #   Show or hide the cursor
+    #   @example Hide on mouse click, show on key press
+    #     mouse_down do
+    #       cursor false
+    #     end
+    #     
+    #     key_down do
+    #       cursor true
+    #     end
+    #   @param [Boolean] show true to show the cursor, false to hide
+    # 
+    # @overload cursor
+    #   Get whether or not the cursor is showing
+    #       
+    #   @return [Boolean] is cursor visible?
     def cursor show=nil
       @cursor_visible ||= true
 
@@ -36,6 +98,14 @@ module Zajal
       end
     end
 
+    # @overload window_position_x new_x
+    #   Set the x position of the sketch window
+    #   @param [#to_i] new_x new x position
+    # 
+    # @overload window_position_x
+    #   Get the x position of the sketch window
+    #   @return [Fixnum] current x position of window
+    # @api internal
     def window_position_x new_x=nil?
       warn "WARNING: App##{__method__} still needs native implementation!"
       if new_x.present?
@@ -45,6 +115,14 @@ module Zajal
       end
     end
 
+    # @overload window_position_y new_y
+    #   Set the y position of the sketch window
+    #   @param [#to_i] new_y new y position
+    # 
+    # @overload window_position_y
+    #   Get the y position of the sketch window
+    #   @return [Fixnum] current y position of window
+    # @api internal
     def window_position_y new_y=nil?
       warn "WARNING: App##{__method__} still needs native implementation!"
       if new_y.present?
@@ -54,6 +132,7 @@ module Zajal
       end
     end
 
+    # @api internal
     def window_position new_x=nil, new_y=nil
       warn "WARNING: App##{__method__} still needs native implementation!"
       if new_y.present?
@@ -65,16 +144,30 @@ module Zajal
       end
     end
 
+    # Get the width of the screen
+    # @return [Fixnum] width of the screen
+    # @api internal
     def screen_width
       warn "WARNING: App##{__method__} still needs native implementation!"
       Native.ofGetScreenWidth
     end
-
+    # Get the height of the screen
+    # @return [Fixnum] height of the screen
+    # @api internal
     def screen_height
       warn "WARNING: App##{__method__} still needs native implementation!"
       Native.ofGetScreenHeight
     end
 
+    # @overload title new_title
+    #   @example
+    #     title "My Amazing Sketch"
+    #   Set the title of the sketch window
+    #   @param [#to_s] new_title new window title
+    # 
+    # @overload title
+    #   Get the current title of the sketch window
+    #   @return [String] window title
     def title new_title=nil
       @window_title ||= ""
 
@@ -86,6 +179,26 @@ module Zajal
       end
     end
 
+    # @overload width new_width
+    #   Set the sketch's width
+    #   @param [#to_i] new_width sketch width
+    # 
+    # @overload width
+    #   Get the sketch's current width
+    #   Useful for alignment
+    #   @demo Right aligned
+    #     circle width, 20, 10
+    #     circle width, 50, 10
+    #     circle width, 80, 10
+    #   @demo Center aligned
+    #     circle width/2, 20, 10
+    #     circle width/2, 50, 10
+    #     circle width/2, 80, 10
+    #   @demo Displaying width
+    #     text width
+    #     text width/2
+    # 
+    #   @return [Fixnum] current width
     def width new_width=nil
       if new_width.present?
         size new_width, height
@@ -94,6 +207,26 @@ module Zajal
       end
     end
 
+    # @overload height new_height
+    #   Set the sketch's height
+    #   @param [#to_i] new_height sketch height
+    # 
+    # @overload height
+    #   Get the sketch's current height
+    #   Useful for alignment
+    #   @demo Bottom aligned
+    #     circle 20, height, 10
+    #     circle 50, height, 10
+    #     circle 80, height, 10
+    #   @demo Center aligned
+    #     circle 20, height/2, 10
+    #     circle 50, height/2, 10
+    #     circle 80, height/2, 10
+    #   @demo Displaying height
+    #     text height
+    #     text height/2
+    # 
+    #   @return [Fixnum] current height
     def height new_height=nil
       if new_height.present?
         size width, new_height
@@ -102,6 +235,9 @@ module Zajal
       end
     end
 
+    # @overload size new_width, new_height
+    # @overload size new_size
+    # @overload size
     def size new_width=nil, new_height=nil
       if new_height.present?
         Native.ofSetWindowShape new_width.to_i, new_height.to_i
@@ -112,6 +248,9 @@ module Zajal
       end
     end
 
+    # @overload fullscreen full
+    # @overload fullscreen
+    # @api internal
     def fullscreen full=nil
       warn "WARNING: App##{__method__} still needs native implementation!"
       @in_fullscreen ||= false
@@ -124,6 +263,9 @@ module Zajal
       end
     end
 
+    # @overload vertical_sync sync
+    # @overload vertical_sync
+    # @api internal
     def vertical_sync sync=nil
       warn "WARNING: App##{__method__} still needs native implementation!"
       @vertical_sync = true
@@ -136,6 +278,7 @@ module Zajal
       end
     end
 
+    # @api internal
     def self.included sketch
       sketch.before_event :setup do
         # calls to ofToDataPath (which a bunch of classes use) will call

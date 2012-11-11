@@ -12,9 +12,9 @@ module Zajal
     #   @param [Numeric] x the x coordinate to draw the image at
     #   @param [Numeric] y the y coordinate to draw the image at
     # 
-    #   @screenshot Drawing one image
+    #   @demo Drawing one image
     #     image "docs/actual_zajal.jpg", 10, 10
-    #   @screenshot Drawing multiple images
+    #   @demo Drawing multiple images
     #     image "docs/actual_zajal.jpg", 0, 0
     #     image "docs/actual_zajal.jpg", 50, 50
     #     image "docs/actual_zajal.jpg", -50, 70
@@ -27,11 +27,11 @@ module Zajal
     #   @param [Numeric] width the width to draw the image at
     #   @param [Numeric] height the height to draw the image at
     # 
-    #   @screenshot Drawing one smaller image
+    #   @demo Drawing one smaller image
     #     image "docs/actual_zajal.jpg", 20, 20, 25, 25
-    #   @screenshot Drawing one larger image
+    #   @demo Drawing one larger image
     #     image "docs/actual_zajal.jpg", -150, -40, 250, 250
-    #   @screenshot Drawing many smaller images
+    #   @demo Drawing many smaller images
     #     4.times do |i|
     #       image "docs/actual_zajal.jpg", i * 25, 0, 25, 25 * (i+1)
     #     end
@@ -80,7 +80,7 @@ module Zajal
       # @overload initialize
       # @overload initialize filename
       #   @param filename [#to_s] name of the file to load
-      #   @screenshot Loading an image
+      #   @demo Loading an image
       #     img = Image.new "docs/actual_zajal.jpg"
       #     img.draw 13, 13
       # 
@@ -146,7 +146,7 @@ module Zajal
       # @overload resize size
       #   @param [Numeric] size new width and height of the image
       # 
-      #   @screenshot Resizing an image
+      #   @demo Resizing an image
       #     img = Image.new "docs/actual_zajal.jpg"
       #     img.resize 20
       #     img.draw 10, 10
@@ -155,7 +155,7 @@ module Zajal
       #   @param [Numeric] width new width of the image
       #   @param [Numeric] height new height of the image
       # 
-      #   @screenshot Resizing an image
+      #   @demo Resizing an image
       #     img = Image.new "docs/actual_zajal.jpg"
       #     img.resize 100, 50
       #     img.draw 0, 0
