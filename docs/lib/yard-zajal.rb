@@ -125,14 +125,14 @@ end
 module YARD::Tags
   class Tag
     def clean_types; types.join ',' if types end
-    def linkified_text; text.linkify.to_html end
-    def linkified_name; name.linkify.to_html end
+    def linkified_text; text.linkify.to_html if text end
+    def linkified_name; name.linkify.to_html if name end
   end
 
   class OverloadTag
     include Methodish
     def summary; object.summary end
-    def elaboration; docstring.linkify.to_html end
+    def elaboration; docstring.linkify.to_html if docstring end
     def simple_path
       pos = object.tags(:overload).index(self)
       pos == 0 ? object.path.sub("Zajal::", "") : object.path.sub("Zajal::", "") + "-#{pos}"
@@ -143,7 +143,7 @@ end
 module YARD::CodeObjects
   class Base
     def simple_path; path.sub("Zajal::", "")  end
-    def summary; docstring.summary.linkify.to_html end #Linkify.linkify(docstring.summary, namespace) end
+    def summary; docstring.summary.linkify.to_html if docstring.summary end
     def elaboration; docstring.chomp('.') == docstring.summary.chomp('.') ? nil : docstring.sub(docstring.summary, "").linkify.to_html end
     def related; tags(:see) end
     def short_file; file.sub(/.*zajal\//, "") end # TODO kind of hard coded, no? 
