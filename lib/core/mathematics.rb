@@ -5,7 +5,7 @@ module Zajal
       Native.ofNoise x.to_f, y.to_f, z.to_f, w.to_f
     end
     
-    def signed_noise x=nil?, y=0.0, z=0.0, w=0.0
+    def signed_noise x=nil, y=0.0, z=0.0, w=0.0
       x = time unless x.present?
       Native.ofSignedNoise x.to_f, y.to_f, z.to_f, w.to_f
     end
