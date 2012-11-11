@@ -68,6 +68,8 @@ module Zajal
           x, y, w, h = *args
         end
 
+        raise "Requested screenshot bigger than sketch!" if x + w > Sketch.current.width or y + h > Sketch.current.height
+
         Native.ofimage_grabScreen @pointer, x.to_i, y.to_i, w.to_i, h.to_i
       end
 
