@@ -1,6 +1,75 @@
 module Zajal
   # @api zajal
   module Images
+    # Draw an image
+    # 
+    # This is shorthand for the {Image} class. It creates an image object,
+    # caches it for future use, and draws that image right away. If width and
+    # height are not given, the dimentions of the loaded image are used.
+    # 
+    # @overload image file, x, y
+    #   @param [#to_s] file The image file to load
+    #   @param [Numeric] x the x coordinate to draw the image at
+    #   @param [Numeric] y the y coordinate to draw the image at
+    # 
+    #   @screenshot Drawing one image
+    #     image "docs/actual_zajal.jpg", 10, 10
+    #   @screenshot Drawing multiple images
+    #     image "docs/actual_zajal.jpg", 0, 0
+    #     image "docs/actual_zajal.jpg", 50, 50
+    #     image "docs/actual_zajal.jpg", -50, 70
+    #     image "docs/actual_zajal.jpg", 80, -40
+    # 
+    # @overload image file, x, y, width, height
+    #   @param [#to_s] file The image file to load
+    #   @param [Numeric] x the x coordinate to draw the image at
+    #   @param [Numeric] y the y coordinate to draw the image at
+    #   @param [Numeric] width the width to draw the image at
+    #   @param [Numeric] height the height to draw the image at
+    # 
+    #   @screenshot Drawing one smaller image
+    #     image "docs/actual_zajal.jpg", 20, 20, 25, 25
+    #   @screenshot Drawing one larger image
+    #     image "docs/actual_zajal.jpg", -150, -40, 250, 250
+    #   @screenshot Drawing many smaller images
+    #     4.times do |i|
+    #       image "docs/actual_zajal.jpg", i * 25, 0, 25, 25 * (i+1)
+    #     end
+    # 
+    # @note In reality, this function reads the first parameter as the file
+    #   to load and passes the rest of the arguments as is to {Image#draw}
+    def image *args
+      @cached_images ||= {}
+
+      file = args.shift
+      @cached_images[file] ||= Image.new file
+      @cached_images[file].draw *args
+    end
+
+    # @overload grab_screen x, y, width, height
+    #   Take a screenshot of the sketch
+    #   
+    #   @param [Numeric] x
+    #   @param [Numeric] y
+    #   @param [Numeric] width
+    #   @param [Numeric] height
+    #   @example Taking a screenshot on mouse click
+    #     draw do
+    #       fill false
+    #       circle 50 + sin(time) * 50, 50, 20
+    #     end
+    #     
+    #     mouse_down do
+    #       grab_screen.save "~/Desktop/moving-circle.png"
+    #     end
+    #   
+    #   @return [Image] screenshot of the sketch
+    def grab_screen *args
+      i = Image.new
+      i.grab_screen *args
+      i
+    end
+
     # An image
     # 
     # {Image} can represents an image file loaded off the disk and a drawing
@@ -11,9 +80,10 @@ module Zajal
       # @overload initialize
       # @overload initialize filename
       #   @param filename [#to_s] name of the file to load
-      #   @screenshot
+      #   @screenshot Loading an image
       #     img = Image.new "docs/actual_zajal.jpg"
-      #     img.draw 20, 20
+      #     img.draw 13, 13
+      # 
       # @overload initialize width, height
       #   @param width [Numeric] width of the new image
       #   @param width [Numeric] height of the new image
@@ -33,12 +103,10 @@ module Zajal
 
       # Load an image off the disk
       # 
-      # This will resize the image to {filename}'s size and load {filename}'s
+      # This will resize the image to `filename`'s size and load `filename`'s
       # pixels
       # 
       # @param filename [#to_s] name of the file to load
-      # 
-      # @return [nil] nothing
       # 
       # @todo fix cwd bug in ofImage::loadImage!!
       def load filename
@@ -49,9 +117,7 @@ module Zajal
       # Save the image to the disk
       # 
       # @param path [#to_s] location on disk to save file
-      # @param quality [#to_s] location on disk to save file
-      # 
-      # @return [nil] nothing
+      # @param quality [Symbol] location on disk to save file
       def save path, quality=:best
         Native.ofimage_saveImage @pointer, File.expand_path(path.to_s).to_ptr, quality
       end
@@ -75,6 +141,24 @@ module Zajal
         Native.ofimage_grabScreen @pointer, x.to_i, y.to_i, w.to_i, h.to_i
       end
 
+      # Resize the image
+      # 
+      # @overload resize size
+      #   @param [Numeric] size new width and height of the image
+      # 
+      #   @screenshot Resizing an image
+      #     img = Image.new "docs/actual_zajal.jpg"
+      #     img.resize 20
+      #     img.draw 10, 10
+      # 
+      # @overload resize width, height
+      #   @param [Numeric] width new width of the image
+      #   @param [Numeric] height new height of the image
+      # 
+      #   @screenshot Resizing an image
+      #     img = Image.new "docs/actual_zajal.jpg"
+      #     img.resize 100, 50
+      #     img.draw 0, 0
       def resize w, h=nil
         h = w unless h.present?
         Native.ofimage_resize @pointer, w.to_i, h.to_i
@@ -95,10 +179,12 @@ module Zajal
       # @overload draw x, y
       #   @param x [Numeric] distance from the left to start drawing
       #   @param y [Numeric] distance from the top to start drawing
+      # 
       # @overload draw x, y, size
       #   @param x [Numeric] distance from the left to start drawing
       #   @param y [Numeric] distance from the top to start drawing
       #   @param size [Numeric] proportional scale of the drawn image
+      # 
       # @overload draw x, y, width, height
       #   @param x [Numeric] distance from the left to start drawing
       #   @param y [Numeric] distance from the top to start drawing
@@ -120,10 +206,18 @@ module Zajal
         Native.ofimage_crop @pointer, x.to_i, y.to_i, w.to_i, h.to_i
       end
 
+      # Rotate the image by 90 degrees
+      # 
+      # @overload rotate
+      # @overload rotate times
       def rotate times=1
         Native.ofimage_rotate90 @pointer, times.to_i
       end
 
+      # Mirror the image
+      # 
+      # @overload mirror
+      # @overload mirror direction
       def mirror direction=:horizontal
         d = {
           horizontal: [false, true],
