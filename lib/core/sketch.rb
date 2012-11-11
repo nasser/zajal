@@ -36,6 +36,28 @@ module Zajal
       @@post_hooks[event] << blk
     end
 
+    # Get the current sketch
+    # 
+    # Useful for classes outside of the main sketch environment to access
+    # Zajal functionality. There can only be one sketch per thread (due to
+    # OpenGL).
+    # 
+    # @example
+    #   class Image
+    #     def grab_screen x, y, w=nil, h=nil
+    #       w = Sketch.current.width unless w.present?
+    #       h = Sketch.current.height unless h.present?
+    #       # ...
+    #     end
+    #   end
+    # 
+    # @return [Sketch] the current zajal sketch
+    def self.current
+      raise "Accessing Sketch.current before it has been set!" if Thread.current[:current_zajal_sketch].nil?
+
+      Thread.current[:current_zajal_sketch]
+    end
+
     # Support a named event in user code
     # 
     # Allow an event block named +event+ in user code. This allows
@@ -139,6 +161,8 @@ module Zajal
           instance_eval @code
         end
       end
+
+      Thread.current[:current_zajal_sketch] = self
     end
 
     # @return [Boolean] has the watched file has been updated?
