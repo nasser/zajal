@@ -41,9 +41,7 @@ module Zajal
       # @todo fix cwd bug in ofImage::loadImage!!
       def load filename
         path = File.expand_path(filename.to_s)
-        Dir.chdir do
-          Native.ofimage_loadImage @pointer, path.to_ptr
-        end
+        Native.ofimage_loadImage @pointer, path.to_ptr
       end
 
       # Save the image to the disk

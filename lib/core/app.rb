@@ -1,4 +1,5 @@
 module Zajal
+  # @api zajal
   module App
     def framerate new_framerate=nil
       warn "WARNING: App##{__method__} still needs native implementation!"
@@ -135,6 +136,20 @@ module Zajal
       end
     end
 
+    def self.included sketch
+      sketch.before_event :setup do
+        # calls to ofToDataPath (which a bunch of classes use) will call
+        # ofSetDataPathRoot if isDataPathSet() is false. ofSetDataPathRoot will
+        # (annoyingly) chdir to the folder that the current executable is in
+        # and break everything. fortunatley, once its called it is no longer
+        # an issue. Dir.chdir will reset the chdir after ofSetDataPathRoot
+        # tries to break things.
+        Dir.chdir do
+          Native.ofSetDataPathRoot Dir.pwd.to_ptr
+        end
+      end
+    end
+
     module Native
       extend FFI::Cpp::Library
       ffi_lib "lib/core/lib/libof.so"
@@ -183,6 +198,8 @@ module Zajal
       # attach_function :ofToggleFullscreen, [], :void
 
       attach_function :ofSetVerticalSync, [:bool], :void
+
+      attach_function :ofSetDataPathRoot, [:stdstring], :void
     end
   end
 end

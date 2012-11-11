@@ -20,9 +20,7 @@ module Zajal
       # @todo fix cwd bug in ofSaveImage!!
       def save path, quality=:best
         path = File.expand_path(path.to_s)
-        Dir.chdir do
-          Native.ofSaveImage @pointer, path.to_ptr, quality
-        end
+        Native.ofSaveImage @pointer, path.to_ptr, quality
       end
 
       # @api internal
