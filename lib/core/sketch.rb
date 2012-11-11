@@ -96,7 +96,7 @@ module Zajal
     #     Native.do_graphics_cleanup
     #   end
     # 
-    # @param event [#to_s] name of the event to support
+    # @param events [Array<#to_s>] names of the events to support
     # 
     # @note This documents incomplete functionality
     # @todo Iron out custom events
@@ -123,15 +123,21 @@ module Zajal
 
     %w[setup update draw].each { |event| support_event event }
 
-    # Create a new {Sketch} object watching +file+
+    # Create a new {Sketch} object
     # 
-    # The file's contents are loaded into the returned {Sketch} object.
-    # The event blocks in the file are exposed as instance methods as
+    # A sketch can be created from Zajal code in a string, a File object
+    # representing code on disk, or a block.
+    # 
+    # In the case of a File object, the file's contents are loaded into the
+    # returned {Sketch} object and that file is watched for future updates
+    # (live coding). In the case of a string or a block, string is loaded the
+    # code is evaluated right away and live coding is not supported.
+    # 
+    # The event blocks in the code are exposed as instance methods as
     # described in {Sketch.support_event}.
     # 
-    # @param file [#to_s] the file to watch
+    # @param code_or_file [#to_s,File] the code to load or file to watch
     # 
-    # @note This documents incomplete functionality
     # @todo Iron out custom events
     # 
     # @see Sketch.support_event

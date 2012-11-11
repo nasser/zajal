@@ -180,8 +180,9 @@ module FFI
 
         # Mangle an instance method name
         # 
-        # @param klass [#to_s] the object's class
-        # @param klass [#to_s] the object's class
+        # @param klass [#to_s] the method's class
+        # @param name [#to_s] the methods's name
+        # @param params [Array<#to_s>] the method's parameters
         # 
         # @return [String] mangled instance method name
         def mangle_method klass, name, params
@@ -210,7 +211,6 @@ module FFI
       #   @param params [Array<Symbol>] array of symbols indicating parameter 
       #     type
       #   @param returns [Symbol] symbol indicating return type
-      #   @opthash foo
       # 
       # @overload attach_function ruby_name, c_name, params, returns, options={}
       def attach_function rbname, cname, params, returns=nil, options={}
