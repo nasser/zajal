@@ -1,0 +1,1 @@
+gem 'capuchin', :git => 'git://github.com/matthewd/capuchin.git'

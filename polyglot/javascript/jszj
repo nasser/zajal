@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+require "zajal"
+require "capuchin"
+
+class Zajal::Frontends::Glfw
+  class CapuchinSketch < Sketch
+    def self.bare? code
+      false
+    end
+
+    def execute code
+      # parse and execute js
+      ctx = Capuchin::Context.new
+      user_code = ctx.compile(ctx.parse_expression("return {#{code}}"), "?").call
+
+      # connect js events to zajal events
+      @@supported_events.each do |ev|
+        self.send ev, &user_code[ev].to_proc if user_code[ev]
+      end
+    end
+
+  end
+end
+
+# expose Zajal to Capuchin
+Zajal::Sketch.instance_methods.each do |meth|
+  prc = proc { |*args| Zajal::Sketch.current.send meth, *args }
+  Capuchin::Globals[meth] = Capuchin::Function.new(&prc)
+end
+
+# Run Capuchin sketch
+fe = Zajal::Frontends::Glfw.new 500, 500
+fe.sketch = Zajal::Frontends::Glfw::CapuchinSketch.new open(ARGV.first)
+fe.run

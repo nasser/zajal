@@ -1,0 +1,18 @@
+GIT
+  remote: git://github.com/matthewd/capuchin.git
+  revision: d47f4b19eb888b6a4fc5428d3d1fdfcdb551b183
+  specs:
+    capuchin (0.5.0)
+      parslet (~> 1.2)
+
+GEM
+  specs:
+    blankslate (2.1.2.4)
+    parslet (1.4.0)
+      blankslate (~> 2.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  capuchin!
