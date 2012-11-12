@@ -56,7 +56,7 @@ namespace :docs do
 
     # upload new documentation
     cd OutputDirectory
-    Dir["**/*"].select { |f| f =~ /\.(html|css|js)$/ }.each do |filename|
+    Dir["**/*"].select { |f| f =~ /\.(html|css|js|ttf|eot|woff|svg)$/ }.each do |filename|
       log.capture("Storing #{filename}") { S3Object.store(filename, open(filename), 'docs.zajal.cc', :access => :public_read) }
     end
 
