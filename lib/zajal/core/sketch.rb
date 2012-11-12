@@ -123,6 +123,14 @@ module Zajal
 
     %w[setup update draw].each { |event| support_event event }
 
+    def self.bare? code
+      bare = true
+      # look for :call, nil, :setup/:draw/:update in the sexp
+      code.to_sexp.flatten.each_cons(3) { |a, b, c| bare = false if a == :call and @@supported_events.member? c }
+
+      bare
+    end
+
     # Create a new {Sketch} object
     # 
     # A sketch can be created from Zajal code in a string, a File object
@@ -157,18 +165,24 @@ module Zajal
           raise ArgumentError, "Can't create sketch!"
         end
 
-        @bare = true
-        # look for :call, nil, :setup/:draw/:update in the sexp
-        @code.to_sexp.flatten.each_cons(3) { |a, b, c| @bare = false if a == :call and @@supported_events.member? c }
+        @bare = self.class.bare? @code
         
         if @bare
-          instance_eval "draw do; #{@code}\nend"
+          execute_bare @code
         else
-          instance_eval @code
+          execute @code
         end
       end
 
       Thread.current[:current_zajal_sketch] = self
+    end
+
+    def execute code
+      instance_eval code
+    end
+
+    def execute_bare code
+      instance_eval "draw do; #{code}\nend"
     end
 
     # @return [Boolean] has the watched file has been updated?
