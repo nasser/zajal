@@ -1,5 +1,5 @@
-# A sample Gemfile
-source "https://rubygems.org"
+source :rubygems
+gem 'aws-s3'
 
 group :test do
   gem "rspec"
