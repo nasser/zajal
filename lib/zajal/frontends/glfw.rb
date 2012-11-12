@@ -190,7 +190,7 @@ module Zajal
         GLFW_MOUSE_BUTTON_7   = 6
         GLFW_MOUSE_BUTTON_8   = 7
 
-        ffi_lib "lib/frontends/glfw/lib/libglfw.dylib"
+        ffi_lib "lib/zajal/frontends/glfw/lib/libglfw.dylib"
         attach_function :glfwSwapBuffers, [], :void
         attach_function :glfwPollEvents, [], :void
 
@@ -205,7 +205,7 @@ module Zajal
 
         attach_function :glfwSetWindowPos, [:int, :int], :void
 
-        ffi_lib "lib/frontends/glfw/lib/GlfwFrontend.so"
+        ffi_lib "lib/zajal/frontends/glfw/lib/GlfwFrontend.so"
         attach_constructor :GlfwFrontend, 16, []
         attach_method :GlfwFrontend, :setWindowShape, [:int, :int], :void
         attach_method :GlfwFrontend, :incrementFrameNum, [], :void

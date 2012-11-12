@@ -1,14 +1,17 @@
+# Ruby extensions
+require "zajal/extensions/signature"
+require "zajal/extensions/enumerable"
+require "zajal/extensions/object"
+require "zajal/extensions/string"
+require "zajal/extensions/range"
+
+require "zajal/ffipp"
+require "zajal/core"
+require "zajal/version"
+require "zajal/frontends/frontend"
+require "zajal/frontends/headless"
+require "zajal/frontends/glfw"
+
+# TODO is this the right place for this?
 require 'ostruct'
 require 'open-uri'
-
-require_relative "extensions/signature"
-require_relative "extensions/enumerable"
-require_relative "extensions/object"
-require_relative "extensions/string"
-require_relative "extensions/range"
-
-require_relative "ffipp"
-require_relative "core"
-require_relative "frontends/frontend"
-require_relative "frontends/headless"
-require_relative "frontends/glfw"

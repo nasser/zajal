@@ -127,7 +127,7 @@ module Zajal
     module Native
       extend FFI::Cpp::Library
       
-      ffi_lib "lib/core/lib/libof.so"
+      ffi_lib "lib/zajal/core/lib/libof.so"
 
       attach_constructor :ofTrueTypeFont, 344, []
       attach_method :ofTrueTypeFont, :drawString, [:stdstring, :float, :float], :void

@@ -26,7 +26,7 @@ module Zajal
       # @api internal
       module Native
         extend FFI::Cpp::Library
-        ffi_lib "lib/core/lib/libof.so"
+        ffi_lib "lib/zajal/core/lib/libof.so"
 
         enum :ofImageQualityType, [ :best, :high, :medium, :low, :worst ]
         ofPixels = type(:ofPixels_).template(:unsigned_char).actually(:ofPixels)

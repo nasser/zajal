@@ -232,7 +232,7 @@ module Zajal
       # @api internal
       module Native
         extend FFI::Cpp::Library
-        ffi_lib "lib/core/lib/libof.so"
+        ffi_lib "lib/zajal/core/lib/libof.so"
 
         ofImage = type(:ofImage_).template(:unsigned_char).actually(:ofImage)
 

@@ -2,7 +2,7 @@
 require 'optparse'
 require 'ostruct'
 
-require_relative "../lib/zajal"
+require "zajal"
 
 options = OpenStruct.new
 OptionParser.new do |opts|

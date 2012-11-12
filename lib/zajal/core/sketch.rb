@@ -207,6 +207,6 @@ module Zajal
     include Typography
     include Mathematics
     include Time
-    include Version
+    # include Version
   end
 end

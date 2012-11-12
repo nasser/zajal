@@ -30,7 +30,7 @@ module Zajal
 
       module Native
         extend FFI::Cpp::Library
-        ffi_lib "lib/frontends/minimal/lib/MinimalFrontend.so"
+        ffi_lib "lib/zajal/frontends/minimal/lib/MinimalFrontend.so"
         attach_constructor :MinimalFrontend, 16, []
       end
     end
