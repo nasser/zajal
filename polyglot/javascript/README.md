@@ -5,7 +5,14 @@ This is a polyglot Zajal experiment, an attempt to expose Zajal's creative codin
 
 Usage
 -----
-First, install Zajal as a gem (from the root of the zajal folder)
+First, get Zajal and switch to the `polyglot` branch
+```bash
+git clone https://github.com/nasser/zajal.git
+cd zajal
+git co polyglot
+```
+
+Then, install Zajal as a gem
 ```bash
 gem build zajal.gemspec
 gem install zajal-0.4.0.gem
