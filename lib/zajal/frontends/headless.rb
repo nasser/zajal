@@ -30,7 +30,7 @@ module Zajal
 
       module Native
         extend FFI::Cpp::Library
-        ffi_lib "lib/zajal/frontends/minimal/lib/MinimalFrontend.so"
+        ffi_lib File.expand_path("minimal/lib/MinimalFrontend.so", File.dirname(__FILE__))
         attach_constructor :MinimalFrontend, 16, []
       end
     end

@@ -36,7 +36,7 @@ module Zajal
 
       module Native
         extend FFI::Cpp::Library
-        ffi_lib "lib/zajal/core/lib/libof.so"
+        File.expand_path("lib/libof.so", File.dirname(__FILE__))
 
         typedef :pointer, :ofTexture
 

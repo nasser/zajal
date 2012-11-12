@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.description   = ""
 
   s.files         = %w[README.md Rakefile LICENSE]
-  s.files         += Dir.glob("lib/**/*.rb")
-  s.files         += Dir.glob("examples/**/*.rb")
+  s.files         += Dir.glob("lib/**/*")
+  s.files         += Dir.glob("examples/**/*")
   s.bindir        = "bin"
   s.require_paths = ["lib"]
 end

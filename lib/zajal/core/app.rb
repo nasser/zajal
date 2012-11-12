@@ -296,7 +296,7 @@ module Zajal
     module Native
       extend FFI::Cpp::Library
 
-      ffi_lib "lib/zajal/core/lib/libof.so"
+      ffi_lib File.expand_path("lib/libof.so", File.dirname(__FILE__))
 
       attach_function :ofGetFrameRate, [], :float
       attach_function :ofGetFrameNum, [], :int
