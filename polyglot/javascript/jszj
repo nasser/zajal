@@ -2,6 +2,16 @@
 require "zajal"
 require "capuchin"
 
+class Rubinius::CompiledCode
+  # Support & operator
+  def to_proc
+    self.scope = Rubinius::StaticScope.new(Object) unless self.scope
+    be = Rubinius::BlockEnvironment.new
+    be.under_context Rubinius::VariableScope.of_sender, self
+    Proc.__from_block__ be
+  end
+end
+
 class Zajal::Frontends::Glfw
   class CapuchinSketch < Sketch
     def self.bare? code
@@ -11,11 +21,11 @@ class Zajal::Frontends::Glfw
     def execute code
       # parse and execute js
       ctx = Capuchin::Context.new
-      user_code = ctx.compile(ctx.parse_expression("return {#{code}}"), "?").call
+      user_code = ctx.compile(ctx.parse_expression(code), "?")
 
-      # connect js events to zajal events
-      @@supported_events.each do |ev|
-        self.send ev, &user_code[ev].to_proc if user_code[ev]
+      # capuchin compiles code into a 'call' method. extract child methods from it
+      user_code.method(:call).executable.child_methods.each do |cm|
+        self.send cm.name, &cm if @@supported_events.member? cm.name
       end
     end
 

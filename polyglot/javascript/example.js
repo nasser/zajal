@@ -1,8 +1,8 @@
-setup: function() {
+function setup() {
   title("Zajal - JavaScript")
-},
+}
 
-draw: function() {
+function draw() {
   alpha_blending(true)
 
   translate(width()/2, height()/2)
@@ -18,8 +18,8 @@ draw: function() {
       Math.sin(i + time() * i/50.0) * i * 2,
       10 + i);
   }
-},
+}
 
-update: function() {
+function update() {
   // print("Update")
 }
