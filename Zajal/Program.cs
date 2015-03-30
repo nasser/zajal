@@ -21,7 +21,7 @@ namespace Zajal {
 		}
 
 		public static void SetClojureClassPath() {
-			SetClojureClassPath(Path.Combine(Directory.GetCurrentDirectory(), "Clojure"));
+			SetClojureClassPath(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly ().Location), "Clojure"));
 		}
 
 		public static void Main () {
