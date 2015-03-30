@@ -111,7 +111,6 @@
         (.Enqueue work-queue [incoming-code socket sender])))))
 
 (defn start-server [^long port]
-  (Console/Write @server-running)
   (if @server-running
     (throw (Exception. "REPL Already Running")))
   (reset! server-running true)
@@ -120,16 +119,16 @@
     (set! (.. socket Client ReceiveBufferSize) (* 1024 5000)) ;; 5Mb
     (.Start (Thread. (gen-delegate ThreadStart []
                                    (if (@configuration :verbose)
-                                     (Console/Write "Starting REPL..."))
+                                     (Console/WriteLine (str "Started REPL on port " port)))
                                    (while @server-running
                                      (listen-and-block socket))
                                    ;; TODO why does this line not execute?
                                    (if (@configuration :verbose)
-                                     (Console/Write "REPL Stopped")))))
+                                     (Console/WriteLine "REPL Stopped")))))
     socket))
 
 (defn stop-server [^UdpClient socket]
   (if (@configuration :verbose)
-    (Console/Write "Stopping REPL..."))
+    (Console/WriteLine "Stopping REPL..."))
   (reset! server-running false)
   (.Close socket))
