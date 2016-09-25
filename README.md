@@ -31,11 +31,11 @@ Extremely early, nothing beyond the basic concept has been demonstrated to work.
 
 Plan
 ----
-The current prototype (in the `figwheel-browser` folder) is a traditional ClojureScript Figwheel project targetting the browser. Basic concepts and core libraries will be tested here.
+The current prototype (in the `figwheel-browser` folder) is a traditional ClojureScript Figwheel project targeting the browser. Basic concepts and core libraries will be tested here.
 
 The next prototype will be a [cljs-electron](https://github.com/Gonzih/cljs-electron) project, testing multiple windows and interaction with the operating system.
 
-The final prototype will be a standard [JavaScript Electron](http://electron.atom.io/) project with the [clojurescript-npm](https://github.com/nasser/clojurescript-npm) package built in. This will test package managment and disribution.
+The final prototype will be a standard [JavaScript Electron](http://electron.atom.io/) project with the [clojurescript-npm](https://github.com/nasser/clojurescript-npm) package built in. This will test package management and distribution.
 
 Using
 -----
