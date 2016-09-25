@@ -7,6 +7,9 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Zajal</RootNamespace>
     <AssemblyName>Zajal</AssemblyName>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <ReleaseVersion>0.5</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -19,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>full</DebugType>
@@ -28,12 +32,10 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Reference Include="OpenTK">
-      <HintPath>..\References\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Scripting">
       <HintPath>..\References\Microsoft.Scripting.dll</HintPath>
     </Reference>
@@ -53,374 +55,490 @@
       <HintPath>..\References\Clojure.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="OpenTK">
+      <HintPath>..\..\..\Scratch\opentk\Binaries\OpenTK\Debug\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.clr.io.clj">
+      <HintPath>..\References\clojure.clr.io.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.clr.shell.clj">
+      <HintPath>..\References\clojure.clr.shell.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.core_clr.clj">
+      <HintPath>..\References\clojure.core_clr.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.core_deftype.clj">
+      <HintPath>..\References\clojure.core_deftype.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.core_print.clj">
+      <HintPath>..\References\clojure.core_print.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.core_proxy.clj">
+      <HintPath>..\References\clojure.core_proxy.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.core.clj">
+      <HintPath>..\References\clojure.core.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.core.protocols.clj">
+      <HintPath>..\References\clojure.core.protocols.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.data.clj">
+      <HintPath>..\References\clojure.data.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.data.generators">
+      <HintPath>..\References\clojure.data.generators.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.edn.clj">
+      <HintPath>..\References\clojure.edn.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.genclass.clj">
+      <HintPath>..\References\clojure.genclass.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.instant.clj">
+      <HintPath>..\References\clojure.instant.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.main.clj">
+      <HintPath>..\References\clojure.main.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.pprint.cl_format.clj">
+      <HintPath>..\References\clojure.pprint.cl_format.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.pprint.clj">
+      <HintPath>..\References\clojure.pprint.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.pprint.column_writer.clj">
+      <HintPath>..\References\clojure.pprint.column_writer.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.pprint.dispatch.clj">
+      <HintPath>..\References\clojure.pprint.dispatch.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.pprint.pprint_base.clj">
+      <HintPath>..\References\clojure.pprint.pprint_base.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.pprint.pretty_writer.clj">
+      <HintPath>..\References\clojure.pprint.pretty_writer.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.pprint.print_table.clj">
+      <HintPath>..\References\clojure.pprint.print_table.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.pprint.utilities.clj">
+      <HintPath>..\References\clojure.pprint.utilities.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.reflect.clj">
+      <HintPath>..\References\clojure.reflect.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.reflect.clr.clj">
+      <HintPath>..\References\clojure.reflect.clr.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.repl.clj">
+      <HintPath>..\References\clojure.repl.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.set.clj">
+      <HintPath>..\References\clojure.set.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.stacktrace.clj">
+      <HintPath>..\References\clojure.stacktrace.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.string.clj">
+      <HintPath>..\References\clojure.string.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.template.clj">
+      <HintPath>..\References\clojure.template.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.test.clj">
+      <HintPath>..\References\clojure.test.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.test.generative">
+      <HintPath>..\References\clojure.test.generative.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.test.junit.clj">
+      <HintPath>..\References\clojure.test.junit.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.test.tap.clj">
+      <HintPath>..\References\clojure.test.tap.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.tools.namespace">
+      <HintPath>..\References\clojure.tools.namespace.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.uuid.clj">
+      <HintPath>..\References\clojure.uuid.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.walk.clj">
+      <HintPath>..\References\clojure.walk.clj.dll</HintPath>
+    </Reference>
+    <Reference Include="clojure.zip.clj">
+      <HintPath>..\References\clojure.zip.clj.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Window.cs" />
+    <Compile Include="RetainedWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Clojure\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Clojure\clojure\core.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\core_clr.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\core_deftype.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\core_print.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\core_proxy.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\data.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\dm-test.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\edn.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\genclass.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\gvec.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\instant.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\main.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\pprint.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\reflect.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\repl.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\run_tests.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\run_tests_i.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\set.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\stacktrace.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\string.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\template.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_helper.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\uuid.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\walk.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\zip.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\clr\io.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\clr\shell.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\core\protocols.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\core\reducers.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\pprint\cl_format.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\pprint\column_writer.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\pprint\dispatch.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\pprint\pprint_base.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\pprint\pretty_writer.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\pprint\print_table.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\pprint\utilities.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\reflect\clr.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\ants.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\await-test.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\celsius.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\counter.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\attributes\testattribute.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\deftype\testdeftype.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\deftype\testprotocol.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\genclass\testgenclass.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\genclass\testgenclass2.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\genclass\testgenclass3.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\genclass\testmvc.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\interop\testinterop.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\proxy\testproxy.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\samples\stm\teststm.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test\junit.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test\tap.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\agents.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\api.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\atoms.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\attributes.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\clojure_set.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\clojure_walk.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\clojure_xml.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\clojure_zip.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\compilation.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\control.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\data.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\data_structures.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\def.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\delays.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\edn.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\errors.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\evaluation.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\fn.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\for.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\genclass.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\generators.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\java_interop.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\keywords.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\logic.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\macros.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\main.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\metadata.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\multimethods.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\ns_libs.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\numbers.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\other_functions.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\parallel.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\pprint.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\predicates.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\printer.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\protocols.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\reader.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\reducers.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\refs.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\repl.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\rt.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\sequences.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\serialization.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\special.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\string.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\test.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\test_fixtures.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\transients.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\try_catch.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\vars.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\vectors.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\volatiles.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\clr\io.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\genclass\examples.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\pprint\test_cl_format.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\pprint\test_helper.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\pprint\test_pretty.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\protocols\examples.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\protocols\hash_collisions.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\protocols\more_examples.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\clojure\test_clojure\repl\example.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\zajal\core.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\zajal\repl.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\zajal\test.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\zajal\window.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Clojure\data_readers.clj">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 </Project>

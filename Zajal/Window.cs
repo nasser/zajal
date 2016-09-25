@@ -1,22 +1,24 @@
 ﻿using System;
-
 using OpenTK;
 using OpenTK.Input;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 using clojure.lang;
 
-using Zajal;
 
 namespace Zajal {
 	public class Window : GameWindow {
-		public Var DrawFnVar, FocusedChangedFnVar, VisibleChangedFnVar, TitleChangedFnVar, IconChangedFnVar,
+		public Var LoadFnVar, DrawFnVar, FocusedChangedFnVar, VisibleChangedFnVar, TitleChangedFnVar, IconChangedFnVar,
 		DisposedFnVar, ClosedFnVar, ResizeFnVar, WindowBorderChangedFnVar, MouseWheelFnVar,
 		MouseMoveFnVar, MouseUpFnVar, MouseDownFnVar, MouseEnterFnVar, MouseLeaveFnVar, KeyUpFnVar, KeyPressFnVar,
 		KeyDownFnVar, WindowStateChangedFnVar, MoveFnVar;
 
-		public Window(string ns = "zajal.window") : base() {
+		public Window(string ns = "zajal.window", int width = 400, int height = 400, int glMajor = 4, int glMinor = 1) :
+		base(width, height, GraphicsMode.Default, "hummus", GameWindowFlags.Default, DisplayDevice.Default, glMajor, glMinor, GraphicsContextFlags.Default) {
 			Title = "Namespace Window - " + ns;
 
 			DrawFnVar = RT.var(ns, "on-draw");
+			LoadFnVar = RT.var(ns, "on-load");
 			FocusedChangedFnVar = RT.var(ns, "on-focused-changed");
 			VisibleChangedFnVar = RT.var(ns, "on-visible-changed");
 			TitleChangedFnVar = RT.var(ns, "on-title-changed");
@@ -40,6 +42,8 @@ namespace Zajal {
 			Visible = true;
 			VSync = VSyncMode.On;
 
+			MakeCurrent ();
+			DoOnLoad ();
 			Program.MainThreadLoop += DoRenderFrame;
 		}
 
@@ -73,13 +77,18 @@ namespace Zajal {
 			}
 		}
 
-		// protected override void OnRenderFrame (FrameEventArgs e) {
+//		 protected override void OnRenderFrame (FrameEventArgs e) {
 		public object DoRenderFrame () {
 			MakeCurrent ();
 			ProcessEvents ();
 			TryInvoke (DrawFnVar, this);
 			SwapBuffers ();
 			return null;
+		}
+
+//		protected override void OnLoad (EventArgs e) {
+		protected void DoOnLoad () {
+			TryInvoke (LoadFnVar, this);
 		}
 
 		protected override void OnFocusedChanged (EventArgs e) {

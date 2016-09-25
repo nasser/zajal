@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [with-bindings])
   (:require [clojure.main :as main])
   (:import
+    [Zajal Program]
     [System Console]
     [System.IO EndOfStreamException]
     [System.Collections Queue]
@@ -94,14 +95,18 @@
                     (str e)))
           bytes (.GetBytes Encoding/UTF8 (str result "\n" (ns-name (:*ns* @default-repl-env)) "=> "))]
             (try
-              (.Send socket bytes (.Length bytes) destination)
+              (if-not (or (nil? socket)
+                          (nil? destination))
+                (.Send socket bytes (.Length bytes) destination))
               (catch SocketException e
                 (let [estr (str (.ToString e)
                                 "\n"
                                 (ns-name (:*ns* @default-repl-env))
                                 "=> ")
                       ebytes (.GetBytes Encoding/UTF8 estr)]
-                  (.Send socket ebytes (.Length ebytes) destination)))))))
+                  (if-not (or (nil? socket)
+                              (nil? destination))
+                    (.Send socket ebytes (.Length ebytes) destination))))))))
 
 (defn- listen-and-block [^UdpClient socket]
   (let [sender (IPEndPoint. IPAddress/Any 0)
@@ -119,7 +124,7 @@
     (set! (.. socket Client ReceiveBufferSize) (* 1024 5000)) ;; 5Mb
     (.Start (Thread. (gen-delegate ThreadStart []
                                    (if (@configuration :verbose)
-                                     (Console/WriteLine (str "Started REPL on port " port)))
+                                     (Program/Message "Port" port))
                                    (while @server-running
                                      (listen-and-block socket))
                                    ;; TODO why does this line not execute?
