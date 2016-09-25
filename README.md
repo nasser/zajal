@@ -18,7 +18,7 @@ The only dependency is the [Mono MDK](http://www.mono-project.com/download/)
     xbuild Zajal/Zajal.csproj
     mono Zajal/bin/Debug/Zajal.exe
 
-The current REPL is lifted directly from Arcadia, so [the same setup instructions](https://github.com/arcadia-unity/arcadia/wiki/Editor-support) apply. Evaluate the contents of the `Examples/brownian.clj` file to see a functional port of the [standard Brownian motion sketch](https://processing.org/examples/brownian.html).
+The current REPL is lifted directly from Arcadia, so [the same setup instructions](https://github.com/arcadia-unity/arcadia/wiki/Editor-support) apply. Evaluate the contents of the [`Examples/brownian.clj`](https://github.com/nasser/zajal/blob/nostrand/Examples/brownian.clj) file to see a functional port of the [standard Brownian motion sketch](https://processing.org/examples/brownian.html).
 
 Legal
 -----
