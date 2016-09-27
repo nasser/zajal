@@ -4,13 +4,14 @@
 (enable-console-print!)
 
 (defn sketch [start update draw]
-  (let [state (atom start)]
-    (letfn [(render-loop [t]
+  (let [state (reagent/atom start)]
+    (letfn [(component [] [draw @state])
+            (render-loop [t]
+                         (.begin js/stats)
                          (swap! state update)
-                         (.begin js/stats) ;; TODO generalize this hack
-                         (reagent/render-component
-                          [draw @state]
-                          (. js/document (getElementById "app")))
-                         (.end js/stats) ;; TODO generalize this hack
+                         (.end js/stats)
                          (.requestAnimationFrame js/window render-loop))]
+      (reagent/render-component
+        [component]
+        (. js/document (getElementById "app")))
       (render-loop 0))))
