@@ -1,6 +1,7 @@
 (ns zajal.brownian
   (:refer-clojure :exclude [update])
-  (:require [zajal.three :as t :refer [renderer scene camera v3]]))
+  (:require [zajal.three :as t :refer [renderer scene camera v3]]
+            [zajal.core :as zajal]))
 
 (defn rrand [a b]
   (- (rand (- a b)) a))
@@ -40,5 +41,7 @@
     (conj trail (v3+ last-point (rand-point step-size)))))
 
 (defn draw [trail]
-  [t/basic-scene {:width 800 :height 800}
+  [t/basic-scene {:width 600 :height 600}
    [line {:color 0xffffff} trail]])
+
+(defonce sketch (zajal/sketch start update draw))

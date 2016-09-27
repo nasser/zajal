@@ -1,22 +1,16 @@
 (ns zajal.core
-  (:require-macros [reagent.ratom :refer [reaction]])
-  (:require [reagent.core :as reagent :refer [cursor track track!]]
-            [zajal.brownian :as brownian]
-            [reagent.ratom :refer [make-reaction]]))
+  (:require [reagent.core :as reagent]))
 
 (enable-console-print!)
 
-(defonce app-state
-  (atom brownian/start))
-
-(defn render-loop [t]
-  (.begin js/stats)
-  (swap! app-state brownian/update)
-  (reagent/render-component
-    [brownian/draw @app-state]
-    (. js/document (getElementById "app")))
-  (.end js/stats)
-  (.requestAnimationFrame js/window render-loop))
-
-(defonce animation-frame
-  (render-loop 0))
+(defn sketch [start update draw]
+  (let [state (atom start)]
+    (letfn [(render-loop [t]
+                         (swap! state update)
+                         (.begin js/stats) ;; TODO generalize this hack
+                         (reagent/render-component
+                          [draw @state]
+                          (. js/document (getElementById "app")))
+                         (.end js/stats) ;; TODO generalize this hack
+                         (.requestAnimationFrame js/window render-loop))]
+      (render-loop 0))))
