@@ -27,7 +27,7 @@ Extremely early, nothing beyond the basic concept has been demonstrated to work.
   (sketch start #'step #'draw))
 ```
 
-![](https://pbs.twimg.com/media/CtJxSi2XgAAu8om.jpg:small)
+![](http://i.imgur.com/4XRGXyh.png)
 
 
 Plan
