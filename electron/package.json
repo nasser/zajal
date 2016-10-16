@@ -1,0 +1,32 @@
+{
+  "name": "electron-react",
+  "version": "0.6.1",
+  "description": "Zajal Creative Coding Experiment",
+  "main": "main.js",
+  "dependencies": {
+    "chokidar": "^1.6.1",
+    "clojurescript": "^0.0.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nasser/zajal.git"
+  },
+  "keywords": [
+    "functional",
+    "clojurescript",
+    "lisp",
+    "creative",
+    "threejs",
+    "react"
+  ],
+  "author": "Ramsey Nasser",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nasser/zajal/issues"
+  },
+  "homepage": "https://github.com/nasser/zajal#readme"
+}
