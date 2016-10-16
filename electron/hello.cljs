@@ -49,14 +49,6 @@
       (render-loop 0)))
   :ok)
 
-
-(def start {:click-count 0})
-
-(defn step [state {:keys [mouse]}]
-  (if (:pressed? mouse)
-    (update state :click-count inc)
-    state))
-
 (defn p [& body]
   (if (map? (first body))
     (node "p" (first body) (rest body))
@@ -69,6 +61,13 @@
 
 (defn text [& s]
   (text* (apply str s)))
+
+(def start {:click-count 0})
+
+(defn step [state {:keys [mouse]}]
+  (if (:pressed? mouse)
+    (update state :click-count inc)
+    state))
 
 (defn draw [{:keys [click-count]}]
   (em (text "Clicks ")
