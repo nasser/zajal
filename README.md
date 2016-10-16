@@ -9,21 +9,22 @@ Status
 Extremely early, nothing beyond the basic concept has been demonstrated to work. 
 
 ```clojure
-(def step-size 0.02)
-
 ;; start state of the sketch
-(def start
-  [(v3 0 0 0)])
+(def start {:click-count 0})
 
 ;; function to update the state each frame
-(defn update [trail]
-  (let [last-point (last trail)]
-    (conj trail (v3+ last-point (rand-point step-size)))))
+(defn step [state {:keys [mouse]}]
+  (if (:pressed? mouse)
+    (update state :click-count inc)
+    state))
 
 ;; function to draw the state
-(defn draw [trail]
-  [t/basic-scene {:width 800 :height 800}
-   [line {:color 0xffffff} trail]])
+(defn draw [{:keys [click-count]}]
+  (em (text "Clicks ")
+      (text (there/prand click-count))))
+
+(defonce test-sketch
+  (sketch start #'step #'draw))
 ```
 
 ![](https://pbs.twimg.com/media/CtJxSi2XgAAu8om.jpg:small)
@@ -31,14 +32,23 @@ Extremely early, nothing beyond the basic concept has been demonstrated to work.
 
 Plan
 ----
-The current prototype (in the `figwheel-browser` folder) is a traditional ClojureScript Figwheel project targeting the browser. Basic concepts and core libraries will be tested here.
-
-The next prototype will be a [cljs-electron](https://github.com/Gonzih/cljs-electron) project, testing multiple windows and interaction with the operating system.
-
-The final prototype will be a standard [JavaScript Electron](http://electron.atom.io/) project with the [clojurescript-npm](https://github.com/nasser/clojurescript-npm) package built in. This will test package management and distribution.
+The current prototype (in the `electron` folder) is a [JavaScript Electron](http://electron.atom.io/) project with the [clojurescript-npm](https://github.com/nasser/clojurescript-npm) package built in. It uses [Elm](http://elm-lang.org/)'s [virtual DOM implementation](https://github.com/elm-lang/virtual-dom) due to its speed and simplicity compared to react.
 
 Using
 -----
+[Electron](http://electron.atom.io/) needs to be installed.
+
+    git clone https://github.com/nasser/zajal.git
+    cd zajal
+    git checkout atlantic
+    cd electron
+    electron . hello.cljs
+
+
+Using (Figwheel)
+----------------
+The old Figwheel prototype still works, but will be phased out of the repo at some point.
+
 [Leiningen](http://leiningen.org/) needs to be installed.
 
     git clone https://github.com/nasser/zajal.git
