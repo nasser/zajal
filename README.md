@@ -32,7 +32,9 @@ Extremely early, nothing beyond the basic concept has been demonstrated to work.
 
 Plan
 ----
-The current prototype (in the `electron` folder) is a [JavaScript Electron](http://electron.atom.io/) project with the [clojurescript-npm](https://github.com/nasser/clojurescript-npm) package built in. It uses [Elm](http://elm-lang.org/)'s [virtual DOM implementation](https://github.com/elm-lang/virtual-dom) due to its speed and simplicity compared to react.
+The current prototype (in the `electron` folder) is a [JavaScript Electron](http://electron.atom.io/) project with the [clojurescript-npm](https://github.com/nasser/clojurescript-npm) package built in.
+
+The trajectory of the project is towards a functional approach that uses some kind of "virtual" representation of the HTML DOM and ThreeJS scene graph. [Existing](https://github.com/elm-lang/virtual-dom) [implementations](https://github.com/Matt-Esch/virtual-dom) were evaluated and rejected due to their performance and inflexibility. We're now using a [new virtual DOM implementation](https://github.com/nasser/zajal/blob/atlantic/electron/virtual-three.js) that is actively being researched and developed. Initial results are promising.
 
 Using
 -----
@@ -42,7 +44,7 @@ Using
     cd zajal
     git checkout atlantic
     cd electron
-    electron . hello.cljs
+    electron .
 
 
 Using (Figwheel)
