@@ -1,6 +1,6 @@
 Zajal 0.6 - Atlantic
 ====================
-Atlantic is the next major rewrite of the Zajal creative coding framework. It is built on [ClojureScript](http://clojurescript.org), [Reagent](https://reagent-project.github.io/), [React](https://facebook.github.io/react/), [ThreeJS](https://threejs.org/) and the ongoing progress of the [Arcadia project](https://github.com/arcadia-unity/arcadia). The goal, as always, is to create a highly expressive, completely live creative coding experience suitable for beginners and advanced programmers alike.
+Atlantic is the next major rewrite of the Zajal creative coding framework. It is built on [ClojureScript](http://clojurescript.org), [Pixi.js](http://www.pixijs.com/), [ThreeJS](https://threejs.org/) and the ongoing progress of the [Arcadia project](https://github.com/arcadia-unity/arcadia). The goal, as always, is to create a highly expressive, completely live creative coding experience suitable for beginners and advanced programmers alike.
 
 This fourth rewrite, continues the exploration of Clojure and Lisp in the service of creative coding, but builds on a web-based stack of functional reactive tools that have become practical in recent years. This incarnation of Zajal, like the previous one and the Arcadia project, experiments with the effects of functional programming on high performance interactive graphics programming. The hope is to provide a real semantic alternative to the imperative painters-algorithm style tools available today.
 
@@ -9,32 +9,45 @@ Status
 Extremely early, nothing beyond the basic concept has been demonstrated to work. 
 
 ```clojure
-;; start state of the sketch
-(def start {:click-count 0})
+(defn step [x] (inc x))
 
-;; function to update the state each frame
-(defn step [state {:keys [mouse]}]
-  (if (:pressed? mouse)
-    (update state :click-count inc)
-    state))
+(defn draw [t]
+  (renderer
+    {:width 400
+     :height 400}
+    [(graphics {:shape (circle 20)
+                :line-width 4 
+                :line-color 0xffffff
+                :x 100
+                :y 100})
+     (graphics {:shape (polygon [0 -15 -10 10 0 5 10 10 0 -15])
+                :fill 0
+                :line-width 1
+                :line-color 0xffffff
+                :x 100
+                :y 75
+                :rotation (* 0.05 t)})
+     (text {:text "Zajal!"
+            :fill "white"
+            :x 50})
+     (graphics {:shape (polygon [0 -15 -10 10 0 5 10 10 0 -15])
+                :fill 0
+                :line-width 1
+                :line-color 0xffffff
+                :x 100
+                :y 125
+                :rotation (* 0.05 t)
+                })]))
 
-;; function to draw the state
-(defn draw [{:keys [click-count]}]
-  (em (text "Clicks ")
-      (text (there/prand click-count))))
-
-(defonce test-sketch
-  (sketch start #'step #'draw))
+(sketch 0 #'step #'draw)
 ```
 
-![](http://i.imgur.com/4XRGXyh.png)
+![](https://i.imgur.com/OfVhDOH.png)
 
 
 Plan
 ----
-The current prototype (in the `electron` folder) is a [JavaScript Electron](http://electron.atom.io/) project with the [clojurescript-npm](https://github.com/nasser/clojurescript-npm) package built in.
-
-The trajectory of the project is towards a functional approach that uses some kind of "virtual" representation of the HTML DOM and ThreeJS scene graph. [Existing](https://github.com/elm-lang/virtual-dom) [implementations](https://github.com/Matt-Esch/virtual-dom) were evaluated and rejected due to their performance and inflexibility. We're now using a [new virtual DOM implementation](https://github.com/nasser/zajal/blob/atlantic/electron/virtual-three.js) that is actively being researched and developed. Initial results are promising.
+The trajectory of the project is towards a functional approach to creative coding that uses a "virtual scene graph" representation akin to [React's](https://facebook.github.io/react/). The current implementation is faster than any other similar technology for our purposes and can target the HTML DOM, ThreeJS scene graph, Pixi,js scene graph, or any other mutable tree-like data structure. The current prototype a minimal [JavaScript Electron](http://electron.atom.io/) application that loads ClojureScript and sets up a socket REPL and filewatcher.
 
 Using
 -----
@@ -43,21 +56,8 @@ Using
     git clone https://github.com/nasser/zajal.git
     cd zajal
     git checkout atlantic
-    cd electron
-    electron .
-
-
-Using (Figwheel)
-----------------
-The old Figwheel prototype still works, but will be phased out of the repo at some point.
-
-[Leiningen](http://leiningen.org/) needs to be installed.
-
-    git clone https://github.com/nasser/zajal.git
-    cd zajal
-    git checkout atlantic
-    cd figwheel-browser
-    lein figwheel
+    npm install
+    electron . zajal/draw/pixi.cljs
 
 Legal
 -----

@@ -283,19 +283,15 @@
 (defn draw [t]
   (renderer
     {:width 400
-     :height 400
-     :antialias true
-     :resolution 1}
+     :height 400}
     [(graphics
        {:shape (circle 20)
         :line-width 4 
         :line-color 0xffffff
-        :alpha 1
         :x 100
         :y 100})
      (graphics
        {:shape (polygon [0 -15 -10 10 0 5 10 10 0 -15])
-        :alpha 1
         :fill 0
         :line-width 1
         :line-color 0xffffff
@@ -308,7 +304,6 @@
             :resolution 8})
      (graphics
        {:shape (polygon [0 -15 -10 10 0 5 10 10 0 -15])
-        :alpha 1
         :fill 0
         :line-width 1
         :line-color 0xffffff
