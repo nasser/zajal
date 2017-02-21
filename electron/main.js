@@ -10,7 +10,7 @@ watcher.on('change', path => win.webContents.send('changed', path))
 
 function createWindow() {
 	win = new BrowserWindow({width: 800, height: 600, 'title-bar-style': 'hidden'});
-  win.loadURL(`file:///${__dirname}/virtual.html`);
+  win.loadURL(`file:///${__dirname}/index.html`);
   win.webContents.on('did-finish-load', () => {
 	  win.webContents.send('new', process.argv[2])
 	});

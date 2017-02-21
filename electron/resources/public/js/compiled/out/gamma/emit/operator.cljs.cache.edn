@@ -1,2 +1,0 @@
-;; Analyzed by ClojureScript 1.8.51
-{:name gamma.emit.operator, :doc nil, :excludes #{}, :use-macros nil, :require-macros nil, :uses {body gamma.ast, term gamma.ast, head gamma.ast, emit gamma.emit.emit}, :requires {gamma.emit.emit gamma.emit.emit, gamma.ast gamma.ast}, :imports nil, :cljs.analyzer/constants {:seen #{:nest :infix :selector :group :postfix :prefix :conditional-choice :line :constructor :literal :aget :span}, :order [:infix :literal :group :prefix :postfix :constructor :line :nest :span :conditional-choice :aget :selector]}}
