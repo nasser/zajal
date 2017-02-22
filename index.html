@@ -19,6 +19,11 @@
 </div>
 <script type="text/javascript" src="node_modules/clojurescript/lib/bootstrap.js"></script>
 <script type="text/javascript" src="node_modules/pixi.js/dist/pixi.js"></script>
+<script type="text/javascript">
+  PIXI.Point.prototype.toString = function() {
+    return this.x + " " + this.y;
+  }
+</script>
 <!-- <script type="text/javascript" src="node_modules/three/build/three.js"></script> -->
 <script type="text/javascript" src="js/zajal.js"></script>
 <script type="text/javascript" src="js/repl.js"></script>

@@ -1,6 +1,6 @@
-(ns zajal.draw.pixi)
+(ns zajal.draw.pixi
+  (:require [zajal.input.keyboard :as keyboard]))
 
-;; TODO organize
 ;; TODO input
 ;; TODO removing props
 ;; TODO source maps, errors
@@ -102,7 +102,7 @@
     [self other]
     (when-not (identical? self other)
       (when (not (identical? (type self) (type other)))
-        (throw "Different types not supported"))
+        (throw (str "Different types not supported " (type self) " vs " (type other))))
       (when (not (identical? self other))
         (-reconcile self other)
         (-reconcile-children self other)))))
@@ -230,6 +230,8 @@
       (apply-properties (.-style _cache) props)
       (-reconcile-children self other))))
 
+;;; api
+
 (defn renderer [props children]
   (ApplicationNode. props children nil))
 
@@ -257,10 +259,12 @@
    :args ps})
 
 (defn v2 [x y] (js/PIXI.Point. x y))
+(defn v2+ [a b] (js/PIXI.Point. (+ (.-x a) (.-x b))
+                                (+ (.-y a) (.-y b))))
  
 (defn input [] nil)
 
-(defn sketch [start step draw]
+(defn sketch [start step draw input]
   (let [state (atom start)
         renderer (draw start)
         current (atom renderer)
@@ -278,39 +282,131 @@
       (render-loop 0)
       (.render renderer))))
 
-(defn step [x] (inc x))
+(def init
+  {:player
+   {:position (v2 0 100)
+    :rotation 0
+    :inertia 0}
+   :asteroids
+   (mapv
+     (fn [x]
+       {:position (v2 (* x 100) 0)
+        :radius (* (+ 1 (js/Math.abs (* 2 (js/Math.sin x)))) 20)})
+     (range -2 2 0.1))})
 
-(defn draw [t]
+(defn horizontal [player input]
+  (cond (:arrow-right input)
+        (update player :rotation + 0.05)
+        (:arrow-left input)
+        (update player :rotation - 0.05)
+        :else player))
+
+(defn vertical [player input]
+  (let [forward (if (:arrow-up input) 1 0)
+        rotation (-> player :rotation)
+        inertia (:inertia player)
+        movement (v2 (* (+ forward inertia) (js/Math.cos rotation))
+                     (* (+ forward inertia) (js/Math.sin rotation)))]
+    (update player :position v2+ movement)))
+
+(defn inertia [player input]
+  (if (and (or (:arrow-up input))
+           (< (:inertia player)
+              3))
+    (update player :inertia + 0.1)
+    (update player :inertia * 0.9)))
+
+(defn controls [player input]
+  (-> player
+      (inertia input)
+      (horizontal input)
+      (vertical input)))
+
+(defn inside? [point circle]
+  (let [p1 (:position point)
+        p2 (:position circle)
+        r (:radius circle)
+        distance-squared (+ (* (- (.-x p2) (.-x p1))
+                               (- (.-x p2) (.-x p1)))
+                            (* (- (.-y p2) (.-y p1))
+                               (- (.-y p2) (.-y p1))))
+        r-sqared (* r r)]
+    (< distance-squared r-sqared)))
+
+(defn collision [{:keys [player asteroids] :as state}]
+  (let [asteroids* (map #(if (inside? player %)
+                           (assoc % :colliding? true)
+                           (assoc % :colliding? false))
+                        asteroids)]
+    (-> state
+        (assoc :asteroids asteroids*)
+        (update :player assoc :colliding? (some :colliding? asteroids*)))))
+
+(defn grow [asteroids]
+  (map #(if (:colliding? %)
+          (update % :radius + 0.1)
+          %)
+       asteroids))
+
+(defn step [state input]
+  (-> state
+      (update :player controls input)
+      collision
+      ; (update :asteroids grow)
+      (assoc :input input)))
+
+(defn debug [state]
+  (container {}
+             [(text {:text (str "asteroids: " (:asteroids state))
+                     :fill "white"
+                     :y 1
+                     :fontSize 8
+                     :fontFamily "Menlo"})
+              (text {:text (str "input:  " (:input state))
+                     :fill "white"
+                     :y 10
+                     :fontSize 8
+                     :fontFamily "Menlo"})]))
+
+(defn draw-ship [position rotation]
+  (container
+    {:position position
+     :rotation rotation}
+    [(graphics
+       {:shape (polygon [0 -15 -10 10 0 5 10 10 0 -15])
+        :rotation 1.5707963268
+        :fill (if colliding? 0xff0000 0)
+        :line-width 1
+        :line-color 0xffffff})]))
+
+; (def color (js/require "color"))
+
+(defn draw-asteroid [{:keys [position colliding? radius rotation] :as asteroid}]
+  (graphics
+    {:shape (circle radius)
+     :fill (if colliding? 0xff0000 0)
+     :alpha 1
+     :rotation (or rotation 0)
+     :position position
+     :line-width 1
+     :line-color 0xffffff
+     }))
+
+
+(defn draw [{:keys [player input] :as state}]
   (renderer
     {:width 400
-     :height 400}
-    [(graphics
-       {:shape (circle 20)
-        :line-width 4 
-        :line-color 0xffffff
-        :x 100
-        :y 100})
-     (graphics
-       {:shape (polygon [0 -15 -10 10 0 5 10 10 0 -15])
-        :fill 0
-        :line-width 1
-        :line-color 0xffffff
-        :x 100
-        :y 75
-        :rotation (* 0.05 t)
-        })
-     (text {:text "Hello?"
-            :fill "white"
-            :resolution 8})
-     (graphics
-       {:shape (polygon [0 -15 -10 10 0 5 10 10 0 -15])
-        :fill 0
-        :line-width 1
-        :line-color 0xffffff
-        :x 100
-        :y 125
-        :rotation (* 0.05 t)
-        })
-     ]))
+     :height 400
+     :resolution 2}
+    [(container
+       {:x 200
+        :y 200}
+       [(container
+          {}
+          (map draw-asteroid (:asteroids state)))
+        (draw-ship (:position player)
+                   (:rotation player))
+        ])
+     (debug state)]))
 
-(sketch 0 #'step #'draw)
+(sketch init #'step #'draw #'keyboard/key-set)
