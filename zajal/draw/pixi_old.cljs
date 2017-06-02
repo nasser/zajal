@@ -15,19 +15,15 @@
     nil
     props))
 
-(defn replace-child [child child*]
-  (let [native-child* (.render child*)
-        native-parent (.. child -_native -parent)
-        native-index (.getChildIndex native-parent child)
-        virtual-parent (.. child -_parent)
-        virtual-index (.indexOf (.-children virtual-parent) child)]
-    (.removeChildAt native-parent native-index)
-    (.addChildAt native-parent native-child* native-index)
-    (assoc (.-children virtual-parent) virtual-index child*)))
+(defn replace-child [child with]
+  (let [parent (.-parent child)
+        index (.getChildIndex parent child)]
+    (.removeChildAt parent index)
+    (.addChildAt parent with index)))
 
 (defn -reconcile [self other]
   (if (not (identical? (type self) (type other)))
-    (replace-child self other)
+    (replace-child _cache (.render other))
     (let [other-props (.-props other)]
       (when (not (identical? props other-props))
         (apply-properties (.-_cache self) other-props))
@@ -91,46 +87,48 @@
                 (when (< i (dec (count self-children)))
                   (recur (inc i)))))))))))
 
-(deftype ApplicationNode [props children ^:mutable _native ^:mutable _parent]
+(deftype ApplicationNode [props children ^:mutable _cache]
   Object
   (render
     [self]
-    (when-not _native
-      (set! _native (new js/PIXI.Application
+    (when-not _cache
+      (set! _cache (new js/PIXI.Application
                         (or (:width props) 800)
                         (or (:height props) 600)
-                        (clj->js (merge {} props))))
+                        (clj->js (merge {}
+                                        props))))
       ;; interface normalizing patch
-      (aset _native "removeChild" (fn [c] (.. _native -stage (removeChild c))))
-      (aset _native "addChild" (fn [c] (.. _native -stage (addChild c))))
+      (aset _cache "removeChild" (fn [c] (.. _cache -stage (removeChild c))))
+      (aset _cache "addChild" (fn [c] (.. _cache -stage (addChild c))))
       (doseq [child children]
-        (.. _native -stage (addChild (.render child)))
-        (set! (.-_parent child) self)))
-    _native)
+        (.. _cache -stage (addChild (.render child)))))
+    _cache)
   (reconcile
     [self other]
-    (when (not (identical? (type self) (type other)))
-      (throw (str "Different types not supported " (type self) " vs " (type other))))
-    (-reconcile self other)
-    (-reconcile-children self other)))
+    (when-not (identical? self other)
+      (when (not (identical? (type self) (type other)))
+        (throw (str "Different types not supported " (type self) " vs " (type other))))
+      (when (not (identical? self other))
+        (-reconcile self other)
+        (-reconcile-children self other)))))
 
-(deftype DisplayObjectNode [ctor props children ^:mutable _native ^:mutable _parent]
+(deftype DisplayObjectNode [ctor props children ^:mutable _cache]
   Object
   (render 
     [self]
-    (when-not _native
-      (set! _native (js/Object.create (.-prototype ctor)))
-      (.call ctor _native)
-      (apply-properties _native props)
+    (when-not _cache
+      (set! _cache (js/Object.create (.-prototype ctor)))
+      (.call ctor _cache)
+      (apply-properties _cache props)
       (when (not (nil? children))
         (doseq [child children]
-          (.addChild _native (.render child))
-          (set! (.-_parent child) self))))
-    _native)
+          (.addChild _cache (.render child)))))
+    _cache)
   (reconcile 
     [self other]
-    (-reconcile self other)
-    (-reconcile-children self other)))
+    (when (not (identical? self other))
+      (-reconcile self other)
+      (-reconcile-children self other))))
 
 (deftype SpriteNode [props children ^:mutable _cache]
   Object
